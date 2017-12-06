@@ -38,25 +38,4 @@ public class EinsatzplanController {
 		this.wochenplanSteuerung = new WochenplanStrg(this, this.model);
 		
 	}	
-	
-	/*
-	
-	private LinkedList<Mitarbeiter> getMitarbeiter(Schicht s){
-		
-		LinkedList<Mitarbeiter> mitarbeiterList = new LinkedList<Mitarbeiter>();		
-		
-		return mitarbeiterList;
-	}
-	
-	
-	private LinkedList<Mitarbeiter> getVerfügbareMitarbeiter(Schicht s){
-		
-		
-		LinkedList<Mitarbeiter> mitarbeiterList = new LinkedList<Mitarbeiter>();
-	
-		return mitarbeiterList;
-	}
-
-	 */
-
 }
