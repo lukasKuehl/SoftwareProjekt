@@ -8,25 +8,7 @@ public class KasseWocheSendenView extends JFrame {
 
 //	private JFrame frame;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void NewScreen() {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					KasseWocheSendenView window = new KasseWocheSendenView();
-					//window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
-	/**
-	 * Create the application.
-	 */
 	public KasseWocheSendenView() {
 		initialize();
 	}

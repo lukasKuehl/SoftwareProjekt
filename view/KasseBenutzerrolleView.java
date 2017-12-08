@@ -14,18 +14,6 @@ public class KasseBenutzerrolleView extends JFrame {
 	/**
 	 * Launch the application.
 	 */
-	public static void NewScreen() {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					KasseBenutzerrolleView window = new KasseBenutzerrolleView();
-//					window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
 	/**
 	 * Create the application.

@@ -98,6 +98,11 @@ public class KasseWochenView extends JFrame implements ActionListener{
 		mnWoche.add(mntmWocheAnzeigen);
 		
 		mntmWocheErstellen = new JMenuItem("erstellen");
+		mntmWocheErstellen.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				KasseWocheErstellenView nw = new KasseWocheErstellenView();
+			}
+		});
 		mntmWocheErstellen.setHorizontalAlignment(SwingConstants.TRAILING);
 		mntmWocheErstellen.setFont(new Font("Verdana", Font.PLAIN, 21));
 		mnWoche.add(mntmWocheErstellen);
