@@ -16,7 +16,7 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
-public class MitarbeiterWochenView extends JFrame{
+public class MitarbeiterWochenView extends JFrame implements ActionListener{
 
 
 	private JPanel contentPane , pnlMenuBar;
@@ -75,7 +75,7 @@ public class MitarbeiterWochenView extends JFrame{
 		mntmWocheAnzeigen = new JMenuItem("anzeigen");
 		mntmWocheAnzeigen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new Test();
+				//new Test();
 			}
 		});
 		mntmWocheAnzeigen.setHorizontalAlignment(SwingConstants.TRAILING);

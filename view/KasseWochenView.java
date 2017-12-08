@@ -24,7 +24,7 @@ import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.border.LineBorder;
 
-public class KasseWochenView extends JFrame {
+public class KasseWochenView extends JFrame implements ActionListener{
 
 	private JPanel contentPane , pnlMenuBar;
 	private JTable table;
@@ -65,12 +65,11 @@ public class KasseWochenView extends JFrame {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		setTitle("FK");
+		setTitle("Einsatzplan Kassenbüro");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setResizable(false);
 		setLocationRelativeTo(null);
 		setBounds(100, 100, 1538,864);
-			
 		 
 		// MenuBar mit den ganzen Unterpunkten   - Variablen sind public
 		
@@ -91,7 +90,7 @@ public class KasseWochenView extends JFrame {
 		mntmWocheAnzeigen = new JMenuItem("anzeigen");
 		mntmWocheAnzeigen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new Test();
+				//new Test();
 			}
 		});
 		mntmWocheAnzeigen.setHorizontalAlignment(SwingConstants.TRAILING);
@@ -109,6 +108,11 @@ public class KasseWochenView extends JFrame {
 		mnWoche.add(mntmWocheLoeschen);
 		
 		mntmWocheVerschicken = new JMenuItem("verschicken");
+		mntmWocheVerschicken.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				KasseWocheSendenView nw = new KasseWocheSendenView();
+			}
+		});
 		mntmWocheVerschicken.setHorizontalAlignment(SwingConstants.TRAILING);
 		mntmWocheVerschicken.setFont(new Font("Verdana", Font.PLAIN, 21));
 		mnWoche.add(mntmWocheVerschicken);
@@ -145,7 +149,13 @@ public class KasseWochenView extends JFrame {
 		mnBenutzerrolle.setFont(new Font("Dialog", Font.PLAIN, 26));
 		menuBar.add(mnBenutzerrolle);
 		
+		
 		mntmBenutzerZuweisen = new JMenuItem("zuweisen");
+		mntmBenutzerZuweisen.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			KasseBenutzerrolleView nw = new KasseBenutzerrolleView();
+			}
+		});
 		mntmBenutzerZuweisen.setHorizontalAlignment(SwingConstants.TRAILING);
 		mntmBenutzerZuweisen.setFont(new Font("Verdana", Font.PLAIN, 21));
 		mnBenutzerrolle.add(mntmBenutzerZuweisen);
