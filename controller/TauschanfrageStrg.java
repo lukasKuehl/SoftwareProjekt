@@ -2,6 +2,7 @@ package controller;
 
 import javax.swing.JDialog;
 
+import data.Schicht;
 import model.Einsatzplanmodel;
 
 /**
@@ -29,7 +30,7 @@ public class TauschanfrageStrg {
 	 * @author 
 	 * @info Anlegen einer neuen Tauschanfrage zum Tausch einer Schicht eines Mitarbeiters mit der Schicht eines anderen Mitarbeiters
 	 */
-	protected boolean erstelleTauschanfrage(){
+	protected boolean erstelleTauschanfrage(String senderName, int senderSchichtNr, String empfaengerName, int empfaengerSchichtNr ){
 		
 		boolean success = false;	
 		//Ausfüllen
@@ -40,7 +41,7 @@ public class TauschanfrageStrg {
 	 * @author 
 	 * @info Eine bereits existierende Tauschanfrage soll aus dem System entfernt werden
 	 */
-	protected boolean entferneTauschanfrage(){
+	protected boolean entferneTauschanfrage(int tauschanfrageNr){
 		
 		boolean success = false;	
 		//Ausfüllen
@@ -51,8 +52,10 @@ public class TauschanfrageStrg {
 	 * @author 
 	 * @info Der Empfänger einer Tauschanfrage möchte diese annehmen, um seine/ihre Schicht mit einer anderen zu tauschen
 	 */
-	protected void akzeptiereTauschanfrage(){	
+	protected boolean akzeptiereTauschanfrage(String emfaengerName, int tauschanfrageNr){	
+		boolean success = false;	
 		//Ausfüllen
+		return success;
 		
 	}
 		

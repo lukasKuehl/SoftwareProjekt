@@ -1,5 +1,7 @@
 package controller;
 
+import java.util.TreeMap;
+
 import javax.swing.JDialog;
 
 import model.Einsatzplanmodel;
@@ -28,7 +30,7 @@ public class TerminStrg {
 	 * @author 
 	 * @info Hinterlegen eines neuen Termin/Krankmeldung/Urlaubstages im System 
 	 */
-	protected boolean erstelleTermin(){
+	protected boolean erstelleTermin(String username, String bez, TreeMap<String,String> zeitraum, String grund ){
 		boolean success = false;	
 		//Ausfüllen
 		return success;
@@ -38,7 +40,7 @@ public class TerminStrg {
 	 * @author 
 	 * @info Entfernen eines bereits angelegten Termines aus dem System.
 	 */
-	protected boolean entferneTermin(){
+	protected boolean entferneTermin(int tblocknr, String username){
 
 		boolean success = false;
 		//Ausfüllen

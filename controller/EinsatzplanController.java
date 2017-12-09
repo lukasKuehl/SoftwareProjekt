@@ -1,12 +1,10 @@
 package controller;
 
 import java.util.LinkedList;
+import java.util.TreeMap;
+import javax.swing.JTable;
 
-import data.Mitarbeiter;
 import data.Schicht;
-import data.Tag;
-import data.Termin;
-import data.Warenhaus;
 import model.Einsatzplanmodel;
 import view.Einsatzplanview;
 
@@ -56,6 +54,50 @@ public class EinsatzplanController {
 	
 	public boolean benutzerRechteWechsel(String username){
 		return this.benutzerSteuerung.benutzerRechteÄndern(username);
+	}
+	
+	public boolean fülleSchicht(String[] mitarbeiternummern){
+		return this.schichtSteuerung.ausfüllenSchicht(mitarbeiternummern);
+	}
+	
+	public boolean erstelleTauschanfrage(String senderName, int senderSchichtNr, String empfaengerName, int empfaengerSchichtNr ){
+		return this.tauschanfrageSteuerung.erstelleTauschanfrage(senderName, senderSchichtNr, empfaengerName, empfaengerSchichtNr);
+	}
+	
+	public boolean entferneTauschanfrage(int tauschanfrageNr){
+		return this.tauschanfrageSteuerung.entferneTauschanfrage(tauschanfrageNr);		
+	}
+	
+	public boolean akzeptiereTauschanfrage(String empfaengerName, int tauschanfrageNr){
+		return this.tauschanfrageSteuerung.akzeptiereTauschanfrage(empfaengerName, tauschanfrageNr);
+	}
+	
+	public boolean erstelleTermin(String username, String bez, TreeMap<String, String> zeitraum, String grund){
+		return this.terminSteuerung.erstelleTermin(username, bez, zeitraum, grund);
+	}
+	
+	public boolean entferneTermin(int tblocknr, String username){
+		return this.terminSteuerung.entferneTermin(tblocknr, username);
+	}
+	
+	public JTable erstelleWochenplanStandard(String username){
+		return this.wochenplanSteuerung.erstelleWochenplanStandard(username);
+	}
+	
+	public JTable erstelleWochenplan(String username, TreeMap<String, String> zeiten, TreeMap<String, Integer> besetzung  ){
+		return this.wochenplanSteuerung.erstelleWochenplanCustom(username, zeiten, besetzung);
+	}
+	
+	public boolean publishWochenplan(String username, String wpbez){
+		return this.wochenplanSteuerung.publishWochenplan(username, wpbez);
+	}
+	
+	public boolean entferneWochenplan(String username, String wpbez){
+		return this.wochenplanSteuerung.entferneWochenplan(username, wpbez);
+	}
+	
+	public boolean verschickeWochenplan(String username, String wpbez){
+		return this.wochenplanSteuerung.verschickeWochenplan(username, wpbez);
 	}
 	
 	protected Einsatzplanview getView(){
