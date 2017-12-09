@@ -25,8 +25,7 @@ public class EinsatzplanController {
 	private TauschanfrageStrg tauschanfrageSteuerung = null;
 	private TerminStrg terminSteuerung = null;
 	private WochenplanStrg wochenplanSteuerung = null;
-	
-	
+		
 	public EinsatzplanController(Einsatzplanmodel epm){
 		
 		this.model = epm;
@@ -37,5 +36,29 @@ public class EinsatzplanController {
 		this.terminSteuerung = new TerminStrg(this, this.model);
 		this.wochenplanSteuerung = new WochenplanStrg(this, this.model);
 		
+	}
+	
+	public boolean benutzerAnmelden(String username, String pw){
+		return this.benutzerSteuerung.benutzerAnmelden(username, pw);
+	}
+	
+	public boolean benutzerAbmelden(String username){
+		return this.benutzerSteuerung.benutzerAbmelden(username);
+	}
+	
+	public boolean benutzerAnlegen(String username, String pw){
+		return this.benutzerSteuerung.benutzerErstellen(username, pw);
+	}
+	
+	public boolean benutzerEntfernen(String username){
+		return this.benutzerSteuerung.benutzerEntfernen(username);
+	}
+	
+	public boolean benutzerRechteWechsel(String username){
+		return this.benutzerSteuerung.benutzerRechteÄndern(username);
+	}
+	
+	protected Einsatzplanview getView(){
+		return this.view;		
 	}	
 }

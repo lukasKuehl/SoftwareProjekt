@@ -1,8 +1,12 @@
 package controller;
 
+import java.util.Observer;
+import java.util.TreeMap;
+
 import javax.swing.JDialog;
 
 import model.Einsatzplanmodel;
+import view.Einsatzplanview;
 
 /**
  * @author 
@@ -14,10 +18,8 @@ public class BenutzerStrg {
 	private EinsatzplanController myController = null;
 	private Einsatzplanmodel myModel = null;
 	
-
-	private JDialog myDialog = null;
-		
-		
+	//private JDialog myDialog = null;
+			
 	/**
 	 * @author 
 	 * @info Erzeugen eines Objektes der Klasse BenutzerStrg. Setzen des allgemeinen EinsatzplanControllers als Parent. Die Variable myDialog wird erst bei jedem Methodenaufruf neu erzeugt und wird deshalb später zugewiesen.
@@ -31,10 +33,16 @@ public class BenutzerStrg {
 	 * @author 
 	 * @info Anlegen eines neuen Benutzers für einen Mitarbeiter eines Warenhauses im System. 
 	 */
-	protected boolean benutzerErstellen(){
+	protected boolean benutzerErstellen(String username, String pw){
 
 		boolean success = false;
-		//Ausfüllen
+		
+		/*
+		if(this.myModel.getMitarbeiter(username) == null){
+			this.myModel.addMitarbeiter(username, pw);
+			success = true;
+		}		
+		*/
 		return success;
 	}
 		
@@ -42,10 +50,23 @@ public class BenutzerStrg {
 	 * @author 
 	 * @info Entfernen eines nicht mehr benötigten Users für einen Mitarbeiter eines Warenhauses
 	 */
-	protected boolean benutzerEntfernen(){
+	protected boolean benutzerEntfernen(String username){
 
 		boolean success = false;
-		//Ausfüllen
+		
+		/*
+		if(this.myModel.getMitarbeiter(username) != null){
+			
+			try{
+				this.myModel.entferneMitarbeiter(username);
+				success = true;
+			}catch(Exception e){
+				System.out.println("Controller: Fehler beim Entfernen eines Mitarbeiters aus der Datenbank: ");
+				e.printStackTrace();
+			}	
+		}		
+		*/		
+		
 		return success;
 	}
 		
@@ -53,10 +74,22 @@ public class BenutzerStrg {
 	 * @author 
 	 * @info Login Angaben für einen spezifischen Nutzer überprüfen und bei korrekten Angaben einloggen des Benutzers ins System
 	 */
-	protected boolean benutzerAnmelden(){
+	protected boolean benutzerAnmelden(String username, String pw){
 
 		boolean success = false;
-		//Ausfüllen
+		/*
+		if(this.myModel.getMitarbeiter(username) != null){
+			try{
+				this.myModel.mitarbeiterAnmelden(username, pw, this.myController.getView());	
+				success = true;
+			}catch(Exception e){
+				System.out.println("Fehler beim Anmelden des Users " + username + ", bitte Eingaben überprüfen :");
+				e.printStackTrace();
+			}
+		
+		}		
+		*/
+		
 		return success;
 		
 	}
@@ -65,9 +98,22 @@ public class BenutzerStrg {
 	 * @author 
 	 * @info Ausloggen eines Nutzers aus dem System
 	 */
-	protected boolean benutzerAbmelden(){
+	protected boolean benutzerAbmelden(String username){
 		boolean success = false;
-		//Ausfüllen
+
+		/*
+		if(this.myModel.getMitarbeiter(username) != null){
+			try{
+				this.myModel.deabonniere(username, this.myController.getView());		
+			}catch(Exception e){
+				System.out.println("Fehler beim Abmelden des Users " + username + " :");
+				e.printStackTrace();
+			}
+		
+		}			
+		*/		
+		
+		
 		return success;
 	}
 	
@@ -75,9 +121,20 @@ public class BenutzerStrg {
 	 * @author 
 	 * @info Ändern der jeweiligen Rechte eines Mitarbeiters von Mitarbeiter- zu Kassenbüro-Rechten oder umgekehrt(je nach derzeitigen Berechtigungen) 
 	 */
-	protected boolean benutzerRechteÄndern(){
+	protected boolean benutzerRechteÄndern(String username){
 		boolean success = false;
-		//Ausfüllen
+		/*
+		if(this.myModel.getMitarbeiter(username) != null){
+			try{
+				this.myModel.rechteWechsel(username);				
+			}catch(Exception e){
+				System.out.println("Fehler beim Ändern der Rechte des Nutzers " + username + " :");
+				e.printStackTrace();
+			}			
+		}
+		
+		*/			
+		
 		return success;
 	}
 
