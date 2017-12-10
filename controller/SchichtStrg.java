@@ -40,7 +40,7 @@ public class SchichtStrg {
 	 * @author 
 	 * @info Hinzufügen einer neuen Schicht für einen bestimmten Tag innerhalb eines Wochenplanes und hinterlegen der notwendigen Informationen in der Datenbank. 
 	 */
-	protected boolean ausfüllenSchicht(String[] mitarbeiternummern){
+	protected boolean ausfüllenSchicht(String[] mitarbeiter){
 
 		boolean success = false;
 		
