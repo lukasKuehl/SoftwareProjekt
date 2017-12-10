@@ -5,9 +5,14 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import java.awt.Font;
-import javax.swing.JComboBox;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class KasseBenutzerrolleView extends JFrame {
+import javax.swing.JComboBox;
+import javax.swing.JButton;
+import javax.swing.JOptionPane;
+
+public class KasseBenutzerrolleView extends JFrame{
 
 //	private JFrame frame;
 
@@ -55,6 +60,22 @@ public class KasseBenutzerrolleView extends JFrame {
 		JComboBox comboBox_1 = new JComboBox();
 		comboBox_1.setBounds(381, 328, 128, 20);
 		getContentPane().add(comboBox_1);
+		
+		JButton btnBestaetigen = new JButton("Best\u00E4tigen");
+		btnBestaetigen.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int confirmed = JOptionPane.showConfirmDialog(null, 
+				        "Sind Sie sicher?", "Warnung",
+				        JOptionPane.YES_NO_OPTION);
+
+				    if (confirmed == JOptionPane.YES_OPTION) {
+				      dispose(); // hier muss natürlich bei JA dann der controller angesteuert werden
+				//Controller.wocheErstellen(a,b,c,d)
+				//dispose wenn keine Fehlermeldung kommt und öffne KasseWocheErstellenPlanView
+			}}
+		});
+		btnBestaetigen.setBounds(420, 390, 89, 23);
+		getContentPane().add(btnBestaetigen);
 		setVisible(true);
 		/*frame = new JFrame();
 		frame.setBounds(100, 100, 1538,864);

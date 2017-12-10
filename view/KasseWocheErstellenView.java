@@ -4,6 +4,8 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
@@ -204,9 +206,15 @@ public class KasseWocheErstellenView extends JFrame {
 		JButton btnBesttigen = new JButton("best\u00E4tigen");
 		btnBesttigen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+						int confirmed = JOptionPane.showConfirmDialog(null, 
+						        "Sind Sie sicher?", "Warnung",
+						        JOptionPane.YES_NO_OPTION);
+
+						    if (confirmed == JOptionPane.YES_OPTION) {
+						      dispose(); //  // auch hier muss natürlich es noch bei JA es angepasst werden
 				//Controller.wocheErstellen(a,b,c,d)
 				//dispose wenn keine Fehlermeldung kommt und öffne KasseWocheErstellenPlanView
-			}
+			}}
 		});
 		btnBesttigen.setBounds(1246, 793, 97, 25);
 		getContentPane().add(btnBesttigen);
