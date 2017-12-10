@@ -10,7 +10,7 @@ import view.Einsatzplanview;
 
 
 /**
- * @author Lukas
+ * @author Lukas Kühl
  * @info Allgemeiner Controller zum entgegennehmen der Anfragen aus der GUI und weiterleiten an die spezifischen Steuerungen
  */
 public class EinsatzplanController {
@@ -37,67 +37,251 @@ public class EinsatzplanController {
 	}
 	
 	public boolean benutzerAnmelden(String username, String pw){
-		return this.benutzerSteuerung.benutzerAnmelden(username, pw);
+		
+		boolean result = false;
+		try{
+			result = this.benutzerSteuerung.benutzerAnmelden(username, pw);
+			
+		}catch(Exception e){
+			System.out.println("Fehler innerhalb des Controllers:");
+			System.out.println("Fehler beim Aufruf der Methode benutzerAnmelden:");
+			e.printStackTrace();			
+		}
+		
+		
+		return result;
 	}
 	
 	public boolean benutzerAbmelden(String username){
-		return this.benutzerSteuerung.benutzerAbmelden(username);
+		
+		boolean result = false;
+		try{
+			result = this.benutzerSteuerung.benutzerAbmelden(username);
+			
+		}catch(Exception e){
+			System.out.println("Fehler innerhalb des Controllers:");
+			System.out.println("Fehler beim Aufruf der Methode benutzerAbmelden:");
+			e.printStackTrace();			
+		}	
+		
+		return result;		
 	}
 	
 	public boolean benutzerAnlegen(String username, String pw){
-		return this.benutzerSteuerung.benutzerErstellen(username, pw);
+		
+		boolean result = false;
+		try{
+			result = this.benutzerSteuerung.benutzerErstellen(username, pw);
+			
+		}catch(Exception e){
+			System.out.println("Fehler innerhalb des Controllers:");
+			System.out.println("Fehler beim Aufruf der Methode benutzerErstellen:");
+			e.printStackTrace();			
+		}	
+		
+		return result;		
+
 	}
 	
 	public boolean benutzerEntfernen(String username){
-		return this.benutzerSteuerung.benutzerEntfernen(username);
+		
+		boolean result = false;
+		try{
+			result = this.benutzerSteuerung.benutzerEntfernen(username);
+			
+		}catch(Exception e){
+			System.out.println("Fehler innerhalb des Controllers:");
+			System.out.println("Fehler beim Aufruf der Methode benutzerEntfernen:");
+			e.printStackTrace();			
+		}	
+		
+		return result;	
+		
 	}
 	
 	public boolean benutzerRechteWechsel(String username){
-		return this.benutzerSteuerung.benutzerRechteÄndern(username);
+		
+		boolean result = false;
+		try{
+			result = this.benutzerSteuerung.benutzerRechteÄndern(username);
+			
+		}catch(Exception e){
+			System.out.println("Fehler innerhalb des Controllers:");
+			System.out.println("Fehler beim Aufruf der Methode benutzerRechteÄndern:");
+			e.printStackTrace();			
+		}	
+		
+		return result;			
 	}
 	
-	public boolean fülleSchicht(String[] mitarbeiternummern){
-		return this.schichtSteuerung.ausfüllenSchicht(mitarbeiternummern);
+	public boolean fülleSchicht(int schichtNr, String[] mitarbeiternummern){
+		
+		boolean result = false;
+		try{
+			result = this.schichtSteuerung.ausfüllenSchicht(schichtNr, mitarbeiternummern);
+			
+		}catch(Exception e){
+			System.out.println("Fehler innerhalb des Controllers:");
+			System.out.println("Fehler beim Aufruf der Methode fülleSchicht:");
+			e.printStackTrace();			
+		}	
+		
+		return result;			
 	}
 	
 	public boolean erstelleTauschanfrage(String senderName, int senderSchichtNr, String empfaengerName, int empfaengerSchichtNr ){
-		return this.tauschanfrageSteuerung.erstelleTauschanfrage(senderName, senderSchichtNr, empfaengerName, empfaengerSchichtNr);
+		
+		boolean result = false;
+		try{
+			result = this.tauschanfrageSteuerung.erstelleTauschanfrage(senderName, senderSchichtNr, empfaengerName, empfaengerSchichtNr);
+			
+		}catch(Exception e){
+			System.out.println("Fehler innerhalb des Controllers:");
+			System.out.println("Fehler beim Aufruf der Methode erstelleTauschanfrage:");
+			e.printStackTrace();			
+		}	
+		
+		return result;		
+	
 	}
 	
 	public boolean entferneTauschanfrage(int tauschanfrageNr){
-		return this.tauschanfrageSteuerung.entferneTauschanfrage(tauschanfrageNr);		
+		
+		boolean result = false;
+		try{
+			result = this.tauschanfrageSteuerung.entferneTauschanfrage(tauschanfrageNr);
+			
+		}catch(Exception e){
+			System.out.println("Fehler innerhalb des Controllers:");
+			System.out.println("Fehler beim Aufruf der Methode entferneTauschanfrage:");
+			e.printStackTrace();			
+		}	
+		
+		return result;		
+		
 	}
 	
 	public boolean akzeptiereTauschanfrage(String empfaengerName, int tauschanfrageNr){
-		return this.tauschanfrageSteuerung.akzeptiereTauschanfrage(empfaengerName, tauschanfrageNr);
+		
+		boolean result = false;
+		try{
+			result = this.tauschanfrageSteuerung.akzeptiereTauschanfrage(empfaengerName, tauschanfrageNr);
+			
+		}catch(Exception e){
+			System.out.println("Fehler innerhalb des Controllers:");
+			System.out.println("Fehler beim Aufruf der Methode akzeptiereTauschanfrage:");
+			e.printStackTrace();			
+		}	
+		
+		return result;			
 	}
 	
 	public boolean erstelleTermin(String username, String bez, TreeMap<String, String> zeitraum, String grund){
-		return this.terminSteuerung.erstelleTermin(username, bez, zeitraum, grund);
+		
+		boolean result = false;
+		try{
+			result = this.terminSteuerung.erstelleTermin(username, bez, zeitraum, grund);
+			
+		}catch(Exception e){
+			System.out.println("Fehler innerhalb des Controllers:");
+			System.out.println("Fehler beim Aufruf der Methode erstelleTermin:");
+			e.printStackTrace();			
+		}	
+		
+		return result;		
 	}
 	
 	public boolean entferneTermin(int tblocknr, String username){
-		return this.terminSteuerung.entferneTermin(tblocknr, username);
+		
+		boolean result = false;
+		try{
+			result = this.terminSteuerung.entferneTermin(tblocknr, username);
+			
+		}catch(Exception e){
+			System.out.println("Fehler innerhalb des Controllers:");
+			System.out.println("Fehler beim Aufruf der Methode entferneTermin:");
+			e.printStackTrace();			
+		}	
+		
+		return result;		
 	}
 	
 	public JTable erstelleWochenplanStandard(String username){
-		return this.wochenplanSteuerung.erstelleWochenplanStandard(username);
+		
+		JTable result = null;
+		try{
+			result = this.wochenplanSteuerung.erstelleWochenplanStandard(username);
+			
+		}catch(Exception e){
+			System.out.println("Fehler innerhalb des Controllers:");
+			System.out.println("Fehler beim Aufruf der Methode erstelleWochenplanStandard:");
+			e.printStackTrace();			
+		}	
+		
+		return result;	
+	
 	}
 	
-	public JTable erstelleWochenplan(String username, TreeMap<String, String> zeiten, TreeMap<String, Integer> besetzung  ){
-		return this.wochenplanSteuerung.erstelleWochenplanCustom(username, zeiten, besetzung);
+	public JTable erstelleWochenplanCustom(String username, TreeMap<String, String> zeiten, TreeMap<String, Integer> besetzung  ){
+		
+		JTable result = null;
+		try{
+			result = this.wochenplanSteuerung.erstelleWochenplanCustom(username, zeiten, besetzung);
+			
+		}catch(Exception e){
+			System.out.println("Fehler innerhalb des Controllers:");
+			System.out.println("Fehler beim Aufruf der Methode erstelleWochenplanCustom:");
+			e.printStackTrace();			
+		}	
+		
+		return result;		
 	}
 	
 	public boolean publishWochenplan(String username, String wpbez){
-		return this.wochenplanSteuerung.publishWochenplan(username, wpbez);
+		
+		boolean result = false;
+		try{
+			result = this.wochenplanSteuerung.publishWochenplan(username, wpbez);
+			
+		}catch(Exception e){
+			System.out.println("Fehler innerhalb des Controllers:");
+			System.out.println("Fehler beim Aufruf der Methode publishWochenplan:");
+			e.printStackTrace();			
+		}	
+		
+		return result;		
+		
 	}
 	
 	public boolean entferneWochenplan(String username, String wpbez){
-		return this.wochenplanSteuerung.entferneWochenplan(username, wpbez);
+		
+		boolean result = false;
+		try{
+			result = this.wochenplanSteuerung.entferneWochenplan(username, wpbez);
+			
+		}catch(Exception e){
+			System.out.println("Fehler innerhalb des Controllers:");
+			System.out.println("Fehler beim Aufruf der Methode entferneWochenplan:");
+			e.printStackTrace();			
+		}	
+		
+		return result;					
 	}
 	
 	public boolean verschickeWochenplan(String username, String wpbez){
-		return this.wochenplanSteuerung.verschickeWochenplan(username, wpbez);
+		
+		boolean result = false;
+		try{
+			result = this.wochenplanSteuerung.verschickeWochenplan(username, wpbez);
+			
+		}catch(Exception e){
+			System.out.println("Fehler innerhalb des Controllers:");
+			System.out.println("Fehler beim Aufruf der Methode verschickeWochenplan:");
+			e.printStackTrace();			
+		}	
+		
+		return result;			
+		
 	}
 	
 	protected Einsatzplanview getView(){
