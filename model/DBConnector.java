@@ -11,7 +11,7 @@ public class DBConnector {
 	private final String url = "jdbc:mysql://localhost:3306/softwareprojekt";
 	private final String reconnectSSL = "?autoReconnect=true&useSSL=false";
 	private final String user = "root";
-	private final String pw = "Admin987123654";
+	private final String pw = "";
 	
 	public static void main(String[] args){
 		new DBConnector();
