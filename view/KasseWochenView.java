@@ -33,8 +33,10 @@ public class KasseWochenView extends JFrame implements ActionListener{
 	private JMenu mnNewMenuIcon, mnWoche, mnTermin , mnKrankmeldung, mnBenutzerrolle;
 	private JMenuItem mntmWocheAnzeigen, mntmWocheLoeschen, mntmWocheVerschicken, mntmWocheErstellen, 
 	mntmTerminErstellen, mntmTerminLoeschen ,  mntmKrankErstellen, mntemKrankLoeschen, mntmBenutzerZuweisen;
+	public JLabel lblKW1;
 
 	private JFrame frame;
+	private JButton btnNewButton_1;
 
 	/**
 	 * Launch the application.
@@ -164,9 +166,29 @@ public class KasseWochenView extends JFrame implements ActionListener{
 		mntmBenutzerZuweisen.setHorizontalAlignment(SwingConstants.TRAILING);
 		mntmBenutzerZuweisen.setFont(new Font("Verdana", Font.PLAIN, 21));
 		mnBenutzerrolle.add(mntmBenutzerZuweisen);
+		getContentPane().setLayout(null);
+		
+		lblKW1 = new JLabel("");
+		lblKW1.setFont(new Font("Tahoma", Font.BOLD, 13));
+		lblKW1.setBounds(109, 11, 136, 30);
+		getContentPane().add(lblKW1);
+		
+		JButton btnNewButton = new JButton("");
+		btnNewButton.setContentAreaFilled(false);
+		btnNewButton.setBorderPainted(false);
+		btnNewButton.setOpaque(false);
+		btnNewButton.setIcon(new ImageIcon("C:\\Users\\Admin\\git\\SoftwareProjekt\\view\\right.png"));
+		btnNewButton.setBounds(255, 11, 32, 23);
+		getContentPane().add(btnNewButton);
+		
+		btnNewButton_1 = new JButton("");
+		btnNewButton_1.setBorderPainted(false);
+		btnNewButton_1.setContentAreaFilled(false);
+		btnNewButton_1.setIcon(new ImageIcon("C:\\Users\\Admin\\git\\SoftwareProjekt\\view\\left.png"));
+		btnNewButton_1.setBounds(49, 11, 50, 23);
+		getContentPane().add(btnNewButton_1);
 		
 		
 		setVisible(true);
 	}
-
 }

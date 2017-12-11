@@ -77,7 +77,10 @@ public class AnmeldungView extends JFrame implements ActionListener {
 		passwordField.setBounds(191, 147, 116, 22);
 		contentPane.add(passwordField);
 		
-		JButton btnLogin = new JButton("");
+		JButton btnLogin = new JButton("Ok");
+		btnLogin.setContentAreaFilled(false);
+		btnLogin.setOpaque(false);
+		btnLogin.setBorderPainted(false);
 		btnLogin.setIcon(new ImageIcon("D:\\workspace\\EinsatzplanSoftwaretechnik\\src\\GUI\\loginsmall.png"));
 		btnLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {

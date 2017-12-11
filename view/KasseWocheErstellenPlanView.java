@@ -33,7 +33,7 @@ public class KasseWocheErstellenPlanView extends JFrame {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		setTitle("Wochenplan versenden");
+		setTitle("Wochenplan erstellen");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setResizable(false);
 		setLocationRelativeTo(null);
