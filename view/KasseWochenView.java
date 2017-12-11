@@ -30,13 +30,13 @@ public class KasseWochenView extends JFrame implements ActionListener{
 	private JTable table;
 	private JTextField txtBisTermin, txtVonTermin, textUhrzeitTerminV, textUhrzeitTerminB;
 	private JMenuBar menuBar;
-	private JMenu mnNewMenuIcon, mnWoche, mnTermin , mnKrankmeldung, mnBenutzerrolle;
-	private JMenuItem mntmWocheAnzeigen, mntmWocheLoeschen, mntmWocheVerschicken, mntmWocheErstellen, 
-	mntmTerminErstellen, mntmTerminLoeschen ,  mntmKrankErstellen, mntemKrankLoeschen, mntmBenutzerZuweisen;
+	private JMenu mnNewMenuIcon, mnWoche,mnSchicht, mnTermin , mnKrankmeldung, mnBenutzerrolle;
+	private JMenuItem mntmWocheLoeschen, mntmWocheVerschicken, mntmWocheErstellen,
+	mntmSchichtBearbeiten, mntmTerminErstellen, mntmTerminLoeschen ,  mntmKrankErstellen, mntmKrankLoeschen, mntmBenutzerZuweisen;
 	public JLabel lblKW1;
 
 	private JFrame frame;
-	private JButton btnNewButton_1;
+	private JButton btnRechts,btnLinks;
 
 	/**
 	 * Launch the application.
@@ -89,20 +89,11 @@ public class KasseWochenView extends JFrame implements ActionListener{
 		mnWoche.setFont(new Font("VerdanaI", Font.PLAIN, 26));
 		menuBar.add(mnWoche);
 		
-		mntmWocheAnzeigen = new JMenuItem("anzeigen");
-		mntmWocheAnzeigen.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				//new Test();
-			}
-		});
-		mntmWocheAnzeigen.setHorizontalAlignment(SwingConstants.TRAILING);
-		mntmWocheAnzeigen.setFont(new Font("Verdana", Font.PLAIN, 21));
-		mnWoche.add(mntmWocheAnzeigen);
 		
 		mntmWocheErstellen = new JMenuItem("erstellen");
 		mntmWocheErstellen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				KasseWocheErstellenView nw = new KasseWocheErstellenView();
+				new KasseWocheErstellenView();
 			}
 		});
 		mntmWocheErstellen.setHorizontalAlignment(SwingConstants.TRAILING);
@@ -110,6 +101,11 @@ public class KasseWochenView extends JFrame implements ActionListener{
 		mnWoche.add(mntmWocheErstellen);
 		
 		mntmWocheLoeschen = new JMenuItem("löschen");
+		mntmWocheLoeschen.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new WochenplanLoeschenView();
+			}
+		});
 		mntmWocheLoeschen.setHorizontalAlignment(SwingConstants.TRAILING);
 		mntmWocheLoeschen.setFont(new Font("Verdana", Font.PLAIN, 21));
 		mnWoche.add(mntmWocheLoeschen);
@@ -117,23 +113,47 @@ public class KasseWochenView extends JFrame implements ActionListener{
 		mntmWocheVerschicken = new JMenuItem("verschicken");
 		mntmWocheVerschicken.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				KasseWocheSendenView nw = new KasseWocheSendenView();
+				new KasseWocheSendenView();
 			}
 		});
 		mntmWocheVerschicken.setHorizontalAlignment(SwingConstants.TRAILING);
 		mntmWocheVerschicken.setFont(new Font("Verdana", Font.PLAIN, 21));
 		mnWoche.add(mntmWocheVerschicken);
 		
+		mnSchicht = new JMenu("Schicht");
+		mnSchicht.setFont(new Font("Dialog", Font.PLAIN, 26));
+		menuBar.add(mnSchicht);
+		
+		mntmSchichtBearbeiten = new JMenuItem("Schicht bearbeiten");
+		mntmSchichtBearbeiten.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new KasseSchichtView();
+			}
+		});
+		mntmSchichtBearbeiten.setHorizontalAlignment(SwingConstants.TRAILING);
+		mntmSchichtBearbeiten.setFont(new Font("Verdana", Font.PLAIN, 21));
+		mnSchicht.add(mntmSchichtBearbeiten);
+		
 		mnTermin = new JMenu("Termin");
 		mnTermin.setFont(new Font("Dialog", Font.PLAIN, 26));
 		menuBar.add(mnTermin);
 		
 		mntmTerminErstellen = new JMenuItem("erstellen");
+		mntmTerminErstellen.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new TerminErstellenView();
+			}
+		});
 		mntmTerminErstellen.setHorizontalAlignment(SwingConstants.TRAILING);
 		mntmTerminErstellen.setFont(new Font("Verdana", Font.PLAIN, 21));
 		mnTermin.add(mntmTerminErstellen);
 		
 		mntmTerminLoeschen = new JMenuItem("löschen");
+		mntmTerminLoeschen.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new TerminLoeschenView();
+			}
+		});
 		mntmTerminLoeschen.setHorizontalAlignment(SwingConstants.TRAILING);
 		mntmTerminLoeschen.setFont(new Font("Verdana", Font.PLAIN, 21));
 		mnTermin.add(mntmTerminLoeschen);
@@ -143,14 +163,24 @@ public class KasseWochenView extends JFrame implements ActionListener{
 		menuBar.add(mnKrankmeldung);
 		
 		mntmKrankErstellen = new JMenuItem("erstellen");
+		mntmKrankErstellen.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new KrankmeldungErstellenView();
+			}
+		});
 		mntmKrankErstellen.setHorizontalAlignment(SwingConstants.TRAILING);
 		mntmKrankErstellen.setFont(new Font("Verdana", Font.PLAIN, 21));
 		mnKrankmeldung.add(mntmKrankErstellen);
 		
-		mntemKrankLoeschen = new JMenuItem("löschen");
-		mntemKrankLoeschen.setHorizontalAlignment(SwingConstants.TRAILING);
-		mntemKrankLoeschen.setFont(new Font("Verdana", Font.PLAIN, 21));
-		mnKrankmeldung.add(mntemKrankLoeschen);
+		mntmKrankLoeschen = new JMenuItem("löschen");
+		mntmKrankLoeschen.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new KrankmeldungLoeschenView();
+			}
+		});
+		mntmKrankLoeschen.setHorizontalAlignment(SwingConstants.TRAILING);
+		mntmKrankLoeschen.setFont(new Font("Verdana", Font.PLAIN, 21));
+		mnKrankmeldung.add(mntmKrankLoeschen);
 		
 		mnBenutzerrolle = new JMenu("Benutzerrolle");
 		mnBenutzerrolle.setFont(new Font("Dialog", Font.PLAIN, 26));
@@ -160,7 +190,7 @@ public class KasseWochenView extends JFrame implements ActionListener{
 		mntmBenutzerZuweisen = new JMenuItem("zuweisen");
 		mntmBenutzerZuweisen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-			KasseBenutzerrolleView nw = new KasseBenutzerrolleView();
+			new KasseBenutzerrolleView();
 			}
 		});
 		mntmBenutzerZuweisen.setHorizontalAlignment(SwingConstants.TRAILING);
@@ -173,20 +203,20 @@ public class KasseWochenView extends JFrame implements ActionListener{
 		lblKW1.setBounds(109, 11, 136, 30);
 		getContentPane().add(lblKW1);
 		
-		JButton btnNewButton = new JButton("");
-		btnNewButton.setContentAreaFilled(false);
-		btnNewButton.setBorderPainted(false);
-		btnNewButton.setOpaque(false);
-		btnNewButton.setIcon(new ImageIcon("C:\\Users\\Admin\\git\\SoftwareProjekt\\view\\right.png"));
-		btnNewButton.setBounds(255, 11, 32, 23);
-		getContentPane().add(btnNewButton);
+		btnRechts = new JButton("");
+		btnRechts.setContentAreaFilled(false);
+		btnRechts.setBorderPainted(false);
+		btnRechts.setOpaque(false);
+		btnRechts.setIcon(new ImageIcon("C:\\Users\\Admin\\git\\SoftwareProjekt\\view\\right.png"));
+		btnRechts.setBounds(255, 11, 32, 23);
+		getContentPane().add(btnRechts);
 		
-		btnNewButton_1 = new JButton("");
-		btnNewButton_1.setBorderPainted(false);
-		btnNewButton_1.setContentAreaFilled(false);
-		btnNewButton_1.setIcon(new ImageIcon("C:\\Users\\Admin\\git\\SoftwareProjekt\\view\\left.png"));
-		btnNewButton_1.setBounds(49, 11, 50, 23);
-		getContentPane().add(btnNewButton_1);
+		btnLinks = new JButton("");
+		btnLinks.setBorderPainted(false);
+		btnLinks.setContentAreaFilled(false);
+		btnLinks.setIcon(new ImageIcon("C:\\Users\\Admin\\git\\SoftwareProjekt\\view\\left.png"));
+		btnLinks.setBounds(49, 11, 50, 23);
+		getContentPane().add(btnLinks);
 		
 		
 		setVisible(true);

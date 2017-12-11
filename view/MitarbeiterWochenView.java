@@ -7,7 +7,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -27,6 +29,9 @@ public class MitarbeiterWochenView extends JFrame implements ActionListener{
 	private JMenuItem mntmWocheAnzeigen,
 	mntmTerminErstellen, mntmTerminLoeschen, mntmTauschanfrageErstellen, mntmTauschanfrageLoeschen,
 	mntmTauschanfrageAnzeigen;
+	private JButton btnRechts,btnLinks;
+	
+	public JLabel lblKW1;
 	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -68,32 +73,28 @@ public class MitarbeiterWochenView extends JFrame implements ActionListener{
 		mnNewMenuIcon.setFont(new Font("Segoe UI", Font.PLAIN, 5));
 		menuBar.add(mnNewMenuIcon);*/
 		
-		mnWoche = new JMenu("Wochenplan");
-		mnWoche.setFont(new Font("VerdanaI", Font.PLAIN, 26));
-		menuBar.add(mnWoche);
-		
-		mntmWocheAnzeigen = new JMenuItem("anzeigen");
-		mntmWocheAnzeigen.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				//new Test();
-			}
-		});
-		mntmWocheAnzeigen.setHorizontalAlignment(SwingConstants.TRAILING);
-		mntmWocheAnzeigen.setFont(new Font("Verdana", Font.PLAIN, 21));
-		mnWoche.add(mntmWocheAnzeigen);
-		
 
-				
+		
 		mnTermin = new JMenu("Termin");
 		mnTermin.setFont(new Font("Dialog", Font.PLAIN, 26));
 		menuBar.add(mnTermin);
 		
 		mntmTerminErstellen = new JMenuItem("erstellen");
+		mntmTerminErstellen.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new TerminErstellenView();
+			}
+		});
 		mntmTerminErstellen.setHorizontalAlignment(SwingConstants.TRAILING);
 		mntmTerminErstellen.setFont(new Font("Verdana", Font.PLAIN, 21));
 		mnTermin.add(mntmTerminErstellen);
 		
 		mntmTerminLoeschen = new JMenuItem("löschen");
+		mntmTerminLoeschen.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new TerminLoeschenView();
+			}
+		});
 		mntmTerminLoeschen.setHorizontalAlignment(SwingConstants.TRAILING);
 		mntmTerminLoeschen.setFont(new Font("Verdana", Font.PLAIN, 21));
 		mnTermin.add(mntmTerminLoeschen);
@@ -102,17 +103,58 @@ public class MitarbeiterWochenView extends JFrame implements ActionListener{
 		mnTauschanfrage.setFont(new Font("Dialog", Font.PLAIN, 26));
 		menuBar.add(mnTauschanfrage);
 		
+		mntmTauschanfrageAnzeigen = new JMenuItem("anzeigen");
+		mntmTauschanfrageAnzeigen.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//new TauschanfrageAnzeigenView();
+			}
+		});
+		mntmTauschanfrageAnzeigen.setHorizontalAlignment(SwingConstants.TRAILING);
+		mntmTauschanfrageAnzeigen.setFont(new Font("Verdana", Font.PLAIN, 21));
+		mnTauschanfrage.add(mntmTauschanfrageAnzeigen);
+		
 		mntmTauschanfrageErstellen = new JMenuItem("erstellen");
+		mntmTauschanfrageErstellen.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new TauschanfrageErstellenView();
+			}
+		});
 		mntmTauschanfrageErstellen.setHorizontalAlignment(SwingConstants.TRAILING);
 		mntmTauschanfrageErstellen.setFont(new Font("Verdana", Font.PLAIN, 21));
 		mnTauschanfrage.add(mntmTauschanfrageErstellen);
 		
 		mntmTauschanfrageLoeschen = new JMenuItem("löschen");
+		mntmTauschanfrageLoeschen.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new TauschanfrageLoeschenView();
+			}
+		});
 		mntmTauschanfrageLoeschen.setHorizontalAlignment(SwingConstants.TRAILING);
 		mntmTauschanfrageLoeschen.setFont(new Font("Verdana", Font.PLAIN, 21));
 		mnTauschanfrage.add(mntmTauschanfrageLoeschen);
 		
-		mntmTauschanfrageAnzeigen = new JMenuItem("anzeigen");
+		lblKW1 = new JLabel("");
+		lblKW1.setFont(new Font("Tahoma", Font.BOLD, 13));
+		lblKW1.setBounds(109, 11, 136, 30);
+		getContentPane().add(lblKW1);
+		
+		JButton btnRechts = new JButton("");
+		btnRechts.setContentAreaFilled(false);
+		btnRechts.setBorderPainted(false);
+		btnRechts.setOpaque(false);
+		btnRechts.setIcon(new ImageIcon("C:\\Users\\Admin\\git\\SoftwareProjekt\\view\\right.png"));
+		btnRechts.setBounds(255, 11, 32, 23);
+		getContentPane().add(btnRechts);
+		
+		btnLinks = new JButton("");
+		btnLinks.setBorderPainted(false);
+		btnLinks.setContentAreaFilled(false);
+		btnLinks.setIcon(new ImageIcon("C:\\Users\\Admin\\git\\SoftwareProjekt\\view\\left.png"));
+		btnLinks.setBounds(49, 11, 50, 23);
+		getContentPane().add(btnLinks);
+		
+		
+
 		
 		
 		
