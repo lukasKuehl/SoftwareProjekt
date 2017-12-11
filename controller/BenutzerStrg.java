@@ -12,7 +12,7 @@ import view.Einsatzplanview;
  * @author 
  * @info Die Klasse BenutzerStrg dient dazu, jegliche Anfragen zu Benutzern durchzuführen und zu validieren.
  */
-public class BenutzerStrg {
+class BenutzerStrg {
 
 	//Initialisierung der Instanzvariablen
 	private EinsatzplanController myController = null;

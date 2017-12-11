@@ -10,7 +10,7 @@ import model.Einsatzplanmodel;
  * @author 
  * @info Die Klasse TerminStrg dient dazu, jegliche Anfragen zu Terminen durchzuführen und zu validieren.
  */
-public class TerminStrg {
+class TerminStrg {
 	
 	//Initialisierung der Instanzvariablen
 	private EinsatzplanController myController = null;

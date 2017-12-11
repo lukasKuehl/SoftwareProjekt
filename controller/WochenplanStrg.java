@@ -17,7 +17,7 @@ import model.Einsatzplanmodel;
  * @author Lukas
  * @info Die Klasse WochenplanStrg dient dazu, jegliche Anfragen bezüglich eines Wochenplanes im System zu verarbeiten und zu validieren.
  */
-public class WochenplanStrg {
+class WochenplanStrg {
 	
 	//Initialisierung der Instanzvariablen
 	private EinsatzplanController myController = null;

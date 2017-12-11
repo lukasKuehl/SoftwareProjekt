@@ -12,7 +12,7 @@ import model.Einsatzplanmodel;
  * @author Lukas Kühl
  * @info Die Klasse SchichtStrg dient dazu, jegliche Anfragen zu Schichten durchzuführen und zu validieren.
  */
-public class SchichtStrg {
+class SchichtStrg {
 
 	//Initialisierung der Instanzvariablen
 	private EinsatzplanController myController = null;

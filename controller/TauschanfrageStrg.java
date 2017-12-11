@@ -9,7 +9,7 @@ import model.Einsatzplanmodel;
  * @author Lukas
  * @info Die Klasse TauschanfrageStrg dient dazu Anfragen, welche sich auf Tauschanfragen beziehen zu bearbeiten und zu validieren. 
  */
-public class TauschanfrageStrg {
+class TauschanfrageStrg {
 	
 	//Initialsierung der Instanzvariablen
 	private EinsatzplanController myController = null;	
