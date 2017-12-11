@@ -2,7 +2,7 @@ package model;
 import java.sql.*;
 
 
-public class DBConnector {
+public class Datenbank_Connection{
 
 	private Connection con = null;	
 
@@ -14,7 +14,7 @@ public class DBConnector {
 	
 
 	
-	public DBConnector(){
+	public Datenbank_Connection(){
 		createCon();	
 	}
 	

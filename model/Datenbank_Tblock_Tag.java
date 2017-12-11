@@ -7,11 +7,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.LinkedList;
 
-import data.Ma_Schicht;
+import data.Tblock_Tag;
 
-public class Datenbank_Ma_Schicht {
+public class Datenbank_Tblock_Tag {
 
-	Datenbank_Connection db_con = new  Datenbank_Connection();
+	Datenbank_Connection db_con = new Datenbank_Connection();
 	Connection con = db_con.getCon();
 
 
@@ -20,28 +20,29 @@ public class Datenbank_Ma_Schicht {
 	 * @Anes Preljevic
 	 * @info 
 	 */
-	public void addMa_Schicht(Ma_Schicht ma_schicht) {
+	public void addTblock_Tag(Tblock_Tag tblock_tag) {
 
 		String sqlStatement;
-		sqlStatement = "insert into Ma_Schicht (Schichtnr,Benutzername) values(?, ?)";
+		sqlStatement = "insert into Tblock_Tag (tblocknr,tbez, wpnr) values(?, ?, ?)";
 		PreparedStatement pstmt = null;
 
 		try {
 			pstmt = con.prepareStatement(sqlStatement);
 
-			int schichtnr = ma_schicht.getSchichtnr();
-			String benutzername = ma_schicht.getBenutzername();;
+			int tblocknr = tblock_tag.getTblocknr();
+			String tbez = tblock_tag.getTbez();;
+			int wpnr = tblock_tag.getWpnr();
 		
 			
 			con.setAutoCommit(false);
 
-			if (checkMa_Schicht(schichtnr, benutzername)) {
-				deleteMa_Schicht(schichtnr,benutzername);
-				addMa_Schicht(ma_schicht);
+			if (checkTblock_Tag(tblocknr, tbez, wpnr)) {
+				deleteTblock_Tag(tblocknr, tbez, wpnr);
+				addTblock_Tag(tblock_tag);
 			} else {
-				pstmt.setInt(1, schichtnr);
-				pstmt.setString(2, benutzername);
-				
+				pstmt.setInt(1, tblocknr);
+				pstmt.setString(2, tbez);
+				pstmt.setInt(3, wpnr);
 			
 				pstmt.execute();
 				con.commit();
@@ -50,28 +51,29 @@ public class Datenbank_Ma_Schicht {
 			con.setAutoCommit(true);
 
 		} catch (SQLException sql) {
-			System.err.println("Methode addMa_Schicht SQL-Fehler: " + sql.getMessage());
+			System.err.println("Methode addtblocktag SQL-Fehler: " + sql.getMessage());
 			try {
 				con.rollback();
 				con.setAutoCommit(true);
 			} catch (SQLException sqlRollback) {
-				System.err.println("Methode addMa_Schicht " + "- Rollback -  SQL-Fehler: " + sqlRollback.getMessage());
+				System.err.println("Methode addtblocktag " + "- Rollback -  SQL-Fehler: " + sqlRollback.getMessage());
 			}
 		} finally {
 			try {
 				if (pstmt != null)
 					pstmt.close();
 			} catch (SQLException e) {
-				System.err.println("Methode addMa_Schicht(finally) SQL-Fehler: " + e.getMessage());
+				System.err.println("Methode addtblocktag(finally) SQL-Fehler: " + e.getMessage());
 			}
 		}
 	}
 
 	// Schicht vorhanden?
-	public boolean checkMa_Schicht(int schichtnr, String benutzername) {
+	public boolean checkTblock_Tag(int tblocknr, String tbez, int wpnr) {
 		Statement stmt = null;
 		ResultSet rs = null;
-		String sqlQuery = "select schichtnr, benutzernaeme from Ma_Schicht where schichtnr = '"+schichtnr+"' and benutzername= '"+benutzername+"'";
+		String sqlQuery = "select tblocknr, tbez from Tblock_Tag where tblocknr = '"+tblocknr+"' "
+				+ "and tbez= '"+tbez+"'and wpnr '"+wpnr+"'";
 
 		try {
 			stmt = con.createStatement();
@@ -79,7 +81,7 @@ public class Datenbank_Ma_Schicht {
 			return rs.next();
 
 		} catch (SQLException sql) {
-			System.err.println("Methode checkMa_Schicht SQL-Fehler: " + sql.getMessage());
+			System.err.println("Methode checkTblock_TagSQL-Fehler: " + sql.getMessage());
 			return false;
 		} finally {
 			try {
@@ -88,7 +90,7 @@ public class Datenbank_Ma_Schicht {
 				if (stmt != null)
 					stmt.close();
 			} catch (SQLException e) {
-				System.err.println("Methode checkMa_Schicht (finally) SQL-Fehler: " + e.getMessage());
+				System.err.println("Methode checkTblock_Tag (finally) SQL-Fehler: " + e.getMessage());
 			}
 		}
 	}
@@ -96,33 +98,33 @@ public class Datenbank_Ma_Schicht {
 
 
 	// Auslesen der Schichten aus der Datenbank und eintragen in eine LinkedList, welche übergeben wird
-	public LinkedList<Ma_Schicht> getMa_Schicht() {
+	public LinkedList<Tblock_Tag> getTblock_Tag() {
 
 		Statement stmt = null;
 		ResultSet rs = null;
 
-		String sqlStatement = "select Schichtnr, Benutzername from Ma_Schicht";
+		String sqlStatement = "select Tblocknr, Tbez, Wpnr from Tblock_Tag";
 
 		try {
 			stmt = con.createStatement();
 			rs = stmt.executeQuery(sqlStatement);
 
-			LinkedList<Ma_Schicht> ma_schichtList = new LinkedList<>();
+			LinkedList<Tblock_Tag> tblock_tagList = new LinkedList<>();
 
 			while (rs.next()) {
-				Ma_Schicht ms = new Ma_Schicht(sqlStatement,0);
+				Tblock_Tag tbt = new Tblock_Tag(0, sqlStatement,0);
 
-				ms.setSchichtnr(rs.getInt("Schichtnr"));
-				ms.setBenutzername(rs.getString("Benutzername"));
+				tbt.setTblocknr(rs.getInt("Tblocknr"));
+				tbt.setTbez(rs.getString("Tbez"));
+				tbt.setWpnr(rs.getInt("Wpnr"));
 				
-				
-				ma_schichtList.add(ms);
+				tblock_tagList.add(tbt);
 			}
 
 			rs.close();
 			stmt.close();
 
-			return ma_schichtList;
+			return tblock_tagList;
 
 		} catch (SQLException sql) {
 			return null;
@@ -130,10 +132,11 @@ public class Datenbank_Ma_Schicht {
 	}
 
 	// Mitarbeiter aus der Schicht löschen, Datensatz aus MA_Schicht entfernen
-	public boolean deleteMa_Schicht(int schichtnr, String benutzername) {
+	public boolean deleteTblock_Tag(int tblocknr, String tbez, int wpnr) {
 		Statement stmt = null;
 		ResultSet rs = null;
-		String sqlQuery = "DELETE FROM Ma_Schicht WHERE Schichtnr = "+schichtnr+" and Benutzername= "+benutzername+"";
+		String sqlQuery = "DELETE FROM Tblock_Tag WHERE Tblocknr = "+tblocknr+""
+				+ " and Tbez= "+tbez+"and Wpnr= "+wpnr+"";
 
 		try {
 			stmt = con.createStatement();
@@ -148,7 +151,7 @@ public class Datenbank_Ma_Schicht {
 				if (stmt != null)
 					stmt.close();
 			} catch (SQLException e) {
-				System.err.println("Methode deleteMa_Schicht (finally) SQL-Fehler: " + e.getMessage());
+				System.err.println("Methode deleteTblock_Tag (finally) SQL-Fehler: " + e.getMessage());
 			}
 		}
 	}
