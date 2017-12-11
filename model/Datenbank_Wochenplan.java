@@ -329,5 +329,23 @@ public class Datenbank_Wochenplan {
 //		pstmt.setNull(4, java.sql.Types.INTEGER);
 //	else
 //		pstmt.setInt(4, Integer.parseInt(tmp[3]));
-	
+	private static int getNewWpnr(Connection con) {
+		Statement stmt = null;
+		ResultSet rs = null;
+		String sqlQuery = "select max (wpnr)+1 from Wochenplan";
+
+		try {
+			stmt = con.createStatement();
+			rs = stmt.executeQuery(sqlQuery);
+			rs.next();
+			int maxWpnr = rs.getInt(1);
+			rs.close();
+			stmt.close();
+			return maxWpnr;
+		} catch (SQLException sql) {
+			System.err.println("Methode getNewEmpno SQL-Fehler: "
+					+ sql.getMessage());
+			return -1;
+		}
+	}
 }
