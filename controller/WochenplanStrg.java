@@ -3,6 +3,10 @@ package controller;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Map;
 import java.util.TreeMap;
 
 import javax.swing.JDialog;
@@ -10,6 +14,11 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
 
+import com.sun.org.apache.xerces.internal.util.SynchronizedSymbolTable;
+
+import data.Mitarbeiter;
+import data.Standardeinstellungen;
+import data.Userrecht;
 import data.Wochenplan;
 import model.Einsatzplanmodel;
 
@@ -37,9 +46,55 @@ class WochenplanStrg {
 	 * @author 
 	 * @info Anlegen eines neuen Wochenplanes und hinterlegen des Planes in der Datenbank inklusive der spezifischen Restriktionen für die zu erstellende Woche(benutzerdefiniert/Standard)
 	 */
-	protected JTable erstelleWochenplanCustom(String username, TreeMap<String, String> zeiten, TreeMap<String, Integer> besetzung){
-		JTable wochenplan = null;
+	protected boolean erstelleWochenplanCustom(String username, String wpbez, TreeMap<String, String> zeiten, TreeMap<String, Integer> besetzung){
+		boolean success = false;
+		
+		//Standardeinstellungen settings = new Standardeinstellungen(zeiten.get("Öffnungszeit"), zeiten.get("Schließzeit"), zeiten.get("Hauptzeitbeginn"), zeiten.get("Hauptzeitende"), 18, besetzung.get("MehrBesetzungKasse"), besetzung.get("MinBesetzungKasse"), besetzung.get("MinBesetzungWarenInfo"), besetzung.get("MinBesetzungTechnikInfo"));
 		/*
+		
+		Mitarbeiter user = Einsatzplanmodel.getMitarbeiter(username);
+		
+		Userrecht recht = Einsatzplanmodel.getUserrecht(user.getJob());
+				
+		if(recht.getBenutzerrolle().equals("Chef")){
+					
+			
+			
+			Map<String, Date> zeitenDate = new TreeMap<String, Date>();
+			
+			for(String key : zeiten.keySet()){
+				
+				String zeitString = zeiten.get(key);
+				SimpleDateFormat format = new SimpleDateFormat("hh:mm");
+								
+				try{
+					Date temp = format.parse(zeitString);				
+					zeitenDate.put(key, temp);			
+					
+				}catch(Exception e){
+					System.out.println("Fehler beim Konvertieren eines Datums");					
+				}
+				
+				//Prüfe, ob die Zeiten den Vorgaben entsprechen
+				boolean zeitenOk = checkZeiten(zeitenDate);
+				
+				
+				//
+				if(zeitenOk){
+					
+				}
+					
+				
+				
+				
+				
+			}		
+		}
+		else{
+			System.out.println("Der Benutzer verfügt nicht über die notwendigen Berechtigungen zum Anlegen eines neuen Einsatzplanes!");
+		}		
+		
+		
 		//ausfüllen
 		
 		
@@ -91,69 +146,28 @@ class WochenplanStrg {
        wochenplan.setFillsViewportHeight(true);         
        */
        
-       return wochenplan;
-   }	
-		
+       return success;
+   }
+
 	/**
 	 * @author 
 	 * @info Anlegen eines neuen Wochenplanes und hinterlegen des Planes in der Datenbank inklusive der spezifischen Restriktionen für die zu erstellende Woche(benutzerdefiniert/Standard)
 	 */
-	protected JTable erstelleWochenplanStandard(String username){
+	protected JTable generiereWochenplanView(String wpbez){
 		JTable wochenplan = null;
-		/*
-		//ausfüllen
+		
+		//Standardeinstellungen settings = Einsatzplanmodel.getStandardeinstellungen();
 		
 		
-		Wochenplan wp = new Wochenplan("lkuehl", "08:00", "20:00", "10:00", "18:00", 4, 1,1,6,1,1);
 		
-		String[] title = {"Mitarbeiter", "Montag", "Dienstag","Mittwoch", "Donnerstag", "Freitag", "Samstag"};
-        
-        // 2D array is used for data in table
-        String[][] data = {{"Lukas Kühl", "08:00-15:00" + "-" +"13:00-20:00", "-", "08:00-15:00", "-", "13:00-20:00", "-"},
-                };
+		
+		
+		
+		
+         return wochenplan;
+       }
 
-        // Creates Table
-        wochenplan = new JTable(data, title)
-        {       	  
-      	  
-             // Determines if data can be entered by users
-             public boolean isCellEditable(int data, int columns)
-             {
-                 return false;
-             }
- 
-             //  Creates cells for the table         
-             public Component prepareRenderer(
-                          TableCellRenderer r, int rows, int columns)
-             {
-                 Component c = super.prepareRenderer(r, rows, columns);                
-                
-                 if(data[rows][columns].equals("noch nicht belegt!")){
-                  	   c.setBackground(Color.RED);
-                 }
-                     
-                 if(data[rows][columns].startsWith("Kasse")){                	  
-              	   //jt.setRowHeight(rows, 3);
-              	   c.setBackground(Color.GREEN);
-                 }
-                    
-                 if( data[rows][columns].startsWith("0") || data[rows][columns].startsWith("1")){                	  
-              	   c.setBackground(Color.WHITE);
-                 } 
-  
-                 return c;
-             }
-       };
-
-       // Set size of table     
-       wochenplan.setPreferredScrollableViewportSize(new Dimension(770, 340));         
-       // This will resize the height of the table automatically 
-       // to all data without scrolling. 
-       wochenplan.setFillsViewportHeight(true);         
-       */
-       
-       return wochenplan;
-   }	
+    
 
 		
 	/**
@@ -190,20 +204,7 @@ class WochenplanStrg {
 		//ausfüllen
 		
 		return success;
-	}
-		
-	//Vielleicht gar nicht mehr erforderlich?
-	/**
-	 * @author 
-	 * @info Hinterlegen eines Wochenplanes mit dem derzeitigen Stand und Veröffentlichungsstatus im System
-	 */
-	protected boolean sichereWochenplan(String username, String wpbez, JTable wochenplan){
-		boolean success = false;
-		//ausfüllen
-		
-		return success;
-	}
-	
+	}	
 	
 	/**
 	 * @author 
@@ -215,5 +216,18 @@ class WochenplanStrg {
 		
 		
 	}
+	
+	
+	/**
+	 * @author Lukas Kühl
+	 * @info Hilfsmethode zum Prüfen der Struktur von Öffnungs- und Hauptzeiten
+	 */
+	private boolean checkZeiten(Map<String, Date> zeitenDate) {
+		return ((zeitenDate.get("Öffnungszeit").before(zeitenDate.get("HauptzeitBeginn"))) && (zeitenDate.get("HauptzeitBeginn").before(zeitenDate.get("HauptzeitEnde"))) && (zeitenDate.get("HauptzeitEnde").before(zeitenDate.get("Schließzeit")))); 
+			
+	}
+	
+	
+	
 	
 }

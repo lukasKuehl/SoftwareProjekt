@@ -206,15 +206,15 @@ public class EinsatzplanController {
 		return result;		
 	}
 	
-	public JTable erstelleWochenplanStandard(String username){
+	public JTable generiereWochenplanView(String wpbez){
 		
 		JTable result = null;
 		try{
-			result = this.wochenplanSteuerung.erstelleWochenplanStandard(username);
+			result = this.wochenplanSteuerung.generiereWochenplanView(wpbez);
 			
 		}catch(Exception e){
 			System.out.println("Fehler innerhalb des Controllers:");
-			System.out.println("Fehler beim Aufruf der Methode erstelleWochenplanStandard:");
+			System.out.println("Fehler beim Aufruf der Methode generiereWochenplanView:");
 			e.printStackTrace();			
 		}	
 		
@@ -222,11 +222,11 @@ public class EinsatzplanController {
 	
 	}
 	
-	public JTable erstelleWochenplanCustom(String username, TreeMap<String, String> zeiten, TreeMap<String, Integer> besetzung  ){
+	public boolean erstelleWochenplanCustom(String username, String wpbez, TreeMap<String, String> zeiten, TreeMap<String, Integer> besetzung  ){
 		
-		JTable result = null;
+		boolean success = false;
 		try{
-			result = this.wochenplanSteuerung.erstelleWochenplanCustom(username, zeiten, besetzung);
+			success = this.wochenplanSteuerung.erstelleWochenplanCustom(username, wpbez, zeiten, besetzung);
 			
 		}catch(Exception e){
 			System.out.println("Fehler innerhalb des Controllers:");
@@ -234,7 +234,7 @@ public class EinsatzplanController {
 			e.printStackTrace();			
 		}	
 		
-		return result;		
+		return success;		
 	}
 	
 	public boolean publishWochenplan(String username, String wpbez){

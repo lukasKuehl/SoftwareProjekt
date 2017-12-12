@@ -29,6 +29,7 @@ class TerminStrg {
 	/**
 	 * @author 
 	 * @info Hinterlegen eines neuen Termin/Krankmeldung/Urlaubstages im System 
+	 * Keys in der 
 	 */
 	protected boolean erstelleTermin(String username, String bez, TreeMap<String,String> zeitraum, String grund ){
 		boolean success = false;	
