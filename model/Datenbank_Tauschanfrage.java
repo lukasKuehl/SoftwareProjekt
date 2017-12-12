@@ -11,14 +11,19 @@ import data.Tauschanfrage;
 
 public class Datenbank_Tauschanfrage {
 
+
+
 	Datenbank_Connection db_con = new Datenbank_Connection();
 	Connection con = db_con.getCon();
 
 
 
 
-	// Schichten in Tabelle Schicht hinzufg
-	public void addTauschanfrage(Tauschanfrage tauschanfrage) {
+	/**
+	 * @Anes Preljevic 
+	 * @info  Fügt eine neue Tauschanfrage in der Tabelle Tauschanfrage hinzu
+	 */
+	protected void addTauschanfrage(Tauschanfrage tauschanfrage) {
 
 		String sqlStatement;
 		sqlStatement = "insert into Tauchanfrage (empfänger, sender, bestätigungsstatus,"
@@ -71,8 +76,11 @@ public class Datenbank_Tauschanfrage {
 		}
 	}
 
-	// Schicht vorhanden?
-	public boolean checkTauschanfrage(int tauschnr) {
+	/**
+	 * @Anes Preljevic
+	 * @info Prüft ob es zu der eingegebenen tauschnr bereits eine Tauschtanfrage gibt, bei existenz return true, sonst false
+	 */
+	private boolean checkTauschanfrage(int tauschnr) {
 		Statement stmt = null;
 		ResultSet rs = null;
 		String sqlQuery = "select tauschnr from Tauschanfrage where tauschnr = " + tauschnr;
@@ -97,8 +105,11 @@ public class Datenbank_Tauschanfrage {
 		}
 	}
 
-	// Schichten in der Tabelle Schicht bearbeiten
-	private void updateTauschanfrage(Tauschanfrage tauschanfrage) {
+	/**
+	 * @Anes Preljevic
+	 * @info Ändert den Bestätigungsstatus der übergebenen Tauschanfrage
+	 */
+	protected void updateTauschanfrage(Tauschanfrage tauschanfrage) {
 
 
 		boolean bestätigungsstatus = tauschanfrage.isBestätigungsstatus();
@@ -141,8 +152,11 @@ public class Datenbank_Tauschanfrage {
 		}
 	}
 
-	// Auslesen der Schichten aus der Datenbank und eintragen in eine LinkedList, welche übergeben wird
-	public LinkedList<Tauschanfrage> getTauschanfrage() {
+	/**
+	 * @Anes Preljevic
+	 * @info Auslesen der Tauschanfragen aus der Datenbank und hinzufügen in eine Liste, welche den Ausgabewert darstellt 
+	 */
+	protected LinkedList<Tauschanfrage> getTauschanfrage() {
 
 		Statement stmt = null;
 		ResultSet rs = null;
@@ -179,8 +193,11 @@ public class Datenbank_Tauschanfrage {
 		}
 	}
 
-	// Schicht aus einem Tag löschen/wp
-	public boolean deleteTauschanfrage(int tauschnr) {
+	/**
+	 * @Anes Preljevic
+	 * @info Löschen einer Tauschanfrage aus der Datenbank Tabelle Tauschanfrage
+	 */
+	protected void deleteTauschanfrage(int tauschnr) {
 		Statement stmt = null;
 		ResultSet rs = null;
 		String sqlQuery = "DELETE FROM Tauschanfrage WHERE Tauschnr= "+tauschnr;
@@ -188,9 +205,21 @@ public class Datenbank_Tauschanfrage {
 		try {
 			stmt = con.createStatement();
 			rs = stmt.executeQuery(sqlQuery);
-			return true;
+			
+			con.commit();
+
+			con.setAutoCommit(true);
+			
 		} catch (SQLException sql) {
-			return false;
+			System.err.println("Methode updateTauschanfrage SQL-Fehler: " + sql.getMessage());
+			try {
+				
+				con.rollback();
+				con.setAutoCommit(true);
+			
+			} catch (SQLException sqlRollback) {
+					System.err.println("Methode updateTauschanfrage " + "- Rollback -  SQL-Fehler: " + sqlRollback.getMessage());
+				}
 		} finally {
 			try {
 				if (rs != null)
@@ -201,5 +230,6 @@ public class Datenbank_Tauschanfrage {
 				System.err.println("Methode deleteTauschanfrage (finally) SQL-Fehler: " + e.getMessage());
 			}
 		}
+		
 	}
 }
