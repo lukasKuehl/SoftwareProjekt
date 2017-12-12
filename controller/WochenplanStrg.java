@@ -43,25 +43,23 @@ class WochenplanStrg {
 	}
 	
 	/**
-	 * @author 
-	 * @info Anlegen eines neuen Wochenplanes und hinterlegen des Planes in der Datenbank inklusive der spezifischen Restriktionen für die zu erstellende Woche(benutzerdefiniert/Standard)
+	 * @author Lukas Kühl
+	 * @info Anlegen eines neuen Wochenplanes nach benuterdefinierten Einstellungen und hinterlegen des Planes in der Datenbank inklusive der spezifischen Restriktionen
+	 * @info Keys der "zeiten" Map: "Öffnungszeit", "HauptzeitBeginn", "HauptzeitEnde", "Schließzeit" 
+	 * @info Keys der "besetzung" Map: "MinBesetzungKasse", "MinBesetzungInfoWaren", "MinBesetzungInfoTechnik", "MehrbesetzungKasse"
 	 */
 	protected boolean erstelleWochenplanCustom(String username, String wpbez, TreeMap<String, String> zeiten, TreeMap<String, Integer> besetzung){
-		boolean success = false;
-		
-		//Standardeinstellungen settings = new Standardeinstellungen(zeiten.get("Öffnungszeit"), zeiten.get("Schließzeit"), zeiten.get("Hauptzeitbeginn"), zeiten.get("Hauptzeitende"), 18, besetzung.get("MehrBesetzungKasse"), besetzung.get("MinBesetzungKasse"), besetzung.get("MinBesetzungWarenInfo"), besetzung.get("MinBesetzungTechnikInfo"));
+		boolean success = false;		
 		/*
-		
 		Mitarbeiter user = Einsatzplanmodel.getMitarbeiter(username);
 		
 		Userrecht recht = Einsatzplanmodel.getUserrecht(user.getJob());
 				
-		if(recht.getBenutzerrolle().equals("Chef")){
-					
-			
+		if(recht.getBenutzerrolle().equals("Chef")){		
 			
 			Map<String, Date> zeitenDate = new TreeMap<String, Date>();
 			
+			// Iteriere durch die TreeMap mit den Angaben zu den Zeiten für den neuen Wochenplan und übertrage die Werte, falls möglich in eine neue Map mit dem Typ java.util.Date
 			for(String key : zeiten.keySet()){
 				
 				String zeitString = zeiten.get(key);
@@ -73,96 +71,97 @@ class WochenplanStrg {
 					
 				}catch(Exception e){
 					System.out.println("Fehler beim Konvertieren eines Datums");					
-				}
+				}				
 				
+			}
 				//Prüfe, ob die Zeiten den Vorgaben entsprechen
-				boolean zeitenOk = checkZeiten(zeitenDate);
-				
-				
-				//
-				if(zeitenOk){
+			if(checkZeitenWochenplan(zeitenDate)){
 					
+				boolean checkbesetzung = true;					
+			
+				//Überprüfung vllt. schon in der View					
+				//Prüfe, ob es negative Werte in der vorhandenen Besetzung-Map gibt
+				for(String s : besetzung.keySet()){
+					if(besetzung.get(s) < 0){
+						checkbesetzung = false;
+					}						
 				}
 					
-				
-				
-				
-				
-			}		
+				//Alle Anforderungen wurden erfüllt --> ein neuer Wochenplan kann im System hinterlegt werden
+				if(checkbesetzung){
+					Wochenplan wp = new Wochenplan(0, false, zeiten.get("Öffnungszeit"), zeiten.get("Schließzeit"), zeiten.get("HauptzeitBeginn"), zeiten.get("HauptzeitEnde"), this.myController.getView().getUsername(), besetzung.get("MinBesetzungInfoTechnik"), besetzung.get("MinBesetzungInfoWaren"), besetzung.get("MinBesetzungKasse"), besetzung.get("MehrbesetzungKasse"));
+					this.myModel.addWochenplan(wp);
+					
+					if(this.myModel.getWochenplan(wp.getWpnr()) != null){
+						success = true;
+					}
+					
+				}
+				else{
+					System.out.println("Fehler beim Erstellen eines neuen Wochenplanes:");
+					System.out.println("Die Besetzungsanzahl darf nicht negativ sein!");
+				}						
+			}
+			else{
+				System.out.println("Fehler beim Erstellen eines neuen Wochenplanes:");
+				System.out.println("Die Angaben zu den Öffnungs- und Hauptzeiten sind fehlerhaft!");
+			}					
 		}
 		else{
+			System.out.println("Fehler beim Erstellen eines neuen Wochenplanes:");
 			System.out.println("Der Benutzer verfügt nicht über die notwendigen Berechtigungen zum Anlegen eines neuen Einsatzplanes!");
-		}		
-		
-		
-		//ausfüllen
-		
-		
-		Wochenplan wp = new Wochenplan("lkuehl", "08:00", "20:00", "10:00", "18:00", 4, 1,1,6,1,1);
-		
-		String[] title = {"Mitarbeiter", "Montag", "Dienstag","Mittwoch", "Donnerstag", "Freitag", "Samstag"};
-        
-        // 2D array is used for data in table
-        String[][] data = {{"Lukas Kühl", "08:00-15:00" + "-" +"13:00-20:00", "-", "08:00-15:00", "-", "13:00-20:00", "-"},
-                };
-
-        // Creates Table
-        wochenplan = new JTable(data, title)
-        {       	  
-      	  
-             // Determines if data can be entered by users
-             public boolean isCellEditable(int data, int columns)
-             {
-                 return false;
-             }
- 
-             //  Creates cells for the table         
-             public Component prepareRenderer(
-                          TableCellRenderer r, int rows, int columns)
-             {
-                 Component c = super.prepareRenderer(r, rows, columns);                
-                
-                 if(data[rows][columns].equals("noch nicht belegt!")){
-                  	   c.setBackground(Color.RED);
-                 }
-                     
-                 if(data[rows][columns].startsWith("Kasse")){                	  
-              	   //jt.setRowHeight(rows, 3);
-              	   c.setBackground(Color.GREEN);
-                 }
-                    
-                 if( data[rows][columns].startsWith("0") || data[rows][columns].startsWith("1")){                	  
-              	   c.setBackground(Color.WHITE);
-                 } 
-  
-                 return c;
-             }
-       };
-
-       // Set size of table     
-       wochenplan.setPreferredScrollableViewportSize(new Dimension(770, 340));         
-       // This will resize the height of the table automatically 
-       // to all data without scrolling. 
-       wochenplan.setFillsViewportHeight(true);         
-       */
-       
-       return success;
+		}	
+		*/
+	return success;
    }
-
+	
+	/**
+	 * @author Lukas Kühl
+	 * @info Anlegen eines neuen Wochenplanes nach standardmäßigen Einstellungen. Auslesen der momentanen Standardeinstellungen aus der Datenbank und hinterlegen des erstellten Planes in der Datenbank.
+	 */
+	protected boolean erstelleWochenplanStandard(String username, String wpbez){
+		
+		boolean success = false;
+		/*
+		Mitarbeiter user = Einsatzplanmodel.getMitarbeiter(username);
+		
+		Userrecht recht = Einsatzplanmodel.getUserrecht(user.getJob());
+				
+		if(recht.getBenutzerrolle().equals("Chef")){	
+			
+			try{
+				Standardeinstellungen settings = this.myModel.getStandardeinstellungen();				
+				Wochenplan wp = new Wochenplan(0, false, settings.getÖffnungszeit(), settings.getSchließzeit(), settings.getHauptzeitbeginn(), settings.getHauptzeitende(), this.myController.getView().getUsername(), settings.getMinanzinfot(), settings.getMinanzinfow(), settings.getMinanzkasse(), settings.getMehrbesetzungkasse());
+				this.myModel.addWochenplan(wp);
+				
+				if(this.myModel.getWochenplan(wp.getWpnr()) != null){
+					success = true;
+				}				
+				
+			}catch(Exception e){
+				System.out.println("Fehler beim Erstellen eines neuen Wochenplanes nach Standardeinstellungen:");
+				System.out.println("Die Standardeinstellungen wurden nicht richtig übernommen!");
+				e.printStackTrace();
+			}			
+		}
+		else{
+			System.out.println("Fehler beim Erstellen eines neuen Wochenplanes:");
+			System.out.println("Der Benutzer verfügt nicht über die notwendigen Berechtigungen zum Anlegen eines neuen Einsatzplanes!");
+		}	
+		*/
+		
+		return success;
+	}
+	
+	
+	
 	/**
 	 * @author 
-	 * @info Anlegen eines neuen Wochenplanes und hinterlegen des Planes in der Datenbank inklusive der spezifischen Restriktionen für die zu erstellende Woche(benutzerdefiniert/Standard)
+	 * @info Erzeugen eines Einsatzplanes in Form eines JTables zur Ansicht in der View
 	 */
 	protected JTable generiereWochenplanView(String wpbez){
-		JTable wochenplan = null;
-		
-		//Standardeinstellungen settings = Einsatzplanmodel.getStandardeinstellungen();
-		
-		
-		
-		
-		
-		
+		JTable wochenplan = null;	
+			//Ausfüllen
 		
          return wochenplan;
        }
@@ -208,9 +207,9 @@ class WochenplanStrg {
 	
 	/**
 	 * @author 
-	 * @info Hilfsmethode zum erstellen von Vorgaben für einen Wochenplan 
+	 * @info Hilfsmethode zum ändern der hinterlegten Standardeinstellungen für einen Wochenplan in der Datenbank.
 	 */
-	private void erstelleVorgaben(Wochenplan wp, boolean standard){
+	private void bearbeiteStandardeinstellungen(Standardeinstellungen settings){
 		
 		//ausfüllen
 		
@@ -220,14 +219,9 @@ class WochenplanStrg {
 	
 	/**
 	 * @author Lukas Kühl
-	 * @info Hilfsmethode zum Prüfen der Struktur von Öffnungs- und Hauptzeiten
+	 * @info Hilfsmethode zum Prüfen der Struktur von Öffnungs- und Hauptzeiten(die richtige Struktur ist Öffnungszeit --> Hauptzeitbeginn --> HauptzeitEnde --> Schließzeit) 
 	 */
-	private boolean checkZeiten(Map<String, Date> zeitenDate) {
-		return ((zeitenDate.get("Öffnungszeit").before(zeitenDate.get("HauptzeitBeginn"))) && (zeitenDate.get("HauptzeitBeginn").before(zeitenDate.get("HauptzeitEnde"))) && (zeitenDate.get("HauptzeitEnde").before(zeitenDate.get("Schließzeit")))); 
-			
-	}
-	
-	
-	
-	
+	private boolean checkZeitenWochenplan(Map<String, Date> zeitenDate) {
+		return ((zeitenDate.get("Öffnungszeit").before(zeitenDate.get("HauptzeitBeginn"))) && (zeitenDate.get("HauptzeitBeginn").before(zeitenDate.get("HauptzeitEnde"))) && (zeitenDate.get("HauptzeitEnde").before(zeitenDate.get("Schließzeit")))); 		
+	}	
 }
