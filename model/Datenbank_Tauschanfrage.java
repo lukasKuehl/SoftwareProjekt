@@ -9,12 +9,18 @@ import java.util.LinkedList;
 
 import data.Tauschanfrage;
 
-public class Datenbank_Tauschanfrage {
+class Datenbank_Tauschanfrage {
 
 
 
 	Datenbank_Connection db_con = new Datenbank_Connection();
 	Connection con = db_con.getCon();
+
+	private Einsatzplanmodel myModel = null;
+
+	protected Datenbank_Tauschanfrage(Einsatzplanmodel mymodel) {
+	this.myModel = myModel;
+	}
 
 
 
@@ -231,5 +237,24 @@ public class Datenbank_Tauschanfrage {
 			}
 		}
 		
+	}
+	protected  int getNewTauschnr(Connection con) {
+		Statement stmt = null;
+		ResultSet rs = null;
+		String sqlQuery = "select max (tauschnr)+1 from Tauschanfrage";
+
+		try {
+			stmt = con.createStatement();
+			rs = stmt.executeQuery(sqlQuery);
+			rs.next();
+			int maxTauschnr = rs.getInt(1);
+			rs.close();
+			stmt.close();
+			return maxTauschnr;
+		} catch (SQLException sql) {
+			System.err.println("Methode getNewEmpno SQL-Fehler: "
+					+ sql.getMessage());
+			return -1;
+		}
 	}
 }

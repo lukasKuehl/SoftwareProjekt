@@ -20,15 +20,21 @@ import data.Tag;
 
 import data.Wochenplan;
 
-public class Datenbank_Wochenplan {
+class Datenbank_Wochenplan {
 
 	Datenbank_Connection db_con = new Datenbank_Connection();
 	Connection con = db_con.getCon();
+	private Einsatzplanmodel myModel = null;
+
+	protected Datenbank_Wochenplan(Einsatzplanmodel mymodel) {
+	this.myModel = myModel;
+	}
+
 
 	
 
 	// Wochenplan in tabelle Wochenplan hinzuf
-	public void addWochenplan(Wochenplan wochenplan) {
+	protected void addWochenplan(Wochenplan wochenplan) {
 
 		String sqlStatement;
 		sqlStatement = "insert into WOCHENPLAN (Wpnr, Oeffentlichstatus, Oeffnungszeit, Schließzeit,"
@@ -112,7 +118,7 @@ public class Datenbank_Wochenplan {
 	}
 
 	// Kontrolle ob Wochenplan vorhanden 
-	public boolean checkWochenplan(int wpnr) {
+	protected boolean checkWochenplan(int wpnr) {
 		Statement stmt = null;
 		ResultSet rs = null;
 		String sqlQuery = "select wpnr from Wochenplan where wpnr = " + wpnr;
@@ -138,7 +144,7 @@ public class Datenbank_Wochenplan {
 	}
 
 	// Wochenplan in der Tabelle Wochenplan bearbeiten
-	public void updateWochenplan(Wochenplan wochenplan) {
+	protected void updateWochenplan(Wochenplan wochenplan) {
 
 		int wpnr = wochenplan.getWpnr();
 		boolean öffentlichstatus = wochenplan.isÖffentlichstatus();
@@ -184,7 +190,7 @@ public class Datenbank_Wochenplan {
 	}
 
 	// Auslesen der Wochenpläne aus der Datenbank und eintragen in eine TreeMap, welche Übergeben wird
-	public TreeMap<Integer , Wochenplan> getWochenpläne() {
+	protected TreeMap<Integer , Wochenplan> getWochenpläne() {
 
 		//Datenbank_Tag tag = new Datenbank_Tag();
 		//Datenbank_Schicht schicht = new Datenbank_Schicht();
@@ -244,7 +250,7 @@ public class Datenbank_Wochenplan {
 		}
 	}
 	// Auslesen der Wochenpläne aus der Datenbank und eintragen in eine TreeMap, welche Übergeben wird
-	public Wochenplan getWochenplan(int wpnr) {
+	protected Wochenplan getWochenplan(int wpnr) {
 
 		//Datenbank_Tag tag = new Datenbank_Tag();
 		//Datenbank_Schicht schicht = new Datenbank_Schicht();
@@ -302,7 +308,7 @@ public class Datenbank_Wochenplan {
 	}
 
 	// Student aus der tabelle Wochenplan löschen 
-	public boolean deleteWochenplan(int wpnr) {
+	protected boolean deleteWochenplan(int wpnr) {
 		Statement stmt = null;
 		ResultSet rs = null;
 		String sqlQuery = "DELETE FROM WOCHENPLAN WHERE Wpnr = " + wpnr;
@@ -329,7 +335,7 @@ public class Datenbank_Wochenplan {
 //		pstmt.setNull(4, java.sql.Types.INTEGER);
 //	else
 //		pstmt.setInt(4, Integer.parseInt(tmp[3]));
-	private static int getNewWpnr(Connection con) {
+	protected  int getNewWpnr(Connection con) {
 		Statement stmt = null;
 		ResultSet rs = null;
 		String sqlQuery = "select max (wpnr)+1 from Wochenplan";

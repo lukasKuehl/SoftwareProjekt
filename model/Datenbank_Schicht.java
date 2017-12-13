@@ -9,14 +9,20 @@ import java.util.LinkedList;
 
 import data.Schicht;
 
-public class Datenbank_Schicht {
+class Datenbank_Schicht {
 
 	Datenbank_Connection db_con = new Datenbank_Connection();
 	Connection con = db_con.getCon();
 
+	private Einsatzplanmodel myModel = null;
+
+	protected Datenbank_Schicht(Einsatzplanmodel mymodel) {
+	this.myModel = myModel;
+	}
+
 
 	// Schichten in Tabelle Schicht hinzufg
-	public void addSchicht(Schicht schicht) {
+	protected void addSchicht(Schicht schicht) {
 
 		String sqlStatement;
 		sqlStatement = "insert into Schicht (Schichtnr,Tbez,Wpnr) values( ?, ?, ?)";
@@ -63,7 +69,7 @@ public class Datenbank_Schicht {
 	}
 
 	// Schicht vorhanden?
-	public boolean checkSchicht(int schichtnr) {
+	protected boolean checkSchicht(int schichtnr) {
 		Statement stmt = null;
 		ResultSet rs = null;
 		String sqlQuery = "select schichtnr from Schicht where schichtnr = " + schichtnr;
@@ -91,7 +97,7 @@ public class Datenbank_Schicht {
 
 
 	// Auslesen der Schichten aus der Datenbank und eintragen in eine LinkedList, welche übergeben wird
-	public LinkedList<Schicht> getSchicht() {
+	protected LinkedList<Schicht> getSchicht() {
 
 		Statement stmt = null;
 		ResultSet rs = null;
@@ -123,7 +129,7 @@ public class Datenbank_Schicht {
 			return null;
 		}
 	}
-	public LinkedList<Schicht> getdieSchicht(int schichtnr) {
+	protected LinkedList<Schicht> getdieSchicht(int schichtnr) {
 
 		Statement stmt = null;
 		ResultSet rs = null;
@@ -157,7 +163,7 @@ public class Datenbank_Schicht {
 	}
 
 	// Schicht aus einem Tag löschen/wp
-	public boolean deleteSchicht(int schichtnr) {
+	protected boolean deleteSchicht(int schichtnr) {
 		Statement stmt = null;
 		ResultSet rs = null;
 		String sqlQuery = "DELETE FROM Schicht WHERE Schichtnr= "+schichtnr;
@@ -177,6 +183,25 @@ public class Datenbank_Schicht {
 			} catch (SQLException e) {
 				System.err.println("Methode deleteSchicht (finally) SQL-Fehler: " + e.getMessage());
 			}
+		}
+	}
+	protected  int getNewSchichtnr(Connection con) {
+		Statement stmt = null;
+		ResultSet rs = null;
+		String sqlQuery = "select max (schichtnr)+1 from Schicht";
+
+		try {
+			stmt = con.createStatement();
+			rs = stmt.executeQuery(sqlQuery);
+			rs.next();
+			int maxSchichtnr = rs.getInt(1);
+			rs.close();
+			stmt.close();
+			return maxSchichtnr;
+		} catch (SQLException sql) {
+			System.err.println("Methode getNewEmpno SQL-Fehler: "
+					+ sql.getMessage());
+			return -1;
 		}
 	}
 }

@@ -1,8 +1,8 @@
 package data;
 	
 public class Ma_Schicht {
-	private String benutzername;
-	private int schichtnr;
+	private String benutzername=null;
+	private int schichtnr =0;
 	
 	public Ma_Schicht(String benutzername, int schichtnr){
 		this.benutzername=benutzername;

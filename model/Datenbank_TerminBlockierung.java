@@ -9,17 +9,24 @@ import java.util.LinkedList;
 
 import data.TerminBlockierung;
 
-public class Datenbank_TerminBlockierung {
+class Datenbank_TerminBlockierung {
 
 	Datenbank_Connection db_con = new Datenbank_Connection();
 	Connection con = db_con.getCon();
+	
+	private Einsatzplanmodel myModel = null;
+
+	protected Datenbank_TerminBlockierung(Einsatzplanmodel mymodel) {
+	this.myModel = myModel;
+	}
+
 
 
 
 
 
 	// Schichten in Tabelle Schicht hinzufg
-	public void addTerminBlockierung(TerminBlockierung terminBlockierung) {
+	protected void addTerminBlockierung(TerminBlockierung terminBlockierung) {
 
 		String sqlStatement;
 		sqlStatement = "insert into TerminBlockierung (Tblocknr, Benutzername, Bbez, Anfzeitraum, Endzeitraum,Anfanguhrzeit, Endeuhrzeit, Grund) values(?, ?, ?, ?, ?, ?, ?, ?)";
@@ -76,7 +83,7 @@ public class Datenbank_TerminBlockierung {
 	}
 
 	// Schicht vorhanden?
-	public boolean checkTerminBlockierung(int tblocknr) {
+	protected boolean checkTerminBlockierung(int tblocknr) {
 		Statement stmt = null;
 		ResultSet rs = null;
 		String sqlQuery = "select tblocknr from TerminBlockierung where tblocknr = " + tblocknr;
@@ -104,7 +111,7 @@ public class Datenbank_TerminBlockierung {
 
 
 	// Auslesen der Schichten aus der Datenbank und eintragen in eine LinkedList, welche übergeben wird
-	public LinkedList<TerminBlockierung> getTerminBlockierung() {
+	protected LinkedList<TerminBlockierung> getTerminBlockierung() {
 
 		Statement stmt = null;
 		ResultSet rs = null;
@@ -143,7 +150,7 @@ public class Datenbank_TerminBlockierung {
 	}
 
 	// Schicht aus einem Tag löschen/wp
-	public boolean deleteTerminBlockierung(int tblocknr) {
+	protected boolean deleteTerminBlockierung(int tblocknr) {
 		Statement stmt = null;
 		ResultSet rs = null;
 		String sqlQuery = "DELETE FROM TerminBlockierung WHERE Tblocknr = "+tblocknr;
@@ -163,6 +170,25 @@ public class Datenbank_TerminBlockierung {
 			} catch (SQLException e) {
 				System.err.println("Methode deleteTerminBlockierung(finally) SQL-Fehler: " + e.getMessage());
 			}
+		}
+	}
+	protected  int getNewTblocknr(Connection con) {
+		Statement stmt = null;
+		ResultSet rs = null;
+		String sqlQuery = "select max (wpnr)+1 from Wochenplan";
+
+		try {
+			stmt = con.createStatement();
+			rs = stmt.executeQuery(sqlQuery);
+			rs.next();
+			int maxTblocknr = rs.getInt(1);
+			rs.close();
+			stmt.close();
+			return maxTblocknr;
+		} catch (SQLException sql) {
+			System.err.println("Methode getNewEmpno SQL-Fehler: "
+					+ sql.getMessage());
+			return -1;
 		}
 	}
 }

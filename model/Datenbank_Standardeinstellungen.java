@@ -16,15 +16,21 @@ import javax.swing.JFileChooser;
 
 import data.Standardeinstellungen;
 
-public class Datenbank_Standardeinstellungen {
+class Datenbank_Standardeinstellungen {
 
 	Datenbank_Connection db_con = new Datenbank_Connection();
 	Connection con = db_con.getCon();
 
-	
+	private Einsatzplanmodel myModel = null;
+
+	protected Datenbank_Standardeinstellungen(Einsatzplanmodel mymodel) {
+	this.myModel = myModel;
+	}
+
+
 
 	// Auslesen der Wochenpläne aus der Datenbank und eintragen in eine TreeMap, welche Übergeben wird
-	public LinkedList<Standardeinstellungen> getStandardeinstellungen() {
+	protected LinkedList<Standardeinstellungen> getStandardeinstellungen() {
 
 		Statement stmt = null;
 		ResultSet rs = null;

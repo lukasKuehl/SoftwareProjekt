@@ -7,7 +7,7 @@ public class Datenbank_Connection{
 	private Connection con = null;	
 
 	
-	private final String url = "jdbc:mysql://localhost:3306/softwareprojekt";
+	private final String url = "jdbc:mysql://localhost:3306/sys";
 	private final String reconnectSSL = "?autoReconnect=true&useSSL=false";
 	private final String user = "root";
 	private final String pw = "famasb0b12";

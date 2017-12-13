@@ -1,12 +1,15 @@
 package data;
-
+/**
+ * @Anes Preljevic 
+ * @info  Fügt eine neue Tauschanfrage in der Tabelle Tauschanfrage hinzu
+ */
 public class Tauschanfrage {
-	private String empfänger;
-	private String sender;
-	private boolean bestätigungsstatus;
-	private int schichtnrsender;
-	private int schichtnrempfänger;
-	private int tauschnr;
+	private String empfänger=null;
+	private String sender=null;
+	private boolean bestätigungsstatus=false;
+	private int schichtnrsender=0;
+	private int schichtnrempfänger=0;
+	private int tauschnr=0;
 	
 	
 	public Tauschanfrage (String empfänger,String sender,boolean bestätigungsstatus,

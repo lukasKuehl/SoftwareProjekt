@@ -9,16 +9,22 @@ import java.util.LinkedList;
 
 import data.Userrecht;
 
-public class Datenbank_Userrecht {
+class Datenbank_Userrecht {
 
 	Datenbank_Connection db_con = new Datenbank_Connection();
 	Connection con = db_con.getCon();
+
+	private Einsatzplanmodel myModel = null;
+
+	protected Datenbank_Userrecht(Einsatzplanmodel mymodel) {
+	this.myModel = myModel;
+	}
 
 
 
 
 	// Schichten in der Tabelle Schicht bearbeiten
-	private void updateUserrecht(Userrecht userrecht) {
+	protected void updateUserrecht(Userrecht userrecht) {
 
 		String job= userrecht.getJob();
 		String benutzerrolle=userrecht.getBenutzerrolle();

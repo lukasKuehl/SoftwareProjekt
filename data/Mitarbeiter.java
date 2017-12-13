@@ -1,13 +1,13 @@
 package data;
 
 public class Mitarbeiter {
-	private String benutzername;
-	private String passwort;
-	private String job;
-	private String vorname;
-	private String name;
-	private int maxstunden;
-	private String whname;
+	private String benutzername=null;
+	private String passwort=null;
+	private String job=null;
+	private String vorname=null;
+	private String name=null;
+	private int maxstunden=0;
+	private String whname=null;
 	
 	public Mitarbeiter(String benutzername, String passwort, String job, String vorname, String name, int Maxstunden, String Whname){
 		this.benutzername = benutzername;

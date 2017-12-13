@@ -9,18 +9,24 @@ import java.util.LinkedList;
 
 import data.Ma_Schicht;
 
-public class Datenbank_Ma_Schicht {
+ class Datenbank_Ma_Schicht {
 
 	Datenbank_Connection db_con = new  Datenbank_Connection();
 	Connection con = db_con.getCon();
+
+	private Einsatzplanmodel myModel = null;
+
+	protected Datenbank_Ma_Schicht(Einsatzplanmodel mymodel) {
+	this.myModel = myModel;
+	}
 
 
 
 	/**
 	 * @Anes Preljevic
-	 * @info 
+	 * @info Mitarbeiter in eine Schicht eintragen, neuer Datensatz Ma_Schicht in der Ma_Schicht Tabelle
 	 */
-	public void addMa_Schicht(Ma_Schicht ma_schicht) {
+	protected void addMa_Schicht(Ma_Schicht ma_schicht) {
 
 		String sqlStatement;
 		sqlStatement = "insert into Ma_Schicht (Schichtnr,Benutzername) values(?, ?)";
@@ -67,8 +73,11 @@ public class Datenbank_Ma_Schicht {
 		}
 	}
 
-	// Schicht vorhanden?
-	public boolean checkMa_Schicht(int schichtnr, String benutzername) {
+	/**
+	 * @Anes Preljevic
+	 * @info Prüft ob es zu der eingegebenen schichtnr und dem benutzernamen bereits einen Mitarbeiter in der Schicht gibt, bei existenz return true, sonst false
+	 */
+	protected boolean checkMa_Schicht(int schichtnr, String benutzername) {
 		Statement stmt = null;
 		ResultSet rs = null;
 		String sqlQuery = "select schichtnr, benutzernaeme from Ma_Schicht where schichtnr = '"+schichtnr+"' and benutzername= '"+benutzername+"'";
@@ -94,9 +103,11 @@ public class Datenbank_Ma_Schicht {
 	}
 
 
-
-	// Auslesen der Schichten aus der Datenbank und eintragen in eine LinkedList, welche übergeben wird
-	public LinkedList<Ma_Schicht> getMa_Schicht() {
+	/**
+	 * @Anes Preljevic
+	 * @info Auslesen der Mitarbeiter mit den zugehörigen Schichten aus der Datenbank und hinzufügen in eine Liste, welche den Ausgabewert darstellt 
+	 */
+	protected LinkedList<Ma_Schicht> getMa_Schicht() {
 
 		Statement stmt = null;
 		ResultSet rs = null;
@@ -128,9 +139,11 @@ public class Datenbank_Ma_Schicht {
 			return null;
 		}
 	}
-
-	// Mitarbeiter aus der Schicht löschen, Datensatz aus MA_Schicht entfernen
-	public boolean deleteMa_Schicht(int schichtnr, String benutzername) {
+	/**
+	 * @Anes Preljevic
+	 * @info Löschen eines Mitarbeiters aus einer Schicht, oder entfernen einer Schicht vom Mitarbeiter (falls die Schicht gelöscht wurde)
+	 */
+	protected boolean deleteMa_Schicht(int schichtnr, String benutzername) {
 		Statement stmt = null;
 		ResultSet rs = null;
 		String sqlQuery = "DELETE FROM Ma_Schicht WHERE Schichtnr = "+schichtnr+" and Benutzername= "+benutzername+"";

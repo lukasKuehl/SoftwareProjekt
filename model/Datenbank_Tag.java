@@ -14,15 +14,22 @@ import data.Tag;
 import data.Schicht;
 
 
-public class Datenbank_Tag {
+class Datenbank_Tag {
 	
 	Datenbank_Connection db_con = new Datenbank_Connection();
 	Connection con = db_con.getCon();
+	
+	private Einsatzplanmodel myModel = null;
+
+	protected Datenbank_Tag(Einsatzplanmodel mymodel) {
+	this.myModel = myModel;
+	}
+
 
 	
 	
 	//Erstellen der Tabelle Tag 
-	public boolean createModule() {
+	protected boolean createModule() {
 		Statement stmt = null;
 		String sqlStatement = "CREATE TABLE Tag (Tbez VARCHAR(15) NOT NULL PRIMARY KEY,"
 				+ "Wpnr int(5) NOT NULL PRIMARY KEY FOREIGN KEY ," +"Anzschicht int(2) NOT NULL," +"Feiertag TINYINT(1) NOT NULL )";
@@ -37,7 +44,7 @@ public class Datenbank_Tag {
 	}
 	
 	//Tage in der Tabelle Tag hinzufügen 
-	public void addTag(Tag tag) {	
+	protected void addTag(Tag tag) {	
 		
 		String sqlStatement;
 
@@ -91,7 +98,7 @@ public class Datenbank_Tag {
 	}
 		
 	//Kontrolle ob Tag in der Tabelle schon vorhanden ist 
-	public boolean checkTag(String tbez, int wpnr) {
+	protected boolean checkTag(String tbez, int wpnr) {
 		Statement stmt = null;
 		ResultSet rs = null;
 		String sqlQuery = "select tbez,wpnr from tag where tbez = '"+tbez+"' and wpnr= '"+wpnr+"'";
@@ -169,11 +176,11 @@ public class Datenbank_Tag {
 	
 	
 		
-	public LinkedList<Tag> getTag() {
+	protected LinkedList<Tag> getTag() {
 
 			
-			Datenbank_Schicht schicht = new Datenbank_Schicht();
-			LinkedList<Schicht> schichtList = schicht.getSchicht();
+//			Datenbank_Schicht schicht = new Datenbank_Schicht();
+//			LinkedList<Schicht> schichtList = schicht.getSchicht();
 
 			Statement stmt = null;
 			ResultSet rs = null;
@@ -194,11 +201,11 @@ public class Datenbank_Tag {
 					t.setFeiertag(rs.getBoolean("Feiertag"));
 			
 					
-					for (Schicht sch : schichtList) {
-						if (sch.getWpnr() == t.getWpnr()&& sch.getTbez() == t.getTbez()) {
-							t.setLinkedListSchichten(sch);
-						}
-					}
+					//for (Schicht sch : schichtList) {
+						//if (sch.getWpnr() == t.getWpnr()&& sch.getTbez() == t.getTbez()) {
+							//t.setLinkedListSchichten(sch);
+						//}
+					//}
 
 				
 					
@@ -218,7 +225,7 @@ public class Datenbank_Tag {
 	
 	
 	//Tag aus der Tabelle Tag löschen
-	public boolean deleteTag(String tbez, int wpnr) {
+	protected boolean deleteTag(String tbez, int wpnr) {
 		Statement stmt = null;
 		ResultSet rs = null;
 		String sqlQuery = "DELETE FROM tag WHERE tbez = '"+tbez+"' and tag.wpnr= '"+wpnr+"'";

@@ -9,10 +9,16 @@ import java.util.LinkedList;
 
 import data.Tblock_Tag;
 
-public class Datenbank_Tblock_Tag {
+class Datenbank_Tblock_Tag {
 
 	Datenbank_Connection db_con = new Datenbank_Connection();
 	Connection con = db_con.getCon();
+
+	private Einsatzplanmodel myModel = null;
+
+	protected Datenbank_Tblock_Tag(Einsatzplanmodel mymodel) {
+	this.myModel = myModel;
+	}
 
 
 
@@ -20,7 +26,7 @@ public class Datenbank_Tblock_Tag {
 	 * @Anes Preljevic
 	 * @info 
 	 */
-	public void addTblock_Tag(Tblock_Tag tblock_tag) {
+	protected void addTblock_Tag(Tblock_Tag tblock_tag) {
 
 		String sqlStatement;
 		sqlStatement = "insert into Tblock_Tag (tblocknr,tbez, wpnr) values(?, ?, ?)";
@@ -69,7 +75,7 @@ public class Datenbank_Tblock_Tag {
 	}
 
 	// Schicht vorhanden?
-	public boolean checkTblock_Tag(int tblocknr, String tbez, int wpnr) {
+	protected boolean checkTblock_Tag(int tblocknr, String tbez, int wpnr) {
 		Statement stmt = null;
 		ResultSet rs = null;
 		String sqlQuery = "select tblocknr, tbez from Tblock_Tag where tblocknr = '"+tblocknr+"' "
@@ -98,7 +104,7 @@ public class Datenbank_Tblock_Tag {
 
 
 	// Auslesen der Schichten aus der Datenbank und eintragen in eine LinkedList, welche übergeben wird
-	public LinkedList<Tblock_Tag> getTblock_Tag() {
+	protected LinkedList<Tblock_Tag> getTblock_Tag() {
 
 		Statement stmt = null;
 		ResultSet rs = null;
@@ -132,7 +138,7 @@ public class Datenbank_Tblock_Tag {
 	}
 
 	// Mitarbeiter aus der Schicht löschen, Datensatz aus MA_Schicht entfernen
-	public boolean deleteTblock_Tag(int tblocknr, String tbez, int wpnr) {
+	protected boolean deleteTblock_Tag(int tblocknr, String tbez, int wpnr) {
 		Statement stmt = null;
 		ResultSet rs = null;
 		String sqlQuery = "DELETE FROM Tblock_Tag WHERE Tblocknr = "+tblocknr+""

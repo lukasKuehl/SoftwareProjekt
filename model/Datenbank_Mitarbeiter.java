@@ -9,18 +9,20 @@ import java.util.LinkedList;
 
 import data.Mitarbeiter;
 
-public class Datenbank_Mitarbeiter {
+class Datenbank_Mitarbeiter {
 
 	Datenbank_Connection db_con = new  Datenbank_Connection();
 	Connection con = db_con.getCon();
+		private Einsatzplanmodel myModel = null;
 
-
-
+		protected Datenbank_Mitarbeiter(Einsatzplanmodel mymodel) {
+		this.myModel = myModel;
+		}
 
 
 
 	// Auslesen der Schichten aus der Datenbank und eintragen in eine LinkedList, welche übergeben wird
-	public LinkedList<Mitarbeiter> getMitarbeiter() {
+	protected LinkedList<Mitarbeiter> getMitarbeiter() {
 
 		Statement stmt = null;
 		ResultSet rs = null;
