@@ -86,13 +86,20 @@ public class AnmeldungView extends JFrame implements ActionListener {
 			public void actionPerformed(ActionEvent e) {
 				/*MitarbeiterView nw = new MitarbeiterView();
 				nw.NewScreen(); */
-				String pwd = new String(passwordField.getPassword());
-				String user = new String(textField.getText());
+				String pw = new String(passwordField.getPassword());
+				String username = new String(textField.getText());
+				
 				//BenutzerStrg.anmelden(pwd,user); je nachdem wie die "Steuerung"heiﬂt
 				//Abfrage der Benutzerrrolle in der Strg/Controller
 				//dispose wenn fertig
 			}});
 		btnLogin.setBounds(213, 182, 54, 47);
 		contentPane.add(btnLogin);
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 }

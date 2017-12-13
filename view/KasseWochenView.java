@@ -104,6 +104,8 @@ public class KasseWochenView extends JFrame implements ActionListener{
 		mntmWocheLoeschen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				new WochenplanLoeschenView();
+				//WochenplanLoeschenView frame = new WochenplanLoeschenView();
+				//frame.setVisible(true); Muss im Konstruktor auf visible gestellt werden
 			}
 		});
 		mntmWocheLoeschen.setHorizontalAlignment(SwingConstants.TRAILING);
@@ -152,6 +154,8 @@ public class KasseWochenView extends JFrame implements ActionListener{
 		mntmTerminLoeschen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				new TerminLoeschenView();
+				//TerminLoeschenView frame = new TerminLoeschenView();
+				//frame.setVisible(true); Konstruktor
 			}
 		});
 		mntmTerminLoeschen.setHorizontalAlignment(SwingConstants.TRAILING);
