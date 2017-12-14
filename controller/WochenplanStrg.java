@@ -220,15 +220,20 @@ class WochenplanStrg {
         g2.dispose();
         try
         {
-            ImageIO.write(bi, "png", new File(System.getProperty("user.home") + "/Desktop/Kalenderwochenübersicht_" + wpbez +".png" ));
+        	String filePath = System.getProperty("user.home") + "/Desktop/Kalenderwochenübersicht_" + wpbez +".png" );
+            ImageIO.write(bi, "png", new File(filePath));
             
             LinkedList<Mitarbeiter> alleMitarbeiter = this.myModel.getWochenplaene();
             
             MailStrg myMailController = new MailStrg();
+            
+            final String user = "einsatzplan.team";
+            final String password = "";
+            final String senderAddress = "einsatzplan.team@web.de";
+            
             for(Mitarbeiter m: alleMitarbeiter){
-            	//ToDo Anhang und username + password klären
-            	myMailController.sendMail(user, password, senderAddress, recipientsAddress, subject);
-            	
+            	//Nutzung des GruppenAccounts bei Web.de
+            	myMailController.sendMail(user, password, senderAddress, m.getEmail(), "Einsatzplan für " + wpbez, filePath);	
             	
             }
             

@@ -270,11 +270,11 @@ public class EinsatzplanController {
 		return result;					
 	}
 	
-	public boolean verschickeWochenplan(String username, String wpbez, JTable wochenplan, JTableHeader wochenplanHeader){
+	public boolean verschickeWochenplan(String username, String wpbez, JTable wochenplan){
 		
 		boolean result = false;
 		try{
-			result = this.wochenplanSteuerung.verschickeWochenplan(username, wpbez, wochenplan,wochenplanHeader);
+			result = this.wochenplanSteuerung.verschickeWochenplan(username, wpbez, wochenplan, wochenplan.getTableHeader());
 			
 		}catch(Exception e){
 			System.out.println("Fehler innerhalb des Controllers:");
