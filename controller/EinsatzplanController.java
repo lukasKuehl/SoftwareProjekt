@@ -1,5 +1,6 @@
 package controller;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.TreeMap;
 import javax.swing.JTable;
@@ -283,6 +284,43 @@ public class EinsatzplanController {
 		return result;			
 		
 	}
+	
+	public ArrayList<String> getAlleTermine(String username){
+		ArrayList<String> rueckgabe = null;
+		try{
+			rueckgabe = this.terminSteuerung.getAlleTermine(username);
+		}catch(Exception e){
+			System.out.println("Fehler innerhalb des Controllers:");
+			System.out.println("Fehler beim Aufruf der Methode getAlleTermine:");
+			e.printStackTrace();			
+		}	
+		return rueckgabe;
+	}
+	
+	public ArrayList<String> getMitarbeiterTermine(String username){
+		ArrayList<String> rueckgabe = null;
+		try{
+			rueckgabe = this.terminSteuerung.getMitarbeiterTermine(username);
+		}catch(Exception e){
+			System.out.println("Fehler innerhalb des Controllers:");
+			System.out.println("Fehler beim Aufruf der Methode getMitarbeiterTermine:");
+			e.printStackTrace();			
+		}	
+		return rueckgabe;
+	}
+	
+	public ArrayList<String> getWochenplaene(){
+		ArrayList<String> rueckgabe = null;
+		try{
+			rueckgabe = this.wochenplanSteuerung.getWochenplaene();
+		}catch(Exception e){
+			System.out.println("Fehler innerhalb des Controllers:");
+			System.out.println("Fehler beim Aufruf der Methode getWochenplaene:");
+			e.printStackTrace();			
+		}	
+		return rueckgabe;
+	}
+	
 	
 	protected Einsatzplanview getView(){
 		return this.view;		

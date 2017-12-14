@@ -5,6 +5,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
 import java.util.TreeMap;
@@ -204,6 +205,13 @@ class WochenplanStrg {
 		
 		return success;
 	}	
+	
+	protected ArrayList<String> getWochenplaene(){
+		ArrayList<String> rueckgabe = null;
+		return rueckgabe;
+	}
+	
+	
 	
 	/**
 	 * @author 

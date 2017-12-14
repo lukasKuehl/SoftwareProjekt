@@ -1,5 +1,6 @@
 package controller;
 
+import java.util.ArrayList;
 import java.util.TreeMap;
 
 import javax.swing.JDialog;
@@ -47,5 +48,16 @@ class TerminStrg {
 		//Ausfüllen
 		return success;
 	}
+	
+	protected ArrayList<String> getMitarbeiterTermine(String username){
+		ArrayList<String> rueckgabe = null;
+		return rueckgabe;
+	}
+	
+	protected ArrayList<String> getAlleTermine(String username){
+		ArrayList<String> rueckgabe = null;
+		return rueckgabe;
+	}
+	
 	
 }
