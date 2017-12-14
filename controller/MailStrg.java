@@ -60,6 +60,8 @@ class MailStrg {
 		properties.put("mail.transport.protocol", "smtp");
 		// Verschlüsselung festlegen
 		properties.put("mail.smtp.starttls.enable", "true");
+		//Ergänzung um Handshake-Exception auszuschließen
+		properties.put("mail.smtp.ssl.trust", "smtp.web.de");
 		return properties;
 	}
 
@@ -77,7 +79,7 @@ class MailStrg {
 			Message msg = new MimeMessage(session);
 
 			// Hier werden die Absender- und Empfängeradressen gesetzt
-			msg.setFrom(new InternetAddress(senderAddress, "Einsatzplanverwaltung_NO-REPLY"));
+			msg.setFrom(new InternetAddress(senderAddress, "Einsatzplanverwaltung"));
 
 			// msg.addRecipient(Message.RecipientType.TO, new
 			// InternetAddress(recipientsAddress));
