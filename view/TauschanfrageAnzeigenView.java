@@ -38,7 +38,7 @@ public class TauschanfrageAnzeigenView extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		 lblTauschanfrageAnzeigen = new JLabel("Tauschanfragen");
+		lblTauschanfrageAnzeigen = new JLabel("Tauschanfragen");
 		lblTauschanfrageAnzeigen.setFont(new Font("Verdana", Font.BOLD, 21));
 		lblTauschanfrageAnzeigen.setBounds(62, 91, 198, 26);
 		contentPane.add(lblTauschanfrageAnzeigen);

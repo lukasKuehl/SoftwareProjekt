@@ -99,23 +99,17 @@ public class KrankmeldungErstellenView extends JFrame  {
 		//		System.out.print(eingabe); Kontrolle
 				
 				if (eingabe==0) {
-					String s[]= new String [4];
-			//zeitraum  = new TreeMap <Integer, String>;
+			 zeitraum  = new TreeMap<Integer, String>();
 					try {	 
-		s[0] = username;
-		s[1] = myModel.
-		s[2] =	txtGrund.getText()+ ";";
-		s[3] = (String) comboBoxMA.getSelectedItem();  // Wiedergabe des gewählten Items
-		zeitraum.put (txtVonTermin.getText());
-   	   	zeitraum.put( txtBisTermin.getText());
-			myView.erstelleTermin(username, bez, zeitraum, txtGrund);
-			
-			//test des Array Inhalts
-			
-		for(int i=0; i<s.length; ++i) {
-			System.out.print(s[i]+" ");  
-		}
-			System.exit(0);
+		username = anmeldungView.getUsername();
+		int terminnr = myModel.getMaxTBlocknr();
+		String grund=	txtGrund.getText()+ ";";
+		String bez= (String) comboBoxMA.getSelectedItem();
+		String zeitr= txtVonTermin.getText + txtBisTermin.getText();
+		zeitraum.put(terminnr, zeitr);
+		
+		myView.erstelleTermin(username, bez, zeitraum, grund);
+		System.exit(0);
 					}
 							       
 			       catch (Exception e) {

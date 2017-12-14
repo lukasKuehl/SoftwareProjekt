@@ -18,6 +18,10 @@ public class Einsatzplanview {
 		this.myModel = model;
 	}
 	
+	/**
+	 * @author - Ramona Gerke
+	 * @info Die Parameter werden an den Controller mit den definierten Übergabeparametern übergeben.
+	 */
 	protected boolean erstelleTermin(String username, String bez, TreeMap<Integer, String> zeitraum, String grund) {
 		boolean erfolg = false;
 		
@@ -45,6 +49,23 @@ public class Einsatzplanview {
 		}
 		if (erfolg == false) {
 			JOptionPane.showConfirmDialog(null, "Der Termin konnte erstellt werden. Bitte die Eingaben prüfen");
+		}
+		
+		return erfolg;
+	}
+	}
+	
+	protected boolean entferneTermin(int terminnr, String username){ {
+		boolean erfolg = false;
+		
+		try {
+			erfolg = this.myController.entferneTermin(terminnr, username);
+					
+		}catch (Exception e) {
+			
+		}
+		if (erfolg == false) {
+			JOptionPane.showConfirmDialog(null, "Der Termin konnte nicht gelöscht werden. Bitte die Auswahl prüfen");
 		}
 		
 		return erfolg;

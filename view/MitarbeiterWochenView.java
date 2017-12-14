@@ -82,7 +82,7 @@ public class MitarbeiterWochenView extends JFrame implements ActionListener{
 		mntmTerminErstellen = new JMenuItem("erstellen");
 		mntmTerminErstellen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new TerminErstellenView();
+				new TerminErstellenView(null, null);
 			}
 		});
 		mntmTerminErstellen.setHorizontalAlignment(SwingConstants.TRAILING);
@@ -92,7 +92,7 @@ public class MitarbeiterWochenView extends JFrame implements ActionListener{
 		mntmTerminLoeschen = new JMenuItem("löschen");
 		mntmTerminLoeschen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new TerminLoeschenView();
+				new TerminLoeschenView(null, null);
 			}
 		});
 		mntmTerminLoeschen.setHorizontalAlignment(SwingConstants.TRAILING);
@@ -152,11 +152,6 @@ public class MitarbeiterWochenView extends JFrame implements ActionListener{
 		btnLinks.setIcon(new ImageIcon("C:\\Users\\Admin\\git\\SoftwareProjekt\\view\\left.png"));
 		btnLinks.setBounds(49, 11, 50, 23);
 		getContentPane().add(btnLinks);
-		
-		
-
-		
-		
 		
 		setVisible(true);
 		
