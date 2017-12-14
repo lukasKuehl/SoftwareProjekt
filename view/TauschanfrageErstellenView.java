@@ -84,5 +84,7 @@ public class TauschanfrageErstellenView extends JFrame {
 		cmbBoxSchicht.setBounds(499, 237, 136, 32);
 		contentPane.add(cmbBoxSchicht);
 		
+		setVisible(true);
+		
 	}
 }

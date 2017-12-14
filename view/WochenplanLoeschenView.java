@@ -7,22 +7,33 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import controller.EinsatzplanController;
+import model.Einsatzplanmodel;
+
 import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.JButton;
 import javax.swing.AbstractListModel;
+import javax.swing.border.LineBorder;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class WochenplanLoeschenView extends JFrame {
 
 	private JPanel contentPane =null;;
-	private JLabel lblWochenplanLschen =null;
+	private JLabel lblWochenplanLschen, lblBitteAuswhlen =null;
 	private  JList listWochenplaene =null;
 	private JButton  btnLschen = null;
+	private EinsatzplanController myController = null;
+	private Einsatzplanmodel myModel = null;
+	private Einsatzplanview myView = null;
 
 	
-	protected WochenplanLoeschenView() {
+		public WochenplanLoeschenView() {
 		
 		setTitle("Wochenplan löschen");
 		setResizable(false);
@@ -40,26 +51,38 @@ public class WochenplanLoeschenView extends JFrame {
 		lblWochenplanLschen.setBounds(51, 61, 243, 27);
 		contentPane.add(lblWochenplanLschen);
 		
-		listWochenplaene = new JList();
-		
-		//Wochenpläne in der Liste hinterlegen
-		listWochenplaene.setModel(new AbstractListModel() {
-			String[] values = new String[] {"hdaskj\tjsdf\t\t", "djfskld"};
-			public int getSize() {
-				return values.length;
-			}
-			public Object getElementAt(int index) {
-				return values[index];
-			}
-		});
+		listWochenplaene = new JList(myController.getWochenplaene().toArray());
+		listWochenplaene.setBorder(new LineBorder(new Color(0, 0, 0)));
 		listWochenplaene.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		listWochenplaene.setBounds(51, 139, 323, 356);
 		contentPane.add(listWochenplaene);
 		
 		btnLschen = new JButton("löschen");
-		btnLschen.setBounds(426, 472, 89, 23);
+		btnLschen.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				
+			int eingabe = JOptionPane.showConfirmDialog(null, "Wollen Sie die den Wochenplan wirklich löschen?", null, JOptionPane.YES_NO_CANCEL_OPTION);
+			if (eingabe== 0) {
+				
+				
+			}else {
+				System.exit(0);
+			}
+			}
+		});
+		btnLschen.setBounds(426, 468, 131, 27);
 		contentPane.add(btnLschen);
 		
+		lblBitteAuswhlen = new JLabel("Bitte auswählen");
+		lblBitteAuswhlen.setFont(new Font("Verdana", Font.PLAIN, 15));
+		lblBitteAuswhlen.setBounds(51, 109, 143, 26);
+		contentPane.add(lblBitteAuswhlen);
+		
+		//ACTION PERFORMED METHODE + EINSATZPLAN VIEW übergabe der index Nr
+		
 		setVisible(true);
+	
+
+		
 	}
 }

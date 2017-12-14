@@ -6,6 +6,7 @@ import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.TreeMap;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -20,6 +21,9 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
+
+import model.Einsatzplanmodel;
+
 import javax.swing.JFormattedTextField;
 
 public class KrankmeldungErstellenView extends JFrame  {
@@ -31,9 +35,13 @@ public class KrankmeldungErstellenView extends JFrame  {
 	private JTextField txtGrund = null;;
 	private JButton buttonBestaetigen = null;;
 	private String username= null;
-
+	private Einsatzplanview myView = null;
+	private Einsatzplanmodel myModel = null;
+	private TreeMap <Integer, String> zeitraum= null;
 	
-	protected KrankmeldungErstellenView() {
+	protected KrankmeldungErstellenView(Einsatzplanview myView) {
+		this.myView= myView;
+		
 		setTitle("Krankmeldung erstellen");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -72,11 +80,7 @@ public class KrankmeldungErstellenView extends JFrame  {
 		panelKrankmeldung.add(txtVonTermin);
 		
 		comboBoxMA = new JComboBox();
-//		alleMitarbeiterAnzeigen(comboBoxMa.); 
-//		comboBoxMA.setModel(new DefaultComboBoxModel(new Mitarbeiter[]);
-				// Liste mit den Mitarbeiter wird vom Controller 
-				
-	
+//		comboBoxMA.setModel(new DefaultComboBoxModel();
 		comboBoxMA.setBounds(253, 243, 152, 20);
 		panelKrankmeldung.add(comboBoxMA);
 		
@@ -96,25 +100,26 @@ public class KrankmeldungErstellenView extends JFrame  {
 				
 				if (eingabe==0) {
 					String s[]= new String [4];
-				
+			//zeitraum  = new TreeMap <Integer, String>;
 					try {	 
-			//AnmeldungView.username();
-//			s[0] = termin.getNextTerminId() +";";
-			s[0] = txtVonTermin.getText()+ ";";
-    	   	s[1] = txtBisTermin.getText()+ ";";	  
-			s[2] =	txtGrund.getText()+ ";";
-			s[3] = (String) comboBoxMA.getSelectedItem();  // Wiedergabe des gewählten Items
+		s[0] = username;
+		s[1] = myModel.
+		s[2] =	txtGrund.getText()+ ";";
+		s[3] = (String) comboBoxMA.getSelectedItem();  // Wiedergabe des gewählten Items
+		zeitraum.put (txtVonTermin.getText());
+   	   	zeitraum.put( txtBisTermin.getText());
+			myView.erstelleTermin(username, bez, zeitraum, txtGrund);
 			
 			//test des Array Inhalts
 			
-			for(int i=0; i<s.length; ++i) {
-				System.out.print(s[i]+" ");  
-			}
+		for(int i=0; i<s.length; ++i) {
+			System.out.print(s[i]+" ");  
+		}
 			System.exit(0);
 					}
 							       
-			       catch (NumberFormatException e) {
-			    	   System.out.println("Daten konnten nicht umgewandelt wrerden, da die Dateiformate nicht stimmen! - Fehle: TerminErstellenView Zeile Button Bestätigen ActionPerformed");
+			       catch (Exception e) {
+			    	   // DIalog AusgabeSystem.out.println("Daten konnten nicht umgewandelt wrerden, da die Dateiformate nicht stimmen! - Fehle: TerminErstellenView Zeile Button Bestätigen ActionPerformed");
 			    	   e.printStackTrace();
 			       }
 			}

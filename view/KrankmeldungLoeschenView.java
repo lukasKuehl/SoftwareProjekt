@@ -45,23 +45,15 @@ public class KrankmeldungLoeschenView extends JFrame {
 		lblKrankmeldungLoeschen.setBounds(95, 74, 362, 26);
 		contentPane.add(lblKrankmeldungLoeschen);
 		
-//		abfragenController.MitarbeiterAnzeigen(); //Datenbankabfrage
-//		listKrankmeldung = new JList()); // LIste als String hinterlegen
-//		listKrankmeldung.setBounds(95, 126, 443, 437);
-//		panelKrankmeldung.add(listKrankmeldung);
+		
+		listKrankmeldung = new JList(myController.getAlleTermine(username).toArray());
+		listKrankmeldung.setBounds(95, 126, 443, 437);
+		panelKrankmeldung.add(listKrankmeldung);
 		
 		btnBestaetigen = new JButton("Bestätigen");
 		btnBestaetigen.setFont(new Font("Verdana", Font.PLAIN, 18));
-//		btnBestaetigen.addActionListener(new ActionListener() {
-//			public void actionPerformed(ActionEvent e) {
-//			int tblocknr=0;
-//			String username = getName();
-//				
-//				myController.entferneTermin(tblocknr, username);
-//			}
-//		});
 		
-
+		//ACTIONPERFORMED METHODE für den bestätigen Button
 		btnBestaetigen.setBounds(497, 445, 141, 35);
 		contentPane.add(btnBestaetigen);
 		

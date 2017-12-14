@@ -4,9 +4,13 @@ import java.awt.*;
 
 import javax.swing.*;
 import javax.swing.border.*;
+
+import controller.EinsatzplanController;
+
 import java.awt.event.*;
 import java.io.IOException;
 import java.util.TreeMap;
+import model.Einsatzplanmodel;
 
 
 public class TerminErstellenView extends JFrame {
@@ -21,19 +25,25 @@ public class TerminErstellenView extends JFrame {
 	private JPanel panelTermin = null;
 	private String username= null;
 	private TreeMap<Integer, String>zeitraum = null;
-	private String zeitr = null;
+	private String zeitr , bez, grund = null;
 	private JButton btnBestaetigen=null;
+	private Einsatzplanmodel myModel= null;
+	private Einsatzplanview myView = null;
+	private EinsatzplanController myController = null;
 
-		protected TerminErstellenView() {
+		public TerminErstellenView(Einsatzplanmodel myModel, Einsatzplanview MyView) {
+		this.myModel = myModel;
+		this.myView = myView;
+		this.myController= myController;
 		setTitle("Termin erstellen");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 1538,864);
+		setBounds(100, 100, 800,600);
 		
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
-		setContentPane(contentPane);;
+		setContentPane(contentPane);
 		
 		panelTermin = new JPanel();
 		panelTermin.setBounds(29, 30, 1188, 728);
@@ -54,7 +64,7 @@ public class TerminErstellenView extends JFrame {
 		labelTerminErstellen.setBounds(64, 100, 200, 28);
 		panelTermin.add(labelTerminErstellen);
 		
-		txtVonTermin = new JTextField();
+		txtVonTermin = new JTextField(); // Java Kalender einfügen
 		txtVonTermin.setFont(new Font("Verdana", Font.PLAIN, 14));
 		txtVonTermin.setText("01.11.2017");
 		txtVonTermin.setHorizontalAlignment(SwingConstants.LEFT);
@@ -69,16 +79,16 @@ public class TerminErstellenView extends JFrame {
 		textUhrzeitTerminV.setBounds(292, 169, 86, 20);
 		panelTermin.add(textUhrzeitTerminV);
 		
-		textUhrzeitTerminB = new JTextField();
+		textUhrzeitTerminB = new JTextField(); // Uhrzeit in zwei separte Felder schreiben
 		textUhrzeitTerminB.setFont(new Font("Verdana", Font.PLAIN, 14));
-		textUhrzeitTerminB.setText("15:00");
+		textUhrzeitTerminB.setText("15:00");  // if eingabe Standardinhalt = null wert abfrage schreiben
 		textUhrzeitTerminB.setColumns(10);
 		textUhrzeitTerminB.setBounds(292, 224, 86, 20);
 		panelTermin.add(textUhrzeitTerminB);
 		
-		comboBoxTerminGrund = new JComboBox();
+		comboBoxTerminGrund = new JComboBox();  
 		comboBoxTerminGrund.setFont(new Font("Verdana", Font.PLAIN, 14));
-		comboBoxTerminGrund.setModel(new DefaultComboBoxModel(new String[] {"privater Termin", "Krankheit", "Urlaub"}));
+		comboBoxTerminGrund.setModel(new DefaultComboBoxModel(new String[] {"privater Termin", "Krankheit", "Urlaub"})); 
 		comboBoxTerminGrund.setBounds(64, 302, 189, 20);
 		panelTermin.add(comboBoxTerminGrund);
 		
@@ -109,35 +119,30 @@ public class TerminErstellenView extends JFrame {
 				
 				
 				if (eingabe==0) {
-					String termin [] = new String [2];
 					zeitraum = new TreeMap<Integer, String>();
 	
 					try {
 						
 	// Nutzername des aktuellen MA 
-//			username = anmeldungView.username();
-//			termin[0] =  termin.getNextID(); 
-			termin [0] = (String)(comboBoxTerminGrund.getSelectedItem());
-			termin [1] =	txtGrund.getText() ;
-			
-			
-					//test des Array Inhalts
-			for(int i=0; i<termin.length; ++i) {
-				System.out.print(termin[i]+" ");
-			}
+			username = anmeldungView.getUsername();
+			int index =  Integer.parseInt(myModel.getMaxTBlocknr());
+			String bez = (String)(comboBoxTerminGrund.getSelectedItem());
+			String grund=	txtGrund.getText() ;
+		
 			
 			zeitr = txtVonTermin.getText() +txtBisTermin.getText() + textUhrzeitTerminV.getText() +textUhrzeitTerminB.getText() ;
-			zeitraum.put(getTerminId(), zeitr); 
+			zeitraum.put(index, zeitr); 
 			
+			///TEST LoESCHEN
 			for (Integer id : zeitraum.keySet()) {
 				System.out.println(id + " - " + zeitraum.get(id));}
-
-		// Fenster mit Dispose schließen
+			// TEST LOESCHEN
+			
 			System.exit(0);
 					}
 							       
 			       catch (Exception e) {
-			    	   System.out.println("Daten konnten nicht umgewandelt werden, da die Dateiformate nicht stimmen! - Fehler: TerminErstellenView Zeile Button Bestätigen ActionPerformed");
+			    	   JOptionPane.showMessageDialog(null,"Daten konnten nicht umgewandelt werden, da die Dateiformate nicht stimmen! - Fehler: TerminErstellenView Zeile Button Bestätigen ActionPerformed");
 			    	   e.printStackTrace();
 			       }
 			}
@@ -147,6 +152,7 @@ public class TerminErstellenView extends JFrame {
 			}
 				}
 			);
+		// Methode für die Überprüfung des Formates schreiben   
 		btnBestaetigen.setBounds(448, 557, 89, 23);
 		panelTermin.add(btnBestaetigen);
 		
@@ -162,9 +168,5 @@ public class TerminErstellenView extends JFrame {
 		
 		setVisible(true);
 	}
-		//INTERN NOCH LOESCHEN UND ID AUS DATENBANK HOLEN
-		public int getTerminId() {
-			return 5;
-		}
 }
 
