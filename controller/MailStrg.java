@@ -23,13 +23,14 @@ import javax.mail.internet.MimeMultipart;
 
 /**
  * @author Sascha Leonardo
+ * @Ergänzung Lukas Kühl
  */
 
-class MailStrg {
-
+class MailStrg {	
+	
 	public void sendMail(String username, String password,
-			String senderAddress, String recipientsAddress, String subject) {
-
+			String senderAddress, String recipientsAddress, String subject, String message, String iconPath ){
+		
 		Authenticator auth = getAuthenticator(username, password);
 		Properties properties = getProperties();
 
@@ -37,7 +38,7 @@ class MailStrg {
 		Session session = Session.getDefaultInstance(properties, auth);
 
 		// Message senden
-		sendMessage(session, senderAddress, recipientsAddress, subject);
+		sendMessage(session, senderAddress, recipientsAddress, subject, message, iconPath);
 
 	}
 
@@ -70,13 +71,13 @@ class MailStrg {
 	 * @param subject
 	 */
 	public void sendMessage(Session session, String senderAddress,
-			String recipientsAddress, String subject) {
+			String recipientsAddress, String subject, String message, String iconPath) {
 		try {
 			// Eine neue Message erzeugen
 			Message msg = new MimeMessage(session);
 
 			// Hier werden die Absender- und Empfängeradressen gesetzt
-			msg.setFrom(new InternetAddress(senderAddress, "Sascha Leonardo"));
+			msg.setFrom(new InternetAddress(senderAddress, "Einsatzplanverwaltung_NO-REPLY"));
 
 			// msg.addRecipient(Message.RecipientType.TO, new
 			// InternetAddress(recipientsAddress));
@@ -91,10 +92,10 @@ class MailStrg {
 			Multipart multipart = new MimeMultipart();
 
 			// Der Text wird gesetzt
-			multipart.addBodyPart(getText());
+			multipart.addBodyPart(getText(message));
 
 			// Das Attachment wird hinzugefügt
-			multipart.addBodyPart(getAttachment());
+			multipart.addBodyPart(getAttachment(iconPath));
 
 			// Text und Attachment zur Nachricht hinzufügen
 			msg.setContent(multipart);
@@ -113,13 +114,13 @@ class MailStrg {
 	 * Nachrichtentext wird gesetzt
 	 * @return
 	 */
-	public BodyPart getText() {
+	public BodyPart getText(String message) {
 		try {
 			// message part erstellen
 			BodyPart messageBodyPart = new MimeBodyPart();
 
 			// Mailtext hinzufügen
-			String text = "Hallo das ist ein Test mit Javamail!\nWenn Sie den Text lesen können hat es funktioniert.";
+			String text = message;
 			messageBodyPart.setText(text);
 
 			// Daten zurückgeben
@@ -135,7 +136,7 @@ class MailStrg {
 	 * Angang wird hinzugefügt
 	 * @return
 	 */
-	public BodyPart getAttachment() {
+	public BodyPart getAttachment(String iconPath) {
 		try {
 			// message part erstellen
 			BodyPart messageBodyPart = new MimeBodyPart();
@@ -143,7 +144,7 @@ class MailStrg {
 
 			// Anhang hinzufügen
 			// Datei in Fileobjekt speichern
-			String filename= "D:\\Internes_Fernsprechverzeichnis.pdf";
+			String filename= iconPath;
 			System.out.println(filename + " wird gesendet...");
 			File file = new File(filename);
 			
@@ -189,20 +190,6 @@ class MailStrg {
 			e.printStackTrace();
 			return null;
 		}
-	}
-
-	// Test des Programms
-	public static void main(String[] args) {
-
-		String username = "saschaleonardo";
-		String password = "test1234!";
-		String senderAddress = "saschaleonardo@web.de";// someone@web.de
-		String recipientsAddress = "sascha.leonardo@fh-bielefeld.de"; // somereceiver@web.de
-		String subject = "Testnachricht JAVA";
-
-		new MailStrg().sendMail(username, password,
-				senderAddress, recipientsAddress, subject);
-
 	}
 }
 

@@ -250,7 +250,10 @@ class WochenplanStrg {
 		return rueckgabe;
 	}
 	
-	
+	protected ArrayList<String> getTage(String wpbez){
+		ArrayList<String> rueckgabe = null;
+		return rueckgabe;
+	}
 	
 	/**
 	 * @author 

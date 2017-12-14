@@ -310,6 +310,46 @@ public class EinsatzplanController {
 		return rueckgabe;
 	}
 	
+	public ArrayList<String> getTage(String wpbez){
+		ArrayList<String> rueckgabe = null;
+		try{
+			rueckgabe = this.wochenplanSteuerung.getTage(wpbez);
+		}catch(Exception e){
+			System.out.println("Fehler innerhalb des Controllers:");
+			System.out.println("Fehler beim Aufruf der Methode getMitarbeiterTermine:");
+			e.printStackTrace();			
+		}	
+		return rueckgabe;
+		
+	}
+	
+	//Aussortierung bereits verplanter Mitarbeiter für die Senderschicht
+	public ArrayList<String> getMitarbeiterSchichten(String wpbez, String tagbez, String username){
+		ArrayList<String> rueckgabe = null;
+		try{
+			rueckgabe = this.schichtSteuerung.getMitarbeiterSchichten(wpbez, tagbez, username);
+		}catch(Exception e){
+			System.out.println("Fehler innerhalb des Controllers:");
+			System.out.println("Fehler beim Aufruf der Methode getMitarbeiterSchichten:");
+			e.printStackTrace();			
+		}	
+		return rueckgabe;
+	}
+	
+	public ArrayList<String> getAndereMitarbeiterSchichten(String wpbez, String tagbez, String username, int schichtNr){
+		ArrayList<String> rueckgabe = null;
+		try{
+			rueckgabe = this.schichtSteuerung.getAndereMitarbeiterSchichten(wpbez, tagbez, username, schichtNr);
+		}catch(Exception e){
+			System.out.println("Fehler innerhalb des Controllers:");
+			System.out.println("Fehler beim Aufruf der Methode getAndereMitarbeiterSchichten:");
+			e.printStackTrace();			
+		}	
+		return rueckgabe;
+	}
+	
+	
+	
 	public ArrayList<String> getWochenplaene(){
 		ArrayList<String> rueckgabe = null;
 		try{

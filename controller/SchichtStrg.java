@@ -1,5 +1,6 @@
 package controller;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 import javax.swing.JDialog;
@@ -126,7 +127,14 @@ class SchichtStrg {
 		return verfuegbareMitarbeiter;
 	}
 	
+	protected ArrayList<String> getMitarbeiterSchichten(String wpbez, String tagbez, String username){
+		ArrayList<String> rueckgabe = null;
+		return rueckgabe;
+	}
 	
+	protected ArrayList<String> getAndereMitarbeiterSchichten(String wpbez, String tagbez, String username, int schichtNr){
+		ArrayList<String> rueckgabe = null;
+		return rueckgabe;
+	}
 	
-		
 }
