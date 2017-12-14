@@ -3,16 +3,24 @@ package controller;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.TreeMap;
 
+import javax.imageio.ImageIO;
 import javax.swing.JDialog;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 
 import com.sun.org.apache.xerces.internal.util.SynchronizedSymbolTable;
@@ -195,17 +203,48 @@ class WochenplanStrg {
 	}
 		
 	/**
-	 * @author 
+	 * @author Lukas Kühl
 	 * @info Die Methode dient dazu einen bestimmten Wochenplan an alle Mitarbeiter der Warenhäuser per E-Mail zu verschicken um Ihnen die Arbeitszeiten mitzuteilen
 	 */
-	protected boolean verschickeWochenplan(String username ,String wpbez){
-		boolean success = false;
-		
-		//ausfüllen
-		
+	protected boolean verschickeWochenplan(String username ,String wpbez, JTable wochenplan, JTableHeader header){
+			
+		boolean success = false;				
+		/*
+		int w = Math.max(wochenplan.getWidth(), header.getWidth());
+        int h = wochenplan.getHeight() + header.getHeight();
+        BufferedImage bi = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
+        Graphics2D g2 = bi.createGraphics();
+        header.paint(g2);
+        g2.translate(0, header.getHeight());
+        wochenplan.paint(g2);
+        g2.dispose();
+        try
+        {
+            ImageIO.write(bi, "png", new File(System.getProperty("user.home") + "/Desktop/Kalenderwochenübersicht_" + wpbez +".png" ));
+            
+            LinkedList<Mitarbeiter> alleMitarbeiter = this.myModel.getWochenplaene();
+            
+            MailStrg myMailController = new MailStrg();
+            for(Mitarbeiter m: alleMitarbeiter){
+            	//ToDo Anhang und username + password klären
+            	myMailController.sendMail(user, password, senderAddress, recipientsAddress, subject);
+            	
+            	
+            }
+            
+            success = true;
+        }
+        catch(IOException ioe)
+        {
+            System.out.println("write: " + ioe.getMessage());
+        }       
+        
+        */
+        
 		return success;
-	}	
+	} 
 	
+ 
 	protected ArrayList<String> getWochenplaene(){
 		ArrayList<String> rueckgabe = null;
 		return rueckgabe;
