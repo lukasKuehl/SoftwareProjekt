@@ -1,85 +1,82 @@
 package view;
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
-import java.util.HashMap;
+import java.awt.*;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-
+import javax.swing.*;
+import javax.swing.border.*;
 import javafx.scene.control.RadioButton;
-import javax.swing.JRadioButton;
+import java.awt.Color;
+import controller.EinsatzplanController;
+import java.awt.event.*;
+
 
 public class KrankmeldungLoeschenView extends JFrame {
 
-	private JPanel contentPane;
-
+	
 	/**
-	 * Launch the application.
+	 * @RamonaGerke
+	 * @Info
 	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					KrankmeldungLoeschenView frame = new KrankmeldungLoeschenView();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
-	 * Create the frame.
-	 */
-	protected KrankmeldungLoeschenView() {
-		setTitle("Einsatzplan");
+	
+	private JPanel contentPane,  panelKrankmeldung = null;
+	private JLabel lblKrankmeldungLoeschen = null;
+	private JList listKrankmeldung=null;
+	private JButton btnBestaetigen=null;
+	private EinsatzplanController myController = null;
+	private String username= null;
+	private JLabel lblBitteAuswaehlen=null;
+	
+	
+		protected KrankmeldungLoeschenView() {
+		setTitle("Krankmeldung löschen");
+		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 1538,864);
-		
+		setBounds(250, 250, 800,600);
 		
 		contentPane = new JPanel();
+		contentPane.setBackground(Color.WHITE);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
 		
+		lblKrankmeldungLoeschen = new JLabel("Krankmeldung löschen");
+		lblKrankmeldungLoeschen.setFont(new Font("Verdana", Font.BOLD, 21));
+		lblKrankmeldungLoeschen.setBounds(95, 74, 362, 26);
+		contentPane.add(lblKrankmeldungLoeschen);
 		
+//		abfragenController.MitarbeiterAnzeigen(); //Datenbankabfrage
+//		listKrankmeldung = new JList()); // LIste als String hinterlegen
+//		listKrankmeldung.setBounds(95, 126, 443, 437);
+//		panelKrankmeldung.add(listKrankmeldung);
+		
+		btnBestaetigen = new JButton("Bestätigen");
+		btnBestaetigen.setFont(new Font("Verdana", Font.PLAIN, 18));
+//		btnBestaetigen.addActionListener(new ActionListener() {
+//			public void actionPerformed(ActionEvent e) {
+//			int tblocknr=0;
+//			String username = getName();
+//				
+//				myController.entferneTermin(tblocknr, username);
+//			}
+//		});
+		
+
+		btnBestaetigen.setBounds(497, 445, 141, 35);
+		contentPane.add(btnBestaetigen);
+		
+		listKrankmeldung = new JList();
+		listKrankmeldung.setBorder(new LineBorder(new Color(0, 0, 0)));
+		listKrankmeldung.setBounds(95, 144, 315, 336);
+		contentPane.add(listKrankmeldung);
+		
+		lblBitteAuswaehlen = new JLabel("Bitte auswählen:");
+		lblBitteAuswaehlen.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblBitteAuswaehlen.setBounds(95, 128, 113, 14);
+		contentPane.add(lblBitteAuswaehlen);
 	
-//	leseKrankmeldungen();
-		
-		
-		
-			setVisible(true);
+		setVisible(true);
 			
 		}
-		
-
-		
-//	}
-	
-//	public void leseKrankmeldungen(HashMap krankmeldungen) {
-//		int s;
-//		JRadioButton rdbtnKrankmeldungen = null;
-//		for (s: krankmeldungen.keySet();) {
-//			krankmeldungen.setKeyset(new JRadioButton(krankmeldungen.keySet()));
-//			rdbtnNewRadioButton.setBounds(43, 163, 109, 23);
-//			contentPane.add(rdbtnNewRadioButton);
-	
-	
-	
-/**  neuen Radiobutton mit den inhalten der Methode erzeuegen 
-*/
-
-	
-			
-//		}
-//	}
-	
-		
-		
-	
 	}
 
