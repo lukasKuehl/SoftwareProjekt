@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.TreeMap;
 import javax.swing.JTable;
+import javax.swing.table.JTableHeader;
 
 import data.Schicht;
 import model.Einsatzplanmodel;
@@ -269,11 +270,11 @@ public class EinsatzplanController {
 		return result;					
 	}
 	
-	public boolean verschickeWochenplan(String username, String wpbez){
+	public boolean verschickeWochenplan(String username, String wpbez, JTable wochenplan, JTableHeader wochenplanHeader){
 		
 		boolean result = false;
 		try{
-			result = this.wochenplanSteuerung.verschickeWochenplan(username, wpbez);
+			result = this.wochenplanSteuerung.verschickeWochenplan(username, wpbez, wochenplan,wochenplanHeader);
 			
 		}catch(Exception e){
 			System.out.println("Fehler innerhalb des Controllers:");
