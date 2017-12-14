@@ -138,7 +138,7 @@ public class MitarbeiterWochenView extends JFrame implements ActionListener{
 		lblKW1.setBounds(109, 11, 136, 30);
 		getContentPane().add(lblKW1);
 		
-		JButton btnRechts = new JButton("");
+		btnRechts = new JButton("");
 		btnRechts.setContentAreaFilled(false);
 		btnRechts.setBorderPainted(false);
 		btnRechts.setOpaque(false);

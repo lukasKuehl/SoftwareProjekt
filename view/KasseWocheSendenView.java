@@ -6,7 +6,7 @@ import javax.swing.JFrame;
 
 public class KasseWocheSendenView extends JFrame {
 
-//	private JFrame frame;
+private JFrame frame;
 
 
 	public KasseWocheSendenView() {
@@ -22,11 +22,8 @@ public class KasseWocheSendenView extends JFrame {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setResizable(false);
 		setLocationRelativeTo(null);
-		setBounds(100, 100, 1538,864);
+		setBounds(100, 100, 800,600);
 		setVisible(true);
-		//frame = new JFrame();
-		//frame.setBounds(100, 100, 450, 300);
-		//frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 
 }

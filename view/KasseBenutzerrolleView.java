@@ -16,9 +16,11 @@ import javax.swing.JOptionPane;
 import data.Mitarbeiter;
 import model.Datenbank_Mitarbeiter;
 
-public class KasseBenutzerrolleView extends JFrame{
-private JComboBox cbBerechtigung;
-//	private JFrame frame;
+public class KasseBenutzerrolleView extends JFrame {
+	private JComboBox cbBerechtigung, cbMitarbeiter;
+	private JButton btnBestaetigen;
+	private JLabel lblBenutzerZuweisen, lblMitarbeiterAuswaehlen, lblBerechtigung;
+	// private JFrame frame;
 
 	/**
 	 * Launch the application.
@@ -39,63 +41,67 @@ private JComboBox cbBerechtigung;
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setResizable(false);
 		setLocationRelativeTo(null);
-		setBounds(100, 100, 1538,864);
+		setBounds(100, 100, 1538, 864);
 		getContentPane().setLayout(null);
-		
-		JLabel lblNewLabel = new JLabel("Benutzer zuweisen");
-		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 30));
-		lblNewLabel.setBounds(83, 124, 301, 73);
-		getContentPane().add(lblNewLabel);
-		
-		JLabel lblMitarbeiterAuswhlen = new JLabel("Mitarbeiter ausw\u00E4hlen:");
-		lblMitarbeiterAuswhlen.setFont(new Font("Tahoma", Font.BOLD, 18));
-		lblMitarbeiterAuswhlen.setBounds(83, 262, 217, 39);
-		getContentPane().add(lblMitarbeiterAuswhlen);
-		
-		JComboBox cbMitarbeiter = new JComboBox();
+
+		lblBenutzerZuweisen = new JLabel("Benutzer zuweisen");
+		lblBenutzerZuweisen.setFont(new Font("Tahoma", Font.BOLD, 30));
+		lblBenutzerZuweisen.setBounds(83, 124, 301, 73);
+		getContentPane().add(lblBenutzerZuweisen);
+
+		lblMitarbeiterAuswaehlen = new JLabel("Mitarbeiter ausw\u00E4hlen:");
+		lblMitarbeiterAuswaehlen.setFont(new Font("Tahoma", Font.BOLD, 18));
+		lblMitarbeiterAuswaehlen.setBounds(83, 262, 217, 39);
+		getContentPane().add(lblMitarbeiterAuswaehlen);
+
+		cbMitarbeiter = new JComboBox();
 		cbMitarbeiter.setBounds(381, 274, 128, 20);
-		/*Datenbank_Mitarbeiter dbhandler = new Datenbank_Mitarbeiter();
-		LinkedList alleMitarbeiter = dbhandler.getMitarbeiter();
-		alleMitarbeiter.forEach((temp) -> {
-            cbMitarbeiter.addItem(temp);
-        });*/
+		/*
+		 * Datenbank_Mitarbeiter dbhandler = new Datenbank_Mitarbeiter();
+		 * LinkedList alleMitarbeiter = dbhandler.getMitarbeiter();
+		 * alleMitarbeiter.forEach((temp) -> { cbMitarbeiter.addItem(temp); });
+		 */
 		getContentPane().add(cbMitarbeiter);
-		
-		JLabel lblBen = new JLabel("Berechtigung ausw\u00E4hlen:");
-		lblBen.setFont(new Font("Tahoma", Font.BOLD, 18));
-		lblBen.setBounds(83, 325, 233, 20);
-		getContentPane().add(lblBen);
-		
-		JComboBox cbBerechtigung = new JComboBox();
+
+		lblBerechtigung = new JLabel("Berechtigung ausw\u00E4hlen:");
+		lblBerechtigung.setFont(new Font("Tahoma", Font.BOLD, 18));
+		lblBerechtigung.setBounds(83, 325, 233, 20);
+		getContentPane().add(lblBerechtigung);
+
+		cbBerechtigung = new JComboBox();
 		cbBerechtigung.setBounds(381, 328, 128, 20);
 		cbBerechtigung.addItem("Kassenbüro");
 		cbBerechtigung.addItem("Mitarbeiter");
 		getContentPane().add(cbBerechtigung);
-		
-		
-		JButton btnBestaetigen = new JButton("Best\u00E4tigen");
+
+		btnBestaetigen = new JButton("Best\u00E4tigen");
 		btnBestaetigen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				int confirmed = JOptionPane.showConfirmDialog(null, 
-				        "Sind Sie sicher?", "Warnung",
-				        JOptionPane.YES_NO_OPTION);
+				int confirmed = JOptionPane.showConfirmDialog(null, "Sind Sie sicher?", "Warnung",
+						JOptionPane.YES_NO_OPTION);
 
-				    if (confirmed == JOptionPane.YES_OPTION) {
-				    	//String benutzerrolle = gibBenutzerrolle(); wie übergeben ( da protected)
-				      dispose(); // hier muss natürlich bei JA dann der controller angesteuert werden
-				//Controller.wocheErstellen(a,b,c,d)
-				//dispose wenn keine Fehlermeldung kommt und öffne KasseWocheErstellenPlanView
-			}}
+				if (confirmed == JOptionPane.YES_OPTION) {
+					// String benutzerrolle = gibBenutzerrolle(); wie übergeben
+					// ( da protected)
+					dispose(); // hier muss natürlich bei JA dann der controller
+								// angesteuert werden
+					// Controller.wocheErstellen(a,b,c,d)
+					// dispose wenn keine Fehlermeldung kommt und öffne
+					// KasseWocheErstellenPlanView
+				}
+			}
 		});
 		btnBestaetigen.setBounds(420, 390, 89, 23);
 		getContentPane().add(btnBestaetigen);
 		setVisible(true);
-		
-		/*frame = new JFrame();
-		frame.setBounds(100, 100, 1538,864);
-		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); */
+
+		/*
+		 * frame = new JFrame(); frame.setBounds(100, 100, 1538,864);
+		 * frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		 */
 	}
-	public String gibBenutzerrolle(){
+
+	public String gibBenutzerrolle() {
 		return cbBerechtigung.getSelectedItem().toString();
 	}
 

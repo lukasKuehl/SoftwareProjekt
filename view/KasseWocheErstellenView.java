@@ -15,13 +15,19 @@ import java.awt.event.ActionListener;
 import java.util.TreeMap;
 import java.awt.event.ActionEvent;
 import javax.swing.JRadioButton;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class KasseWocheErstellenView extends JFrame {
-	private JTextField txtOeffnungAnfangA, txtOeffnungAnfangB, txtOeffnungEndeA, txtOeffnungEndeB,
-	txtHauptAnfangA, txtHauptAnfangB, txtHauptEndeA,txtHauptEndeB;
-	private JComboBox cbMinTechInfo, cbMinHausInfo, cbMinHausKasse, cbExtraHausInfo, cbExtraKassen,
-	cbExtraTechInfo, cbKW;
+	private JTextField txtOeffnungAnfangA, txtOeffnungAnfangB, txtOeffnungEndeA, txtOeffnungEndeB, txtHauptAnfangA,
+			txtHauptAnfangB, txtHauptEndeA, txtHauptEndeB;
+	private JComboBox cbMinTechInfo, cbMinHausInfo, cbMinHausKasse, cbExtraKassen, cbKW;
 	private JRadioButton rdbtnStandardeinstellungen;
+	private JButton btnBesttigen;
+	private JLabel lblWochenplanErstellen, lblKalenderwocheKw, lblOeffnungszeiten, doppelpunkt, lblBis, doppelpunkt_1,
+			lblHauptzeiten, doppelpunkt_2, lblBis_1, doppelpunkt_3, lblMindestbesetzung,
+			lblMindestbesetzungFrLebensmittel, lblMindestbesetzungFrLebensmittel_1, lblKassen,
+			lblAnzahlZustzlicherMitarbeiter, lblUhr, lblUhr_1, lblUhr_2, lblUhr_3;
 
 	public KasseWocheErstellenView() {
 		initialize();
@@ -39,12 +45,12 @@ public class KasseWocheErstellenView extends JFrame {
 		setBounds(100, 100, 1538, 864);
 		getContentPane().setLayout(null);
 
-		JLabel lblWochenplanErstellen = new JLabel("Wochenplan erstellen");
+		lblWochenplanErstellen = new JLabel("Wochenplan erstellen");
 		lblWochenplanErstellen.setFont(new Font("Tahoma", Font.BOLD, 30));
 		lblWochenplanErstellen.setBounds(39, 127, 327, 52);
 		getContentPane().add(lblWochenplanErstellen);
 
-		JLabel lblKalenderwocheKw = new JLabel("Kalenderwoche KW:");
+		lblKalenderwocheKw = new JLabel("Kalenderwoche KW:");
 		lblKalenderwocheKw.setFont(new Font("Tahoma", Font.BOLD, 15));
 		lblKalenderwocheKw.setBounds(39, 358, 160, 16);
 		getContentPane().add(lblKalenderwocheKw);
@@ -55,94 +61,182 @@ public class KasseWocheErstellenView extends JFrame {
 		String[] werte1 = setField(52, 1);
 		setComboBox(cbKW, werte1);
 
-		JLabel lblffnungszeiten = new JLabel("\u00D6ffnungszeiten:");
-		lblffnungszeiten.setFont(new Font("Tahoma", Font.BOLD, 15));
-		lblffnungszeiten.setBounds(39, 441, 160, 16);
-		getContentPane().add(lblffnungszeiten);
+		lblOeffnungszeiten = new JLabel("\u00D6ffnungszeiten:");
+		lblOeffnungszeiten.setFont(new Font("Tahoma", Font.BOLD, 15));
+		lblOeffnungszeiten.setBounds(39, 441, 160, 16);
+		getContentPane().add(lblOeffnungszeiten);
 
 		txtOeffnungAnfangA = new JTextField();
-		txtOeffnungAnfangA.setBounds(211, 439, 39, 22);
-		getContentPane().add(txtOeffnungAnfangA);
-		txtOeffnungAnfangA.setColumns(10);
+		txtOeffnungAnfangA.addKeyListener(new KeyAdapter() {
+			@Override
 
-		JLabel label = new JLabel(":");
-		label.setBounds(255, 445, 39, 16);
-		getContentPane().add(label);
+			public void keyTyped(KeyEvent arg0) {
+				char vchar = arg0.getKeyChar();
+				if (!(Character.isDigit(vchar)) || (vchar == KeyEvent.VK_BACK_SPACE) || (vchar == KeyEvent.VK_DELETE)) {
+					arg0.consume();
+				}
+
+			}
+		});
+		txtOeffnungAnfangA.setBounds(185, 439, 39, 22);
+		getContentPane().add(txtOeffnungAnfangA);
+		txtOeffnungAnfangA.setColumns(2);
+
+		doppelpunkt = new JLabel(":");
+		doppelpunkt.setBounds(236, 442, 39, 16);
+		getContentPane().add(doppelpunkt);
 
 		txtOeffnungAnfangB = new JTextField();
-		txtOeffnungAnfangB.setBounds(272, 439, 39, 22);
-		getContentPane().add(txtOeffnungAnfangB);
-		txtOeffnungAnfangB.setColumns(10);
+		txtOeffnungAnfangB.addKeyListener(new KeyAdapter() {
+			@Override
 
-		JLabel lblBis = new JLabel("     bis");
+			public void keyTyped(KeyEvent arg0) {
+				char vchar = arg0.getKeyChar();
+				if (!(Character.isDigit(vchar)) || (vchar == KeyEvent.VK_BACK_SPACE) || (vchar == KeyEvent.VK_DELETE)) {
+					arg0.consume();
+				}
+
+			}
+		});
+		txtOeffnungAnfangB.setBounds(253, 439, 39, 22);
+		getContentPane().add(txtOeffnungAnfangB);
+		txtOeffnungAnfangB.setColumns(2);
+
+		lblBis = new JLabel("     bis");
 		lblBis.setFont(new Font("Tahoma", Font.BOLD, 13));
-		lblBis.setBounds(236, 474, 56, 16);
+		lblBis.setBounds(211, 474, 56, 16);
 		getContentPane().add(lblBis);
 
 		txtOeffnungEndeA = new JTextField();
-		txtOeffnungEndeA.setBounds(211, 503, 39, 22);
-		getContentPane().add(txtOeffnungEndeA);
-		txtOeffnungEndeA.setColumns(10);
+		txtOeffnungEndeA.addKeyListener(new KeyAdapter() {
+			@Override
 
-		JLabel label_1 = new JLabel(":");
-		label_1.setBounds(262, 503, 56, 16);
-		getContentPane().add(label_1);
+			public void keyTyped(KeyEvent arg0) {
+				char vchar = arg0.getKeyChar();
+				if (!(Character.isDigit(vchar)) || (vchar == KeyEvent.VK_BACK_SPACE) || (vchar == KeyEvent.VK_DELETE)) {
+					arg0.consume();
+				}
+
+			}
+		});
+		txtOeffnungEndeA.setBounds(185, 500, 39, 22);
+		getContentPane().add(txtOeffnungEndeA);
+		txtOeffnungEndeA.setColumns(2);
+
+		doppelpunkt_1 = new JLabel(":");
+		doppelpunkt_1.setBounds(236, 503, 56, 16);
+		getContentPane().add(doppelpunkt_1);
 
 		txtOeffnungEndeB = new JTextField();
-		txtOeffnungEndeB.setBounds(272, 503, 39, 22);
-		getContentPane().add(txtOeffnungEndeB);
-		txtOeffnungEndeB.setColumns(10);
+		txtOeffnungEndeB.addKeyListener(new KeyAdapter() {
+			@Override
 
-		JLabel lblHauptzeiten = new JLabel("Hauptzeiten:");
+			public void keyTyped(KeyEvent arg0) {
+				char vchar = arg0.getKeyChar();
+				if (!(Character.isDigit(vchar)) || (vchar == KeyEvent.VK_BACK_SPACE) || (vchar == KeyEvent.VK_DELETE)) {
+					arg0.consume();
+				}
+
+			}
+		});
+		txtOeffnungEndeB.setBounds(253, 500, 39, 22);
+		getContentPane().add(txtOeffnungEndeB);
+		txtOeffnungEndeB.setColumns(2);
+
+		lblHauptzeiten = new JLabel("Hauptzeiten:");
 		lblHauptzeiten.setFont(new Font("Tahoma", Font.BOLD, 15));
 		lblHauptzeiten.setBounds(39, 574, 160, 16);
 		getContentPane().add(lblHauptzeiten);
 
 		txtHauptAnfangA = new JTextField();
-		txtHauptAnfangA.setBounds(211, 572, 39, 22);
-		getContentPane().add(txtHauptAnfangA);
-		txtHauptAnfangA.setColumns(10);
+		txtHauptAnfangA.addKeyListener(new KeyAdapter() {
+			@Override
 
-		JLabel label_2 = new JLabel(":");
-		label_2.setBounds(262, 575, 5, 16);
-		getContentPane().add(label_2);
+			public void keyTyped(KeyEvent arg0) {
+				char vchar = arg0.getKeyChar();
+				if (!(Character.isDigit(vchar)) || (vchar == KeyEvent.VK_BACK_SPACE) || (vchar == KeyEvent.VK_DELETE)) {
+					arg0.consume();
+				}
+
+			}
+		});
+		txtHauptAnfangA.setBounds(185, 572, 39, 22);
+		getContentPane().add(txtHauptAnfangA);
+		txtHauptAnfangA.setColumns(2);
+
+		doppelpunkt_2 = new JLabel(":");
+		doppelpunkt_2.setBounds(236, 575, 14, 16);
+		getContentPane().add(doppelpunkt_2);
 
 		txtHauptAnfangB = new JTextField();
-		txtHauptAnfangB.setBounds(272, 572, 39, 22);
-		getContentPane().add(txtHauptAnfangB);
-		txtHauptAnfangB.setColumns(10);
+		txtHauptAnfangB.addKeyListener(new KeyAdapter() {
+			@Override
 
-		JLabel lblBis_1 = new JLabel("bis");
+			public void keyTyped(KeyEvent arg0) {
+				char vchar = arg0.getKeyChar();
+				if (!(Character.isDigit(vchar)) || (vchar == KeyEvent.VK_BACK_SPACE) || (vchar == KeyEvent.VK_DELETE)) {
+					arg0.consume();
+				}
+
+			}
+		});
+		txtHauptAnfangB.setBounds(253, 572, 39, 22);
+		getContentPane().add(txtHauptAnfangB);
+		txtHauptAnfangB.setColumns(2);
+
+		lblBis_1 = new JLabel("bis");
 		lblBis_1.setFont(new Font("Tahoma", Font.BOLD, 13));
-		lblBis_1.setBounds(255, 627, 56, 16);
+		lblBis_1.setBounds(222, 609, 56, 16);
 		getContentPane().add(lblBis_1);
 
 		txtHauptEndeA = new JTextField();
-		txtHauptEndeA.setBounds(211, 672, 39, 22);
-		getContentPane().add(txtHauptEndeA);
-		txtHauptEndeA.setColumns(10);
+		txtHauptEndeA.addKeyListener(new KeyAdapter() {
+			@Override
 
-		JLabel label_3 = new JLabel(":");
-		label_3.setBounds(262, 675, 5, 16);
-		getContentPane().add(label_3);
+			public void keyTyped(KeyEvent arg0) {
+				char vchar = arg0.getKeyChar();
+				if (!(Character.isDigit(vchar)) || (vchar == KeyEvent.VK_BACK_SPACE) || (vchar == KeyEvent.VK_DELETE)) {
+					arg0.consume();
+				}
+
+			}
+		});
+		txtHauptEndeA.setBounds(185, 638, 39, 22);
+		getContentPane().add(txtHauptEndeA);
+		txtHauptEndeA.setColumns(2);
+
+		doppelpunkt_3 = new JLabel(":");
+		doppelpunkt_3.setBounds(236, 640, 5, 16);
+		getContentPane().add(doppelpunkt_3);
 
 		txtHauptEndeB = new JTextField();
-		txtHauptEndeB.setBounds(272, 672, 39, 22);
-		getContentPane().add(txtHauptEndeB);
-		txtHauptEndeB.setColumns(10);
+		txtHauptEndeB.addKeyListener(new KeyAdapter() {
+			@Override
 
-		JLabel lblMindestbesetzung = new JLabel("Mindestbesetzung f\u00FCr Technikwarenaus: Info");
+			public void keyTyped(KeyEvent arg0) {
+				char vchar = arg0.getKeyChar();
+				if (!(Character.isDigit(vchar)) || (vchar == KeyEvent.VK_BACK_SPACE) || (vchar == KeyEvent.VK_DELETE)) {
+					arg0.consume();
+				}
+
+			}
+		});
+		txtHauptEndeB.setBounds(253, 638, 39, 22);
+		getContentPane().add(txtHauptEndeB);
+		txtHauptEndeB.setColumns(2);
+
+		lblMindestbesetzung = new JLabel("Mindestbesetzung f\u00FCr Technikwarenaus: Info");
 		lblMindestbesetzung.setFont(new Font("Tahoma", Font.BOLD, 15));
 		lblMindestbesetzung.setBounds(487, 431, 509, 16);
 		getContentPane().add(lblMindestbesetzung);
 
-		JLabel lblMindestbesetzungFrLebensmittel = new JLabel(
+		lblMindestbesetzungFrLebensmittel = new JLabel(
 				"Mindestbesetzung f\u00FCr Lebensmittel- / Haushaltswarenhaus: Info");
 		lblMindestbesetzungFrLebensmittel.setFont(new Font("Tahoma", Font.BOLD, 15));
 		lblMindestbesetzungFrLebensmittel.setBounds(487, 474, 509, 16);
 		getContentPane().add(lblMindestbesetzungFrLebensmittel);
 
-		JLabel lblMindestbesetzungFrLebensmittel_1 = new JLabel(
+		lblMindestbesetzungFrLebensmittel_1 = new JLabel(
 				"Mindestbesetzung f\u00FCr Lebensmittel- / Haushaltswarenhaus Kasse:");
 		lblMindestbesetzungFrLebensmittel_1.setFont(new Font("Tahoma", Font.BOLD, 15));
 		lblMindestbesetzungFrLebensmittel_1.setBounds(487, 524, 509, 16);
@@ -166,57 +260,30 @@ public class KasseWocheErstellenView extends JFrame {
 		String[] werte4 = setField(10, 0);
 		setComboBox(cbMinHausKasse, werte4);
 
-		JLabel lblNewLabel = new JLabel("Anzahl zus\u00E4tzlicher Mitarbeiter f\u00FCr:");
-		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 15));
-		lblNewLabel.setBounds(487, 575, 509, 16);
-		getContentPane().add(lblNewLabel);
-
-		JLabel lblLebensmittelHaushaltswarenhaus = new JLabel("Lebensmittel- / Haushaltswarenhaus Info:");
-		lblLebensmittelHaushaltswarenhaus.setFont(new Font("Tahoma", Font.BOLD, 15));
-		lblLebensmittelHaushaltswarenhaus.setBounds(487, 627, 509, 16);
-		getContentPane().add(lblLebensmittelHaushaltswarenhaus);
-
-		JLabel lblTechnikwarenhausInfo = new JLabel("Technikwarenhaus Info:");
-		lblTechnikwarenhausInfo.setFont(new Font("Tahoma", Font.BOLD, 15));
-		lblTechnikwarenhausInfo.setBounds(487, 675, 509, 16);
-		getContentPane().add(lblTechnikwarenhausInfo);
-
-		JLabel lblKassen = new JLabel("Kassen:");
+		lblKassen = new JLabel("Kassen:");
 		lblKassen.setFont(new Font("Tahoma", Font.BOLD, 15));
-		lblKassen.setBounds(487, 727, 509, 16);
+		lblKassen.setBounds(487, 626, 509, 16);
 		getContentPane().add(lblKassen);
 
-		cbExtraHausInfo = new JComboBox();
-		cbExtraHausInfo.setBounds(1040, 636, 50, 22);
-		getContentPane().add(cbExtraHausInfo);
-		String[] werte5 = setField(10, 0);
-		setComboBox(cbExtraHausInfo, werte5);
-
-		cbExtraTechInfo = new JComboBox();
-		cbExtraTechInfo.setBounds(1040, 675, 50, 22);
-		getContentPane().add(cbExtraTechInfo);
-		String[] werte6 = setField(10, 0);
-		setComboBox(cbExtraTechInfo, werte6);
-
 		cbExtraKassen = new JComboBox();
-		cbExtraKassen.setBounds(1040, 725, 50, 22);
+		cbExtraKassen.setBounds(1040, 624, 50, 22);
 		getContentPane().add(cbExtraKassen);
-		String[] werte7 = setField(10, 0);
-		setComboBox(cbExtraKassen, werte7);
+		String[] werte5 = setField(10, 0);
+		setComboBox(cbExtraKassen, werte5);
 
-		JButton btnBesttigen = new JButton("best\u00E4tigen");
+		btnBesttigen = new JButton("best\u00E4tigen");
 		btnBesttigen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int confirmed = JOptionPane.showConfirmDialog(null, "Sind Sie sicher?", "Warnung",
 						JOptionPane.YES_NO_OPTION);
 
 				if (confirmed == JOptionPane.YES_OPTION) {
-					
+
 					String wpbez = gibWochenplanbezeichnung();
-					
-					TreeMap<String,String> eingabeOeffnungszeiten = gibOeffnungszeiten();
+
+					TreeMap<String, String> eingabeOeffnungszeiten = gibOeffnungszeiten();
 					TreeMap<String, Integer> eingabeBesetzung = gibBesetzung();
-					
+
 					dispose(); // // auch hier muss natürlich es noch bei JA es
 								// angepasst werden
 					// Controller.wocheErstellen(a,b,c,d)
@@ -227,7 +294,7 @@ public class KasseWocheErstellenView extends JFrame {
 		});
 		btnBesttigen.setBounds(1246, 793, 97, 25);
 		getContentPane().add(btnBesttigen);
-		
+
 		ButtonGroup gruppe = new ButtonGroup();
 		JRadioButton rdbtnBenutzerdefiniert = new JRadioButton("Benutzerdefiniert");
 		rdbtnStandardeinstellungen = new JRadioButton("Standardeinstellungen");
@@ -235,7 +302,7 @@ public class KasseWocheErstellenView extends JFrame {
 		gruppe.add(rdbtnStandardeinstellungen);
 		rdbtnBenutzerdefiniert.setSelected(true);
 		rdbtnBenutzerdefiniert.addActionListener(new ActionListener() {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				txtOeffnungAnfangA.setEnabled(true);
@@ -250,8 +317,7 @@ public class KasseWocheErstellenView extends JFrame {
 		});
 		rdbtnBenutzerdefiniert.setBounds(211, 399, 127, 25);
 		getContentPane().add(rdbtnBenutzerdefiniert);
-		
-		
+
 		rdbtnStandardeinstellungen.setBounds(39, 399, 160, 25);
 		rdbtnStandardeinstellungen.addActionListener(new ActionListener() {
 
@@ -265,7 +331,7 @@ public class KasseWocheErstellenView extends JFrame {
 				txtHauptAnfangB.setEnabled(false);
 				txtHauptEndeA.setEnabled(false);
 				txtHauptEndeB.setEnabled(false);
-				
+
 				txtOeffnungAnfangA.setText("");
 				txtOeffnungAnfangB.setText("");
 				txtOeffnungEndeA.setText("");
@@ -275,9 +341,39 @@ public class KasseWocheErstellenView extends JFrame {
 				txtHauptEndeA.setText("");
 				txtHauptEndeB.setText("");
 
+				cbMinTechInfo.setEnabled(false);
+				cbMinHausInfo.setEnabled(false);
+				cbMinHausKasse.setEnabled(false);
+				cbExtraKassen.setEnabled(false);
+
 			}
 		});
 		getContentPane().add(rdbtnStandardeinstellungen);
+
+		lblAnzahlZustzlicherMitarbeiter = new JLabel("Anzahl zus\u00E4tzlicher Mitarbeiter:");
+		lblAnzahlZustzlicherMitarbeiter.setFont(new Font("Tahoma", Font.BOLD, 15));
+		lblAnzahlZustzlicherMitarbeiter.setBounds(487, 575, 509, 16);
+		getContentPane().add(lblAnzahlZustzlicherMitarbeiter);
+
+		lblUhr = new JLabel("Uhr");
+		lblUhr.setFont(new Font("Tahoma", Font.BOLD, 13));
+		lblUhr.setBounds(310, 442, 56, 16);
+		getContentPane().add(lblUhr);
+
+		lblUhr_1 = new JLabel("Uhr");
+		lblUhr_1.setFont(new Font("Tahoma", Font.BOLD, 13));
+		lblUhr_1.setBounds(310, 503, 56, 16);
+		getContentPane().add(lblUhr_1);
+
+		lblUhr_2 = new JLabel("Uhr");
+		lblUhr_2.setFont(new Font("Tahoma", Font.BOLD, 13));
+		lblUhr_2.setBounds(310, 575, 56, 16);
+		getContentPane().add(lblUhr_2);
+
+		lblUhr_3 = new JLabel("Uhr");
+		lblUhr_3.setFont(new Font("Tahoma", Font.BOLD, 13));
+		lblUhr_3.setBounds(310, 641, 56, 16);
+		getContentPane().add(lblUhr_3);
 		setVisible(true);
 
 		/*
@@ -286,7 +382,7 @@ public class KasseWocheErstellenView extends JFrame {
 		 */
 	}
 
-	public TreeMap<String, String> gibOeffnungszeiten() {
+	protected TreeMap<String, String> gibOeffnungszeiten() {
 
 		TreeMap<String, String> zeiten = new TreeMap<String, String>();
 		zeiten.put("OeffnunAnfangA", txtOeffnungAnfangA.getText());
@@ -301,19 +397,17 @@ public class KasseWocheErstellenView extends JFrame {
 
 	}
 
-	public TreeMap<String, Integer> gibBesetzung() {
+	protected TreeMap<String, Integer> gibBesetzung() {
 
-		TreeMap<String,Integer> besetzung = new TreeMap<String, Integer>();
+		TreeMap<String, Integer> besetzung = new TreeMap<String, Integer>();
 		besetzung.put("MinBesetzungKasse", Integer.parseInt(cbMinHausKasse.getSelectedItem().toString()));
 		besetzung.put("MinBesetzungInfoWaren", Integer.parseInt(cbMinHausInfo.getSelectedItem().toString()));
-		besetzung.put("MinBesetzungInfoTechnik",Integer.parseInt(cbMinTechInfo.getSelectedItem().toString()));
-		besetzung.put("MehrbesetzungKasse",Integer.parseInt(cbExtraKassen.getSelectedItem().toString()));
-		besetzung.put("MehrbesetzungInfoTechnik",Integer.parseInt(cbExtraTechInfo.getSelectedItem().toString()));
-		besetzung.put("MehrfachbesetzungInfoWaren",Integer.parseInt(cbExtraHausInfo.getSelectedItem().toString()));
+		besetzung.put("MinBesetzungInfoTechnik", Integer.parseInt(cbMinTechInfo.getSelectedItem().toString()));
+		besetzung.put("MehrbesetzungKasse", Integer.parseInt(cbExtraKassen.getSelectedItem().toString()));
 		return besetzung;
 	}
-	
-	public String gibWochenplanbezeichnung(){
+
+	public String gibWochenplanbezeichnung() {
 		return cbKW.getSelectedItem().toString();
 	}
 
