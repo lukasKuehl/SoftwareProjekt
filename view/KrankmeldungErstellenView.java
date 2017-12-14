@@ -1,6 +1,7 @@
 package view;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -19,41 +20,25 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
+import javax.swing.JFormattedTextField;
 
-public class KrankmeldungErstellenView extends JFrame implements ActionListener {
+public class KrankmeldungErstellenView extends JFrame  {
 
-	private JPanel contentPane, panelKrankmeldung;
-	private JTextField txtBisTermin, txtVonTermin;
-	private JComboBox comboBoxMA;
-	private JLabel labelKrankmeldungErstellen;
-	private JTextField txtGrund;
+	private JPanel contentPane, panelKrankmeldung = null;
+	private JTextField txtBisTermin, txtVonTermin =null;
+	private JComboBox comboBoxMA =null;
+	private JLabel labelKrankmeldungErstellen, lblMitarbeiterAuswaehlen, lblNotizEintragen =null;
+	private JTextField txtGrund = null;;
+	private JButton buttonBestaetigen = null;;
+	private String username= null;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					KrankmeldungErstellenView frame = new KrankmeldungErstellenView();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
-	/**
-	 * Create the frame.
-	 */
-	public KrankmeldungErstellenView() {
-		setTitle("Einsatzplan");
+	
+	protected KrankmeldungErstellenView() {
+		setTitle("Krankmeldung erstellen");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 1538,864);
-		
-		
+		setBounds(250, 250, 800,600);
+				
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
@@ -61,6 +46,7 @@ public class KrankmeldungErstellenView extends JFrame implements ActionListener 
 		
 		panelKrankmeldung = new JPanel();
 		panelKrankmeldung.setBounds(29, 30, 1188, 728);
+		panelKrankmeldung.setBackground(Color.WHITE);
 		panelKrankmeldung.setBorder(UIManager.getBorder("Button.border"));
 		contentPane.add(panelKrankmeldung);
 		panelKrankmeldung.setLayout(null);
@@ -69,12 +55,12 @@ public class KrankmeldungErstellenView extends JFrame implements ActionListener 
 		txtBisTermin.setFont(new Font("Verdana", Font.PLAIN, 14));
 		txtBisTermin.setText("05.11.2017");
 		txtBisTermin.setColumns(10);
-		txtBisTermin.setBounds(64, 224, 189, 20);
+		txtBisTermin.setBounds(61, 184, 189, 20);
 		panelKrankmeldung.add(txtBisTermin);
 		
-		labelKrankmeldungErstellen = new JLabel("Krankmeldung erstellen:");
-		 labelKrankmeldungErstellen.setFont(new Font("Verdana", Font.PLAIN, 22));
-		 labelKrankmeldungErstellen.setBounds(64, 100, 302, 28);
+		labelKrankmeldungErstellen = new JLabel("Krankmeldung erstellen");
+		labelKrankmeldungErstellen.setFont(new Font("Verdana", Font.BOLD, 21));
+		labelKrankmeldungErstellen.setBounds(61, 58, 302, 28);
 		panelKrankmeldung.add( labelKrankmeldungErstellen);
 		
 		txtVonTermin = new JTextField();
@@ -82,59 +68,53 @@ public class KrankmeldungErstellenView extends JFrame implements ActionListener 
 		txtVonTermin.setText("01.11.2017");
 		txtVonTermin.setHorizontalAlignment(SwingConstants.LEFT);
 		txtVonTermin.setColumns(10);
-		txtVonTermin.setBounds(64, 169, 189, 20);
+		txtVonTermin.setBounds(61, 129, 189, 20);
 		panelKrankmeldung.add(txtVonTermin);
 		
-		JComboBox comboBoxMA = new JComboBox();
+		comboBoxMA = new JComboBox();
+//		alleMitarbeiterAnzeigen(comboBoxMa.); 
 //		comboBoxMA.setModel(new DefaultComboBoxModel(new Mitarbeiter[]);
 				// Liste mit den Mitarbeiter wird vom Controller 
-				// Array Struktur 
-			
+				
 	
-		comboBoxMA.setBounds(64, 289, 98, 20);
+		comboBoxMA.setBounds(253, 243, 152, 20);
 		panelKrankmeldung.add(comboBoxMA);
 		
 		txtGrund = new JTextField();
 		txtGrund.setHorizontalAlignment(SwingConstants.CENTER);
 		txtGrund.setFont(new Font("Verdana", Font.PLAIN, 14));
-		txtGrund.setText("ggf. Grund");
-		txtGrund.setBounds(200, 289, 277, 301);
+		txtGrund.setBounds(61, 311, 277, 143);
 		panelKrankmeldung.add(txtGrund);
 		txtGrund.setColumns(10);
 		
-		JButton button = new JButton("bestätigen");
-		button.addActionListener(new ActionListener() {
+	
+		 buttonBestaetigen = new JButton("bestätigen");
+		 buttonBestaetigen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				int eingabe = JOptionPane.showConfirmDialog(null, "Wollen Sie die Daten bestätigen?", null, JOptionPane.YES_NO_CANCEL_OPTION);
 		//		System.out.print(eingabe); Kontrolle
 				
 				if (eingabe==0) {
-					String s[]= new String [3];
-					int terminnr=0;
-					terminnr++;
-	
-					try {
-	
-			s[0] = txtVonTermin.getText();
-    	   	s[1] = txtBisTermin.getText();	  
-    	   	
-//    	   	vergleichGrundInhalt(txtGrund.getText());
-			s [2] =	txtGrund.getText();
-			
-//			s[3] = (String) comboBoxMA.getSelectedItem();  / Wiedergabe des gewählten Items
-//			s[3] = String.valueOf(terminnr); TerminNr anzeigen
+					String s[]= new String [4];
+				
+					try {	 
+			//AnmeldungView.username();
+//			s[0] = termin.getNextTerminId() +";";
+			s[0] = txtVonTermin.getText()+ ";";
+    	   	s[1] = txtBisTermin.getText()+ ";";	  
+			s[2] =	txtGrund.getText()+ ";";
+			s[3] = (String) comboBoxMA.getSelectedItem();  // Wiedergabe des gewählten Items
 			
 			//test des Array Inhalts
+			
 			for(int i=0; i<s.length; ++i) {
 				System.out.print(s[i]+" ");  
 			}
-
-				// Fenster mit Dispose schließen
 			System.exit(0);
 					}
 							       
 			       catch (NumberFormatException e) {
-			    	   System.out.println("Daten konnten nicht umgewandelt werden, da die Dateiformate nicht stimmen! - Fehler: TerminErstellenView Zeile Button Bestätigen ActionPerformed");
+			    	   System.out.println("Daten konnten nicht umgewandelt wrerden, da die Dateiformate nicht stimmen! - Fehle: TerminErstellenView Zeile Button Bestätigen ActionPerformed");
 			    	   e.printStackTrace();
 			       }
 			}
@@ -145,29 +125,28 @@ public class KrankmeldungErstellenView extends JFrame implements ActionListener 
 			
 			}
 			);
-		button.setBounds(550, 567, 89, 23);
-		panelKrankmeldung.add(button);
+		 buttonBestaetigen.setBounds(558, 431, 89, 23);
+		panelKrankmeldung.add(buttonBestaetigen);
+		
+		lblNotizEintragen = new JLabel("Notiz eintragen");
+		lblNotizEintragen.setFont(new Font("Verdana", Font.PLAIN, 15));
+		lblNotizEintragen.setBounds(61, 285, 152, 14);
+		panelKrankmeldung.add(lblNotizEintragen);
+		
+		lblMitarbeiterAuswaehlen = new JLabel("Mitarbeiter ausw\u00E4hlen");
+		lblMitarbeiterAuswaehlen.setFont(new Font("Verdana", Font.PLAIN, 15));
+		lblMitarbeiterAuswaehlen.setBounds(61, 244, 165, 14);
+		panelKrankmeldung.add(lblMitarbeiterAuswaehlen);
 
 		setVisible(true);
 	}
+	
 
-	// Vergleich es Inhaltes vom JTextfield txtGrund
-//	private String vergleichGrundInhalt(String grund) {
-//		String eingabe = txtGrund.getText();
-//		if (eingabe == "ggf.Grund" ) {
-//			txtGrund.setText(null);
-//		}return txtGrund.getText();
-//	}
-	
-	
-	@Override
-	public void actionPerformed(ActionEvent arg0) {
+ // LOESCHEN
+//	public void actionPerformed(ActionEvent arg0) {
 		// TODO Auto-generated method stub
 		
-	}
-		
-	
-	
+
 				}
 
 

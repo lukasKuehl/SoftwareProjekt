@@ -1,6 +1,7 @@
 package view;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Font;
 
@@ -11,57 +12,38 @@ import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
-import controller.TerminStrg;
-import data.Termin;
-
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.awt.event.ActionEvent;
 
 public class TerminLoeschenView extends JFrame {
 
-	private JPanel contentPane;
-	private JLabel labelTerminLoeschen;
-	private JPanel panelTermin;
+	private JPanel contentPane, panelTermin = null;
+	private JLabel lblTerninLoeschen =null;
 	private JList list =null;
+	private String username = null;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					TerminLoeschenView frame = new TerminLoeschenView();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
-	/**
-	 * Create the frame.
-	 */
-	public TerminLoeschenView() {
+	protected TerminLoeschenView() {
 		setTitle("Einsatzplan");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 1538,864);
-		
+		setBounds(250, 250, 800,600);
 		
 		contentPane = new JPanel();
+		contentPane.setBackground(Color.WHITE);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JLabel lblTerninLschen = new JLabel("Termin löschen");
-		lblTerninLschen.setBounds(76, 158, 199, 26);
-		contentPane.add(lblTerninLschen);
+		lblTerninLoeschen = new JLabel("Termin löschen");
+		lblTerninLoeschen.setFont(new Font("Verdana", Font.BOLD, 21));
+		lblTerninLoeschen.setBounds(65, 83, 199, 26);
+		contentPane.add(lblTerninLoeschen);
 		
 		MaListeAnzeigen();
 		
@@ -74,38 +56,44 @@ public class TerminLoeschenView extends JFrame {
 						
 						if (eingabe==0) {
 								
-						if (list.isSelectionEmpty()) {
+							if  (list.isSelectionEmpty()) {
 							
-			//			JOptionPane.ERROR_MESSAGE();		
-						}
-						
-						else {
-							
-						}
-							
-							
+							JOptionPane.showMessageDialog(null, "Es wurde keine Eingabe getätigt", "Error", JOptionPane.ERROR_MESSAGE);
+							}
+							 else {
+								 try {
+									 list.getSelectedIndex();
+								// myController.entferneTermin();
 							// an controller übergeben das er den ausgewählten Termin löscht 
-							
+									 System.exit(0);
+								 }
+								 catch (Exception a) {
+									 a.getMessage();
+									 System.out.println("Die Liste konnte nicht übergeben werden. IOException - Methode ActionPerformed (btnBestätigen)");
+								 }
+							 }
+							}
+						else {
+								System.exit(0);
 						}
 							
-			
-				
-				
-			}
-		});
-		btnBesttigen.setBounds(456, 485, 141, 35);
+			}});
+		btnBesttigen.setBounds(437, 465, 141, 35);
 		contentPane.add(btnBesttigen);
-	
 		
-		
+		JLabel lblTerminAuswhlen = new JLabel("Termin ausw\u00E4hlen");
+		lblTerminAuswhlen.setFont(new Font("Verdana", Font.PLAIN, 13));
+		lblTerminAuswhlen.setBounds(62, 120, 152, 14);
+		contentPane.add(lblTerminAuswhlen);
+
 
 	}
-	
+	//Aktuelle Testklasse für die Anzeige der Termine
 	protected void MaListeAnzeigen () {
 	String s [] = {"Termin 1", "Termin 2"};  // Test 	s
 	list = new JList(s);
 	list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-	list.setBounds(76, 218, 282, 298);
+	list.setBounds(65, 145, 282, 355);
 	list.getModel();
 	contentPane.add(list);
 	}
