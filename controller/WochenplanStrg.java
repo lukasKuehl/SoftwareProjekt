@@ -160,23 +160,114 @@ class WochenplanStrg {
 		*/
 		
 		return success;
-	}
-	
-	
+	}	
 	
 	/**
-	 * @author 
+	 * @author Lukas Kühl
 	 * @info Erzeugen eines Einsatzplanes in Form eines JTables zur Ansicht in der View
 	 */
 	protected JTable generiereWochenplanView(String wpbez){
 		JTable wochenplan = null;	
-			//Ausfüllen
+		/*
+		LinkedList<Tag> tage= myModel.getTage(wpbez);
+		LinkedList<Mitarbeiter> mitarbeiterList = myModel.getAlleMitarbeiter();
+		String[] spaltennamen = null;
+		String[][] zeilen = null;
 		
+		if(tage.size() == 6){
+			
+			String[] tempSpaltennamen = {"", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"};
+			spaltennamen = tempSpaltennamen;
+			
+			LinkedList <String[]> temp = new LinkedList<String[]>();
+			
+			for(Mitarbeiter m : mitarbeiterList){
+				temp.add(generiereMitarbeiterSpalte(wpbez, m, tage.size()));				
+			}
+			
+			zeilen = new String[temp.size()][];
+			
+			for(int i = 0; i < zeilen.length; i++){
+				zeilen[i]= temp.get(i);			
+			}	
+		}
+		
+		if(tage.size() == 7){
+			
+			String[] tempSpaltennamen = {"", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"};
+			spaltennamen = tempSpaltennamen;
+			
+			LinkedList <String[]> temp = new LinkedList<String[]>();
+			
+			for(Mitarbeiter m : mitarbeiterList){
+				temp.add(generiereMitarbeiterSpalte(wpbez, m, tage.size()));				
+			}
+			
+			zeilen = new String[temp.size()][];
+			
+			for(int i = 0; i < zeilen.length; i++){
+				zeilen[i]= temp.get(i);			
+			}	
+		}
+		
+		try{
+			wochenplan = new JTable(zeilen,spaltennamen);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		*/
          return wochenplan;
-       }
+	}
 
-    
-
+	
+	
+	/**
+	 * @author Lukas Kühl
+	 * @info Hilfsmethode zum erzeugen einer Zeile in der Wochenplantabelle für einen Spezifischen Mitarbeiter
+	 */
+    private String[] generiereMitarbeiterSpalte(String wpbez, Mitarbeiter ma, int tageAnzahl){
+    	
+    	String[] rueckgabe = new String[tageAnzahl+1];
+    	
+    	/*
+    	LinkedList<Tag> tage = myModel.getTage(wpbez);
+    	LinkedList<Schicht> schichten = myModel.getSchichten(ma);
+    	
+    	Map<String, Schicht> tageMap = new TreeMap<String, Schicht>();    	
+    	
+    	for(Tag t: tage){    	
+    		
+    		for(Schicht s: schichten){  
+    			
+    			if(s.getTbez().equals(t.getTbez())){
+    				tageMap.put(t.getTbez(), s);    				
+    			}   			
+    		}    		
+    	}      	
+    	
+    	if(tageAnzahl == 6){
+    		rueckgabe[0] = ma.getVorname() + " " + ma.getName();
+    		rueckgabe[1] = tageMap.get("Montag").getStartZeit() + "-" + tageMap.get("Montag").getEndZeit();
+    		rueckgabe[2] = tageMap.get("Dienstag").getStartZeit() + "-" + tageMap.get("Dienstag").getEndZeit();
+    		rueckgabe[3] = tageMap.get("Mittwoch").getStartZeit() + "-" + tageMap.get("Mittwoch").getEndZeit();
+    		rueckgabe[4] = tageMap.get("Donnerstag").getStartZeit() + "-" + tageMap.get("Donnerstag").getEndZeit();
+    		rueckgabe[5] = tageMap.get("Freitag").getStartZeit() + "-" + tageMap.get("Freitag").getEndZeit();
+    		rueckgabe[6] = tageMap.get("Samstag").getStartZeit() + "-" + tageMap.get("Samstag").getEndZeit();
+    	}
+    	
+    	if(tageAnzahl == 7){
+    		rueckgabe[0] = ma.getVorname() + " " + ma.getName();
+    		rueckgabe[1] = tageMap.get("Montag").getStartZeit() + "-" + tageMap.get("Montag").getEndZeit();
+    		rueckgabe[2] = tageMap.get("Dienstag").getStartZeit() + "-" + tageMap.get("Dienstag").getEndZeit();
+    		rueckgabe[3] = tageMap.get("Mittwoch").getStartZeit() + "-" + tageMap.get("Mittwoch").getEndZeit();
+    		rueckgabe[4] = tageMap.get("Donnerstag").getStartZeit() + "-" + tageMap.get("Donnerstag").getEndZeit();
+    		rueckgabe[5] = tageMap.get("Freitag").getStartZeit() + "-" + tageMap.get("Freitag").getEndZeit();
+    		rueckgabe[6] = tageMap.get("Samstag").getStartZeit() + "-" + tageMap.get("Samstag").getEndZeit();
+    		rueckgabe[7] = tageMap.get("Sonntag").getStartZeit() + "-" + tageMap.get("Sonntag").getEndZeit();
+    	}   	
+    	*/
+    	return rueckgabe;
+    }
 		
 	/**
 	 * @author 
