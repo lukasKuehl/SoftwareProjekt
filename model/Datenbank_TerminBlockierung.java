@@ -13,13 +13,6 @@ class Datenbank_TerminBlockierung {
 
 	Datenbank_Connection db_con = new Datenbank_Connection();
 	Connection con = db_con.getCon();
-	
-	private Einsatzplanmodel myModel = null;
-
-	protected Datenbank_TerminBlockierung(Einsatzplanmodel mymodel) {
-	this.myModel = myModel;
-	}
-
 
 
 
@@ -82,7 +75,11 @@ class Datenbank_TerminBlockierung {
 		}
 	}
 
-	// Schicht vorhanden?
+	/**
+	 * @author Anes Preljevic
+	 * @info Prüft ob es zu der eingegebenen Tblocknr eine TerminBlockierung gibt,
+	 * bei existenz return true sonst false
+	 */
 	protected boolean checkTerminBlockierung(int tblocknr) {
 		Statement stmt = null;
 		ResultSet rs = null;
@@ -109,9 +106,12 @@ class Datenbank_TerminBlockierung {
 	}
 
 
-
-	// Auslesen der Schichten aus der Datenbank und eintragen in eine LinkedList, welche übergeben wird
-	protected LinkedList<TerminBlockierung> getTerminBlockierung() {
+	/**
+	 * @author Anes Preljevic
+	 * @info Auslesen aller TerminBlockierungen aus der Datenbank und erzeugen von TerminBlockierung Objekten.
+	 * Diese werden in eine LinkedList abgelegt und ausgegeben.
+	 */
+	protected LinkedList<TerminBlockierung> getTerminBlockierungen() {
 
 		Statement stmt = null;
 		ResultSet rs = null;
@@ -148,8 +148,11 @@ class Datenbank_TerminBlockierung {
 			return null;
 		}
 	}
-
-	// Schicht aus einem Tag löschen/wp
+	/**
+	 * @author Anes Preljevic
+	 * @info Löschen der TerminBlockierung aus der Tabelle TerminBlockierung in der Datenbank,
+	 * welche die übergebene Tblocknr besitzt.
+	 */
 	protected boolean deleteTerminBlockierung(int tblocknr) {
 		Statement stmt = null;
 		ResultSet rs = null;
@@ -172,7 +175,13 @@ class Datenbank_TerminBlockierung {
 			}
 		}
 	}
-	protected  int getNewTblocknr(Connection con) {
+	/**
+	 * @author Anes Preljevic
+	 * @info Fragt die höchste Tblocknr ab und erhöht diese um 1, sodass bei neu Erstellung
+	 * einer TerminBlockierung die nächste Tblocknr vorliegt.
+	 */
+	
+	protected  int getNewTblocknr() {
 		Statement stmt = null;
 		ResultSet rs = null;
 		String sqlQuery = "select max (wpnr)+1 from Wochenplan";

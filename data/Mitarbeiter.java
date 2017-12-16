@@ -8,8 +8,9 @@ public class Mitarbeiter {
 	private String name=null;
 	private int maxstunden=0;
 	private String whname=null;
+	private String email=null;
 	
-	public Mitarbeiter(String benutzername, String passwort, String job, String vorname, String name, int Maxstunden, String Whname){
+	public Mitarbeiter(String benutzername, String passwort, String job, String vorname, String name, int Maxstunden, String Whname, String Email){
 		this.benutzername = benutzername;
 		this.passwort = passwort;
 		this.job = job;
@@ -17,6 +18,15 @@ public class Mitarbeiter {
 		this.name= name;
 		this.maxstunden=maxstunden;
 		this.whname= whname;
+		this.email=email;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	public String getBenutzername() {

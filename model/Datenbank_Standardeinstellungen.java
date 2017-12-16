@@ -21,16 +21,14 @@ class Datenbank_Standardeinstellungen {
 	Datenbank_Connection db_con = new Datenbank_Connection();
 	Connection con = db_con.getCon();
 
-	private Einsatzplanmodel myModel = null;
-
-	protected Datenbank_Standardeinstellungen(Einsatzplanmodel mymodel) {
-	this.myModel = myModel;
-	}
 
 
-
-	// Auslesen der Wochenpläne aus der Datenbank und eintragen in eine TreeMap, welche Übergeben wird
-	protected LinkedList<Standardeinstellungen> getStandardeinstellungen() {
+	/**
+	 * @author Anes Preljevic
+	 * @info Auslesen der Standardeinstellungen aus der Datenbank und erzeugen eines Standardeinstellungen Objektes,
+	 * welches ausgegeben wird.
+	 */
+	protected Standardeinstellungen getStandardeinstellungen() {
 
 		Statement stmt = null;
 		ResultSet rs = null;
@@ -42,9 +40,9 @@ class Datenbank_Standardeinstellungen {
 			stmt = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
 			rs = stmt.executeQuery(sqlStatement);
 
-			LinkedList<Standardeinstellungen> standardeinstellungenList = new LinkedList();
 
-			while (rs.next()) {
+
+				rs.next();
 				Standardeinstellungen s = new Standardeinstellungen(sqlStatement, sqlStatement, sqlStatement, sqlStatement, 0, 0, 0, 0, 0);
 
 
@@ -61,12 +59,12 @@ class Datenbank_Standardeinstellungen {
 				
 
 				
-			}
+			
 
 			rs.close();
 			stmt.close();
 
-			return standardeinstellungenList;
+			return s;
 
 		} catch (SQLException sql) {
 			return null;

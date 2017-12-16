@@ -1,9 +1,6 @@
   package model;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
+
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,7 +10,7 @@ import java.sql.Statement;
 import java.util.LinkedList;
 import java.util.TreeMap;
 
-import javax.swing.JFileChooser;
+
 
 import data.Tag;
 
@@ -21,14 +18,8 @@ import data.Tag;
 import data.Wochenplan;
 
 class Datenbank_Wochenplan {
-
 	Datenbank_Connection db_con = new Datenbank_Connection();
 	Connection con = db_con.getCon();
-	private Einsatzplanmodel myModel = null;
-
-	protected Datenbank_Wochenplan(Einsatzplanmodel mymodel) {
-	this.myModel = myModel;
-	}
 
 
 	
@@ -117,7 +108,13 @@ class Datenbank_Wochenplan {
 		}
 	}
 
-	// Kontrolle ob Wochenplan vorhanden 
+	
+	/**
+	 * @author Anes Preljevic
+	 * @info Prüft ob es zu der eingegebenen Wochenplannr einen Wochenplan gibt,
+	 * bei existenz return true sonst false
+	 */
+	
 	protected boolean checkWochenplan(int wpnr) {
 		Statement stmt = null;
 		ResultSet rs = null;
@@ -142,8 +139,12 @@ class Datenbank_Wochenplan {
 			}
 		}
 	}
-
-	// Wochenplan in der Tabelle Wochenplan bearbeiten
+	/**
+	 * @author Anes Preljevic
+	 * @info Ändert den Öffentlichstatus auf den Wert der übergebenen Woche
+	 */
+	
+	
 	protected void updateWochenplan(Wochenplan wochenplan) {
 
 		int wpnr = wochenplan.getWpnr();
@@ -160,12 +161,8 @@ class Datenbank_Wochenplan {
 			pstmt = con.prepareStatement(sqlStatement);
 
 			con.setAutoCommit(false);
-			
 			pstmt.setBoolean(1, öffentlichstatus);
 			
-
-
-
 			pstmt.executeUpdate();
 			con.commit();
 
@@ -188,14 +185,98 @@ class Datenbank_Wochenplan {
 			}
 		}
 	}
+	/**
+	 * @author Anes Preljevic
+	 * @info Ändert den Öffentlichstatus auf true, bei der Woche mit der übergebenen Wochenplannr
+	 */
+	protected void setzeÖffentlichstatustrue(int wpnr) {
+		
+		Statement stmt = null;
+		String sqlStatement;
 
-	// Auslesen der Wochenpläne aus der Datenbank und eintragen in eine TreeMap, welche Übergeben wird
+		sqlStatement = "UPDATE WOCHENPLAN " + "SET Oeffentlichstatus = true WHERE Wpnr =" + wpnr;
+		
+		
+		try {
+
+			stmt = con.createStatement();
+
+			con.setAutoCommit(false);
+			stmt.executeUpdate(sqlStatement);
+			con.commit();
+
+			con.setAutoCommit(true);
+
+		} catch (SQLException sql) {
+			System.err.println("Methode updateWochenplan SQL-Fehler: " + sql.getMessage());
+			try {
+				con.rollback();
+				con.setAutoCommit(true);
+			} catch (SQLException sqlRollback) {
+				System.err.println("Methode setzeÖffentlichstatustrue " + "- Rollback -  SQL-Fehler: " + sqlRollback.getMessage());
+			}
+		} finally {
+			try {
+				if (stmt != null)
+					stmt.close();
+			} catch (SQLException e) {
+				System.err.println("Methode setzeÖffentlichstatustrue (finally) SQL-Fehler: " + e.getMessage());
+			}
+		}
+	}
+	/**
+	 * @author Anes Preljevic
+	 * @info Ändert den Öffentlichstatus auf false, bei der Woche mit der übergebenen Wochenplannr
+	 */
+	
+	protected void setzeÖffentlichstatusfalse(int wpnr) {
+		
+		Statement stmt = null;
+		String sqlStatement;
+		sqlStatement = "UPDATE WOCHENPLAN SET Oeffentlichstatus = false WHERE Wpnr =" + wpnr;
+		
+		
+		try {
+
+			stmt = con.createStatement();
+
+			con.setAutoCommit(false);
+			stmt.executeUpdate(sqlStatement);
+			con.commit();
+
+			con.setAutoCommit(true);
+
+		} catch (SQLException sql) {
+			System.err.println("Methode updateWochenplan SQL-Fehler: " + sql.getMessage());
+			try {
+				con.rollback();
+				con.setAutoCommit(true);
+			} catch (SQLException sqlRollback) {
+				System.err.println("Methode setzeÖffentlichstatusfalse " + "- Rollback -  SQL-Fehler: " + sqlRollback.getMessage());
+			}
+		} finally {
+			try {
+				if (stmt != null)
+					stmt.close();
+			} catch (SQLException e) {
+				System.err.println("Methode setzeÖffentlichstatusfalse (finally) SQL-Fehler: " + e.getMessage());
+			}
+		}
+	}
+
+	/**
+	 * @author Anes Preljevic
+	 * @info Auslesen aller Wochenpläne aus der Datenbank und erzeugen von Wochenplan Objekten.
+	 * Diese werden in eine TreeMap abgelegt. Die zugehörigen Tage  
+	 * werden in einer LinkedList gespeichert.( in diesen werden zusätzlich die zugehörigen Schichten ausgelesen) 
+	 * Diese Liste ist in der TreeMap enthalten welche außerdem den Ausgabewert darstellt.
+	 */
 	protected TreeMap<Integer , Wochenplan> getWochenpläne() {
 
-		//Datenbank_Tag tag = new Datenbank_Tag();
+		Datenbank_Tag tag = new Datenbank_Tag();
 		//Datenbank_Schicht schicht = new Datenbank_Schicht();
 
-		//LinkedList<Tag> tageList = tag.getTag();;
+		LinkedList<Tag> tageList = tag.getTage();;
 		//LinkedList<Schicht> schichtList = schicht.getSchicht();
 
 		Statement stmt = null;
@@ -223,9 +304,9 @@ class Datenbank_Wochenplan {
 				wp.setMinanzinfow(rs.getInt("Minanzinfow"));
 				wp.setMinanzkasse(rs.getInt("Minanzkasse"));
 				wp.setMehrbesetzung(rs.getInt("Mehrbesetzung"));
-				//for (Tag ta : tageList) {
-					//if (ta.getWpnr() == s.getWpnr()) {
-						//s.setLinkedListTage(ta);
+				for (Tag ta : tageList) {
+					if (ta.getWpnr() == wp.getWpnr()) {
+						wp.setLinkedListTage(ta);
 				
 
 			//			for (Schicht sch : schichtList) {
@@ -234,8 +315,8 @@ class Datenbank_Wochenplan {
 					//			s.setLinkedListSchichten(sch);
 						//	}
 						//}
-				//	}
-				//}
+					}
+				}
 
 				wochenplanList.put(wp.getWpnr(), wp);
 			}
@@ -249,15 +330,22 @@ class Datenbank_Wochenplan {
 			return null;
 		}
 	}
-	// Auslesen der Wochenpläne aus der Datenbank und eintragen in eine TreeMap, welche Übergeben wird
+	/**
+		* @author Anes Preljevic
+		* @info Auslesen des Wochenplans mit der übergebenen Wochenplannr aus der Datenbank, erstellen eines Objektes Wochenplan mit den Daten aus der Datenbank.
+		*  Die zugehörigen Tage werden in einer LinkedList gespeichert.( in diesen werden zusätzlich die zugehörigen Schichten ausgelesen) 
+		* Diese Liste ist in dem Objekt enthalten welches außerdem den Ausgabewert darstellt.
+		*/
 	protected Wochenplan getWochenplan(int wpnr) {
 
-		//Datenbank_Tag tag = new Datenbank_Tag();
-		//Datenbank_Schicht schicht = new Datenbank_Schicht();
-
-		//LinkedList<Tag> tageList = tag.getTag();;
-		//LinkedList<Schicht> schichtList = schicht.getSchicht();
-
+		Datenbank_Tag tag = new Datenbank_Tag();
+		LinkedList<Tag> tageList = tag.getTage();;
+	
+		
+		if (!checkWochenplan(wpnr)){
+			return null;
+		}
+		else{
 		Statement stmt = null;
 		ResultSet rs = null;
 		String sqlStatement = "select Wpnr, Oeffentlichstatus, Oeffnungszeit, Schließzeit, Hauptzeitbeginn, Hauptzeitende, Benutzername,"
@@ -281,41 +369,54 @@ class Datenbank_Wochenplan {
 				wp.setMinanzinfow(rs.getInt("Minanzinfow"));
 				wp.setMinanzkasse(rs.getInt("Minanzkasse"));
 				wp.setMehrbesetzung(rs.getInt("Mehrbesetzung"));
-				//for (Tag ta : tageList) {
-					//if (ta.getWpnr() == s.getWpnr()) {
-						//s.setLinkedListTage(ta);
+				if (rs.wasNull())
+					sqlStatement = "--";
+				for (Tag ta : tageList) {
+					if (ta.getWpnr() == wp.getWpnr()) {
+						wp.setLinkedListTage(ta);
 				
-
-			//			for (Schicht sch : schichtList) {
-					
-				//			if (sch.getWpnr() == ta.getWpnr()&&(sch.getWpnr() == ta.getWpnr()&& sch.getTbez() == ta.getTbez())) {
-					//			s.setLinkedListSchichten(sch);
-						//	}
-						//}
-				//	}
-				//}
 
 			
 
 			rs.close();
 			stmt.close();
+					}
+				}
 
 			return wp;
-
-		} catch (SQLException sql) {
+		}
+		catch (SQLException sql) {
 			return null;
 		}
+		}
 	}
-
-	// Student aus der tabelle Wochenplan löschen 
+	/**
+	 * @author Anes Preljevic
+	 * @info Löschen eines Wochenplans mit zugehörigen Tagen (schichten)  aus den Datenbank Tabellen 
+	 * Wochenplan, Tag, Schicht, Ma-Schicht ( Schicht und Ma-Schicht werden über die Tag/Schicht - deleteMethode gelöscht).
+	 */
+	
 	protected boolean deleteWochenplan(int wpnr) {
+		Datenbank_Tag tag = new Datenbank_Tag();
+		LinkedList<Tag> tageList = tag.getTage();
+
+		if (!checkWochenplan(wpnr)){
+			return false;
+		}
+		else{
 		Statement stmt = null;
 		ResultSet rs = null;
 		String sqlQuery = "DELETE FROM WOCHENPLAN WHERE Wpnr = " + wpnr;
+		for (Tag ta : tageList) {
+			if (ta.getWpnr() == wpnr) {
+				tag.deleteTag(wpnr);
+			}
+			}
 		
 		try {
 			stmt = con.createStatement();
 			rs = stmt.executeQuery(sqlQuery);
+
 			return true;
 		} catch (SQLException sql) {
 			return false;
@@ -329,13 +430,20 @@ class Datenbank_Wochenplan {
 				System.err.println("Methode deleteWochenplan (finally) SQL-Fehler: " + e.getMessage());
 			}
 		}
+		}
 	}
 
 //	if(tmp[3].equalsIgnoreCase("null"))
 //		pstmt.setNull(4, java.sql.Types.INTEGER);
 //	else
 //		pstmt.setInt(4, Integer.parseInt(tmp[3]));
-	protected  int getNewWpnr(Connection con) {
+	/**
+	 * @author Anes Preljevic
+	 * @info Fragt die höchste Wpnr ab und erhöht diese um 1, sodass bei neu Erstellung
+	 * eines Wochenplans die nächste Wpnr vorliegt.
+	 */
+	
+	protected  int getNewWpnr() {
 		Statement stmt = null;
 		ResultSet rs = null;
 		String sqlQuery = "select max (wpnr)+1 from Wochenplan";

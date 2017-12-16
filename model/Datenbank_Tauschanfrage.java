@@ -16,12 +16,6 @@ class Datenbank_Tauschanfrage {
 	Datenbank_Connection db_con = new Datenbank_Connection();
 	Connection con = db_con.getCon();
 
-	private Einsatzplanmodel myModel = null;
-
-	protected Datenbank_Tauschanfrage(Einsatzplanmodel mymodel) {
-	this.myModel = myModel;
-	}
-
 
 
 
@@ -84,7 +78,7 @@ class Datenbank_Tauschanfrage {
 
 	/**
 	 * @Anes Preljevic
-	 * @info Prüft ob es zu der eingegebenen tauschnr bereits eine Tauschtanfrage gibt, bei existenz return true, sonst false
+	 * @info Prüft ob es zu der eingegebenen tauschnr eine Tauschtanfrage gibt, bei existenz return true sonst false.
 	 */
 	private boolean checkTauschanfrage(int tauschnr) {
 		Statement stmt = null;
@@ -132,9 +126,6 @@ class Datenbank_Tauschanfrage {
 
 			con.setAutoCommit(false);
 			pstmt.setBoolean(1, bestätigungsstatus);
-
-
-
 			pstmt.executeUpdate();
 			con.commit();
 
@@ -157,7 +148,43 @@ class Datenbank_Tauschanfrage {
 			}
 		}
 	}
+	/**
+	 * @Anes Preljevic
+	 * @info Ändert den Bestätigungsstatus der übergebenen Tauschanfrage
+	 */
+	protected void bestätigeTauschanfrage(int tauschnr) {
 
+
+		String sqlStatement;
+		sqlStatement = "UPDATE Tauschanfrage " + "SET Bestätigunsstatus = true " + "WHERE Tauschnr =" + tauschnr;
+		Statement stmt = null;
+
+		try {
+
+			stmt = con.createStatement();
+			con.setAutoCommit(false);
+			stmt.executeUpdate(sqlStatement);
+			con.commit();
+
+			con.setAutoCommit(true);
+
+		} catch (SQLException sql) {
+			System.err.println("Methode bestätigeTauschanfrage SQL-Fehler: " + sql.getMessage());
+			try {
+				con.rollback();
+				con.setAutoCommit(true);
+			} catch (SQLException sqlRollback) {
+				System.err.println("Methode bestätigeTauschanfrage " + "- Rollback -  SQL-Fehler: " + sqlRollback.getMessage());
+			}
+		} finally {
+			try {
+				if (stmt != null)
+					stmt.close();
+			} catch (SQLException e) {
+				System.err.println("Methode bestätigeTauschanfrage (finally) SQL-Fehler: " + e.getMessage());
+			}
+		}
+	}
 	/**
 	 * @Anes Preljevic
 	 * @info Auslesen der Tauschanfragen aus der Datenbank und hinzufügen in eine Liste, welche den Ausgabewert darstellt 
@@ -217,14 +244,14 @@ class Datenbank_Tauschanfrage {
 			con.setAutoCommit(true);
 			
 		} catch (SQLException sql) {
-			System.err.println("Methode updateTauschanfrage SQL-Fehler: " + sql.getMessage());
+			System.err.println("Methode deleteTauschanfrage SQL-Fehler: " + sql.getMessage());
 			try {
 				
 				con.rollback();
 				con.setAutoCommit(true);
 			
 			} catch (SQLException sqlRollback) {
-					System.err.println("Methode updateTauschanfrage " + "- Rollback -  SQL-Fehler: " + sqlRollback.getMessage());
+					System.err.println("Methode deleteTauschanfrage " + "- Rollback -  SQL-Fehler: " + sqlRollback.getMessage());
 				}
 		} finally {
 			try {
@@ -238,7 +265,12 @@ class Datenbank_Tauschanfrage {
 		}
 		
 	}
-	protected  int getNewTauschnr(Connection con) {
+	/**
+	 * @author Anes Preljevic
+	 * @info Fragt die höchste Tauschnr ab und erhöht diese um 1, sodass bei neu Erstellung
+	 * einer Tauschanfrage die nächste Tauschnr vorliegt.
+	 */
+	protected  int getNewTauschnr() {
 		Statement stmt = null;
 		ResultSet rs = null;
 		String sqlQuery = "select max (tauschnr)+1 from Tauschanfrage";

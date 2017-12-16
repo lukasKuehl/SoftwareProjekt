@@ -14,11 +14,6 @@ class Datenbank_Warenhaus {
 
 	Datenbank_Connection db_con = new Datenbank_Connection();
 	Connection con = db_con.getCon();
-	private Einsatzplanmodel myModel = null;
-
-	protected Datenbank_Warenhaus(Einsatzplanmodel mymodel) {
-	this.myModel = myModel;
-	}
 
 
 	protected void addWarenhaus(Warenhaus warenhaus) {
@@ -63,7 +58,11 @@ class Datenbank_Warenhaus {
 			}
 		}
 	}
-	// Auslesen der Schichten aus der Datenbank und eintragen in eine LinkedList, welche übergeben wird
+	/**
+	 * @author Anes Preljevic
+	 * @info Auslesen der Warenhäuser aus der Datenbank und erzeugen von Warenhaus Objekten.
+	 * Diese werden in eine LinkedList abgelegt und ausgegeben.
+	 */
 	protected LinkedList<Warenhaus> getWarenhaus() {
 
 		Statement stmt = null;
@@ -72,7 +71,7 @@ class Datenbank_Warenhaus {
 		String sqlStatement = "select Whname, anzkasse, anzinfo from Warenhaus";
 
 		try {
-			stmt = con.createStatement();
+			stmt = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
 			rs = stmt.executeQuery(sqlStatement);
 
 			LinkedList<Warenhaus> warenhausList = new LinkedList<>();

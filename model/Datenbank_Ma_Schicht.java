@@ -14,16 +14,10 @@ import data.Ma_Schicht;
 	Datenbank_Connection db_con = new  Datenbank_Connection();
 	Connection con = db_con.getCon();
 
-	private Einsatzplanmodel myModel = null;
-
-	protected Datenbank_Ma_Schicht(Einsatzplanmodel mymodel) {
-	this.myModel = myModel;
-	}
-
 
 
 	/**
-	 * @Anes Preljevic
+	 * @author Anes Preljevic
 	 * @info Mitarbeiter in eine Schicht eintragen, neuer Datensatz Ma_Schicht in der Ma_Schicht Tabelle
 	 */
 	protected void addMa_Schicht(Ma_Schicht ma_schicht) {
@@ -74,7 +68,7 @@ import data.Ma_Schicht;
 	}
 
 	/**
-	 * @Anes Preljevic
+	 * @author Anes Preljevic
 	 * @info Prüft ob es zu der eingegebenen schichtnr und dem benutzernamen bereits einen Mitarbeiter in der Schicht gibt, bei existenz return true, sonst false
 	 */
 	protected boolean checkMa_Schicht(int schichtnr, String benutzername) {
@@ -104,7 +98,7 @@ import data.Ma_Schicht;
 
 
 	/**
-	 * @Anes Preljevic
+	 * @author Anes Preljevic
 	 * @info Auslesen der Mitarbeiter mit den zugehörigen Schichten aus der Datenbank und hinzufügen in eine Liste, welche den Ausgabewert darstellt 
 	 */
 	protected LinkedList<Ma_Schicht> getMa_Schicht() {
@@ -139,14 +133,79 @@ import data.Ma_Schicht;
 			return null;
 		}
 	}
+
 	/**
-	 * @Anes Preljevic
+	* @author Anes Preljevic
+	* @info Auslesen der Mitarbeiter die in eine Schicht gehören mit der übergebenen Schichtnr aus der Datenbank,
+	*  erstellen eines Objektes Ma_Schicht mit den Daten aus der Datenbank. Liste mit den Ma_Schicht Objekten
+	*  wird ausgegeben.
+	*/
+	protected LinkedList<Ma_Schicht> getMitarbeiterausderSchicht(int schichtnr) {
+
+		Statement stmt = null;
+		ResultSet rs = null;
+
+		String sqlStatement = "SELECT Schichtnr, Benutzername from Ma_Schicht WHERE schichtnr="+schichtnr;
+
+		try {
+			stmt = con.createStatement();
+			rs = stmt.executeQuery(sqlStatement);
+
+			LinkedList<Ma_Schicht> ma_schichtList = new LinkedList<>();
+
+			while (rs.next()) {
+				Ma_Schicht ms = new Ma_Schicht(sqlStatement,0);
+
+				ms.setSchichtnr(rs.getInt("Schichtnr"));
+				ms.setBenutzername(rs.getString("Benutzername"));
+				
+				
+				ma_schichtList.add(ms);
+			}
+
+			rs.close();
+			stmt.close();
+
+			return ma_schichtList;
+
+		} catch (SQLException sql) {
+			return null;
+		}
+	}
+	/**
+	 * @author Anes Preljevic
 	 * @info Löschen eines Mitarbeiters aus einer Schicht, oder entfernen einer Schicht vom Mitarbeiter (falls die Schicht gelöscht wurde)
 	 */
 	protected boolean deleteMa_Schicht(int schichtnr, String benutzername) {
 		Statement stmt = null;
 		ResultSet rs = null;
 		String sqlQuery = "DELETE FROM Ma_Schicht WHERE Schichtnr = "+schichtnr+" and Benutzername= "+benutzername+"";
+
+		try {
+			stmt = con.createStatement();
+			rs = stmt.executeQuery(sqlQuery);
+			return true;
+		} catch (SQLException sql) {
+			return false;
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (stmt != null)
+					stmt.close();
+			} catch (SQLException e) {
+				System.err.println("Methode deleteMa_Schicht (finally) SQL-Fehler: " + e.getMessage());
+			}
+		}
+	}
+	/**
+	 * @author Anes Preljevic
+	 * @info Löscht den Ma_Schicht Datensatz aus der Tabelle Ma_Schicht, mit dem die übergebene Schichtnr übereinstimmt
+	 */
+	protected boolean deleteMa_SchichtWochenplan(int schichtnr) {
+		Statement stmt = null;
+		ResultSet rs = null;
+		String sqlQuery = "DELETE FROM Ma_Schicht WHERE Schichtnr = "+schichtnr;
 
 		try {
 			stmt = con.createStatement();

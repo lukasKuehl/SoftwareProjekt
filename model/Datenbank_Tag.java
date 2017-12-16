@@ -11,6 +11,7 @@ import model.Datenbank_Connection;
 
 
 import data.Tag;
+import data.Tblock_Tag;
 import data.Schicht;
 
 
@@ -19,30 +20,8 @@ class Datenbank_Tag {
 	Datenbank_Connection db_con = new Datenbank_Connection();
 	Connection con = db_con.getCon();
 	
-	private Einsatzplanmodel myModel = null;
-
-	protected Datenbank_Tag(Einsatzplanmodel mymodel) {
-	this.myModel = myModel;
-	}
-
-
 	
-	
-	//Erstellen der Tabelle Tag 
-	protected boolean createModule() {
-		Statement stmt = null;
-		String sqlStatement = "CREATE TABLE Tag (Tbez VARCHAR(15) NOT NULL PRIMARY KEY,"
-				+ "Wpnr int(5) NOT NULL PRIMARY KEY FOREIGN KEY ," +"Anzschicht int(2) NOT NULL," +"Feiertag TINYINT(1) NOT NULL )";
-		try {
-			stmt = con.createStatement();
-			stmt.execute(sqlStatement);
-			stmt.close();
-			return true;
-		} catch (SQLException sql) {
-			return false;
-		}
-	}
-	
+
 	//Tage in der Tabelle Tag hinzufügen 
 	protected void addTag(Tag tag) {	
 		
@@ -96,8 +75,11 @@ class Datenbank_Tag {
 			}
 		}
 	}
-		
-	//Kontrolle ob Tag in der Tabelle schon vorhanden ist 
+	/**
+	 * @author Anes Preljevic
+	 * @info Prüft ob es zu der eingegebenen Wochenplannr und der Tagbezeichnung einen Tag gibt,
+	 * bei existenz return true sonst false
+	 */
 	protected boolean checkTag(String tbez, int wpnr) {
 		Statement stmt = null;
 		ResultSet rs = null;
@@ -125,7 +107,12 @@ class Datenbank_Tag {
 		}
 	}
 	
-	//Tage in der Tabelle Tag bearbeiten
+	/**
+	 * @author Anes Preljevic
+	 * @info Ändert den Feiertag status auf den Wert des übergebenen Tages.
+	 */
+	
+	
 	private void updateTag(Tag tag) {
 		
 		String tbez = tag.getTbez();
@@ -173,15 +160,105 @@ class Datenbank_Tag {
 			}
 		}
 	}	
-	
-	
+	/**
+	 * @author Anes Preljevic
+	 * @info Ändert den Feiertag status auf true, bei dem Tag mit der übergebenen Tbez und wpnr.
+	 */
+	private void setzeFeiertagtrue(String tbez, int wpnr) {
+		Statement stmt = null;
+		String sqlStatement;
+		sqlStatement = "UPDATE Tag Set Feiertag = true"
+					+ "WHERE where tbez = '"+tbez+"' and wpnr= '"+wpnr+"'";
 		
-	protected LinkedList<Tag> getTag() {
+		
+		try {	
+			
+			stmt = con.createStatement();
+			con.setAutoCommit(false);
+			stmt.executeUpdate(sqlStatement);
+			con.commit();			
+
+			con.setAutoCommit(true);
+			
+		} catch (SQLException sql) {
+			System.err.println("Methode setzeFeiertagtrue SQL-Fehler: "
+					+ sql.getMessage());
+			try {
+				con.rollback();
+				con.setAutoCommit(true);
+			} catch (SQLException sqlRollback) {
+				System.err.println("Methode setzeFeiertagtrue "
+						+ "- Rollback -  SQL-Fehler: "
+						+ sqlRollback.getMessage());
+			}
+		} finally {
+			try {
+				if (stmt != null)
+					stmt.close();
+			} catch (SQLException e) {
+				System.err.println("Methode setzeFeiertagtrue(finally) SQL-Fehler: "
+						+ e.getMessage());
+			}
+		}
+	}	
+	/**
+	 * @author Anes Preljevic
+	 * @info Ändert den Feiertag status auf false, bei dem Tag mit der übergebenen Tbez und wpnr.
+	 */
+	
+	private void setzeFeiertagfalse(String tbez, int wpnr) {
+		Statement stmt = null;
+		String sqlStatement;
+		sqlStatement = "UPDATE Tag Set Feiertag = false"
+					+ "WHERE where tbez = '"+tbez+"' and wpnr= '"+wpnr+"'";
+		
+		
+		try {	
+			
+			stmt = con.createStatement();
+			con.setAutoCommit(false);
+			stmt.executeUpdate(sqlStatement);
+			con.commit();			
+
+			con.setAutoCommit(true);
+			
+		} catch (SQLException sql) {
+			System.err.println("Methode setzeFeiertagfalse SQL-Fehler: "
+					+ sql.getMessage());
+			try {
+				con.rollback();
+				con.setAutoCommit(true);
+			} catch (SQLException sqlRollback) {
+				System.err.println("Methode setzeFeiertagfalse "
+						+ "- Rollback -  SQL-Fehler: "
+						+ sqlRollback.getMessage());
+			}
+		} finally {
+			try {
+				if (stmt != null)
+					stmt.close();
+			} catch (SQLException e) {
+				System.err.println("Methode setzeFeiertagfalse(finally) SQL-Fehler: "
+						+ e.getMessage());
+			}
+		}
+	}	
+	/**
+	 * @author Anes Preljevic
+	 * @info Auslesen aller Tage aus der Datenbank und erzeugen von Tag Objekten.
+	 * Diese werden in eine LinkedList abgelegt. Die zugehörigen Schichten  
+	 * werden in einer LinkedList gespeichert.
+	 * Diese Liste ist in der Tag List enthalten welche außerdem den Ausgabewert darstellt.
+	 */
+	protected LinkedList<Tag> getTage() {
 
 			
-//			Datenbank_Schicht schicht = new Datenbank_Schicht();
-//			LinkedList<Schicht> schichtList = schicht.getSchicht();
-
+			Datenbank_Schicht schicht = new Datenbank_Schicht();
+			LinkedList<Schicht> schichtList = schicht.getSchichten();
+			
+			Datenbank_Tblock_Tag tblock_tag = new Datenbank_Tblock_Tag();
+			LinkedList<Tblock_Tag> tblocktagList = tblock_tag.getAlleTblock_Tag();
+			
 			Statement stmt = null;
 			ResultSet rs = null;
 			String sqlStatement = "select Tbez, Wpnr, Anzschicht, Feiertag from Tag";
@@ -201,16 +278,18 @@ class Datenbank_Tag {
 					t.setFeiertag(rs.getBoolean("Feiertag"));
 			
 					
-					//for (Schicht sch : schichtList) {
-						//if (sch.getWpnr() == t.getWpnr()&& sch.getTbez() == t.getTbez()) {
-							//t.setLinkedListSchichten(sch);
-						//}
-					//}
-
-				
+					for (Schicht sch : schichtList) {
+						if (sch.getWpnr() == t.getWpnr()&& sch.getTbez() == t.getTbez()) {
+							t.setLinkedListSchichten(sch);
+						}
+					}
+					for (Tblock_Tag tbt : tblocktagList) {
+						if (tbt.getWpnr() == t.getWpnr()&& tbt.getTbez() == t.getTbez()) {
+							t.setLinkedListTblock_Tag(tbt);
+						}
+					}
 					
 
-					
 				}
 
 				rs.close();
@@ -224,12 +303,39 @@ class Datenbank_Tag {
 		}
 	
 	
-	//Tag aus der Tabelle Tag löschen
-	protected boolean deleteTag(String tbez, int wpnr) {
+	/**
+	 * @author Anes Preljevic
+	 * @info Löschen eines Tages mit zugehörigen Schichten  aus den Datenbank Tabellen 
+	 * Tag, Schicht, Ma-Schicht (  Ma-Schicht wird über die Schicht - deleteMethode gelöscht).
+	 */
+	
+	protected boolean deleteTag(int wpnr) {
+		Datenbank_Schicht schicht = new Datenbank_Schicht();
+		LinkedList<Schicht> schichtList = schicht.getSchichten();
+		
+		Datenbank_Tblock_Tag tblock_tag = new Datenbank_Tblock_Tag();
+		LinkedList<Tblock_Tag> tblocktagList = tblock_tag.getAlleTblock_Tag();
+		
+		Datenbank_Tag tag = new Datenbank_Tag();
+		LinkedList<Tag> tageList = tag.getTage();
+		
 		Statement stmt = null;
 		ResultSet rs = null;
-		String sqlQuery = "DELETE FROM tag WHERE tbez = '"+tbez+"' and tag.wpnr= '"+wpnr+"'";
+		String sqlQuery = "DELETE FROM tag WHERE tag.wpnr= "+wpnr;
+		for (Schicht sch : schichtList) {
+			if (sch.getWpnr() == wpnr) {
+				schicht.deleteSchicht(wpnr);;
+			}
+			for (Tag t : tageList) {
+				if (t.getWpnr() == wpnr) {
 
+			for (Tblock_Tag tbt : tblocktagList) {
+				if (tbt.getWpnr() == wpnr && tbt.getTbez() == t.getTbez()) {
+					tblock_tag.deleteTblock_Tag(wpnr);;
+				}
+			}
+				}}
+		}
 		try {
 			stmt = con.createStatement();
 			rs = stmt.executeQuery(sqlQuery);
@@ -250,4 +356,6 @@ class Datenbank_Tag {
 			}
 		}
 	}	
+	
+	
 }

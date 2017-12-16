@@ -9,7 +9,7 @@ public class Tag {
 	private int anzschicht;
 	private boolean feiertag;
 	private LinkedList<Schicht> ll_schicht = new LinkedList<Schicht>();
-
+	private LinkedList<Tblock_Tag> ll_tblocktag = new LinkedList<Tblock_Tag>();
 
 	public Tag(String tbez, int wpnr, int anzschicht, boolean feiertag){
 		this.wpnr=wpnr;
@@ -55,6 +55,16 @@ public class Tag {
 
 	public void setLinkedListSchichten(Schicht sch) {
 		this.ll_schicht=ll_schicht;
+		
+	}
+
+
+	public LinkedList<Tblock_Tag> getLl_tblocktag() {
+		return ll_tblocktag;
+	}
+
+	public void setLinkedListTblock_Tag(Tblock_Tag tbt) {
+		this.ll_tblocktag=ll_tblocktag;
 		
 	}
 

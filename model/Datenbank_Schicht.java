@@ -7,18 +7,16 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.LinkedList;
 
+import data.Ma_Schicht;
 import data.Schicht;
+import data.Tag;
 
 class Datenbank_Schicht {
 
 	Datenbank_Connection db_con = new Datenbank_Connection();
 	Connection con = db_con.getCon();
 
-	private Einsatzplanmodel myModel = null;
 
-	protected Datenbank_Schicht(Einsatzplanmodel mymodel) {
-	this.myModel = myModel;
-	}
 
 
 	// Schichten in Tabelle Schicht hinzufg
@@ -68,7 +66,12 @@ class Datenbank_Schicht {
 		}
 	}
 
-	// Schicht vorhanden?
+	/**
+	 * @author Anes Preljevic
+	 * @info Prüft ob es zu der eingegebenen Schichtnr eine Schicht gibt,
+	 * bei existenz return true sonst false
+	 */
+	
 	protected boolean checkSchicht(int schichtnr) {
 		Statement stmt = null;
 		ResultSet rs = null;
@@ -95,9 +98,12 @@ class Datenbank_Schicht {
 	}
 
 
-
-	// Auslesen der Schichten aus der Datenbank und eintragen in eine LinkedList, welche übergeben wird
-	protected LinkedList<Schicht> getSchicht() {
+	/**
+	 * @author Anes Preljevic
+	 * @info Auslesen aller Schichten aus der Datenbank und erzeugen von Schicht Objekten.
+	 * Diese werden in eine LinkedList abgelegt und ausgegeben.
+	 */
+	protected LinkedList<Schicht> getSchichten() {
 
 		Statement stmt = null;
 		ResultSet rs = null;
@@ -105,7 +111,7 @@ class Datenbank_Schicht {
 		String sqlStatement = "select Schichtnr from Schicht";
 
 		try {
-			stmt = con.createStatement();
+			stmt = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
 			rs = stmt.executeQuery(sqlStatement);
 
 			LinkedList<Schicht> schichtList = new LinkedList<>();
@@ -129,18 +135,27 @@ class Datenbank_Schicht {
 			return null;
 		}
 	}
-	protected LinkedList<Schicht> getdieSchicht(int schichtnr) {
-
+	
+	/**
+	 * @author Anes Preljevic
+	 * @info Auslesen einer bestimmten Schicht aus der Datenbank und erzeugen eines Schicht Objektes,
+	 * welches anschließend ausgegeben wird.
+	 */
+	protected Schicht getSchicht(int schichtnr) {
+		if (!checkSchicht(schichtnr)){
+			return null;
+		}
+		else{
 		Statement stmt = null;
 		ResultSet rs = null;
 
 		String sqlStatement = "select Schichtnr from Schicht where schichtnr="+schichtnr;
 
 		try {
-			stmt = con.createStatement();
+			stmt = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
 			rs = stmt.executeQuery(sqlStatement);
 
-			LinkedList<Schicht> schichtList = new LinkedList<>();
+			
 
 			
 				Schicht s = new Schicht(0, sqlStatement, 0);
@@ -149,28 +164,48 @@ class Datenbank_Schicht {
 				s.setTbez(rs.getString("Tbez"));
 				s.setWpnr(rs.getInt("Wpnr"));
 				
-				schichtList.add(s);
-			
 
 			rs.close();
 			stmt.close();
 
-			return schichtList;
+			return s;
 
 		} catch (SQLException sql) {
 			return null;
 		}
+		}
 	}
 
-	// Schicht aus einem Tag löschen/wp
-	protected boolean deleteSchicht(int schichtnr) {
+	/**
+	 * @author Anes Preljevic
+	 * @info Löschen einer Schicht mit zugehörigen Ma_Schicht (Mitarbeitern in Schichten)aus den Datenbank Tabellen 
+	 * Schicht, Ma-Schicht.
+	 */
+	protected boolean deleteSchicht(int wpnr) {
+		Datenbank_Schicht schicht = new Datenbank_Schicht();
+		LinkedList<Schicht> schichtList = schicht.getSchichten();
+		Datenbank_Ma_Schicht masch = new Datenbank_Ma_Schicht();
+		LinkedList<Ma_Schicht> maschichtList = masch.getMa_Schicht();;
+
 		Statement stmt = null;
 		ResultSet rs = null;
-		String sqlQuery = "DELETE FROM Schicht WHERE Schichtnr= "+schichtnr;
+		String sqlQuery = "DELETE FROM Schicht WHERE wpnr= "+wpnr;
+		for (Schicht sch : schichtList) {
+			if (sch.getWpnr() == wpnr) {
 
+		
+		for (Ma_Schicht ms : maschichtList) {
+			if (ms.getSchichtnr() == sch.getSchichtnr()) {
+				masch.deleteMa_SchichtWochenplan(sch.getSchichtnr());
+			}
+			}
+		}
+		}	
 		try {
 			stmt = con.createStatement();
 			rs = stmt.executeQuery(sqlQuery);
+
+			
 			return true;
 		} catch (SQLException sql) {
 			return false;
@@ -185,7 +220,12 @@ class Datenbank_Schicht {
 			}
 		}
 	}
-	protected  int getNewSchichtnr(Connection con) {
+	/**
+	 * @author Anes Preljevic
+	 * @info Fragt die höchste Schichtnr und erhöht diese um 1, sodass bei neu Erstellung
+	 * einer Schicht die nächste Schichtnr vorliegt.
+	 */
+	protected  int getNewSchichtnr() {
 		Statement stmt = null;
 		ResultSet rs = null;
 		String sqlQuery = "select max (schichtnr)+1 from Schicht";
@@ -199,7 +239,7 @@ class Datenbank_Schicht {
 			stmt.close();
 			return maxSchichtnr;
 		} catch (SQLException sql) {
-			System.err.println("Methode getNewEmpno SQL-Fehler: "
+			System.err.println("Methode getNewSchichtnrSQL-Fehler: "
 					+ sql.getMessage());
 			return -1;
 		}
