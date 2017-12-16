@@ -6,6 +6,7 @@ import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Date;
 import java.util.TreeMap;
 
 import javax.swing.DefaultComboBoxModel;
@@ -29,19 +30,21 @@ import javax.swing.JFormattedTextField;
 public class KrankmeldungErstellenView extends JFrame  {
 
 	private JPanel contentPane, panelKrankmeldung = null;
-	private JTextField txtBisTermin, txtVonTermin =null;
+	private JFormattedTextField txtBisTermin, txtVonTermin =null;
 	private JComboBox comboBoxMA =null;
-	private JLabel labelKrankmeldungErstellen, lblMitarbeiterAuswaehlen, lblNotizEintragen =null;
+	private JLabel labelKrankmeldungErstellen, lblMitarbeiterAuswaehlen, lblNotizEintragen, lblVon, lblBis =null;
 	private JTextField txtGrund = null;;
 	private JButton buttonBestaetigen = null;;
 	private String username= null;
 	private Einsatzplanview myView = null;
 	private Einsatzplanmodel myModel = null;
 	private TreeMap <Integer, String> zeitraum= null;
+	private Date formatter = null;
 	
-	protected KrankmeldungErstellenView(Einsatzplanview myView) {
+	protected KrankmeldungErstellenView(Einsatzplanview myView, Einsatzplanmodel myModel) {
 		this.myView= myView;
-		
+		this.myModel =myModel;
+		formatter = new Date();
 		setTitle("Krankmeldung erstellen");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -59,11 +62,10 @@ public class KrankmeldungErstellenView extends JFrame  {
 		contentPane.add(panelKrankmeldung);
 		panelKrankmeldung.setLayout(null);
 		
-		txtBisTermin = new JTextField();
+		txtBisTermin = new JFormattedTextField(formatter);
 		txtBisTermin.setFont(new Font("Verdana", Font.PLAIN, 14));
-		txtBisTermin.setText("05.11.2017");
 		txtBisTermin.setColumns(10);
-		txtBisTermin.setBounds(61, 184, 189, 20);
+		txtBisTermin.setBounds(103, 168, 189, 20);
 		panelKrankmeldung.add(txtBisTermin);
 		
 		labelKrankmeldungErstellen = new JLabel("Krankmeldung erstellen");
@@ -71,26 +73,44 @@ public class KrankmeldungErstellenView extends JFrame  {
 		labelKrankmeldungErstellen.setBounds(61, 58, 302, 28);
 		panelKrankmeldung.add( labelKrankmeldungErstellen);
 		
-		txtVonTermin = new JTextField();
+		txtVonTermin = new JFormattedTextField(formatter);
 		txtVonTermin.setFont(new Font("Verdana", Font.PLAIN, 14));
-		txtVonTermin.setText("01.11.2017");
 		txtVonTermin.setHorizontalAlignment(SwingConstants.LEFT);
 		txtVonTermin.setColumns(10);
-		txtVonTermin.setBounds(61, 129, 189, 20);
+		txtVonTermin.setBounds(103, 113, 189, 20);
 		panelKrankmeldung.add(txtVonTermin);
 		
 		comboBoxMA = new JComboBox();
 //		comboBoxMA.setModel(new DefaultComboBoxModel();
-		comboBoxMA.setBounds(253, 243, 152, 20);
+		comboBoxMA.setBounds(150, 229, 142, 20);
 		panelKrankmeldung.add(comboBoxMA);
 		
-		txtGrund = new JTextField();
+		txtGrund = new JTextField(); 
 		txtGrund.setHorizontalAlignment(SwingConstants.CENTER);
 		txtGrund.setFont(new Font("Verdana", Font.PLAIN, 14));
 		txtGrund.setBounds(61, 311, 277, 143);
 		panelKrankmeldung.add(txtGrund);
 		txtGrund.setColumns(10);
 		
+		lblVon = new JLabel("Von");
+		lblVon.setFont(new Font("Verdana", Font.PLAIN, 15));
+		lblVon.setBounds(61, 113, 46, 14);
+		panelKrankmeldung.add(lblVon);
+		
+		lblBis = new JLabel("Bis ");
+		lblBis.setFont(new Font("Verdana", Font.PLAIN, 15));
+		lblBis.setBounds(61, 171, 26, 14);
+		panelKrankmeldung.add(lblBis);
+		
+		lblNotizEintragen = new JLabel("Notiz eintragen");
+		lblNotizEintragen.setFont(new Font("Verdana", Font.PLAIN, 15));
+		lblNotizEintragen.setBounds(61, 285, 152, 14);
+		panelKrankmeldung.add(lblNotizEintragen);
+		
+		lblMitarbeiterAuswaehlen = new JLabel("Mitarbeiter");
+		lblMitarbeiterAuswaehlen.setFont(new Font("Verdana", Font.PLAIN, 15));
+		lblMitarbeiterAuswaehlen.setBounds(61, 230, 165, 14);
+		panelKrankmeldung.add(lblMitarbeiterAuswaehlen);
 	
 		 buttonBestaetigen = new JButton("bestätigen");
 		 buttonBestaetigen.addActionListener(new ActionListener() {
@@ -104,8 +124,8 @@ public class KrankmeldungErstellenView extends JFrame  {
 		username = anmeldungView.getUsername();
 		int terminnr = myModel.getMaxTBlocknr();
 		String grund=	txtGrund.getText()+ ";";
-		String bez= (String) comboBoxMA.getSelectedItem();
-		String zeitr= txtVonTermin.getText + txtBisTermin.getText();
+		String bez= comboBoxMA.getSelectedItem().toString();
+		String zeitr= txtVonTermin.getText().toString() + txtBisTermin.getText().toString();
 		zeitraum.put(terminnr, zeitr);
 		
 		myView.erstelleTermin(username, bez, zeitraum, grund);
@@ -126,25 +146,10 @@ public class KrankmeldungErstellenView extends JFrame  {
 			);
 		 buttonBestaetigen.setBounds(558, 431, 89, 23);
 		panelKrankmeldung.add(buttonBestaetigen);
-		
-		lblNotizEintragen = new JLabel("Notiz eintragen");
-		lblNotizEintragen.setFont(new Font("Verdana", Font.PLAIN, 15));
-		lblNotizEintragen.setBounds(61, 285, 152, 14);
-		panelKrankmeldung.add(lblNotizEintragen);
-		
-		lblMitarbeiterAuswaehlen = new JLabel("Mitarbeiter ausw\u00E4hlen");
-		lblMitarbeiterAuswaehlen.setFont(new Font("Verdana", Font.PLAIN, 15));
-		lblMitarbeiterAuswaehlen.setBounds(61, 244, 165, 14);
-		panelKrankmeldung.add(lblMitarbeiterAuswaehlen);
-
+	
 		setVisible(true);
 	}
 	
-
- // LOESCHEN
-//	public void actionPerformed(ActionEvent arg0) {
-		// TODO Auto-generated method stub
-		
 
 				}
 

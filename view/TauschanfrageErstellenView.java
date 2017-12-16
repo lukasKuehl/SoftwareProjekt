@@ -20,9 +20,12 @@ public class TauschanfrageErstellenView extends JFrame {
 
 	private JPanel contentPane = null;
 	private JTextField textFieldDatum =null;
-	private JLabel lblSchichtAuswhlen,  lblTauschanfrageStellen, lblDatumEintragen, lblMitarbeiterAuswaehlen  =null;
+	private JLabel lblTauschanfrageStellen, lblMitarbeiterAuswaehlen  =null;
 	private JButton btnVersenden = null;
-	private JComboBox cmbBoxSchicht, cmbBoxMa = null;
+	private JComboBox cmbBoxWP, cmbBoxMa = null;
+	private JLabel lblWochenplanAuswhlen;
+	private JLabel lblTagAuswhlen;
+	private JLabel lblSchichtAuswhlen;
 	
 		protected TauschanfrageErstellenView() {
 		setTitle("Tauschanfrage erstellen");
@@ -41,48 +44,78 @@ public class TauschanfrageErstellenView extends JFrame {
 		lblTauschanfrageStellen.setBounds(62, 91, 385, 26);
 		contentPane.add(lblTauschanfrageStellen);
 		
-		lblMitarbeiterAuswaehlen = new JLabel("Tauschmitarbeiter auswähhlen");
-		lblMitarbeiterAuswaehlen.setFont(new Font("Verdana", Font.PLAIN, 21));
-		lblMitarbeiterAuswaehlen.setBounds(62, 235, 385, 26);
-		contentPane.add(lblMitarbeiterAuswaehlen);
-		
-		JComboBox cmbBoxMa = new JComboBox();
+		JComboBox cmbBoxTag = new JComboBox();
+		cmbBoxTag.setFont(new Font("Verdana", Font.PLAIN, 15));
 	
 		// Mitarbeiter in der JComboBox hinterlegen
 		//Array List
 		// 
-		cmbBoxMa.setBounds(499, 306, 136, 32);
-		contentPane.add(cmbBoxMa);
-		
-		lblSchichtAuswhlen = new JLabel("Schicht auswählen");
-		lblSchichtAuswhlen.setFont(new Font("Verdana", Font.PLAIN, 21));
-		lblSchichtAuswhlen.setBounds(62, 304, 308, 26);
-		contentPane.add(lblSchichtAuswhlen);
-		
-		lblDatumEintragen = new JLabel("Datum eintragen");
-		lblDatumEintragen.setFont(new Font("Verdana", Font.PLAIN, 21));
-		lblDatumEintragen.setBounds(62, 160, 265, 26);
-		contentPane.add(lblDatumEintragen);
+		cmbBoxTag.setBounds(249, 211, 136, 26);
+		contentPane.add(cmbBoxTag);
 		
 		btnVersenden = new JButton("versenden");
 		btnVersenden.setFont(new Font("Verdana", Font.PLAIN, 18));
-		btnVersenden.setBounds(499, 419, 136, 38);
+		btnVersenden.setBounds(590, 495, 136, 36);
 		contentPane.add(btnVersenden);
 		
-		textFieldDatum = new JTextField();
-		textFieldDatum.setHorizontalAlignment(SwingConstants.CENTER);
-		textFieldDatum.setFont(new Font("Verdana", Font.PLAIN, 21));
-		textFieldDatum.setText("01.01.2018");
-		textFieldDatum.setBounds(449, 157, 186, 32);
-		contentPane.add(textFieldDatum);
-		textFieldDatum.setColumns(10);
-		
-		cmbBoxSchicht = new JComboBox();
+		cmbBoxWP = new JComboBox();
 		// Schichten einfügen - aus Datenbank ziehen? 
 		// Array List
 		
-		cmbBoxSchicht.setBounds(499, 237, 136, 32);
-		contentPane.add(cmbBoxSchicht);
+		cmbBoxWP.setBounds(249, 174, 136, 26);
+		contentPane.add(cmbBoxWP);
+		
+		lblWochenplanAuswhlen = new JLabel("Wochenplan auswählen");
+		lblWochenplanAuswhlen.setVerticalAlignment(SwingConstants.BOTTOM);
+		lblWochenplanAuswhlen.setFont(new Font("Verdana", Font.PLAIN, 15));
+		lblWochenplanAuswhlen.setBounds(62, 178, 188, 22);
+		contentPane.add(lblWochenplanAuswhlen);
+		
+		lblTagAuswhlen = new JLabel("Tag \r\nausw\u00E4hlen");
+		lblTagAuswhlen.setVerticalAlignment(SwingConstants.BOTTOM);
+		lblTagAuswhlen.setHorizontalAlignment(SwingConstants.LEFT);
+		lblTagAuswhlen.setFont(new Font("Verdana", Font.PLAIN, 15));
+		lblTagAuswhlen.setBounds(62, 211, 178, 26);
+		contentPane.add(lblTagAuswhlen);
+		
+		lblSchichtAuswhlen = new JLabel("Schicht ausw\u00E4hlen");
+		lblSchichtAuswhlen.setVerticalAlignment(SwingConstants.BOTTOM);
+		lblSchichtAuswhlen.setFont(new Font("Verdana", Font.PLAIN, 15));
+		lblSchichtAuswhlen.setBounds(62, 248, 136, 26);
+		contentPane.add(lblSchichtAuswhlen);
+		
+		JComboBox comboBoxSchicht = new JComboBox();
+		comboBoxSchicht.setFont(new Font("Verdana", Font.PLAIN, 15));
+		comboBoxSchicht.setBounds(249, 248, 136, 26);
+		contentPane.add(comboBoxSchicht);
+		
+		JLabel lblMitWemWollen = new JLabel("Tauschdaten");
+		lblMitWemWollen.setFont(new Font("Verdana", Font.BOLD, 15));
+		lblMitWemWollen.setBounds(62, 347, 222, 14);
+		contentPane.add(lblMitWemWollen);
+		
+		JLabel labelTagAndererMA = new JLabel("Tag \r\nausw\u00E4hlen");
+		labelTagAndererMA.setVerticalAlignment(SwingConstants.BOTTOM);
+		labelTagAndererMA.setHorizontalAlignment(SwingConstants.LEFT);
+		labelTagAndererMA.setFont(new Font("Verdana", Font.PLAIN, 15));
+		labelTagAndererMA.setBounds(62, 372, 178, 26);
+		contentPane.add(labelTagAndererMA);
+		
+		JComboBox comboBox = new JComboBox();
+		comboBox.setFont(new Font("Verdana", Font.PLAIN, 15));
+		comboBox.setBounds(249, 372, 136, 26);
+		contentPane.add(comboBox);
+		
+		JLabel labelSchichtAndererMA = new JLabel("Schicht ausw\u00E4hlen");
+		labelSchichtAndererMA.setVerticalAlignment(SwingConstants.BOTTOM);
+		labelSchichtAndererMA.setFont(new Font("Verdana", Font.PLAIN, 15));
+		labelSchichtAndererMA.setBounds(62, 409, 136, 26);
+		contentPane.add(labelSchichtAndererMA);
+		
+		JComboBox comboBox_1 = new JComboBox();
+		comboBox_1.setFont(new Font("Verdana", Font.PLAIN, 15));
+		comboBox_1.setBounds(249, 409, 136, 26);
+		contentPane.add(comboBox_1);
 		
 		setVisible(true);
 		
