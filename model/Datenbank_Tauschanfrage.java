@@ -7,7 +7,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.LinkedList;
 
+import data.Mitarbeiter;
+import data.Schicht;
 import data.Tauschanfrage;
+import data.Tblock_Tag;
 
 class Datenbank_Tauschanfrage {
 
@@ -187,10 +190,19 @@ class Datenbank_Tauschanfrage {
 	}
 	/**
 	 * @Anes Preljevic
-	 * @info Auslesen der Tauschanfragen aus der Datenbank und hinzufügen in eine Liste, welche den Ausgabewert darstellt 
+	 * @info Auslesen der Tauschanfragen aus der Datenbank und hinzufügen in eine Liste, welche den Ausgabewert darstellt.
+	 * Diese beinhaltet die zugehörigen Mitarbeiter und Schichten der Sender und Empfänger.
+	 * Es werden Mitarbeiter, Schicht Objekte welche dem Sender/Empfänger entsprechen für jede Tauschanfrage gespeichert.
 	 */
-	protected LinkedList<Tauschanfrage> getTauschanfrage() {
-
+	protected LinkedList<Tauschanfrage> getTauschanfragen() {
+		Datenbank_Schicht schicht = new Datenbank_Schicht();
+		LinkedList<Schicht> schichtsenderList = schicht.getSchichten();
+		LinkedList<Schicht> schichtempfängerList = schicht.getSchichten();
+		
+		Datenbank_Mitarbeiter mitarbeiter = new Datenbank_Mitarbeiter();
+		LinkedList<Mitarbeiter> senderList = mitarbeiter.getAlleMitarbeiter();
+		LinkedList<Mitarbeiter> empfängerList = mitarbeiter.getAlleMitarbeiter();
+		
 		Statement stmt = null;
 		ResultSet rs = null;
 
@@ -212,7 +224,26 @@ class Datenbank_Tauschanfrage {
 				tanf.setSchichtnrsender(rs.getInt("Schichtnrsender"));
 				tanf.setSchichtnrempfänger(rs.getInt("Schichtnrempfänger"));
 				tanf.setTauschnr(rs.getInt("Tauschnr"));
-				
+				for (Schicht sch : schichtsenderList) {
+					if (sch.getSchichtnr() == tanf.getSchichtnrsender()) {
+						tanf.setLinkedListSchichtensender(sch);
+					}
+				}
+				for (Schicht sch : schichtempfängerList) {
+					if (sch.getSchichtnr() == tanf.getSchichtnrempfänger()) {
+						tanf.setLinkedListSchichtenempfänger(sch);
+					}
+				}
+				for (Mitarbeiter ma : senderList) {
+					if (ma.getBenutzername() == tanf.getSender()) {
+						tanf.setLinkedListSender(ma);
+					}
+				}
+				for (Mitarbeiter ma : empfängerList) {
+					if (ma.getBenutzername() == tanf.getEmpfänger()) {
+						tanf.setLinkedListEmpfänger(ma);
+					}
+				}
 				tauschanfrageList.add(tanf);
 			}
 
@@ -225,7 +256,74 @@ class Datenbank_Tauschanfrage {
 			return null;
 		}
 	}
+	/**
+	 * @Anes Preljevic
+	 * @info Auslesen einer bestimmten Tauschanfragen aus der Datenbankl, Speicherung im Objekt Tauschanfrage welches den Ausgabewert darstellt.
+	 * Diese beinhaltet die zugehörigen Mitarbeiter und Schichten der Sender und Empfänger.
+	 * Es werden Mitarbeiter, Schicht Objekte welche dem Sender/Empfänger entsprechen für jede Tauschanfrage gespeichert.
+	 */
+	protected Tauschanfrage getTauschanfrage(int tauschnr) {
+		Datenbank_Schicht schicht = new Datenbank_Schicht();
+		LinkedList<Schicht> schichtsenderList = schicht.getSchichten();
+		LinkedList<Schicht> schichtempfängerList = schicht.getSchichten();
+		
+		Datenbank_Mitarbeiter mitarbeiter = new Datenbank_Mitarbeiter();
+		LinkedList<Mitarbeiter> senderList = mitarbeiter.getAlleMitarbeiter();
+		LinkedList<Mitarbeiter> empfängerList = mitarbeiter.getAlleMitarbeiter();
+		
+		Statement stmt = null;
+		ResultSet rs = null;
 
+		String sqlStatement = "select Empfänger, Sender, Bestätigungsstatus,"
+				+ " Schichtnrsender, Schichtnrempfänger, Tauschnr from Tauschanfrage WHERE tauschnr="+tauschnr;
+
+		try {
+			stmt = con.createStatement();
+			rs = stmt.executeQuery(sqlStatement);
+
+			
+
+			
+				Tauschanfrage tanf = new Tauschanfrage(sqlStatement, sqlStatement, false, 0, 0, 0);
+
+				tanf.setEmpfänger(rs.getString("Empfänger"));
+				tanf.setSender(rs.getString("Sender"));
+				tanf.setBestätigungsstatus(rs.getBoolean("Bestätigunsstatus"));
+				tanf.setSchichtnrsender(rs.getInt("Schichtnrsender"));
+				tanf.setSchichtnrempfänger(rs.getInt("Schichtnrempfänger"));
+				tanf.setTauschnr(rs.getInt("Tauschnr"));
+				for (Schicht sch : schichtsenderList) {
+					if (sch.getSchichtnr() == tanf.getSchichtnrsender()) {
+						tanf.setLinkedListSchichtensender(sch);
+					}
+				}
+				for (Schicht sch : schichtempfängerList) {
+					if (sch.getSchichtnr() == tanf.getSchichtnrempfänger()) {
+						tanf.setLinkedListSchichtenempfänger(sch);
+					}
+				}
+				for (Mitarbeiter ma : senderList) {
+					if (ma.getBenutzername() == tanf.getSender()) {
+						tanf.setLinkedListSender(ma);
+					}
+				}
+				for (Mitarbeiter ma : empfängerList) {
+					if (ma.getBenutzername() == tanf.getEmpfänger()) {
+						tanf.setLinkedListEmpfänger(ma);
+					}
+				}
+				
+			
+
+			rs.close();
+			stmt.close();
+
+			return tanf;
+
+		} catch (SQLException sql) {
+			return null;
+		}
+	}
 	/**
 	 * @Anes Preljevic
 	 * @info Löschen einer Tauschanfrage aus der Datenbank Tabelle Tauschanfrage

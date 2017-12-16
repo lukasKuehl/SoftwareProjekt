@@ -10,6 +10,7 @@ import java.util.LinkedList;
 import data.Ma_Schicht;
 import data.Schicht;
 import data.Tag;
+import data.TerminBlockierung;
 
 class Datenbank_Schicht {
 
@@ -102,13 +103,15 @@ class Datenbank_Schicht {
 	 * @author Anes Preljevic
 	 * @info Auslesen aller Schichten aus der Datenbank und erzeugen von Schicht Objekten.
 	 * Diese werden in eine LinkedList abgelegt und ausgegeben.
+	 * Die zugehörigen Mitarbeiter und Schicht Beziehungen werden als LinkedList in den Schichten gespeichert.
 	 */
 	protected LinkedList<Schicht> getSchichten() {
-
+		Datenbank_Ma_Schicht ma_schicht = new Datenbank_Ma_Schicht();
+		LinkedList<Ma_Schicht> maschichtList = ma_schicht.getMa_Schicht();;
 		Statement stmt = null;
 		ResultSet rs = null;
 
-		String sqlStatement = "select Schichtnr from Schicht";
+		String sqlStatement = "select Schichtnr,Tbez, Anzschicht, Anfanguhrzeit, Endeuhrzeit from Schicht";
 
 		try {
 			stmt = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
@@ -117,11 +120,18 @@ class Datenbank_Schicht {
 			LinkedList<Schicht> schichtList = new LinkedList<>();
 
 			while (rs.next()) {
-				Schicht s = new Schicht(0, sqlStatement, 0);
+				Schicht s = new Schicht(0, sqlStatement, 0, sqlStatement, sqlStatement);
 
 				s.setSchichtnr(rs.getInt("Schichtnr"));
 				s.setTbez(rs.getString("Tbez"));
 				s.setWpnr(rs.getInt("Wpnr"));
+				s.setAnfanguhrzeit(rs.getString("Anfanguhrzeit"));
+				s.setEndeuhrzeit(rs.getString("Endeuhrzeit"));
+				for (Ma_Schicht mas : maschichtList) {
+					if (mas.getSchichtnr() == s.getSchichtnr()) {
+						s.setLinkedListMa_Schicht(mas);
+					}
+					}
 				
 				schichtList.add(s);
 			}
@@ -142,6 +152,8 @@ class Datenbank_Schicht {
 	 * welches anschließend ausgegeben wird.
 	 */
 	protected Schicht getSchicht(int schichtnr) {
+		Datenbank_Ma_Schicht ma_schicht = new Datenbank_Ma_Schicht();
+		LinkedList<Ma_Schicht> maschichtList = ma_schicht.getMa_Schicht();;
 		if (!checkSchicht(schichtnr)){
 			return null;
 		}
@@ -149,21 +161,24 @@ class Datenbank_Schicht {
 		Statement stmt = null;
 		ResultSet rs = null;
 
-		String sqlStatement = "select Schichtnr from Schicht where schichtnr="+schichtnr;
+		String sqlStatement = "select Schichtnr,Tbez, Anzschicht, Anfanguhrzeit, Endeuhrzeit from Schicht Where Schichtnr ="+schichtnr;
 
 		try {
 			stmt = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
 			rs = stmt.executeQuery(sqlStatement);
 
-			
-
-			
-				Schicht s = new Schicht(0, sqlStatement, 0);
+				Schicht s = new Schicht(0, sqlStatement, 0, sqlStatement, sqlStatement);
 
 				s.setSchichtnr(rs.getInt("Schichtnr"));
 				s.setTbez(rs.getString("Tbez"));
 				s.setWpnr(rs.getInt("Wpnr"));
-				
+				s.setAnfanguhrzeit(rs.getString("Anfanguhrzeit"));
+				s.setEndeuhrzeit(rs.getString("Endeuhrzeit"));
+				for (Ma_Schicht mas : maschichtList) {
+					if (mas.getSchichtnr() == s.getSchichtnr()) {
+						s.setLinkedListMa_Schicht(mas);
+					}
+					}
 
 			rs.close();
 			stmt.close();

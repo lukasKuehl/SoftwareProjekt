@@ -1,14 +1,44 @@
 package data;
 
+import java.util.LinkedList;
+
 public class Schicht {
-	private int schichtnr;
-	private String tbez;
-	private int wpnr;
-	
-	public Schicht(int schichtnr, String tbez, int wpnr){
+	private int schichtnr= 0;
+	private String tbez =null;
+	private int wpnr=0;
+	private String anfanguhrzeit=null;
+	private String endeuhrzeit=null;
+	private LinkedList<Ma_Schicht> ll_ma_schicht = new LinkedList<Ma_Schicht>();
+	public Schicht(int schichtnr, String tbez, int wpnr,String anfanguhrzeit,String endeuhrzeit){
 		this.schichtnr=schichtnr;
 		this.tbez=tbez;
 		this.wpnr=wpnr;
+		this.anfanguhrzeit=anfanguhrzeit;
+		this.endeuhrzeit=endeuhrzeit;
+	}	
+
+	public String getAnfanguhrzeit() {
+		return anfanguhrzeit;
+	}
+
+	public void setAnfanguhrzeit(String anfanguhrzeit) {
+		this.anfanguhrzeit = anfanguhrzeit;
+	}
+
+	public String getEndeuhrzeit() {
+		return endeuhrzeit;
+	}
+
+	public void setEndeuhrzeit(String endeuhrzeit) {
+		this.endeuhrzeit = endeuhrzeit;
+	}
+
+	public LinkedList<Ma_Schicht> getLl_ma_schicht() {
+		return ll_ma_schicht;
+	}
+
+	public void setLl_ma_schicht(LinkedList<Ma_Schicht> ll_ma_schicht) {
+		this.ll_ma_schicht = ll_ma_schicht;
 	}
 
 	public int getSchichtnr() {
@@ -34,6 +64,14 @@ public class Schicht {
 
 	public void setWpnr(int wpnr) {
 		this.wpnr = wpnr;
+	}
+	public LinkedList<Ma_Schicht> getLl_maschicht() {
+		return ll_ma_schicht;
+	}
+
+	public void setLinkedListMa_Schicht(Ma_Schicht mas) {
+		this.ll_ma_schicht=ll_ma_schicht;
+		
 	}
 	
 }
