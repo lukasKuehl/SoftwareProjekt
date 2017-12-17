@@ -113,7 +113,7 @@ class Datenbank_Tag {
 	 */
 	
 	
-	private void updateTag(Tag tag) {
+	protected void updateTag(Tag tag) {
 		
 		String tbez = tag.getTbez();
 		int wpnr = tag.getWpnr();
@@ -164,7 +164,7 @@ class Datenbank_Tag {
 	 * @author Anes Preljevic
 	 * @info Ändert den Feiertag status auf true, bei dem Tag mit der übergebenen Tbez und wpnr.
 	 */
-	private void setzeFeiertagtrue(String tbez, int wpnr) {
+	protected void setzeFeiertagtrue(String tbez, int wpnr) {
 		Statement stmt = null;
 		String sqlStatement;
 		sqlStatement = "UPDATE Tag Set Feiertag = true"
@@ -206,7 +206,7 @@ class Datenbank_Tag {
 	 * @info Ändert den Feiertag status auf false, bei dem Tag mit der übergebenen Tbez und wpnr.
 	 */
 	
-	private void setzeFeiertagfalse(String tbez, int wpnr) {
+	protected void setzeFeiertagfalse(String tbez, int wpnr) {
 		Statement stmt = null;
 		String sqlStatement;
 		sqlStatement = "UPDATE Tag Set Feiertag = false"

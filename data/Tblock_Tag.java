@@ -8,6 +8,11 @@ public class Tblock_Tag {
 	private int wpnr;
 	private LinkedList<TerminBlockierung> ll_termin = new LinkedList<TerminBlockierung>();
 	
+	/**
+	 * @author Anes Preljevic
+	 * @info Erzeugen eines Objektes vom Typ Tblock_Tag und 
+	 * Wertzuweisung der Instanzvariablen. Getter/Setter für alle Variablen.
+	 */
 	public Tblock_Tag(int tblocknr, String tbez, int wpnr){
 		this.tblocknr=tblocknr;
 		this.tbez=tbez;

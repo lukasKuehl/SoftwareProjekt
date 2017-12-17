@@ -10,7 +10,12 @@ public class Tag {
 	private boolean feiertag;
 	private LinkedList<Schicht> ll_schicht = new LinkedList<Schicht>();
 	private LinkedList<Tblock_Tag> ll_tblocktag = new LinkedList<Tblock_Tag>();
-
+	
+	/**
+	 * @author Anes Preljevic
+	 * @info Erzeugen eines Objektes vom Typ Tag und 
+	 * Wertzuweisung der Instanzvariablen. Getter/Setter für alle Variablen.
+	 */
 	public Tag(String tbez, int wpnr, int anzschicht, boolean feiertag){
 		this.wpnr=wpnr;
 		this.anzschicht=anzschicht;

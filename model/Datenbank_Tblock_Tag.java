@@ -169,10 +169,10 @@ class Datenbank_Tblock_Tag {
 	}
 	/**
 	 * @author Anes Preljevic
-	 * @info Auslesen eines bestimmter bestimmten Termin zu Tag Beziehung aus der Datenbank und erzeugen eines Tblock_Tag Objektes,
+	 * @info Auslesen einer bestimmten Termin zu Tag Beziehung aus der Datenbank und erzeugen eines Tblock_Tag Objektes,
 	 * welches anschließend ausgegeben wird mit einer Liste zugehöriger TerminBlockierungen.
 	 */
-	protected Tblock_Tag getTblock_Tag(int tblocknr) {
+	protected Tblock_Tag getTblock_TagTB(int tblocknr) {
 		Datenbank_TerminBlockierung terminblockierung = new Datenbank_TerminBlockierung();
 		LinkedList<TerminBlockierung> terminList = terminblockierung.getTerminBlockierungen();;
 		if (!checkTblock_TagTB(tblocknr)){
@@ -208,7 +208,12 @@ class Datenbank_Tblock_Tag {
 		}
 		}
 	}
-	protected Tblock_Tag getTblock_Tag(String tbez, int wpnr) {
+	/**
+	 * @author Anes Preljevic
+	 * @info Auslesen einer bestimmten Termin zu Tag Beziehung aus der Datenbank und erzeugen eines Tblock_Tag Objektes,
+	 * welches anschließend ausgegeben wird mit einer Liste zugehöriger TerminBlockierungen.
+	 */
+	protected Tblock_Tag getTblock_TagT(String tbez, int wpnr) {
 		Datenbank_TerminBlockierung terminblockierung = new Datenbank_TerminBlockierung();
 		LinkedList<TerminBlockierung> terminList = terminblockierung.getTerminBlockierungen();;
 		if (!checkTblock_TagTA(tbez, wpnr)){

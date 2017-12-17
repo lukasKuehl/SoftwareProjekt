@@ -9,6 +9,11 @@ public class Schicht {
 	private String anfanguhrzeit=null;
 	private String endeuhrzeit=null;
 	private LinkedList<Ma_Schicht> ll_ma_schicht = new LinkedList<Ma_Schicht>();
+	/**
+	 * @author Anes Preljevic
+	 * @info Erzeugen eines Objektes vom Typ Schicht und 
+	 * Wertzuweisung der Instanzvariablen. Getter/Setter für alle Variablen.
+	 */
 	public Schicht(int schichtnr, String tbez, int wpnr,String anfanguhrzeit,String endeuhrzeit){
 		this.schichtnr=schichtnr;
 		this.tbez=tbez;

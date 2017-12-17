@@ -174,9 +174,12 @@ import data.Ma_Schicht;
 	}
 	/**
 	 * @author Anes Preljevic
-	 * @info Löschen eines Mitarbeiters aus einer Schicht, oder entfernen einer Schicht vom Mitarbeiter (falls die Schicht gelöscht wurde)
+	 * @info Löschen eines Mitarbeiters aus einer Schicht
 	 */
 	protected boolean deleteMa_Schicht(int schichtnr, String benutzername) {
+		if(!checkMa_Schicht(schichtnr, benutzername)){
+			return false;
+		}
 		Statement stmt = null;
 		ResultSet rs = null;
 		String sqlQuery = "DELETE FROM Ma_Schicht WHERE Schichtnr = "+schichtnr+" and Benutzername= "+benutzername+"";
@@ -200,7 +203,8 @@ import data.Ma_Schicht;
 	}
 	/**
 	 * @author Anes Preljevic
-	 * @info Löscht den Ma_Schicht Datensatz aus der Tabelle Ma_Schicht, mit dem die übergebene Schichtnr übereinstimmt
+	 * @info Löscht den Ma_Schicht Datensatz aus der Tabelle Ma_Schicht, mit dem die übergebene Schichtnr übereinstimmt,
+	 * wenn die Schicht gelöscht wurde.
 	 */
 	protected boolean deleteMa_SchichtWochenplan(int schichtnr) {
 		Statement stmt = null;

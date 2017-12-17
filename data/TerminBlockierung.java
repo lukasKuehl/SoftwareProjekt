@@ -10,6 +10,11 @@ public class TerminBlockierung {
 	private String endeuhrzeit;
 	private String grund;
 	
+	/**
+	 * @author Anes Preljevic
+	 * @info Erzeugen eines Objektes vom Typ TerminBlockierung und 
+	 * Wertzuweisung der Instanzvariablen. Getter/Setter für alle Variablen.
+	 */
 	public TerminBlockierung(int tblocknr, String benutzername,
 			String bbez, String anfzeitraum, String endzeitraum, 
 			 String anfanguhrzeit, String endeuhrzeit, String grund){

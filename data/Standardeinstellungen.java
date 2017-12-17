@@ -14,6 +14,11 @@ public class Standardeinstellungen {
 	private int minanzinfot;
 	private int minanzinfow;
 	
+	/**
+	 * @author Anes Preljevic
+	 * @info Erzeugen eines Objektes vom Typ Standardeinstellungen und 
+	 * Wertzuweisung der Instanzvariablen. Getter/Setter für alle Variablen.
+	 */
 	
 	public Standardeinstellungen(String öffnungszeit, String schließzeit, String hauptzeitbeginn,
 			String hauptzeitende, int anzschicht, int mehrbesetzungkasse, int minanzkasse, int minanzinfot, int minanzinfow) {

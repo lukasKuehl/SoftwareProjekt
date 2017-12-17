@@ -416,11 +416,24 @@ class Datenbank_Wochenplan {
 		try {
 			stmt = con.createStatement();
 			rs = stmt.executeQuery(sqlQuery);
+			con.commit();
 
+			con.setAutoCommit(true);
 			return true;
-		} catch (SQLException sql) {
-			return false;
-		} finally {
+			}
+			catch (SQLException sql) {
+			System.err.println("Methode deleteTauschanfrage SQL-Fehler: " + sql.getMessage());
+			try {
+				
+				con.rollback();
+				con.setAutoCommit(true);
+				return false;
+			} catch (SQLException sqlRollback) {
+					System.err.println("Methode deleteTauschanfrage " + "- Rollback -  SQL-Fehler: " + sqlRollback.getMessage());
+					return false;
+				}
+		} 
+			finally {
 			try {
 				if (rs != null)
 					rs.close();
@@ -429,9 +442,9 @@ class Datenbank_Wochenplan {
 			} catch (SQLException e) {
 				System.err.println("Methode deleteWochenplan (finally) SQL-Fehler: " + e.getMessage());
 			}
+			}}
 		}
-		}
-	}
+	
 
 //	if(tmp[3].equalsIgnoreCase("null"))
 //		pstmt.setNull(4, java.sql.Types.INTEGER);

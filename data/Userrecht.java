@@ -3,7 +3,11 @@ package data;
 public class Userrecht {
 	private String job;
 	private String benutzerrolle;
-	
+	/**
+	 * @author Anes Preljevic
+	 * @info Erzeugen eines Objektes vom Typ Userrecht und 
+	 * Wertzuweisung der Instanzvariablen. Getter/Setter für alle Variablen.
+	 */
 	public Userrecht(String job, String benutzerrolle){
 		this.job=job;
 		this.benutzerrolle=benutzerrolle;

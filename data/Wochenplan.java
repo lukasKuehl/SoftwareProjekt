@@ -20,7 +20,11 @@ public class Wochenplan {
 	
 	private LinkedList<Tag> ll_tag = new LinkedList<Tag>();
 	
-	
+	/**
+	 * @author Anes Preljevic
+	 * @info Erzeugen eines Objektes vom Typ Wochenplan und 
+	 * Wertzuweisung der Instanzvariablen. Getter/Setter für alle Variablen.
+	 */
 	public Wochenplan (int wpnr,
 	boolean öffentlichstatus,String öffnungszeit,String schließzeit,
 	 String hauptzeitbeginn,String hauptzeitende,String benutzername,

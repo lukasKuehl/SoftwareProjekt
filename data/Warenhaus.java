@@ -4,7 +4,11 @@ public class Warenhaus {
 	private String whname;
 	private int anzkasse;
 	private int anzinfo;
-	
+	/**
+	 * @author Anes Preljevic
+	 * @info Erzeugen eines Objektes vom Typ Warenhaus und 
+	 * Wertzuweisung der Instanzvariablen. Getter/Setter für alle Variablen.
+	 */
 	public Warenhaus(String whname, int anzkasse, int anzinfo){
 		this.whname=whname;
 		this.anzkasse=anzkasse;

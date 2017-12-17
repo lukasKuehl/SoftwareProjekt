@@ -10,6 +10,11 @@ public class Mitarbeiter {
 	private String whname=null;
 	private String email=null;
 	
+	/**
+	 * @author Anes Preljevic
+	 * @info Erzeugen eines Objektes vom Typ Mitarbeiter und 
+	 * Wertzuweisung der Instanzvariablen. Getter/Setter für alle Variablen.
+	 */
 	public Mitarbeiter(String benutzername, String passwort, String job, String vorname, String name, int Maxstunden, String Whname, String Email){
 		this.benutzername = benutzername;
 		this.passwort = passwort;

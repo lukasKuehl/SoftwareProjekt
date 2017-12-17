@@ -20,6 +20,11 @@ public class Tauschanfrage {
 	private LinkedList<Mitarbeiter> ll_empfänger = new LinkedList<Mitarbeiter>();
 	private LinkedList<Mitarbeiter> ll_sender = new LinkedList<Mitarbeiter>();
 	
+	/**
+	 * @author Anes Preljevic
+	 * @info Erzeugen eines Objektes vom Typ Tauschanfrage und 
+	 * Wertzuweisung der Instanzvariablen. Getter/Setter für alle Variablen.
+	 */
 	public Tauschanfrage (String empfänger,String sender,boolean bestätigungsstatus,
 			int schichtnrsender,int schichtnrempfänger, int tauschnr) {
 		this.empfänger= empfänger;

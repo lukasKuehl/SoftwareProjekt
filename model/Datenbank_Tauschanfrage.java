@@ -83,7 +83,7 @@ class Datenbank_Tauschanfrage {
 	 * @Anes Preljevic
 	 * @info Prüft ob es zu der eingegebenen tauschnr eine Tauschtanfrage gibt, bei existenz return true sonst false.
 	 */
-	private boolean checkTauschanfrage(int tauschnr) {
+	protected boolean checkTauschanfrage(int tauschnr) {
 		Statement stmt = null;
 		ResultSet rs = null;
 		String sqlQuery = "select tauschnr from Tauschanfrage where tauschnr = " + tauschnr;
@@ -328,7 +328,11 @@ class Datenbank_Tauschanfrage {
 	 * @Anes Preljevic
 	 * @info Löschen einer Tauschanfrage aus der Datenbank Tabelle Tauschanfrage
 	 */
-	protected void deleteTauschanfrage(int tauschnr) {
+	protected boolean deleteTauschanfrage(int tauschnr) {
+		if (!checkTauschanfrage(tauschnr)){
+			return false;
+		}
+		else{
 		Statement stmt = null;
 		ResultSet rs = null;
 		String sqlQuery = "DELETE FROM Tauschanfrage WHERE Tauschnr= "+tauschnr;
@@ -341,15 +345,19 @@ class Datenbank_Tauschanfrage {
 
 			con.setAutoCommit(true);
 			
-		} catch (SQLException sql) {
+		
+		return true;
+		}
+		catch (SQLException sql) {
 			System.err.println("Methode deleteTauschanfrage SQL-Fehler: " + sql.getMessage());
 			try {
 				
 				con.rollback();
 				con.setAutoCommit(true);
-			
+				return false;
 			} catch (SQLException sqlRollback) {
 					System.err.println("Methode deleteTauschanfrage " + "- Rollback -  SQL-Fehler: " + sqlRollback.getMessage());
+					return false;
 				}
 		} finally {
 			try {
@@ -360,6 +368,7 @@ class Datenbank_Tauschanfrage {
 			} catch (SQLException e) {
 				System.err.println("Methode deleteTauschanfrage (finally) SQL-Fehler: " + e.getMessage());
 			}
+		}
 		}
 		
 	}
