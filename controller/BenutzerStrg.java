@@ -39,7 +39,7 @@ class BenutzerStrg {
 		
 		/*
 		if(this.myModel.getMitarbeiter(username) == null){
-			this.myModel.addMitarbeiter(username, pw);
+			this.myModel.addMitarbeiter(username, pw);			
 			success = true;
 		}		
 		*/
@@ -57,7 +57,7 @@ class BenutzerStrg {
 		/*
 		if(this.myModel.getMitarbeiter(username) != null){
 			
-			try{
+			try{				
 				this.myModel.entferneMitarbeiter(username);
 				success = true;
 			}catch(Exception e){
@@ -126,7 +126,7 @@ class BenutzerStrg {
 		/*
 		if(this.myModel.getMitarbeiter(username) != null){
 			try{
-				this.myModel.rechteWechsel(username);				
+				this.myModel.benutzerRechteWechsel(username);				
 			}catch(Exception e){
 				System.out.println("Fehler beim Ändern der Rechte des Nutzers " + username + " :");
 				e.printStackTrace();

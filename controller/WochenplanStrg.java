@@ -26,7 +26,9 @@ import javax.swing.table.TableCellRenderer;
 import com.sun.org.apache.xerces.internal.util.SynchronizedSymbolTable;
 
 import data.Mitarbeiter;
+import data.Schicht;
 import data.Standardeinstellungen;
+import data.Tag;
 import data.Userrecht;
 import data.Wochenplan;
 import model.Einsatzplanmodel;
@@ -60,8 +62,9 @@ class WochenplanStrg {
 	protected boolean erstelleWochenplanCustom(String username, String wpbez, TreeMap<String, String> zeiten, TreeMap<String, Integer> besetzung){
 		boolean success = false;		
 		/*
-		Mitarbeiter user = Einsatzplanmodel.getMitarbeiter(username);
+		Mitarbeiter user = myModel.getMitarbeiter(username);
 		
+		//muss noch implementiert werden
 		Userrecht recht = Einsatzplanmodel.getUserrecht(user.getJob());
 				
 		if(recht.getBenutzerrolle().equals("Chef")){		
@@ -132,9 +135,10 @@ class WochenplanStrg {
 		
 		boolean success = false;
 		/*
-		Mitarbeiter user = Einsatzplanmodel.getMitarbeiter(username);
-		
-		Userrecht recht = Einsatzplanmodel.getUserrecht(user.getJob());
+		Mitarbeiter user = myModel.getMitarbeiter(username);
+	
+		//Muss noch implementier werden
+		Userrecht recht = myModel.getUserrecht(user.getJob());
 				
 		if(recht.getBenutzerrolle().equals("Chef")){	
 			
@@ -168,13 +172,25 @@ class WochenplanStrg {
 	 */
 	protected JTable generiereWochenplanView(String wpbez){
 		JTable wochenplan = null;	
-		/*
-		LinkedList<Tag> tage= myModel.getTage(wpbez);
+		
+		//Umwandeln der Wpbez in die eindeutige Wochennummer
+    	int wpnr = Integer.parseInt((wpbez.substring(2).trim()));  			
+		
+		LinkedList<Tag> alleTage = myModel.getTage();
+    	LinkedList<Tag> wochenTage = new LinkedList<Tag>();
+    	
+    	//Sortiere alle Tage aus, die nicht zu der angefragten Woche gehören
+    	for(Tag t: alleTage){
+    		if(t.getWpnr() == wpnr){
+    			wochenTage.add(t);
+    		}    		
+    	}		
+		
 		LinkedList<Mitarbeiter> mitarbeiterList = myModel.getAlleMitarbeiter();
 		String[] spaltennamen = null;
 		String[][] zeilen = null;
 		
-		if(tage.size() == 6){
+		if(wochenTage.size() == 6){
 			
 			String[] tempSpaltennamen = {"", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"};
 			spaltennamen = tempSpaltennamen;
@@ -182,7 +198,7 @@ class WochenplanStrg {
 			LinkedList <String[]> temp = new LinkedList<String[]>();
 			
 			for(Mitarbeiter m : mitarbeiterList){
-				temp.add(generiereMitarbeiterSpalte(wpbez, m, tage.size()));				
+				temp.add(generiereMitarbeiterSpalte(wpnr, m, wochenTage.size()));				
 			}
 			
 			zeilen = new String[temp.size()][];
@@ -192,7 +208,7 @@ class WochenplanStrg {
 			}	
 		}
 		
-		if(tage.size() == 7){
+		if(wochenTage.size() == 7){
 			
 			String[] tempSpaltennamen = {"", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"};
 			spaltennamen = tempSpaltennamen;
@@ -200,7 +216,7 @@ class WochenplanStrg {
 			LinkedList <String[]> temp = new LinkedList<String[]>();
 			
 			for(Mitarbeiter m : mitarbeiterList){
-				temp.add(generiereMitarbeiterSpalte(wpbez, m, tage.size()));				
+				temp.add(generiereMitarbeiterSpalte(wpnr, m, wochenTage.size()));				
 			}
 			
 			zeilen = new String[temp.size()][];
@@ -215,7 +231,7 @@ class WochenplanStrg {
 		}catch(Exception e){
 			e.printStackTrace();
 		}
-		*/
+		
          return wochenplan;
 	}
 
@@ -223,19 +239,30 @@ class WochenplanStrg {
 	
 	/**
 	 * @author Lukas Kühl
-	 * @info Hilfsmethode zum erzeugen einer Zeile in der Wochenplantabelle für einen Spezifischen Mitarbeiter
+	 * @info Hilfsmethode zum Erzeugen einer Zeile in der Wochenplantabelle für einen spezifischen Mitarbeiter
 	 */
-    private String[] generiereMitarbeiterSpalte(String wpbez, Mitarbeiter ma, int tageAnzahl){
-    	
-    	String[] rueckgabe = new String[tageAnzahl+1];
-    	
+    private String[] generiereMitarbeiterSpalte(int wpnr, Mitarbeiter ma, int tageAnzahl){
+    
+    	//Symbolisiert eine Mitarbeiterzeile in der Wochenplantabelle
+    	String[] rueckgabe = new String[tageAnzahl+1];    	
     	/*
-    	LinkedList<Tag> tage = myModel.getTage(wpbez);
+    	LinkedList<Tag> alleTage = myModel.getTage();
+    	LinkedList<Tag> wochenTage = new LinkedList<Tag>();
+    	
+    	//Sortiere alle Tage aus, die nicht zu der angefragten Woche gehören
+    	for(Tag t: alleTage){
+    		if(t.getWpnr() == wpnr){
+    			wochenTage.add(t);
+    		}    		
+    	}
+    	    	
+    	//Muss noch implementiert werden!   	
     	LinkedList<Schicht> schichten = myModel.getSchichten(ma);
+    	
     	
     	Map<String, Schicht> tageMap = new TreeMap<String, Schicht>();    	
     	
-    	for(Tag t: tage){    	
+    	for(Tag t: wochenTage){    	
     		
     		for(Schicht s: schichten){  
     			
@@ -300,7 +327,7 @@ class WochenplanStrg {
 	protected boolean verschickeWochenplan(String username ,String wpbez, JTable wochenplan, JTableHeader header){
 			
 		boolean success = false;				
-		/*
+		
 		int w = Math.max(wochenplan.getWidth(), header.getWidth());
         int h = wochenplan.getHeight() + header.getHeight();
         BufferedImage bi = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
@@ -311,20 +338,27 @@ class WochenplanStrg {
         g2.dispose();
         try
         {
-        	String filePath = System.getProperty("user.home") + "/Desktop/Kalenderwochenübersicht_" + wpbez +".png" );
+        	String filePath = System.getProperty("user.home") + "/Desktop/Kalenderwochenübersicht_" + wpbez +".png";
             ImageIO.write(bi, "png", new File(filePath));
             
-            LinkedList<Mitarbeiter> alleMitarbeiter = this.myModel.getWochenplaene();
+            LinkedList<Mitarbeiter> alleMitarbeiter = this.myModel.getAlleMitarbeiter();
             
             MailStrg myMailController = new MailStrg();
             
             final String user = "einsatzplan.team";
             final String password = "";
-            final String senderAddress = "einsatzplan.team@web.de";
+            final String senderAddress = "einsatzplan.team@web.de";           
             
             for(Mitarbeiter m: alleMitarbeiter){
-            	//Nutzung des GruppenAccounts bei Web.de
-            	myMailController.sendMail(user, password, senderAddress, m.getEmail(), "Einsatzplan für " + wpbez, filePath);	
+            	//Festlegung des Textes für die E-Mail
+            	String message = "Hallo " + m.getVorname() + " " + m.getName() +",\n" + 
+            			"anbei dieser Mail finden Sie den Mitarbeitereinsatzplan für die " + wpbez +".\n" + 
+            			"\n" +
+            			"Mit freundlichen Grüßen,\n" +
+            			"Team der Einsatzplanverwaltung";           	
+            	
+            	//Nutzung des Gruppenaccounts bei Web.de
+            	myMailController.sendMail(user, password, senderAddress, m.getEmail(), "Einsatzplan für " + wpbez, message, filePath);	
             	
             }
             
@@ -332,10 +366,9 @@ class WochenplanStrg {
         }
         catch(IOException ioe)
         {
-            System.out.println("write: " + ioe.getMessage());
-        }       
-        
-        */
+            System.out.println("Fehler beim Verschicken der Wochenpläne per E-Mail:");
+            ioe.printStackTrace();
+        }        
         
 		return success;
 	} 

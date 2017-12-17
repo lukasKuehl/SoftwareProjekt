@@ -5,8 +5,11 @@ import java.util.LinkedList;
 
 import javax.swing.JDialog;
 
+import data.Ma_Schicht;
 import data.Mitarbeiter;
 import data.Schicht;
+import data.Tblock_Tag;
+import data.TerminBlockierung;
 import model.Einsatzplanmodel;
 
 /**
@@ -47,27 +50,26 @@ class SchichtStrg {
 	 */
 	protected boolean ausfüllenSchicht(int schichtNr, String[] mitarbeiter){
 
-		boolean success = false;		
+		boolean success = false;			
+		LinkedList<Ma_Schicht> einteilung= this.myModel.getMitarbeiterausderSchicht(schichtNr);
 		
-		/*
-		LinkedList<Mitarbeiter> einteilung= this.myModel.getMA_Schicht(schichtNr);
-		
-		for(Mitarbeiter m : einteilung){
+		for(Ma_Schicht ma : einteilung){
 			
 			for(String s : mitarbeiter){
-				if(m.getUsername().equals(s)){
+				if(ma.getBenutzername().equals(s)){
 					//Mitarbeiter bereits in der Schicht eingeteilt --> weiter
 				}
 				else{
-					if(this.myModel.mitarbeiterVorhanden(s)){				
-						
-						this.myModel.schichtAddMitarbeiter(schichtNr, s);
-						
+					//Prüfe, ob der Mitarbeiter im System vorhanden ist und somit eingeteilt werden kann
+					if(this.myModel.checkMitarbeiter(s)){							
+						//Teile den Mitarbeiter in die gewünschte Schicht ein
+						this.myModel.addMa_Schicht(new Ma_Schicht(s, schichtNr));					
 					}
 				}
 			}			
 		}	
-		*/
+		success = true;
+		
 		return success;
 	}
 
@@ -77,16 +79,15 @@ class SchichtStrg {
 	 */
 	protected LinkedList<String> getVerfügbareMitarbeiter(int schichtNr){
 		LinkedList<String> verfuegbareMitarbeiter = new LinkedList<String>();
-		
 		/*
-		LinkedList<Mitarbeiter> alleMitarbeiter = this.myModel.getMitarbeiter();
+		LinkedList<Mitarbeiter> alleMitarbeiter = this.myModel.getAlleMitarbeiter();
 		
-		for(Mitarbeiter m: alleMitarbeiter){
+		for(Mitarbeiter m: alleMitarbeiter){		
 			LinkedList<Schicht> schichten = this.myModel.getSchichten(m.getUsername());
 			
 			int maxDauer, dauer = 0; 
 			
-			maxDauer = this.myModel.getMaxArbeitszeitMA(s);
+			maxDauer = m.getMaxstunden();
 			
 			//Bereits vorhande Schichten werden addiert um momentane Auslastung zu ermitteln
 			for(Schicht schicht: schichten){
@@ -97,19 +98,29 @@ class SchichtStrg {
 			dauer = dauer + this.myModel.getSchichtDauer(schichtNr);
 			
 			if(dauer <= maxDauer ){
+								
+				LinkedList<TerminBlockierung> alleTerminBlockierungen = this.myModel.getTerminBlockierungen();
+				LinkedList<TerminBlockierung> mitarbeiterTerminBlockierungen = new LinkedList<TerminBlockierung>();
 				
-				LinkedList<TerminBlockierung> terminblockierungen = this.myModel.getTerminBlockierungen(m.getUsername());
+				//Sortiere die TerminBlockierungen aus, die nicht zu dem jeweiligen Mitarbeiter gehören
+				for(TerminBlockierung tb: alleTerminBlockierungen){
+					if(tb.getBenutzername().equals(m.getBenutzername())){
+						mitarbeiterTerminBlockierungen.add(tb);
+					}
 					
+				}			
+				
 				boolean frei = true;
-				for(TerminBlockierung tb : terminblockierungen){
-					
+				for(TerminBlockierung tb : mitarbeiterTerminBlockierungen){
+				
 					//Suche den Tag + Wochenplan, an dem der Mitarbeiter einen Termin hat
-					String tbezTermin = this.myModel.getTBlock_Tag(tb.getTblockNr()).getTbez();
-					int wpnrTermin = this.myModel.getTBlock_Tag(tb.getTblockNr()).getWpnr();
+					String tbezTermin = tb.getBbez();					
+					Tblock_Tag temp = this.myModel.getTblock_TagTB(tb.getTblocknr());								
+					int wpnrTermin = temp.getWpnr();
 					
 					//Suche den Tag + Wochenplan, in dem sich die Schicht befindet
 					String tbezSchicht = this.myModel.getSchicht(schichtNr).getTbez();
-					int wpnrSchicht = this.myModel.getSchicht(schichtNr).getWochenplanNr();
+					int wpnrSchicht = this.myModel.getSchicht(schichtNr).getWpnr();
 					
 					if((tbezTermin.equals(tbezSchicht)) &&(wpnrTermin == wpnrSchicht)){
 						//Mitarbeiter hat an dem Tag, in dem sich die Schicht befindet, bereits einen Termin eingetragen und ist somit nicht verfügbar
@@ -118,7 +129,7 @@ class SchichtStrg {
 				}		
 				
 				if(frei){
-					verfuegbareMitarbeiter.add(m.getUsername());
+					verfuegbareMitarbeiter.add(m.getBenutzername());
 				}	
 			}			
 		}
