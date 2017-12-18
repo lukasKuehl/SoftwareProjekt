@@ -160,13 +160,36 @@ class TerminStrg {
 	}
 	
 	/**
-	 * @author 
-	 * @info Entfernen eines bereits angelegten Termines aus dem System.
+	 * @author Lukas Kühl
+	 * @info Entfernen eines bereits angelegten Termines aus der Datenbank.
 	 */
 	protected boolean entferneTermin(int tblocknr, String username){
 
 		boolean success = false;
-		//Ausfüllen
+		boolean valid = false;
+		
+		LinkedList<TerminBlockierung> alleTerminblockierungen = this.myModel.getTerminBlockierungen();
+		
+		for(TerminBlockierung tb: alleTerminblockierungen){
+			//Prüfe, ob der Termin existiert und ob der Nutzer die Berechtigung zum Löschen besitzt(Bedingung: Ersteller/in des Termins)
+			if((tb.getTblocknr() == tblocknr) && tb.getBenutzername().equals(username)){
+				valid = true;				
+			}
+		}
+		
+		if(valid){
+			
+			this.myModel.deleteTerminBlockierung(tblocknr);			
+			
+			if(this.myModel.getTblock_TagTB(tblocknr) != null){
+				this.myModel.deleteTblock_Tag(tblocknr);			
+			}		
+			success = true;
+		}
+		else{
+			System.out.println("Der Termin konnte nicht gelöscht werden!");		
+		}	
+		
 		return success;
 	}
 	
