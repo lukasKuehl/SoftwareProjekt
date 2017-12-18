@@ -193,30 +193,61 @@ class TerminStrg {
 		return success;
 	}
 	
+	
+	/**
+	 * @author Lukas Kühl
+	 * @info Ausgabe einer Liste mit den Terminen eines Mitarbeiters für die Anzeige in dem TermineDialog der View
+	 */
 	protected ArrayList<String> getMitarbeiterTermine(String username){
-		ArrayList<String> rueckgabe = null;
+		ArrayList<String> rueckgabe = new ArrayList<String>();
+		
+		LinkedList<TerminBlockierung> alleTermine = this.myModel.getTerminBlockierungen();
+		LinkedList<TerminBlockierung> mitarbeiterTermine = new LinkedList<TerminBlockierung>();
+		
+		//Suche nach den Terminen, die dem übergebenen Mitarbeiter zugeordnet wurden
+		for(TerminBlockierung tb : alleTermine){
+			if(tb.getBenutzername().equals(username)){
+				mitarbeiterTermine.add(tb);
+			}
+		}		
+		
+		LinkedList<Tblock_Tag> alleTerminZuordnungen = this.myModel.getAlleTblock_Tag();
+		// Zuordnung von Terminen zu einem Wochenplan --> Key TerminNr; Value WochenplanNr
+		TreeMap<Integer, Integer> mitarbeiterTerminZuordnungen = new TreeMap<Integer, Integer>();
+		
+		for(TerminBlockierung tb: mitarbeiterTermine){
+			
+			for(Tblock_Tag tbt : alleTerminZuordnungen){
+				
+				if(tb.getTblocknr() == tbt.getTblocknr())
+					mitarbeiterTerminZuordnungen.put(tbt.getTblocknr(), tbt.getWpnr());			
+			}		
+		}		
+		
+		//Übertrage die Termine im Format Terminbezeichnung - KW - Anfangstag - Endtag - Anfangsuhrzeit-Enduhrzeit in die RückgabeListe
+		for(TerminBlockierung tb : mitarbeiterTermine){
+			String temp = tb.getBbez() + " - KW" + mitarbeiterTerminZuordnungen.get(String.valueOf(tb.getTblocknr())) + " - ";
+			
+			//Falls es sich um einen eintägigen Termin handelt, wird der Anfangs- und Endtag zusammengefasst
+			if(tb.getAnfzeitraum().equals(tb.getEndzeitraum())){
+				temp = temp + tb.getAnfzeitraum() + " - ";
+			}
+			else{
+				temp = temp + tb.getAnfzeitraum() + "-" + tb.getEndzeitraum() + " - ";
+			}
+			
+			temp = temp + tb.getAnfanguhrzeit() + "-" + tb.getEndeuhrzeit() + " Uhr";
+			
+			//Datensatz ist vollständig und kann in die Rückgabeliste eingetragen werden
+			rueckgabe.add(temp);
+			
+		}
+		
 		return rueckgabe;
 	}
 	
 	protected ArrayList<String> getAlleTermine(String username){
 		ArrayList<String> rueckgabe = null;
 		return rueckgabe;
-	}
-	
-	
-	private boolean checkZeitraum(TreeMap<String, Date> times){
-		boolean valid = false;
-		
-		
-		
-		return valid;
-	}
-	
-	private boolean checkZeiten(TreeMap<String, Date> times){
-		boolean valid = false;
-		
-		return valid;
-	}
-	
-	
+	}	
 }
