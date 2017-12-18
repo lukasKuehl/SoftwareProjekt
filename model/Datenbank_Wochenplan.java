@@ -24,43 +24,58 @@ class Datenbank_Wochenplan {
 
 	
 
-	// Wochenplan in tabelle Wochenplan hinzuf
-	protected void addWochenplan(Wochenplan wochenplan) {
-
-		String sqlStatement;
+	/**
+	 * @Thomas Friesen
+	 * @info Die Methode fügt einen Datensatz in die Wochenplan Tabelle hinzu.
+	 */
+	protected Boolean addWochenplan(Wochenplan wochenplan) {
+		boolean success = false;
+		
+		String sqlStatement = null;
 		sqlStatement = "insert into WOCHENPLAN (Wpnr, Oeffentlichstatus, Oeffnungszeit, Schließzeit,"
 				+ " Hauptzeitbeginn, Hauptzeitende, Benutzername, Minanzinfot, Minanzinfow,"
 				+ " Minanzkasse, Mehrbesetzung ) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		PreparedStatement pstmt = null;
-
+		Statement checkInput = null;
+		ResultSet checkRS = null;
+		int wpnr = 0;
+		boolean öffentlichstatus = false;
+		String öffnungszeit = null;
+		String schließzeit = null;
+		String hauptzeitbeginn = null;
+		String hauptzeitende = null;
+		String benutzername = null;
+		int Minanzinfot = 0;
+		int Minanzinfow = 0;
+		int Minanzkasse = 0;
+		int Mehrbesetzung = 0;
+		
+		
 		try {
 			pstmt = con.prepareStatement(sqlStatement);
-			String wp=Integer.toString(wochenplan.getWpnr());
-			while(wp.length()!=4){
-				break;
-			}
-			
-			int wpnr= Integer.parseInt(wp);
-			boolean öffentlichstatus = wochenplan.isÖffentlichstatus();
-			String öffnungszeit = wochenplan.getÖffnungszeit();
-			String schließzeit = wochenplan.getSchließzeit();
-			String hauptzeitbeginn = wochenplan.getHauptzeitbeginn();
-			String hauptzeitende = wochenplan.getHauptzeitende();
-			String benutzername = wochenplan.getBenutzername();
-			int Minanzinfot = wochenplan.getMinanzinfot();
-			int Minanzinfow = wochenplan.getMinanzinfow();
-			int Minanzkasse = wochenplan.getMinanzkasse();
-			int Mehrbesetzung = wochenplan.getMehrbesetzung();
 
+
+			wpnr= wochenplan.getWpnr();
+			öffentlichstatus = wochenplan.isÖffentlichstatus();
+			öffnungszeit = wochenplan.getÖffnungszeit();
+			schließzeit = wochenplan.getSchließzeit();
+			hauptzeitbeginn = wochenplan.getHauptzeitbeginn();
+			hauptzeitende = wochenplan.getHauptzeitende();
+			benutzername = wochenplan.getBenutzername();
+			Minanzinfot = wochenplan.getMinanzinfot();
+			Minanzinfow = wochenplan.getMinanzinfow();
+			Minanzkasse = wochenplan.getMinanzkasse();
+			Mehrbesetzung = wochenplan.getMehrbesetzung();
+			
 			con.setAutoCommit(false);
 
 			if (checkWochenplan(wpnr)) {
-				deleteWochenplan(wpnr);
-				addWochenplan(wochenplan);
-			} else {
-				
+				System.out.println("Der Wochenplan ist bereits in der Tabelle eingetragen");
+			}
+			else{
+				//Es wurde sichergestellt, dass die PK- und FK-Check-Constraints nicht verletzt werden --> Der Datensatz kann erzeugt werden
+			
 				pstmt.setInt(1, wpnr);
-				
 				pstmt.setBoolean(2, öffentlichstatus);
 				pstmt.setString(3, öffnungszeit);
 				pstmt.setString(4, schließzeit);
@@ -71,41 +86,54 @@ class Datenbank_Wochenplan {
 				pstmt.setInt(9, Minanzinfow);
 				pstmt.setInt(10, Minanzkasse);
 				pstmt.setInt(11, Mehrbesetzung);
-
+			
 				pstmt.execute();
-				con.commit();
+				con.commit();	
 				
-
-				if (checkWochenplan(wpnr)) {
-
-
-					System.out.println("Mitarbeiter wurde angelegt.");
-
-				} else {
-					System.err.println("Wochenplan kann "
-							+ "nicht angelegt werden!");
-					con.rollback();
-				}
-			}
-
+			}			
+			
+			success = true;
 			con.setAutoCommit(true);
-
+			
+			
 		} catch (SQLException sql) {
-			System.err.println("Methode addWochenplan SQL-Fehler: " + sql.getMessage());
+			//Die Ausgaben dienen zur Ursachensuche und sollten im späteren Programm entweder gar nicht oder vielleicht als Dialog(ausgelöst in der View weil der Rückgabewert false ist) angezeigt werden
+			System.out.println("Fehler beim Einfügen eines neuen Datensatzes in die Datenbank!");
+			System.out.println("Fehler bei der Erstellung eines neuen TerminBlockierung-Datensatzes:");
+			System.out.println("Parameter: Wochenplannummer = " + wpnr + " Öffentlich = " + öffentlichstatus +
+					" Öffnungszeit: " + öffnungszeit + " Schließzeit: " + schließzeit + " Hauptzeitbeginn: " + hauptzeitbeginn +
+					"Hauptzeitende: " + hauptzeitende + "Benutzer; " + benutzername +"Minanzinfot: " + Minanzinfot +
+					"Minanzinfow: " + Minanzinfow + "Minanzkasse: " + Minanzkasse + "Mehrbesetzung: " + Mehrbesetzung);
+			sql.printStackTrace();		
+			
 			try {
+				//Zurücksetzen des Connection Zustandes auf den Ursprungszustand
 				con.rollback();
 				con.setAutoCommit(true);
 			} catch (SQLException sqlRollback) {
-				System.err.println("Methode addWochenplan " + "- Rollback -  SQL-Fehler: " + sqlRollback.getMessage());
+				System.err.println("Methode addTerminBlockierung " + "- Rollback -  SQL-Fehler: " + sqlRollback.getMessage());
 			}
 		} finally {
+			//Schließen der offen gebliebenen Statements & ResultSets
 			try {
-				if (pstmt != null)
+				
+				if(checkRS != null){
+					checkRS.close();
+				}				
+				
+				if(checkInput != null){
+					checkInput.close();
+				}			
+				
+				if (pstmt != null){
 					pstmt.close();
+				}			
+				
 			} catch (SQLException e) {
-				System.err.println("Methode addWochenplan(finally) SQL-Fehler: " + e.getMessage());
+				System.err.println("Methode addTerminBlockierung(finally) SQL-Fehler: " + e.getMessage());
 			}
 		}
+		return success;
 	}
 
 	

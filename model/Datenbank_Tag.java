@@ -22,63 +22,96 @@ class Datenbank_Tag {
 	
 	
 
-	//Tage in der Tabelle Tag hinzufügen 
-	protected void addTag(Tag tag) {	
+	/**
+	 * @Thomas Friesen
+	 * @info Die Methode fügt einen Datensatz in die Tag Tabelle ein.
+	 */
+	protected boolean addTag(Tag tag) {	
+		boolean success = false;
+		
 		
 		String sqlStatement;
-
-		sqlStatement = "insert into Tag (Tbez, Wpnr, Anzschicht, Feiertag)values(?, ?, ?, ?)";
+		sqlStatement = "insert into Tag(tbez, wpnr, anzschicht, feiertag) values(?, ?, ?, ?)";
 		PreparedStatement pstmt = null;
+		Statement checkInput = null;
+		ResultSet checkRS = null;
+		String tbez = null;
+		int wpnr = 0;
+		int anzschicht = 0;
+		boolean feiertag = false;
 		
-		try {		
+		
+		try {
 			pstmt = con.prepareStatement(sqlStatement);
-			
-			String tbez = tag.getTbez();
-			int wpnr = tag.getWpnr();
-			int anzschicht = tag.getAnzschicht();
-			boolean feiertag = tag.isFeiertag();
-			con.setAutoCommit(false);
-			
-			if(checkTag(tbez,wpnr)){
-				updateTag(tag);
-			}
-			else{			
-			pstmt.setString(1, tbez);
-			pstmt.setInt(2, wpnr);
-			pstmt.setInt(3, anzschicht);
-			pstmt.setBoolean(4, feiertag);	
-			pstmt.execute();
-			con.commit();
 
-			}
+			//Auslesen der als Parameter übergebenen Mitarbeiter-Schicht-Beziehung
+			tbez = tag.getTbez();
+			wpnr = tag.getWpnr();
+			anzschicht = tag.getAnzschicht();
 			
+			
+			con.setAutoCommit(false);
+
+			if (checkTag(tbez,wpnr)) {
+				System.out.println("Dieser Tag existiert bereits in dem angegebenen Wochenplan!");
+			}
+			else{
+				//Es wurde sichergestellt, dass die PK- und FK-Check-Constraints nicht verletzt werden --> Der Datensatz kann erzeugt werden
+			
+				pstmt.setString(1, tbez);
+				pstmt.setInt(2, wpnr);
+				pstmt.setInt(3, anzschicht);
+				pstmt.setBoolean(4, feiertag);
+			
+				pstmt.execute();
+				con.commit();	
+				
+			}			
+			
+			success = true;
 			con.setAutoCommit(true);
 			
+			
 		} catch (SQLException sql) {
-			System.err.println("Methode addTag SQL-Fehler: "
-					+ sql.getMessage());
+			//Die Ausgaben dienen zur Ursachensuche und sollten im späteren Programm entweder gar nicht oder vielleicht als Dialog(ausgelöst in der View weil der Rückgabewert false ist) angezeigt werden
+			System.out.println("Fehler beim Einfügen eines neuen Datensatzes in die Datenbank!");
+			System.out.println("Fehler bei der Zuordnung eines Tages zu einem Wochenplan:");
+			System.out.println("Parameter: Tagbezeichnung = " + tbez + " Wochenplannummer = " + wpnr);
+			sql.printStackTrace();		
+			
 			try {
+				//Zurücksetzen des Connection Zustandes auf den Ursprungszustand
 				con.rollback();
 				con.setAutoCommit(true);
 			} catch (SQLException sqlRollback) {
-				System.err.println("Methode addTag "
-						+ "- Rollback -  SQL-Fehler: "
-						+ sqlRollback.getMessage());
+				System.err.println("Methode addMa_Schicht " + "- Rollback -  SQL-Fehler: " + sqlRollback.getMessage());
 			}
 		} finally {
+			//Schließen der offen gebliebenen Statements & ResultSets
 			try {
-				if (pstmt != null)
+				
+				if(checkRS != null){
+					checkRS.close();
+				}				
+				
+				if(checkInput != null){
+					checkInput.close();
+				}			
+				
+				if (pstmt != null){
 					pstmt.close();
+				}			
+				
 			} catch (SQLException e) {
-				System.err.println("Methode addTag(finally) SQL-Fehler: "
-						+ e.getMessage());
+				System.err.println("Methode addMa_Schicht(finally) SQL-Fehler: " + e.getMessage());
 			}
 		}
+		return success;
 	}
+	
 	/**
-	 * @author Anes Preljevic
-	 * @info Prüft ob es zu der eingegebenen Wochenplannr und der Tagbezeichnung einen Tag gibt,
-	 * bei existenz return true sonst false
+	 * @Thomas Friesen
+	 * @info Die Methode überprüft, ob ein Datensatz mit den angegebenen Parametern bereits in der Datenbank existiert
 	 */
 	protected boolean checkTag(String tbez, int wpnr) {
 		Statement stmt = null;

@@ -17,54 +17,83 @@ import data.Ma_Schicht;
 
 
 	/**
-	 * @author Anes Preljevic
-	 * @info Mitarbeiter in eine Schicht eintragen, neuer Datensatz Ma_Schicht in der Ma_Schicht Tabelle
+	 * @Thomas Friesen
+	 * @info Die Methode fügt einen Datensatz in die Ma_Schicht Tabelle ein.
 	 */
-	protected void addMa_Schicht(Ma_Schicht ma_schicht) {
-
+	public boolean addMa_Schicht(Ma_Schicht ma_schicht) {
+		boolean success = false;
+	
 		String sqlStatement;
 		sqlStatement = "insert into Ma_Schicht (Schichtnr,Benutzername) values(?, ?)";
 		PreparedStatement pstmt = null;
-
+		Statement checkInput = null;
+		ResultSet checkRS = null;
+		int schichtnr = 0;
+		String benutzername = null;
+		
+		
 		try {
 			pstmt = con.prepareStatement(sqlStatement);
 
-			int schichtnr = ma_schicht.getSchichtnr();
-			String benutzername = ma_schicht.getBenutzername();;
-		
+			//Auslesen der als Parameter übergebenen Mitarbeiter-Schicht-Beziehung
+			schichtnr = ma_schicht.getSchichtnr();
+			benutzername = ma_schicht.getBenutzername();		
 			
 			con.setAutoCommit(false);
 
 			if (checkMa_Schicht(schichtnr, benutzername)) {
-				deleteMa_Schicht(schichtnr,benutzername);
-				addMa_Schicht(ma_schicht);
-			} else {
+				System.out.println("Der Mitarbeiter wurde bereits in die Schicht eingeteilt!");
+			}
+			else{
+				//Es wurde sichergestellt, dass die PK- und FK-Check-Constraints nicht verletzt werden --> Der Datensatz kann erzeugt werden
+			
 				pstmt.setInt(1, schichtnr);
 				pstmt.setString(2, benutzername);
-				
 			
 				pstmt.execute();
-				con.commit();
-			}
-
+				con.commit();	
+				
+			}			
+			
+			success = true;
 			con.setAutoCommit(true);
-
+			
+			
 		} catch (SQLException sql) {
-			System.err.println("Methode addMa_Schicht SQL-Fehler: " + sql.getMessage());
+			//Die Ausgaben dienen zur Ursachensuche und sollten im späteren Programm entweder gar nicht oder vielleicht als Dialog(ausgelöst in der View weil der Rückgabewert false ist) angezeigt werden
+			System.out.println("Fehler beim Einfügen eines neuen Datensatzes in die Datenbank!");
+			System.out.println("Fehler bei der Zuordnung eines Mitarbeiters zu einer Schicht:");
+			System.out.println("Parameter: Schichtnr = " + schichtnr + " Mitarbeiter = " + benutzername);
+			sql.printStackTrace();		
+			
 			try {
+				//Zurücksetzen des Connection Zustandes auf den Ursprungszustand
 				con.rollback();
 				con.setAutoCommit(true);
 			} catch (SQLException sqlRollback) {
 				System.err.println("Methode addMa_Schicht " + "- Rollback -  SQL-Fehler: " + sqlRollback.getMessage());
 			}
 		} finally {
+			//Schließen der offen gebliebenen Statements & ResultSets
 			try {
-				if (pstmt != null)
+				
+				if(checkRS != null){
+					checkRS.close();
+				}				
+				
+				if(checkInput != null){
+					checkInput.close();
+				}			
+				
+				if (pstmt != null){
 					pstmt.close();
+				}			
+				
 			} catch (SQLException e) {
 				System.err.println("Methode addMa_Schicht(finally) SQL-Fehler: " + e.getMessage());
 			}
 		}
+		return success;
 	}
 
 	/**

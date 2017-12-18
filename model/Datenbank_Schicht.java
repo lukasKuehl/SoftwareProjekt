@@ -20,51 +20,94 @@ class Datenbank_Schicht {
 
 
 
-	// Schichten in Tabelle Schicht hinzufg
-	protected void addSchicht(Schicht schicht) {
-
+	/**
+	 * @Thomas Friesen
+	 * @info Die Methode fügt einen Datensatz in die Schicht Tabelle hinzu.
+	 */
+	public boolean addSchicht(Schicht schicht) {
+		boolean success = false;
+		
+		
 		String sqlStatement;
-		sqlStatement = "insert into Schicht (Schichtnr,Tbez,Wpnr) values( ?, ?, ?)";
+		sqlStatement = "insert into Schicht(schichtnr, tbez, wpnr, anfanguhrzeit, endeuhrzeit) values(?, ?, ?, ?, ?)";
 		PreparedStatement pstmt = null;
-
+		Statement checkInput = null;
+		ResultSet checkRS = null;
+		int schichtnr = 0;
+		String tbez = null;
+		int wpnr = 0;
+		String anfanguhrzeit = null;
+		String endeuhrzeit = null;
+		
+		
 		try {
 			pstmt = con.prepareStatement(sqlStatement);
 
-			int schichtnr = schicht.getSchichtnr();
-			String tbez = schicht.getTbez();
-			int wpnr = schicht.getWpnr();
+			//Auslesen der als Parameter übergebenen Mitarbeiter-Schicht-Beziehung
+			schichtnr = schicht.getSchichtnr();
+			tbez = schicht.getTbez();
+			wpnr = schicht.getWpnr();
+			anfanguhrzeit = schicht.getAnfanguhrzeit();
+			endeuhrzeit = schicht.getEndeuhrzeit();
 			
 			con.setAutoCommit(false);
 
 			if (checkSchicht(schichtnr)) {
-				deleteSchicht(schichtnr);
-				addSchicht(schicht);
-			} else {
-				pstmt.setInt(1, schichtnr);
-				pstmt.setString(5,tbez);
-				pstmt.setInt(6, wpnr);
-				pstmt.execute();
-				con.commit();
+				System.out.println("Diese schichtnr existiert bereits in der Tabelle Schicht!");
 			}
-
+			else{
+				//Es wurde sichergestellt, dass die PK- und FK-Check-Constraints nicht verletzt werden --> Der Datensatz kann erzeugt werden
+			
+				pstmt.setInt(1, schichtnr);
+				pstmt.setString(2, tbez);
+				pstmt.setInt(3, wpnr);
+				pstmt.setString(4, anfanguhrzeit);
+				pstmt.setString(5, endeuhrzeit);
+			
+				pstmt.execute();
+				con.commit();	
+				
+			}			
+			
+			success = true;
 			con.setAutoCommit(true);
-
+			
+			
 		} catch (SQLException sql) {
-			System.err.println("Methode addSchicht SQL-Fehler: " + sql.getMessage());
+			//Die Ausgaben dienen zur Ursachensuche und sollten im späteren Programm entweder gar nicht oder vielleicht als Dialog(ausgelöst in der View weil der Rückgabewert false ist) angezeigt werden
+			System.out.println("Fehler beim Einfügen eines neuen Datensatzes in die Datenbank!");
+			System.out.println("Fehler beim Hinzufügen einer neuen Schicht:");
+			System.out.println("Parameter: schichtnr = " + schichtnr);
+			sql.printStackTrace();		
+			
 			try {
+				//Zurücksetzen des Connection Zustandes auf den Ursprungszustand
 				con.rollback();
 				con.setAutoCommit(true);
 			} catch (SQLException sqlRollback) {
 				System.err.println("Methode addSchicht " + "- Rollback -  SQL-Fehler: " + sqlRollback.getMessage());
 			}
 		} finally {
+			//Schließen der offen gebliebenen Statements & ResultSets
 			try {
-				if (pstmt != null)
+				
+				if(checkRS != null){
+					checkRS.close();
+				}				
+				
+				if(checkInput != null){
+					checkInput.close();
+				}			
+				
+				if (pstmt != null){
 					pstmt.close();
+				}			
+				
 			} catch (SQLException e) {
 				System.err.println("Methode addSchicht(finally) SQL-Fehler: " + e.getMessage());
 			}
 		}
+		return success;
 	}
 
 	/**

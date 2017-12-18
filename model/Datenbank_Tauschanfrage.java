@@ -23,62 +23,85 @@ class Datenbank_Tauschanfrage {
 
 
 	/**
-	 * @Anes Preljevic 
+	 * @Thomas Friesen
 	 * @info  Fügt eine neue Tauschanfrage in der Tabelle Tauschanfrage hinzu
 	 */
-	protected void addTauschanfrage(Tauschanfrage tauschanfrage) {
 
+	protected boolean addTauschanfrage(int tauschNr, String senderName, int senderSchichtNr, String empfaengerName, int empfaengerSchichtNr ) {
+		boolean success = false;
+	
+		
 		String sqlStatement;
-		sqlStatement = "insert into Tauchanfrage (empfänger, sender, bestätigungsstatus,"
-				+ " schichtnrsender, schichtnrempfänger, tauschnr) values(?, ?, ?, ?, ?, ?)";
+		sqlStatement = "insert into Tauschanfrage(empfänger, sender, bestätigungsstatus,schichtnrsender, schichtnrempfänger, tauschnr) values(?, ?, ?, ?, ?, ?)";
 		PreparedStatement pstmt = null;
-
+		Statement checkInput = null;
+		ResultSet checkRS = null;
+		boolean bestaetigestatus = false;
+		
+		
 		try {
 			pstmt = con.prepareStatement(sqlStatement);
-
-			String empfänger = tauschanfrage.getEmpfänger();
-			String sender = tauschanfrage.getSender();;
-			boolean bestätigungsstatus= tauschanfrage.isBestätigungsstatus();
-			int schichtnrsender = tauschanfrage.getSchichtnrsender();
-			int schichtnrempfänger = tauschanfrage.getSchichtnrempfänger();
-			int tauschnr = tauschanfrage.getTauschnr();
 			
 			con.setAutoCommit(false);
 
-			if (checkTauschanfrage(tauschnr)) {
-				deleteTauschanfrage(tauschnr);
-				addTauschanfrage(tauschanfrage);
-			} else {
-				pstmt.setString(1, empfänger);
-				pstmt.setString(2, sender);
-				pstmt.setBoolean(3, bestätigungsstatus);
-				pstmt.setInt(4, schichtnrsender);
-				pstmt.setInt(5,schichtnrempfänger);
-				pstmt.setInt(6, tauschnr);
-				pstmt.execute();
-				con.commit();
+			if (checkTauschanfrage(tauschNr)) {
+				System.out.println("Die Tauschnummer befindet sich bereits in der Datenbank!");
 			}
-
+			else{
+				//Es wurde sichergestellt, dass die PK- und FK-Check-Constraints nicht verletzt werden --> Der Datensatz kann erzeugt werden
+			
+				pstmt.setString(1, empfaengerName);
+				pstmt.setString(2, senderName);
+				pstmt.setBoolean(3,bestaetigestatus);
+				pstmt.setInt(4,senderSchichtNr);
+				pstmt.setInt(5, empfaengerSchichtNr);
+				pstmt.setInt(6, tauschNr);
+			
+				pstmt.execute();
+				con.commit();	
+				
+			}			
+			
+			success = true;
 			con.setAutoCommit(true);
-
+			
+			
 		} catch (SQLException sql) {
-			System.err.println("Methode addTauschanfrage SQL-Fehler: " + sql.getMessage());
+			//Die Ausgaben dienen zur Ursachensuche und sollten im späteren Programm entweder gar nicht oder vielleicht als Dialog(ausgelöst in der View weil der Rückgabewert false ist) angezeigt werden
+			System.out.println("Fehler beim Einfügen eines neuen Datensatzes in die Datenbank!");
+			System.out.println("Fehler bei der Zuordnung einer Tauschnummer zu einer Tauschanfrage:");
+			System.out.println("Parameter: TauschNr = " + tauschNr);
+			sql.printStackTrace();		
+			
 			try {
+				//Zurücksetzen des Connection Zustandes auf den Ursprungszustand
 				con.rollback();
 				con.setAutoCommit(true);
 			} catch (SQLException sqlRollback) {
 				System.err.println("Methode addTauschanfrage " + "- Rollback -  SQL-Fehler: " + sqlRollback.getMessage());
 			}
 		} finally {
+			//Schließen der offen gebliebenen Statements & ResultSets
 			try {
-				if (pstmt != null)
+				
+				if(checkRS != null){
+					checkRS.close();
+				}				
+				
+				if(checkInput != null){
+					checkInput.close();
+				}			
+				
+				if (pstmt != null){
 					pstmt.close();
+				}			
+				
 			} catch (SQLException e) {
 				System.err.println("Methode addTauschanfrage(finally) SQL-Fehler: " + e.getMessage());
 			}
 		}
+		return success;
 	}
-
 	/**
 	 * @Anes Preljevic
 	 * @info Prüft ob es zu der eingegebenen tauschnr eine Tauschtanfrage gibt, bei existenz return true sonst false.
