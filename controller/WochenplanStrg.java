@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.Map;
@@ -25,6 +26,7 @@ import javax.swing.table.TableCellRenderer;
 
 import com.sun.org.apache.xerces.internal.util.SynchronizedSymbolTable;
 
+import data.Ma_Schicht;
 import data.Mitarbeiter;
 import data.Schicht;
 import data.Standardeinstellungen;
@@ -244,8 +246,8 @@ class WochenplanStrg {
     private String[] generiereMitarbeiterSpalte(int wpnr, Mitarbeiter ma, int tageAnzahl){
     
     	//Symbolisiert eine Mitarbeiterzeile in der Wochenplantabelle
-    	String[] rueckgabe = new String[tageAnzahl+1];    	
-    	/*
+    	String[] rueckgabe = new String[tageAnzahl+1];     	
+    	
     	LinkedList<Tag> alleTage = myModel.getTage();
     	LinkedList<Tag> wochenTage = new LinkedList<Tag>();
     	
@@ -254,48 +256,138 @@ class WochenplanStrg {
     		if(t.getWpnr() == wpnr){
     			wochenTage.add(t);
     		}    		
-    	}
-    	    	
-    	//Muss noch implementiert werden!   	
-    	LinkedList<Schicht> schichten = myModel.getSchichten(ma);
+    	}    	  	
     	
+    	//Abfrage der gesamten Zuordnung und Suche nach den Schichten, die dem übergebenen Mitarbeiter zugeordet sind
+    	LinkedList<Ma_Schicht> einteilung = this.myModel.getMa_Schicht();
+    	LinkedList<Ma_Schicht> mitarbeiterEinteilung = new LinkedList<Ma_Schicht>();
+    			
+    	//Iteriere durch die Einteilungsliste und übernehme die Datensätze in die Mitarbeitereinteilung, die den gesuchten Benuzternamen haben
+    	for(Ma_Schicht ms: einteilung){			
+    		if(ms.getBenutzername().equals(ma.getBenutzername())){
+    			mitarbeiterEinteilung.add(ms);
+    		}			
+    	}   	
     	
-    	Map<String, Schicht> tageMap = new TreeMap<String, Schicht>();    	
+    	//Abfrage vorhandenen Schichten in der Datenbank und Suche nach den Schichtnummern der Einteilung s.o.
+		LinkedList<Schicht> alleSchichten = this.myModel.getSchichten();
+		LinkedList<Schicht> mitarbeiterSchichten =new LinkedList<Schicht>();
+		
+		for(Schicht s: alleSchichten){
+			
+			for(Ma_Schicht mas: mitarbeiterEinteilung){
+				
+				if(s.getSchichtnr() == mas.getSchichtnr()){
+					mitarbeiterSchichten.add(s);
+				}			
+			}		
+		}    	
+    	
+    	Map<String, LinkedList<Schicht>> tageSchichtenMap = new TreeMap<String, LinkedList<Schicht>>();    	
     	
     	for(Tag t: wochenTage){    	
     		
-    		for(Schicht s: schichten){  
+    		for(Schicht s: mitarbeiterSchichten){  
     			
     			if(s.getTbez().equals(t.getTbez())){
-    				tageMap.put(t.getTbez(), s);    				
+    				
+    				if(tageSchichtenMap.get(t.getTbez()) == null){
+    					tageSchichtenMap.put(t.getTbez(), new LinkedList<Schicht>());    					
+    				}
+    				tageSchichtenMap.get(t.getTbez()).add(s);   				
+    				   				
     			}   			
     		}    		
-    	}      	
+    	}       	
+    	
+    	String montagsSchichten = getTageszeitraum(tageSchichtenMap.get("Montag"));   	
+    	String dienstagsSchichten = getTageszeitraum(tageSchichtenMap.get("Dienstag"));
+    	String mittwochsSchichten = getTageszeitraum(tageSchichtenMap.get("Mittwoch"));
+    	String donnerstagsSchichten = getTageszeitraum(tageSchichtenMap.get("Donnerstag"));
+    	String freitagsSchichten = getTageszeitraum(tageSchichtenMap.get("Freitag"));
+    	String samstagsSchichten = getTageszeitraum(tageSchichtenMap.get("Samstag"));
+    	String sonntagsSchichten = getTageszeitraum(tageSchichtenMap.get("Sonntag"));
     	
     	if(tageAnzahl == 6){
     		rueckgabe[0] = ma.getVorname() + " " + ma.getName();
-    		rueckgabe[1] = tageMap.get("Montag").getStartZeit() + "-" + tageMap.get("Montag").getEndZeit();
-    		rueckgabe[2] = tageMap.get("Dienstag").getStartZeit() + "-" + tageMap.get("Dienstag").getEndZeit();
-    		rueckgabe[3] = tageMap.get("Mittwoch").getStartZeit() + "-" + tageMap.get("Mittwoch").getEndZeit();
-    		rueckgabe[4] = tageMap.get("Donnerstag").getStartZeit() + "-" + tageMap.get("Donnerstag").getEndZeit();
-    		rueckgabe[5] = tageMap.get("Freitag").getStartZeit() + "-" + tageMap.get("Freitag").getEndZeit();
-    		rueckgabe[6] = tageMap.get("Samstag").getStartZeit() + "-" + tageMap.get("Samstag").getEndZeit();
+    		rueckgabe[1] = montagsSchichten;
+    		rueckgabe[2] = dienstagsSchichten;
+    		rueckgabe[3] = mittwochsSchichten;
+    		rueckgabe[4] = donnerstagsSchichten;
+    		rueckgabe[5] = freitagsSchichten;
+    		rueckgabe[6] = samstagsSchichten;
     	}
     	
+    	//Sonderfall: Verkaufsoffener Sonntag
     	if(tageAnzahl == 7){
     		rueckgabe[0] = ma.getVorname() + " " + ma.getName();
-    		rueckgabe[1] = tageMap.get("Montag").getStartZeit() + "-" + tageMap.get("Montag").getEndZeit();
-    		rueckgabe[2] = tageMap.get("Dienstag").getStartZeit() + "-" + tageMap.get("Dienstag").getEndZeit();
-    		rueckgabe[3] = tageMap.get("Mittwoch").getStartZeit() + "-" + tageMap.get("Mittwoch").getEndZeit();
-    		rueckgabe[4] = tageMap.get("Donnerstag").getStartZeit() + "-" + tageMap.get("Donnerstag").getEndZeit();
-    		rueckgabe[5] = tageMap.get("Freitag").getStartZeit() + "-" + tageMap.get("Freitag").getEndZeit();
-    		rueckgabe[6] = tageMap.get("Samstag").getStartZeit() + "-" + tageMap.get("Samstag").getEndZeit();
-    		rueckgabe[7] = tageMap.get("Sonntag").getStartZeit() + "-" + tageMap.get("Sonntag").getEndZeit();
+    		rueckgabe[1] = montagsSchichten;
+    		rueckgabe[2] = dienstagsSchichten;
+    		rueckgabe[3] = mittwochsSchichten;
+    		rueckgabe[4] = donnerstagsSchichten;
+    		rueckgabe[5] = freitagsSchichten;
+    		rueckgabe[6] = samstagsSchichten;
+    		rueckgabe[7] = sonntagsSchichten;
     	}   	
-    	*/
+    	
     	return rueckgabe;
     }
 		
+    
+    
+    /**
+	 * @author Lukas Kühl
+	 * @info Hilfsmethode zur Ermittlung der gesamten Arbeitszeit aufgrund der eingeteilten Schichten eines Mitarbeiters an einem bestimmten Tag für die Einstatzplantabelle
+	 */
+    private String getTageszeitraum(LinkedList<Schicht> schichten){
+    	
+    	String rueckgabe = null;
+    	
+    	if(schichten == null){
+    		return "-";
+    	}
+    	else{			
+    			
+    		LinkedList<Date> zeitenDate = new LinkedList<Date>();
+    			
+    		// Iteriere durch die übergebene Schichtenliste und konvertiere die vorhanden Zeiten ins Date Format
+    		for(Schicht s : schichten){
+    				
+    			String anfangsZeitString = s.getAnfanguhrzeit();
+    			String endZeitString = s.getEndeuhrzeit();
+    			SimpleDateFormat format = new SimpleDateFormat("hh:mm");
+    								
+    			try{
+    				Date tempAnfang = format.parse(anfangsZeitString);	    					
+    				zeitenDate.add(tempAnfang);			
+    				Date tempEnde = format.parse(endZeitString);
+    				zeitenDate.add(tempEnde);
+    					
+    			}catch(Exception e){
+    				System.out.println("Fehler beim Konvertieren eines Datums");					
+    			}			   				
+    		}  	
+    			
+    		// Konvertierung war erfolgreich und es ist mindestens eine Schicht vorhanden, da Anfangs- und Endzeit da sind --> mind. 2 Werte
+    		if(zeitenDate.size() >= 2){
+    			
+    			Collections.sort(zeitenDate);    			
+    			
+    			//Gebe die frühste und die späteste Zeit aus der Liste zurück --> Gesamter Zeitraum abgedeckt
+    			rueckgabe = zeitenDate.getFirst() + "-" + zeitenDate.getLast();    				
+    		}     		
+    	}
+    	
+    	return rueckgabe;
+    }
+    
+    
+    
+    
+    
+    
+    
+    
 	/**
 	 * @author 
 	 * @return 

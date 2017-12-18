@@ -138,8 +138,56 @@ class SchichtStrg {
 		return verfuegbareMitarbeiter;
 	}
 	
+	
+	/**
+	 * @author Lukas Kühl
+	 * @info Methode zur Ermittlung der Schichten eines Mitarbeiters für einen bestimmten Tag innerhalb eines Wochenplanes
+	 */
 	protected ArrayList<String> getMitarbeiterSchichten(String wpbez, String tagbez, String username){
 		ArrayList<String> rueckgabe = null;
+		
+		//Umwandeln der Wpbez in die eindeutige Wochennummer
+    	int wpnr = Integer.parseInt((wpbez.substring(2).trim())); 		
+		
+    	//Abfrage der gesamten Zuordnung und Suche nach den Schichten, die dem übergebenen benuzternamen zugeordnet sind
+		LinkedList<Ma_Schicht> einteilung = this.myModel.getMa_Schicht();
+		LinkedList<Ma_Schicht> mitarbeiterEinteilung = new LinkedList<Ma_Schicht>();
+		
+		//Iteriere durch die Einteilungsliste und übernehme die Datensätze in die Mitarbeitereinteilung, die den gesuchten Benuzternamen haben
+		for(Ma_Schicht ms: einteilung){			
+			if(ms.getBenutzername().equals(username)){
+				mitarbeiterEinteilung.add(ms);
+			}			
+		}
+		
+		//Abfrage vorhandenen Schichten in der Datenbank und Suche nach den Schichtnummern der Einteilung s.o.
+		LinkedList<Schicht> alleSchichten = this.myModel.getSchichten();
+		LinkedList<Schicht> mitarbeiterSchichtenAlle =new LinkedList<Schicht>();
+		
+		for(Schicht s: alleSchichten){
+			
+			for(Ma_Schicht mas: mitarbeiterEinteilung){
+				
+				if(s.getSchichtnr() == mas.getSchichtnr()){
+					mitarbeiterSchichtenAlle.add(s);
+				}			
+			}		
+		}
+		
+		LinkedList<Schicht> mitarbeiterTagesSchichten = new LinkedList<Schicht>();
+		
+		//Suche nach den Schichten eines bestimmten Tages eines vorhanden Wochenplanes
+		for(Schicht s: mitarbeiterSchichtenAlle){
+			
+			if((s.getTbez().equals(tagbez)) && (s.getWpnr() == wpnr)){
+				mitarbeiterTagesSchichten.add(s);
+			}		
+		}	
+		
+		for(Schicht s: mitarbeiterTagesSchichten){
+			rueckgabe.add(String.valueOf(s.getSchichtnr()));
+		}
+		
 		return rueckgabe;
 	}
 	
