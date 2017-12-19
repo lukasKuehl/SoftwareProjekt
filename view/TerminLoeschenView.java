@@ -75,7 +75,6 @@ public class TerminLoeschenView extends JFrame {
 				if (eingabe == 0) {
 
 					if (list.isSelectionEmpty()) {
-
 						JOptionPane.showMessageDialog(null, "Es wurde keine Eingabe getätigt", "Error",
 								JOptionPane.ERROR_MESSAGE);
 					} else {
@@ -97,10 +96,13 @@ public class TerminLoeschenView extends JFrame {
 									"Die Liste konnte nicht übergeben werden. - Methode ActionPerformed (btnBestätigen)");
 						}
 					}
-				} else {
+				}
+			
+				 else {
 					System.exit(0);
 				}
 			}
+			
 		});
 		btnBesttigen.setBounds(437, 465, 119, 26);
 		contentPane.add(btnBesttigen);

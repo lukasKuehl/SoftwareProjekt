@@ -26,7 +26,7 @@ public class Einsatzplanview {
 		boolean erfolg = false;
 		
 		try {
-			erfolg = this.myController.erstelleTermin(username, bez, zeitraum, grund);
+			erfolg = this.myController.erstelleTermin(username, bez, zeitraum, grund);  // TREEMAP MUSS AUF STRING STRING GEÄNDERT WERDEN
 			JOptionPane.showConfirmDialog(null, "Termin erfolgreich erstellt");
 		}catch (Exception e) {
 			
@@ -48,7 +48,7 @@ public class Einsatzplanview {
 			
 		}
 		if (erfolg == false) {
-			JOptionPane.showConfirmDialog(null, "Der Termin konnte erstellt werden. Bitte die Eingaben prüfen");
+			JOptionPane.showConfirmDialog(null, "Der Termin konnte nicht erstellt werden. Bitte die Eingaben prüfen");
 		}
 		
 		return erfolg;
@@ -70,8 +70,39 @@ public class Einsatzplanview {
 		
 		return erfolg;
 	}
-
-
-
 	}
+
+	protected boolean erstelleTauschanfrage(String senderName, int senderSchichtNr, String empfaengerName, int empfaengerSchichtNr ) {
+		boolean erfolg = false;
+		
+		try {
+			erfolg = this.myController.erstelleTauschanfrage(senderName, senderSchichtNr, empfaengerName, empfaengerSchichtNr);
+					
+		}catch (Exception e) {
+			
+		}
+		if (erfolg == false) {
+			JOptionPane.showConfirmDialog(null, "Die Tauschanfrage  konnte nicht angelegt werden. Bitte die Eingaben prüfen");
+		}
+		
+		return erfolg;
+	}
+	
+	protected boolean entferneTauschanfrage(int tauschanfrageNr) {
+		boolean erfolg = false;
+		
+		try {
+			erfolg = this.myController.entferneTauschanfrage(tauschanfrageNr);
+					
+		}catch (Exception e) {
+			
+		}
+		if (erfolg == false) {
+			JOptionPane.showConfirmDialog(null, "Die Tauschanfrage konnte nicht entfernt werden. Bitte die Eingaben prüfen");
+		}
+		
+		return erfolg;
+	}
+	
 }
+

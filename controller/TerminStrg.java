@@ -9,9 +9,11 @@ import java.util.TreeMap;
 
 import javax.swing.JDialog;
 
+import data.Mitarbeiter;
 import data.Tag;
 import data.Tblock_Tag;
 import data.TerminBlockierung;
+import data.Userrecht;
 import data.Wochenplan;
 import model.Einsatzplanmodel;
 
@@ -247,7 +249,59 @@ class TerminStrg {
 	}
 	
 	protected ArrayList<String> getAlleTermine(String username){
-		ArrayList<String> rueckgabe = null;
+		ArrayList<String> rueckgabe = null;		
+		/*
+		boolean admin = false;
+		LinkedList<Userrecht> rechte = this.myModel.getUserrechte();
+		Mitarbeiter ma = this.myModel.getMitarbeiter(username);		
+		
+		for(Userrecht u: rechte){
+			//Durchsuche die Job --> Recht Zuordnung nach dem Job des Mitarbeiters
+			if(u.getJob().equals(ma.getJob())){
+				//Prüfe, ob die zugehörige Rolle Admin ist
+				if(u.getBenutzerrolle().equals("Admin")){
+					//Der/Die Mitarbeiter/in hat die notwendigen Berechtigungen
+					admin = true;
+				}			
+			}		
+		}
+		
+		if(admin){
+			
+			LinkedList<TerminBlockierung> alleTermine = this.myModel.getTerminBlockierungen();
+						
+			LinkedList<Tblock_Tag> alleTerminZuordnungen = this.myModel.getAlleTblock_Tag();
+			
+			//Übertrage die Termine im Format Terminbezeichnung - Mitarbeitername - KW - Anfangstag - Endtag - Anfangsuhrzeit-Enduhrzeit in die RückgabeListe
+			for(TerminBlockierung tb : alleTermine){
+				
+				for(Tblock_Tag tbt : alleTerminZuordnungen){
+					
+					if(tbt.getTblocknr() == tb.getTblocknr()){
+						
+						String temp = tb.getBbez() + " - " + this.myModel.getMitarbeiter(tb.getBenutzername()).getVorname() + " " + this.myModel.getMitarbeiter(tb.getBenutzername()).getName() +" - KW" + tbt.getWpnr() + " - ";
+						
+						//Falls es sich um einen eintägigen Termin handelt, wird der Anfangs- und Endtag zusammengefasst
+						if(tb.getAnfzeitraum().equals(tb.getEndzeitraum())){
+							temp = temp + tb.getAnfzeitraum() + " - ";
+						}
+						else{
+							temp = temp + tb.getAnfzeitraum() + "-" + tb.getEndzeitraum() + " - ";
+						}
+						
+						temp = temp + tb.getAnfanguhrzeit() + "-" + tb.getEndeuhrzeit() + " Uhr";
+						
+						//Datensatz ist vollständig und kann in die Rückgabeliste eingetragen werden
+						rueckgabe.add(temp);						
+					}					
+				}			
+			}		
+		}
+		else{
+			throw new Exception("Die notwendigen Berechtigungen sind nicht vorhanden, bitte wenden Sie sich an den Systemadministrator.");
+		}
+		*/
+		
 		return rueckgabe;
 	}	
 }
