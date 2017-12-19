@@ -5,6 +5,8 @@ import java.util.LinkedList;
 
 import javax.swing.JDialog;
 
+import org.omg.CORBA.MARSHAL;
+
 import data.Ma_Schicht;
 import data.Mitarbeiter;
 import data.Schicht;
@@ -184,28 +186,7 @@ class SchichtStrg {
 			}		
 		}	
 		
-		for(Schicht s: mitarbeiterTagesSchichten){
-			
-			//Struktur eines Schichteintrages in der Rückgabeliste: SchichtNr - KW - Tag - Zeitraum - Mitarbeitername
-			
-			String temp = String.valueOf(s.getSchichtnr() + " - KW"  + s.getWpnr() + " - " + s.getTbez() + " - " + s.getAnfanguhrzeit()+"-" + s.getEndeuhrzeit() +" Uhr - ");
-			
-			LinkedList<Ma_Schicht> alleSchichtZuordnungen = this.myModel.getMa_Schicht();
-			Mitarbeiter ma = null;
-			
-			for(Ma_Schicht mas: alleSchichtZuordnungen){
-				//Betroffene Schichzuordnung gefunden, entnahme des Mitarbeiters zum Auslesen des Namens
-				if(s.getSchichtnr() == mas.getSchichtnr()){
-					ma = this.myModel.getMitarbeiter(mas.getBenutzername());
-				}		
-			}
-			
-			temp = temp + ma.getVorname() + " " + ma.getName();			
-			
-			rueckgabe.add(temp);
-		}
-		
-		return rueckgabe;
+		return getSchichteinteilungView(mitarbeiterTagesSchichten);	
 	}
 	
 	protected ArrayList<String> getAndereMitarbeiterSchichten(String wpbez, String username, int schichtNr){
@@ -237,28 +218,40 @@ class SchichtStrg {
 			}		
 		}			
 		
-		for(Schicht s: andereMitarbeiterSchichtenAlle){
+		return getSchichteinteilungView(andereMitarbeiterSchichtenAlle);
+	}
+	
+	
+	/**
+	 * @author Lukas Kühl
+	 * @info Hilfsmethode zur Generierung eines Eintrages in der Schichtübersicht innerhalb der View
+	 */
+	private ArrayList<String> getSchichteinteilungView(LinkedList<Schicht> mitarbeiterSchichten){
+		
+		ArrayList<String> rueckgabe = new ArrayList<String>();
+		
+		for(Schicht s: mitarbeiterSchichten){
 			
-			//Struktur eines Schichteintrages in der Rückgabeliste: SchichtNr - KW - Tag - Zeitraum - Mitarbeitername
+		//Struktur eines Schichteintrages in der Rückgabeliste: SchichtNr - KW - Tag - Zeitraum - Mitarbeitername
 			
-			String temp = String.valueOf(s.getSchichtnr() + " - KW"  + s.getWpnr() + " - " + s.getTbez() + " - " + s.getAnfanguhrzeit()+"-" + s.getEndeuhrzeit() +" Uhr - ");
+		String temp = String.valueOf(s.getSchichtnr() + " - KW"  + s.getWpnr() + " - " + s.getTbez() + " - " + s.getAnfanguhrzeit()+"-" + s.getEndeuhrzeit() +" Uhr - ");
 			
-			LinkedList<Ma_Schicht> alleSchichtZuordnungen = this.myModel.getMa_Schicht();
-			Mitarbeiter ma = null;
+		LinkedList<Ma_Schicht> alleSchichtZuordnungen = this.myModel.getMa_Schicht();
+		Mitarbeiter ma = null;
 			
-			for(Ma_Schicht mas: alleSchichtZuordnungen){
-				//Betroffene Schichzuordnung gefunden, entnahme des Mitarbeiters zum Auslesen des Namens
-				if(s.getSchichtnr() == mas.getSchichtnr()){
-					ma = this.myModel.getMitarbeiter(mas.getBenutzername());
-				}		
-			}
+		for(Ma_Schicht mas: alleSchichtZuordnungen){
+			//Betroffene Schichzuordnung gefunden, entnahme des Mitarbeiters zum Auslesen des Namens
+			if(s.getSchichtnr() == mas.getSchichtnr()){
+				ma = this.myModel.getMitarbeiter(mas.getBenutzername());
+			}		
+		}
 			
-			temp = temp + ma.getVorname() + " " + ma.getName();			
-			
-			rueckgabe.add(temp);
+		temp = temp + ma.getVorname() + " " + ma.getName();			
+		
+		rueckgabe.add(temp);
 		}
 		
 		return rueckgabe;
-	}
-	
+		
+	}	
 }
