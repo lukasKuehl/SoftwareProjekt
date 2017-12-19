@@ -78,7 +78,7 @@ public class TauschanfrageErstellenView extends JFrame {
 		hhh.add("hajf");
 
 		cmbBoxWP = new JComboBox<String>((new String[] { "jashda", "hdaskd" }));
-		// wp = getWochenplaene();
+		// wp = myView.getWochenplaene();
 		for (String m : hhh) {
 			cmbBoxWP.addItem(m);
 		}
@@ -152,51 +152,53 @@ public class TauschanfrageErstellenView extends JFrame {
 		comboBoxSchichtAndererMA.setFont(new Font("Verdana", Font.PLAIN, 15));
 		comboBoxSchichtAndererMA.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
 		}});
 		comboBoxSchichtAndererMA.setBounds(249, 409, 136, 26);
 		contentPane.add(comboBoxSchichtAndererMA);
 		setVisible(true);
 	}
+	
+	public void actionPerformed(ActionEvent e) {
+		
+			if (e.getSource() == cmbBoxWP) {
+			cmbBoxTag.setEnabled(true);
+			labelTagAndererMA.setEnabled(true);
+		}
 
+			if (e.getSource() == cmbBoxTag){
+			cmbBoxSchicht.setEnabled(true);
+			lblTagAuswhlen.setEnabled(true);
+		}
+	
+		if (e.getSource() == cmbBoxSchicht) {
+			comboBoxTagAndererMA.setEnabled(true);
+			labelTagAndererMA.setEnabled(true);
+		}
+
+		if (e.getSource() == comboBoxTagAndererMA) {
+			comboBoxSchichtAndererMA.setEnabled(true);
+			labelSchichtAndererMA.setEnabled(true);
+		}
 		
-		// ACTION PERFORMED METHODEN  // NOCH AUSLAGERN
-		public void actionPerformed(ActionEvent e) {
-				if (e.getSource() == cmbBoxWP) {
-					cmbBoxTag.setEnabled(true);
-					lblTagAuswhlen.setEnabled(true);
-				}
-		
-		
-			if (e.getSource() == cmbBoxTag) {
-					cmbBoxSchicht.setEnabled(true);
-					lblSchichtAuswhlen.setEnabled(true);
-				}
+		if (e.getSource() == btnVersenden) {
 			
-				if (e.getSource() == cmbBoxSchicht) {
-					comboBoxTagAndererMA.setEnabled(true);
-					labelTagAndererMA.setEnabled(true);
-				}
-		
-				if (e.getSource() == comboBoxTagAndererMA) {
-					comboBoxSchichtAndererMA.setEnabled(true);
-					labelSchichtAndererMA.setEnabled(true);
-				}
-				
-				if (e.getSource() == btnVersenden) {
-				String senderName = getUsername();
-				int senderSchichtNr = myModel.getSchichtNr(username);
-				String wp = cmbBoxWP.getSelectedItem().toString();
-				String empfaengerName; // Username des Mitarbeiter hinzufügen
-				String tag= cmbBoxTag.getSelectedItem().toString();
-				int empfaengerSchichtNr = getUsernameAndererMA();
-				String schicht = cmbBoxSchicht.getSelectedItem().toString();
-				String tagAndererMA = comboBoxTagAndererMA.getSelectedItem().toString();
-				String schichtAndererMA = comboBoxSchichtAndererMA.getSelectedItem().toString();
-				
-				myView.erstelleTauschanfrage(senderName, senderSchichtNr, empfaengerName, empfaengerSchichtNr );
-				
-			}
+			
+			// LISTE FÜR DIE EmpfängerNamen SchichtNr, schicht, schichtAndererMa
+//		String username = myView.getUsername(username);
+//		String empfaengerName= null; // Username des Mitarbeiter hinzufügen / AUS der Schicht des anderen MA
+//		String tag= cmbBoxTag.getSelectedItem().toString();
+//		int empfaengerSchichtNr = 0; // USERNAME ANDERER MITARBEITER 
+//		String schicht = cmbBoxSchicht.getSelectedItem().toString();
+//		String tagAndererMA = comboBoxTagAndererMA.getSelectedItem().toString();
+//		String schichtAndererMA = comboBoxSchichtAndererMA.getSelectedItem().toString();
+//		
+//		int senderSchichtNr = 0;//AUS DER LINKED LIST
+//		myView.erstelleTauschanfrage(username, senderSchichtNr, empfaengerName, empfaengerSchichtNr );
 		
 	}
+
+}
+
 }
 

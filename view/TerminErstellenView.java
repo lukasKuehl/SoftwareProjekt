@@ -156,7 +156,7 @@ public class TerminErstellenView extends JFrame {
 		panelTermin.add(lblDoppelpunkt2);
 
 		
-		// Kontrolle der Format Eingabe  auf 24 Stunden und 60 min
+		// Kontrolle der Format Eingabe  auf 24 Stunden und 60 min  erstellen
 		try {
 			txtFldUhrzeitBisB = new JFormattedTextField(new MaskFormatter("##"));
 		} catch (ParseException eUhrzeitBisB) {
@@ -213,8 +213,6 @@ public class TerminErstellenView extends JFrame {
 
 		setVisible(true);
 	}
-
-	
 	
 	// ACTION PERFORMED METHODEN
 	public void actionPerformed(ActionEvent e) {

@@ -11,7 +11,7 @@ public class Einsatzplanview {
 
 	private EinsatzplanController myController = null;
 	private Einsatzplanmodel myModel = null;
-	
+	private String username = null;
 	
 	public Einsatzplanview(EinsatzplanController einsatzplanController, Einsatzplanmodel model) {
 		this.myController = einsatzplanController;
@@ -22,11 +22,17 @@ public class Einsatzplanview {
 	 * @author - Ramona Gerke
 	 * @info Die Parameter werden an den Controller mit den definierten Übergabeparametern übergeben.
 	 */
-	protected boolean erstelleTermin(String username, String bez, TreeMap<Integer, String> zeitraum, String grund) {
+	
+	protected String getUsername(String username) {
+		return username;
+	} // AUS DER ANMELDUNGSVIEW WIRD DEN USERNAME ÜBERGEBEN
+	
+	
+	protected boolean erstelleTermin(String username, String bez, TreeMap<String, String> zeitraum, String grund) {
 		boolean erfolg = false;
 		
 		try {
-			erfolg = this.myController.erstelleTermin(username, bez, zeitraum, grund);  // TREEMAP MUSS AUF STRING STRING GEÄNDERT WERDEN
+			erfolg = this.myController.erstelleTermin(username, bez, zeitraum, grund);
 			JOptionPane.showConfirmDialog(null, "Termin erfolgreich erstellt");
 		}catch (Exception e) {
 			
@@ -82,7 +88,7 @@ public class Einsatzplanview {
 			
 		}
 		if (erfolg == false) {
-			JOptionPane.showConfirmDialog(null, "Die Tauschanfrage  konnte nicht angelegt werden. Bitte die Eingaben prüfen");
+			JOptionPane.showConfirmDialog(null, "Die Tauschanfrage konnte nicht angelegt werden. Bitte die Eingaben prüfen");
 		}
 		
 		return erfolg;
