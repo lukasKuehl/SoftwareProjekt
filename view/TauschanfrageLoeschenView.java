@@ -31,8 +31,10 @@ public class TauschanfrageLoeschenView extends JFrame {
 	private JLabel lblTauschanfrageLoeschen = null;
 	private JList listKrankmeldung = null;
 	private JButton btnBestaetigen = null;
+	private Einsatzplanview myView= null;
 
 		protected TauschanfrageLoeschenView() {
+		
 		setTitle("Tauschanfrage löschen");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -57,18 +59,10 @@ public class TauschanfrageLoeschenView extends JFrame {
 		panelKrankmeldung.add(lblTauschanfrageLoeschen);
 		
 		listKrankmeldung = new JList<Object>();
-		listKrankmeldung.setModel(new AbstractListModel() {
-			String[] values = new String[] {"hasfkasjh", "hdkfahjds"};
-			
-			// liste mit den Krankmeldungen der Mitarbeiter
-			
-			public int getSize() {
-				return values.length;
-			}
-			public Object getElementAt(int index) {
-				return values[index];
-			}
-		});
+	 // Linked List mit For Each Schleife ausgeben
+		
+	// Termine löschen, Krankmeldungen löschen und Tauschanfragen löschen evtl. doch in Linked List, da ID mit angegeben sollte
+	
 		listKrankmeldung.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		listKrankmeldung.setBounds(71, 126, 340, 392);
 		panelKrankmeldung.add(listKrankmeldung);
@@ -76,26 +70,6 @@ public class TauschanfrageLoeschenView extends JFrame {
 		btnBestaetigen = new JButton("Bestätigen");
 		btnBestaetigen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
-				int eingabe = JOptionPane.showConfirmDialog(null, "Wollen Sie die Auswahl bestätigen?", null, JOptionPane.YES_NO_CANCEL_OPTION);
-				//		System.out.print(eingabe); Kontrolle
-						
-						
-						if (eingabe==0) {	
-							try {
-							int id =	listKrankmeldung.getSelectedIndex();
-							String s = (String) listKrankmeldung.getSelectedValue();
-//							myController.entferneKrankmeldung(id);	
-							System.out.println("Inhalt" + s); // test
-							}
-							catch(Exception ex) {
-								ex.getStackTrace();
-								System.err.println("Fehler in der Eingabe der Daten - ActionPerformed, Button Bestätigen und Klasse TasuschanfrageLoeschen");
-								}
-						}
-							else {
-								System.exit(0);
-							}
 						}
 					});
 		btnBestaetigen.setBounds(519, 483, 141, 35);
@@ -104,4 +78,27 @@ public class TauschanfrageLoeschenView extends JFrame {
 			setVisible(true);
 			
 		}
+		//ACTION PERFORMED METHODEN 
+		public void actionPerformed(ActionEvent e) {
+			if (e.getSource()==btnBestaetigen) {
+				
+			int eingabe = JOptionPane.showConfirmDialog(null, "Wollen Sie die Auswahl bestätigen?", null, JOptionPane.YES_NO_CANCEL_OPTION);
+								
+					if (eingabe==0) {	
+						try {
+						int id =	listKrankmeldung.getSelectedIndex();
+						String s = (String) listKrankmeldung.getSelectedValue();
+//						myView.entferneTermin(id);	
+						}
+						catch(Exception ex) {
+							ex.getStackTrace();
+							System.err.println("Fehler in der Eingabe der Daten - ActionPerformed, Button Bestätigen und Klasse TauschanfrageLoeschen");
+							}
+					}
+						else {
+							System.exit(0);
+						}
+					
+				};
 	}
+}

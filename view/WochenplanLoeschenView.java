@@ -46,6 +46,9 @@ public class WochenplanLoeschenView extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
+		//JLISTE MIT WP NR ERSTELLEN 
+		// Linked List mit For EACH SCHLEIFE AUSGEBEN
+		
 		lblWochenplanLschen = new JLabel("Wochenplan l\u00F6schen");
 		lblWochenplanLschen.setFont(new Font("Verdana", Font.PLAIN, 21));
 		lblWochenplanLschen.setBounds(51, 61, 243, 27);

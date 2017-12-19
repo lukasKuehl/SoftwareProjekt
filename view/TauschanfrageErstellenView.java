@@ -8,6 +8,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import controller.EinsatzplanController;
+import model.Einsatzplanmodel;
 
 import javax.swing.JLabel;
 import java.awt.Font;
@@ -33,9 +34,11 @@ public class TauschanfrageErstellenView extends JFrame {
 	private JButton btnVersenden = null;
 	private EinsatzplanController myController = null;
 	private Einsatzplanview myView = null;
+	private Einsatzplanmodel myModel = null;
 
-	protected TauschanfrageErstellenView(EinsatzplanController myController) {
+	protected TauschanfrageErstellenView(EinsatzplanController myController, Einsatzplanview myView) {
 		this.myController = myController;
+		this.myView = myView;
 		setTitle("Tauschanfrage erstellen");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -56,28 +59,18 @@ public class TauschanfrageErstellenView extends JFrame {
 		cmbBoxTag.setEnabled(false);
 		cmbBoxTag.setModel(new DefaultComboBoxModel<String>(new String[] { "jashda", "hdaskd" })); // TEST DER COMBOBOX
 		cmbBoxTag.setFont(new Font("Verdana", Font.PLAIN, 15));
+		cmbBoxTag.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+		}});
 		cmbBoxTag.setBounds(249, 211, 136, 26);
 		contentPane.add(cmbBoxTag);
 
 		btnVersenden = new JButton("versenden");
-		btnVersenden.setFont(new Font("Verdana", Font.PLAIN, 15));}
-		public void actionPerformed(ActionEvent e) {
-			if (e.getSource() == btnVersenden) {
-				
-				String senderName = getUsername();
-				int senderSchichtNr = myModel.getSchichtNr(username);
-				String wp = cmbBoxWP.getSelectedItem().toString();
-//				String empfaengerName = // Username des Mitarbeiter hinzufügen
-				String tag= cmbBoxTag.getSelectedItem().toString();
-				int empfaengerSchichtNr = getUsernameAndererMA();
-				String schicht = cmbBoxSchicht.getSelectedItem().toString();
-				String tagAndererMA = comboBoxTagAndererMA.getSelectedItem().toString();
-				String schichtAndererMA = comboBoxSchichtAndererMA.getSelectedItem().toString();
-				
-				myView.erstelleTauschanfrage(String senderName, int senderSchichtNr, String empfaengerName, int empfaengerSchichtNr );
-				
-			}
+		btnVersenden.setFont(new Font("Verdana", Font.PLAIN, 15));
 		btnVersenden.setBounds(532, 455, 136, 36);
+		btnVersenden.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) { 
+			}});
 		contentPane.add(btnVersenden);
 
 		ArrayList<String> hhh = new ArrayList<String>();
@@ -90,6 +83,9 @@ public class TauschanfrageErstellenView extends JFrame {
 			cmbBoxWP.addItem(m);
 		}
 		cmbBoxWP.setBounds(249, 174, 136, 26);
+		cmbBoxWP.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+		}});
 		contentPane.add(cmbBoxWP);
 
 		lblWochenplanAuswhlen = new JLabel("Wochenplan auswählen");
@@ -116,6 +112,9 @@ public class TauschanfrageErstellenView extends JFrame {
 		cmbBoxSchicht = new JComboBox<String>((new String[] { "jashda", "hdaskd" }));
 		cmbBoxSchicht.setEnabled(false);
 		cmbBoxSchicht.setFont(new Font("Verdana", Font.PLAIN, 15));
+		cmbBoxSchicht.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+		}});
 		cmbBoxSchicht.setBounds(249, 248, 136, 26);
 		contentPane.add(cmbBoxSchicht);
 
@@ -135,7 +134,9 @@ public class TauschanfrageErstellenView extends JFrame {
 		comboBoxTagAndererMA = new JComboBox<String>((new String[] { "jashda", "hdaskd" }));
 		comboBoxTagAndererMA.setEnabled(false);
 		comboBoxTagAndererMA.setFont(new Font("Verdana", Font.PLAIN, 15));
-		
+		comboBoxTagAndererMA.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+		}});
 		comboBoxTagAndererMA.setBounds(249, 372, 136, 26);
 		contentPane.add(comboBoxTagAndererMA);
 
@@ -149,49 +150,53 @@ public class TauschanfrageErstellenView extends JFrame {
 		comboBoxSchichtAndererMA = new JComboBox<String>((new String[] { "jashda", "hdaskd" }));
 		comboBoxSchichtAndererMA.setEnabled(false);
 		comboBoxSchichtAndererMA.setFont(new Font("Verdana", Font.PLAIN, 15));
+		comboBoxSchichtAndererMA.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+		}});
 		comboBoxSchichtAndererMA.setBounds(249, 409, 136, 26);
 		contentPane.add(comboBoxSchichtAndererMA);
+		setVisible(true);
+	}
 
 		
-		// ACTION PERFORMED METHODEN
-		cmbBoxWP.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+		// ACTION PERFORMED METHODEN  // NOCH AUSLAGERN
+		public void actionPerformed(ActionEvent e) {
 				if (e.getSource() == cmbBoxWP) {
 					cmbBoxTag.setEnabled(true);
 					lblTagAuswhlen.setEnabled(true);
 				}
-			}
-		});
 		
-		cmbBoxTag.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (e.getSource() == cmbBoxTag) {
+		
+			if (e.getSource() == cmbBoxTag) {
 					cmbBoxSchicht.setEnabled(true);
 					lblSchichtAuswhlen.setEnabled(true);
 				}
-			}
-		});
-	
-		cmbBoxSchicht.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+			
 				if (e.getSource() == cmbBoxSchicht) {
 					comboBoxTagAndererMA.setEnabled(true);
 					labelTagAndererMA.setEnabled(true);
 				}
-			}
-
-		});
-		comboBoxTagAndererMA.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+		
 				if (e.getSource() == comboBoxTagAndererMA) {
 					comboBoxSchichtAndererMA.setEnabled(true);
 					labelSchichtAndererMA.setEnabled(true);
-
 				}
+				
+				if (e.getSource() == btnVersenden) {
+				String senderName = getUsername();
+				int senderSchichtNr = myModel.getSchichtNr(username);
+				String wp = cmbBoxWP.getSelectedItem().toString();
+				String empfaengerName; // Username des Mitarbeiter hinzufügen
+				String tag= cmbBoxTag.getSelectedItem().toString();
+				int empfaengerSchichtNr = getUsernameAndererMA();
+				String schicht = cmbBoxSchicht.getSelectedItem().toString();
+				String tagAndererMA = comboBoxTagAndererMA.getSelectedItem().toString();
+				String schichtAndererMA = comboBoxSchichtAndererMA.getSelectedItem().toString();
+				
+				myView.erstelleTauschanfrage(senderName, senderSchichtNr, empfaengerName, empfaengerSchichtNr );
+				
 			}
-		});
 		
-		setVisible(true);
-
 	}
 }
+

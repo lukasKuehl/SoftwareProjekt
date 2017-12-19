@@ -82,7 +82,23 @@ public class Einsatzplanview {
 			
 		}
 		if (erfolg == false) {
-			JOptionPane.showConfirmDialog(null, "Der Termin konnte nicht angelegt werden. Bitte die Eingaben prüfen");
+			JOptionPane.showConfirmDialog(null, "Die Tauschanfrage  konnte nicht angelegt werden. Bitte die Eingaben prüfen");
+		}
+		
+		return erfolg;
+	}
+	
+	protected boolean entferneTauschanfrage(int tauschanfrageNr) {
+		boolean erfolg = false;
+		
+		try {
+			erfolg = this.myController.entferneTauschanfrage(tauschanfrageNr);
+					
+		}catch (Exception e) {
+			
+		}
+		if (erfolg == false) {
+			JOptionPane.showConfirmDialog(null, "Die Tauschanfrage konnte nicht entfernt werden. Bitte die Eingaben prüfen");
 		}
 		
 		return erfolg;

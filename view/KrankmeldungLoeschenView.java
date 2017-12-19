@@ -53,11 +53,15 @@ public class KrankmeldungLoeschenView extends JFrame {
 		btnBestaetigen = new JButton("Bestätigen");
 		btnBestaetigen.setFont(new Font("Verdana", Font.PLAIN, 18));
 		
-		//ACTIONPERFORMED METHODE für den bestätigen Button
+		//ACTIONPERFORMED METHODE für den bestätigen Button einfügen
+		
+		
 		btnBestaetigen.setBounds(497, 445, 141, 35);
 		contentPane.add(btnBestaetigen);
 		
 		listKrankmeldung = new JList();
+		
+		// LINKED LIST MIT TERMIN NR  // AUSGABE DER LISTE
 		listKrankmeldung.setBorder(new LineBorder(new Color(0, 0, 0)));
 		listKrankmeldung.setBounds(95, 144, 315, 336);
 		contentPane.add(listKrankmeldung);
