@@ -22,7 +22,6 @@ class Datenbank_Wochenplan {
 	Connection con = db_con.getCon();
 
 
-	
 
 	/**
 	 * @Thomas Friesen

@@ -16,8 +16,6 @@ class Datenbank_TerminBlockierung {
 
 
 
-
-
 	/**
 	 * @Thomas Friesen
 	 * @info  Fügt einen neuen Termin-Datensatz in die TerminBlockierung Tabelle hinzu.

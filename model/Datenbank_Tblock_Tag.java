@@ -17,6 +17,7 @@ class Datenbank_Tblock_Tag {
 	Connection con = db_con.getCon();
 
 
+	
 	/**
 	 * @Thomas Friesen
 	 * @info Die Methode fügt einen Datensatz in die Tblock_Tag Tabelle ein.

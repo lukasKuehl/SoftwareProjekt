@@ -15,6 +15,7 @@ class Datenbank_Mitarbeiter {
 	Connection con = db_con.getCon();
 
 	
+	
 	/**
 	 * @Thomas Friesen
 	 * @info Die Methode fügt einen Mitarbeiter in die Datenbank hinein

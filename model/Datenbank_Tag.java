@@ -22,6 +22,7 @@ class Datenbank_Tag {
 	
 	
 
+	
 	/**
 	 * @Thomas Friesen
 	 * @info Die Methode fügt einen Datensatz in die Tag Tabelle ein.
