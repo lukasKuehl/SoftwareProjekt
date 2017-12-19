@@ -1,10 +1,18 @@
 package controller;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.Map;
 import java.util.TreeMap;
 
 import javax.swing.JDialog;
 
+import data.Tag;
+import data.Tblock_Tag;
+import data.TerminBlockierung;
+import data.Wochenplan;
 import model.Einsatzplanmodel;
 
 /**
@@ -28,36 +36,218 @@ class TerminStrg {
 	}
 		
 	/**
-	 * @author 
+	 * @author Lukas Kühl
 	 * @info Hinterlegen eines neuen Termin/Krankmeldung/Urlaubstages im System 
-	 * Keys der "zeitraum" Map: "anfZeitraum", "endZeitraum", "anfangsUhrzeit", "endUhrzeit"
+	 * Keys der "zeitraum" Map: "wpbez", "anfZeitraumTag", "endZeitraumTag", "anfangsUhrzeit", "endUhrzeit"
 	 */
 	protected boolean erstelleTermin(String username, String bez, TreeMap<String,String> zeitraum, String grund ){
 		boolean success = false;	
-		//Ausfüllen
+		
+		TreeMap<String, Date> zeitraumDate = new TreeMap<String, Date>();
+		String anfZeitraum = null;
+		String endZeitraum = null;
+		int wpnr = 0;
+		
+		try{
+			//Umwandeln der Wpbez in die eindeutige Wochennummer
+	    	wpnr = Integer.parseInt((zeitraum.get("wpbez").substring(2).trim())); 
+		}catch(Exception e){
+			System.out.println("Fehler bei der Erstellung eines Termins:");
+			System.out.println("Die Wochenplanbezeichnung entspricht nicht den Vorgaben (KWXX)!");
+		}		
+		
+		try{
+			
+			if(this.myModel.getWochenplan(wpnr) != null){
+				Wochenplan wp = this.myModel.getWochenplan(wpnr);
+				
+				LinkedList<Tag> alleTage = this.myModel.getTage();
+				
+				boolean checkAnfangstag = false;
+				boolean checkEndtag = false;
+				
+				anfZeitraum = zeitraum.get("anfZeitraumTag");
+				endZeitraum = zeitraum.get("endZeitraumTag");
+				
+				for(Tag t: alleTage){
+					
+					if((t.getWpnr() == wpnr) && (t.getTbez().equals(anfZeitraum))){
+						checkAnfangstag = true;						
+					}
+					
+					if((t.getWpnr() == wpnr)&&(t.getTbez().equals(endZeitraum))){
+						checkEndtag = true;
+					}				
+				}				
+				
+				if(!(checkAnfangstag && checkEndtag)){
+					throw new Exception("Die eingetragenen Tage sind im Wochenplan KW" + wpnr + " nicht vorhanden, bitte Wochenplan erneut erstellen");
+				}		
+				
+				//Prüfe, ob die Reihenfolge der Tage vertauscht wurde, z.B. Termin beginnt am Mittwoch und endet am Dienstag
+				
+				String reihenfolgeFehlermeldung = "Die Reihenfolge der Anfangs- und Endtage des Termins sind vertauscht!";
+				
+				if(anfZeitraum.equals("Dienstag")){
+					if(endZeitraum.equals("Montag")){
+						throw new Exception(reihenfolgeFehlermeldung);
+					}
+				}
+				if(anfZeitraum.equals("Mittwoch")){
+					if((endZeitraum.equals("Dienstag")) || (endZeitraum.equals("Montag"))){
+						throw new Exception(reihenfolgeFehlermeldung);
+					}
+				}
+				
+				if(anfZeitraum.equals("Donnerstag")){
+					if((endZeitraum.equals("Mittwoch")) || (endZeitraum.equals("Dienstag")) || (endZeitraum.equals("Montag"))){
+						throw new Exception(reihenfolgeFehlermeldung);
+					}
+				}
+				
+				if(anfZeitraum.equals("Freitag")){
+					if((endZeitraum.equals("Donnerstag")) ||(endZeitraum.equals("Mittwoch")) || (endZeitraum.equals("Dienstag")) || (endZeitraum.equals("Montag"))){
+						throw new Exception(reihenfolgeFehlermeldung);
+					}
+				}
+				
+				if(anfZeitraum.equals("Samstag")){
+					if((endZeitraum.equals("Freitag"))||(endZeitraum.equals("Donnerstag")) ||(endZeitraum.equals("Mittwoch")) || (endZeitraum.equals("Dienstag")) || (endZeitraum.equals("Montag"))){
+						throw new Exception(reihenfolgeFehlermeldung);
+					}
+				}
+				
+				if(anfZeitraum.equals("Sonntag")){
+					if((endZeitraum.equals("Samstag"))||(endZeitraum.equals("Freitag"))||(endZeitraum.equals("Donnerstag")) ||(endZeitraum.equals("Mittwoch")) || (endZeitraum.equals("Dienstag")) || (endZeitraum.equals("Montag"))){
+						throw new Exception(reihenfolgeFehlermeldung);
+					}
+				}		
+				//Der Zeitraum ist korrekt
+			}
+			
+			String anfangsUhrzeit = zeitraum.get("anfangsUhrzeit");
+			String endUhrzeit = zeitraum.get("endUhrzeit");
+			Date anfangsUhrzeitDate = null;
+			Date endUhrzeitDate = null;
+			
+			
+			SimpleDateFormat sdf = new SimpleDateFormat("hh:ss");
+			
+			try{
+				anfangsUhrzeitDate = sdf.parse(anfangsUhrzeit);
+				endUhrzeitDate = sdf.parse(endUhrzeit);
+				
+			}catch(Exception e){
+				System.out.println("Fehler beim erstellen eines neuen Termins:");				
+				System.out.println("Fehler beim Konvertieren der Öffnungs- und Schließzeiten");
+				e.printStackTrace();
+			}
+			
+			if(anfangsUhrzeitDate.before(endUhrzeitDate)){
+				
+				int newTbNr = this.myModel.getNewTblocknr();
+				
+				TerminBlockierung tb = new TerminBlockierung(newTbNr, username, bez, zeitraum.get("anfangsZeitraum"), zeitraum.get("endZeitraum"), zeitraum.get("anfangsUhrzeit"), zeitraum.get("endZeitraum"), grund);
+				this.myModel.addTerminBlockierung(tb);	
+				success = true;
+			}
+		}catch(Exception e){
+			System.out.println("Fehler beim erstellen eines neuen Termins:");
+			e.printStackTrace();			
+		}	
+	
 		return success;
 	}
 	
 	/**
-	 * @author 
-	 * @info Entfernen eines bereits angelegten Termines aus dem System.
+	 * @author Lukas Kühl
+	 * @info Entfernen eines bereits angelegten Termines aus der Datenbank.
 	 */
 	protected boolean entferneTermin(int tblocknr, String username){
 
 		boolean success = false;
-		//Ausfüllen
+		boolean valid = false;
+		
+		LinkedList<TerminBlockierung> alleTerminblockierungen = this.myModel.getTerminBlockierungen();
+		
+		for(TerminBlockierung tb: alleTerminblockierungen){
+			//Prüfe, ob der Termin existiert und ob der Nutzer die Berechtigung zum Löschen besitzt(Bedingung: Ersteller/in des Termins)
+			if((tb.getTblocknr() == tblocknr) && tb.getBenutzername().equals(username)){
+				valid = true;				
+			}
+		}
+		
+		if(valid){
+			
+			this.myModel.deleteTerminBlockierung(tblocknr);			
+			
+			if(this.myModel.getTblock_TagTB(tblocknr) != null){
+				this.myModel.deleteTblock_Tag(tblocknr);			
+			}		
+			success = true;
+		}
+		else{
+			System.out.println("Der Termin konnte nicht gelöscht werden!");		
+		}	
+		
 		return success;
 	}
 	
+	
+	/**
+	 * @author Lukas Kühl
+	 * @info Ausgabe einer Liste mit den Terminen eines Mitarbeiters für die Anzeige in dem TermineDialog der View
+	 */
 	protected ArrayList<String> getMitarbeiterTermine(String username){
-		ArrayList<String> rueckgabe = null;
+		ArrayList<String> rueckgabe = new ArrayList<String>();
+		
+		LinkedList<TerminBlockierung> alleTermine = this.myModel.getTerminBlockierungen();
+		LinkedList<TerminBlockierung> mitarbeiterTermine = new LinkedList<TerminBlockierung>();
+		
+		//Suche nach den Terminen, die dem übergebenen Mitarbeiter zugeordnet wurden
+		for(TerminBlockierung tb : alleTermine){
+			if(tb.getBenutzername().equals(username)){
+				mitarbeiterTermine.add(tb);
+			}
+		}		
+		
+		LinkedList<Tblock_Tag> alleTerminZuordnungen = this.myModel.getAlleTblock_Tag();
+		// Zuordnung von Terminen zu einem Wochenplan --> Key TerminNr; Value WochenplanNr
+		TreeMap<Integer, Integer> mitarbeiterTerminZuordnungen = new TreeMap<Integer, Integer>();
+		
+		for(TerminBlockierung tb: mitarbeiterTermine){
+			
+			for(Tblock_Tag tbt : alleTerminZuordnungen){
+				
+				if(tb.getTblocknr() == tbt.getTblocknr())
+					mitarbeiterTerminZuordnungen.put(tbt.getTblocknr(), tbt.getWpnr());			
+			}		
+		}		
+		
+		//Übertrage die Termine im Format Terminbezeichnung - KW - Anfangstag - Endtag - Anfangsuhrzeit-Enduhrzeit in die RückgabeListe
+		for(TerminBlockierung tb : mitarbeiterTermine){
+			String temp = tb.getBbez() + " - KW" + mitarbeiterTerminZuordnungen.get(String.valueOf(tb.getTblocknr())) + " - ";
+			
+			//Falls es sich um einen eintägigen Termin handelt, wird der Anfangs- und Endtag zusammengefasst
+			if(tb.getAnfzeitraum().equals(tb.getEndzeitraum())){
+				temp = temp + tb.getAnfzeitraum() + " - ";
+			}
+			else{
+				temp = temp + tb.getAnfzeitraum() + "-" + tb.getEndzeitraum() + " - ";
+			}
+			
+			temp = temp + tb.getAnfanguhrzeit() + "-" + tb.getEndeuhrzeit() + " Uhr";
+			
+			//Datensatz ist vollständig und kann in die Rückgabeliste eingetragen werden
+			rueckgabe.add(temp);
+			
+		}
+		
 		return rueckgabe;
 	}
 	
 	protected ArrayList<String> getAlleTermine(String username){
 		ArrayList<String> rueckgabe = null;
 		return rueckgabe;
-	}
-	
-	
+	}	
 }
