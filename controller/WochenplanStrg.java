@@ -472,7 +472,24 @@ class WochenplanStrg {
 	}
 	
 	protected ArrayList<String> getTage(String wpbez){
-		ArrayList<String> rueckgabe = null;
+		ArrayList<String> rueckgabe = new ArrayList<String>();
+		
+		//Umwandeln der Wpbez in die eindeutige Wochennummer
+    	int wpnr = Integer.parseInt((wpbez.substring(2).trim()));  			
+		
+		LinkedList<Tag> alleTage = this.myModel.getTage();
+		LinkedList<Tag> wochenTage = new LinkedList<Tag>(); 
+		
+		for(Tag t: alleTage){
+			if(t.getWpnr() == wpnr){
+				wochenTage.add(t);				
+			}
+		}
+		
+		for(Tag t : wochenTage){
+			rueckgabe.add(t.getTbez());
+		}		
+		
 		return rueckgabe;
 	}
 	
