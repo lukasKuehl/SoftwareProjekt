@@ -339,7 +339,7 @@ public class EinsatzplanController {
 	public ArrayList<String> getAndereMitarbeiterSchichten(String wpbez, String tagbez, String username, int schichtNr){
 		ArrayList<String> rueckgabe = null;
 		try{
-			rueckgabe = this.schichtSteuerung.getAndereMitarbeiterSchichten(wpbez, tagbez, username, schichtNr);
+			rueckgabe = this.schichtSteuerung.getAndereMitarbeiterSchichten(wpbez, username, schichtNr);
 		}catch(Exception e){
 			System.out.println("Fehler innerhalb des Controllers:");
 			System.out.println("Fehler beim Aufruf der Methode getAndereMitarbeiterSchichten:");
