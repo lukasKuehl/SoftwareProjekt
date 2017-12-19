@@ -16,63 +16,105 @@ class Datenbank_TerminBlockierung {
 
 
 
-
-
-	// Schichten in Tabelle Schicht hinzufg
-	protected void addTerminBlockierung(TerminBlockierung terminBlockierung) {
-
+	/**
+	 * @Thomas Friesen
+	 * @info  Fügt einen neuen Termin-Datensatz in die TerminBlockierung Tabelle hinzu.
+	 */
+	protected boolean addTerminBlockierung(TerminBlockierung terminBlockierung) {
+		boolean success = false;
+	
+		
 		String sqlStatement;
-		sqlStatement = "insert into TerminBlockierung (Tblocknr, Benutzername, Bbez, Anfzeitraum, Endzeitraum,Anfanguhrzeit, Endeuhrzeit, Grund) values(?, ?, ?, ?, ?, ?, ?, ?)";
+		sqlStatement = "insert into Terminblockierung (tblocknr, benutzername, bbez, anfangzeitraum, endezeitraum, anfanguhrzeit, endeuhrzeit, grund) values(?, ?, ?, ?, ?, ?, ?, ?)";
 		PreparedStatement pstmt = null;
-
+		Statement checkInput = null;
+		ResultSet checkRS = null;
+		int tBlockNr = 0;
+		String benutzername = null;
+		String bbez = null;
+		String anfangzeitraum = null;
+		String endezeitraum = null;
+		String anfanguhrzeit = null;
+		String endeuhrzeit = null;
+		String grund = null;
+		
+		
 		try {
 			pstmt = con.prepareStatement(sqlStatement);
 
-			int tblocknr=terminBlockierung.getTblocknr();
-			String  benutzername=terminBlockierung.getBenutzername();
-			String bbez=terminBlockierung.getBbez();
-			String anfzeitraum=terminBlockierung.getAnfzeitraum();
-			String endzeitraum=terminBlockierung.getEndzeitraum();
-			String anfanguhrzeit=terminBlockierung.getAnfanguhrzeit();
-			String endeuhrzeit =terminBlockierung.getEndeuhrzeit();
-			String  grund = terminBlockierung.getGrund();
+			//Auslesen der als Parameter übergebenen Mitarbeiter-Schicht-Beziehung
+			tBlockNr = terminBlockierung.getTblocknr();
+			benutzername = terminBlockierung.getBenutzername();	
+			bbez = terminBlockierung.getBbez();
+			anfangzeitraum = terminBlockierung.getAnfzeitraum();
+			endezeitraum = terminBlockierung.getEndzeitraum();
+			anfanguhrzeit = terminBlockierung.getAnfanguhrzeit();
+			endeuhrzeit = terminBlockierung.getEndeuhrzeit();
+			grund = terminBlockierung.getGrund();
 			
 			con.setAutoCommit(false);
 
-			if (checkTerminBlockierung(tblocknr)) {
-				deleteTerminBlockierung(tblocknr);
-				addTerminBlockierung(terminBlockierung);
-			} else {
-				pstmt.setInt(1, tblocknr);
+			if (checkTerminBlockierung(tBlockNr)) {
+				System.out.println("Der Termin wurde bereits in die TerminBlockierung-Tabelle eingetragen");
+			}
+			else{
+				//Es wurde sichergestellt, dass die PK- und FK-Check-Constraints nicht verletzt werden --> Der Datensatz kann erzeugt werden
+			
+				pstmt.setInt(1, tBlockNr);
 				pstmt.setString(2, benutzername);
 				pstmt.setString(3, bbez);
-				pstmt.setString(4, anfzeitraum);
-				pstmt.setString(5,endzeitraum);
+				pstmt.setString(4, anfangzeitraum);
+				pstmt.setString(5, endezeitraum);
 				pstmt.setString(6, anfanguhrzeit);
 				pstmt.setString(7, endeuhrzeit);
 				pstmt.setString(8, grund);
+			
 				pstmt.execute();
-				con.commit();
-			}
-
+				con.commit();	
+				
+			}			
+			
+			success = true;
 			con.setAutoCommit(true);
-
+			
+			
 		} catch (SQLException sql) {
-			System.err.println("Methode addTerminBLockierung SQL-Fehler: " + sql.getMessage());
+			//Die Ausgaben dienen zur Ursachensuche und sollten im späteren Programm entweder gar nicht oder vielleicht als Dialog(ausgelöst in der View weil der Rückgabewert false ist) angezeigt werden
+			System.out.println("Fehler beim Einfügen eines neuen Datensatzes in die Datenbank!");
+			System.out.println("Fehler bei der Erstellung eines neuen TerminBlockierung-Datensatzes:");
+			System.out.println("Parameter: tBlockNr = " + tBlockNr + " Mitarbeiter = " + benutzername +
+					" Bezeichnung: " + bbez + " Anfangzeitraum: " + anfangzeitraum + " Endezeitraum: " + endezeitraum +
+					"Anfanguhrzeit: " + anfanguhrzeit + "Endeuhrzeit; " + endeuhrzeit +"Grund: " + grund);
+			sql.printStackTrace();		
+			
 			try {
+				//Zurücksetzen des Connection Zustandes auf den Ursprungszustand
 				con.rollback();
 				con.setAutoCommit(true);
 			} catch (SQLException sqlRollback) {
-				System.err.println("Methode addTerminBlokierung" + "- Rollback -  SQL-Fehler: " + sqlRollback.getMessage());
+				System.err.println("Methode addTerminBlockierung " + "- Rollback -  SQL-Fehler: " + sqlRollback.getMessage());
 			}
 		} finally {
+			//Schließen der offen gebliebenen Statements & ResultSets
 			try {
-				if (pstmt != null)
+				
+				if(checkRS != null){
+					checkRS.close();
+				}				
+				
+				if(checkInput != null){
+					checkInput.close();
+				}			
+				
+				if (pstmt != null){
 					pstmt.close();
+				}			
+				
 			} catch (SQLException e) {
 				System.err.println("Methode addTerminBlockierung(finally) SQL-Fehler: " + e.getMessage());
 			}
 		}
+		return success;
 	}
 
 	/**

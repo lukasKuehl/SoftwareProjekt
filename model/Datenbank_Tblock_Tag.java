@@ -17,58 +17,99 @@ class Datenbank_Tblock_Tag {
 	Connection con = db_con.getCon();
 
 
+	
 	/**
-	 * @Anes Preljevic
-	 * @info 
+	 * @Thomas Friesen
+	 * @info Die Methode fügt einen Datensatz in die Tblock_Tag Tabelle ein.
 	 */
-	protected void addTblock_Tag(Tblock_Tag tblock_tag) {
-
+	protected boolean addTblock_Tag(Tblock_Tag tblock_tag) {
+		boolean success = false;
+		
+		
 		String sqlStatement;
-		sqlStatement = "insert into Tblock_Tag (tblocknr,tbez, wpnr) values(?, ?, ?)";
+		sqlStatement = "insert into Tblock_Tag (tblocknr, tbez, wpnr) values(?, ?, ?)";
 		PreparedStatement pstmt = null;
-
+		Statement checkInput = null;
+		ResultSet checkRS = null;
+		int tBlockNr = 0;
+		String tbez = null;
+		int wpnr = 0;
+		
+		
 		try {
 			pstmt = con.prepareStatement(sqlStatement);
 
-			int tblocknr = tblock_tag.getTblocknr();
-			String tbez = tblock_tag.getTbez();;
-			int wpnr = tblock_tag.getWpnr();
-		
+			//Auslesen der als Parameter übergebenen TerminBlockierung-Tag Beziehung
+			tBlockNr = tblock_tag.getTblocknr();
+			tbez = tblock_tag.getTbez();
+			wpnr = tblock_tag.getTblocknr();
 			
 			con.setAutoCommit(false);
 
-				pstmt.setInt(1, tblocknr);
+			if (checkTblock_TagTB(tBlockNr)) {
+				System.out.println("Keine Beziehung von Terminblockierung zu Tagen!");
+			}
+			if (checkTblock_TagTA(tbez,wpnr)) {
+				System.out.println("Keine Beziehung von Terminbezeichnung und Wochenplannummern zu Tagen vorhanden!");
+			}
+			else{
+				//Es wurde sichergestellt, dass die PK- und FK-Check-Constraints nicht verletzt werden --> Der Datensatz kann erzeugt werden
+			
+				pstmt.setInt(1, tBlockNr);
 				pstmt.setString(2, tbez);
 				pstmt.setInt(3, wpnr);
 			
 				pstmt.execute();
-				con.commit();
+				con.commit();	
+				
+			}			
 			
-
+			success = true;
 			con.setAutoCommit(true);
-
+			
+			
 		} catch (SQLException sql) {
-			System.err.println("Methode addtblocktag SQL-Fehler: " + sql.getMessage());
+			//Die Ausgaben dienen zur Ursachensuche und sollten im späteren Programm entweder gar nicht oder vielleicht als Dialog(ausgelöst in der View weil der Rückgabewert false ist) angezeigt werden
+			System.out.println("Fehler beim Einfügen eines neuen Datensatzes in die Datenbank!");
+			System.out.println("Fehler bei der Zuordnung einer Terminblockierung zu einem Tag:");
+			System.out.println("Parameter: tBlockNr = " + tBlockNr + " Tagbezeichnung = " + tbez+ " WochenplanNr = " + wpnr);
+			sql.printStackTrace();		
+			
 			try {
+				//Zurücksetzen des Connection Zustandes auf den Ursprungszustand
 				con.rollback();
 				con.setAutoCommit(true);
 			} catch (SQLException sqlRollback) {
-				System.err.println("Methode addtblocktag " + "- Rollback -  SQL-Fehler: " + sqlRollback.getMessage());
+				System.err.println("Methode addTblock_Tag " + "- Rollback -  SQL-Fehler: " + sqlRollback.getMessage());
 			}
 		} finally {
+			//Schließen der offen gebliebenen Statements & ResultSets
 			try {
-				if (pstmt != null)
+				
+				if(checkRS != null){
+					checkRS.close();
+				}				
+				
+				if(checkInput != null){
+					checkInput.close();
+				}			
+				
+				if (pstmt != null){
 					pstmt.close();
+				}			
+				
 			} catch (SQLException e) {
-				System.err.println("Methode addtblocktag(finally) SQL-Fehler: " + e.getMessage());
-			}}
+				System.err.println("Methode addTBlock_Tag(finally) SQL-Fehler: " + e.getMessage());
+			}
 		}
+		return success;
+	}
 	
 
 	/**
 	 * @author Anes Preljevic
 	 * @info Prüft ob es zu der eingegebenen Tblocknr eine Beziehung von Blockierungen zu Tagen  gibt,
-	 * bei existenz return true sonst false
+	 * bei Existenz return true sonst false
 	 */
 	protected boolean checkTblock_TagTB(int tblocknr) {
 		Statement stmt = null;

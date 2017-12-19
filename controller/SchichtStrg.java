@@ -144,7 +144,7 @@ class SchichtStrg {
 	 * @info Methode zur Ermittlung der Schichten eines Mitarbeiters für einen bestimmten Tag innerhalb eines Wochenplanes
 	 */
 	protected ArrayList<String> getMitarbeiterSchichten(String wpbez, String tagbez, String username){
-		ArrayList<String> rueckgabe = null;
+		ArrayList<String> rueckgabe = new ArrayList<String>();
 		
 		//Umwandeln der Wpbez in die eindeutige Wochennummer
     	int wpnr = Integer.parseInt((wpbez.substring(2).trim())); 		
@@ -185,14 +185,79 @@ class SchichtStrg {
 		}	
 		
 		for(Schicht s: mitarbeiterTagesSchichten){
-			rueckgabe.add(String.valueOf(s.getSchichtnr()));
+			
+			//Struktur eines Schichteintrages in der Rückgabeliste: SchichtNr - KW - Tag - Zeitraum - Mitarbeitername
+			
+			String temp = String.valueOf(s.getSchichtnr() + " - KW"  + s.getWpnr() + " - " + s.getTbez() + " - " + s.getAnfanguhrzeit()+"-" + s.getEndeuhrzeit() +" Uhr - ");
+			
+			LinkedList<Ma_Schicht> alleSchichtZuordnungen = this.myModel.getMa_Schicht();
+			Mitarbeiter ma = null;
+			
+			for(Ma_Schicht mas: alleSchichtZuordnungen){
+				//Betroffene Schichzuordnung gefunden, entnahme des Mitarbeiters zum Auslesen des Namens
+				if(s.getSchichtnr() == mas.getSchichtnr()){
+					ma = this.myModel.getMitarbeiter(mas.getBenutzername());
+				}		
+			}
+			
+			temp = temp + ma.getVorname() + " " + ma.getName();			
+			
+			rueckgabe.add(temp);
 		}
 		
 		return rueckgabe;
 	}
 	
-	protected ArrayList<String> getAndereMitarbeiterSchichten(String wpbez, String tagbez, String username, int schichtNr){
-		ArrayList<String> rueckgabe = null;
+	protected ArrayList<String> getAndereMitarbeiterSchichten(String wpbez, String username, int schichtNr){
+		ArrayList<String> rueckgabe = new ArrayList<String>();
+		
+		//Umwandeln der Wpbez in die eindeutige Wochennummer
+    	int wpnr = Integer.parseInt((wpbez.substring(2).trim())); 	
+    	
+    	LinkedList<Ma_Schicht> einteilung = this.myModel.getMa_Schicht();
+		LinkedList<Ma_Schicht> andereMitarbeiterEinteilung = new LinkedList<Ma_Schicht>();
+		
+		for(Ma_Schicht mas : einteilung){
+			if(!mas.getBenutzername().equals(username)){
+				andereMitarbeiterEinteilung.add(mas);
+			}
+		}
+		
+		//Abfrage vorhandenen Schichten in der Datenbank und Suche nach den Schichtnummern der Einteilung s.o.
+		LinkedList<Schicht> alleSchichten = this.myModel.getSchichten();
+		LinkedList<Schicht> andereMitarbeiterSchichtenAlle =new LinkedList<Schicht>();
+				
+		for(Schicht s: alleSchichten){
+				
+			for(Ma_Schicht mas: andereMitarbeiterEinteilung){
+						
+				if(s.getSchichtnr() == mas.getSchichtnr()){
+					andereMitarbeiterSchichtenAlle.add(s);
+				}			
+			}		
+		}			
+		
+		for(Schicht s: andereMitarbeiterSchichtenAlle){
+			
+			//Struktur eines Schichteintrages in der Rückgabeliste: SchichtNr - KW - Tag - Zeitraum - Mitarbeitername
+			
+			String temp = String.valueOf(s.getSchichtnr() + " - KW"  + s.getWpnr() + " - " + s.getTbez() + " - " + s.getAnfanguhrzeit()+"-" + s.getEndeuhrzeit() +" Uhr - ");
+			
+			LinkedList<Ma_Schicht> alleSchichtZuordnungen = this.myModel.getMa_Schicht();
+			Mitarbeiter ma = null;
+			
+			for(Ma_Schicht mas: alleSchichtZuordnungen){
+				//Betroffene Schichzuordnung gefunden, entnahme des Mitarbeiters zum Auslesen des Namens
+				if(s.getSchichtnr() == mas.getSchichtnr()){
+					ma = this.myModel.getMitarbeiter(mas.getBenutzername());
+				}		
+			}
+			
+			temp = temp + ma.getVorname() + " " + ma.getName();			
+			
+			rueckgabe.add(temp);
+		}
+		
 		return rueckgabe;
 	}
 	
