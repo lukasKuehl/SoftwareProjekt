@@ -177,28 +177,27 @@ public class TerminErstellenView extends JFrame {
 		chckbxGanztig.setBounds(64, 225, 97, 23);
 		chckbxGanztig.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				if (chckbxGanztig.isSelected()) {
+				txtFldUhrzeitTerminV.setEnabled(false);
+				txtFldUhrzeitTerminB.setEnabled(false);
+				labelUhrzeitBis.setEnabled(false);
+				txtFldUhrzeitBisB.setEnabled(false);
+				lblDoppelpunkt1.setEnabled(false);
+				lblDoppelpunkt2.setEnabled(false);
+				txtFldUhrzeitBisA.setEnabled(false);
+				lblVon.setEnabled(false);
 
-				if (chckbxGanztig.isSelected() == true) {
-					txtFldUhrzeitTerminV.setEnabled(false);
-					txtFldUhrzeitTerminB.setEnabled(false);
-					labelUhrzeitBis.setEnabled(false);
-					txtFldUhrzeitBisB.setEnabled(false);
-					lblDoppelpunkt1.setEnabled(false);
-					lblDoppelpunkt2.setEnabled(false);
-					txtFldUhrzeitBisA.setEnabled(false);
-					lblVon.setEnabled(false);
-
-				} else {
-					txtFldUhrzeitTerminV.setEnabled(true);
-					txtFldUhrzeitTerminB.setEnabled(true);
-					labelUhrzeitBis.setEnabled(true);
-					txtFldUhrzeitBisB.setEnabled(true);
-					lblDoppelpunkt1.setEnabled(true);
-					lblDoppelpunkt2.setEnabled(true);
-					txtFldUhrzeitBisA.setEnabled(true);
-					lblVon.setEnabled(true);
-				}
+			} else {
+				txtFldUhrzeitTerminV.setEnabled(true);
+				txtFldUhrzeitTerminB.setEnabled(true);
+				labelUhrzeitBis.setEnabled(true);
+				txtFldUhrzeitBisB.setEnabled(true);
+				lblDoppelpunkt1.setEnabled(true);
+				lblDoppelpunkt2.setEnabled(true);
+				txtFldUhrzeitBisA.setEnabled(true);
+				lblVon.setEnabled(true);
 			}
+		}
 		});
 		chckbxGanztig.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		chckbxGanztig.setSelected(false);
@@ -208,45 +207,48 @@ public class TerminErstellenView extends JFrame {
 		btnErstellen.setFont(new Font("Verdana", Font.PLAIN, 15));
 		btnErstellen.setBounds(453, 507, 110, 23);
 		btnErstellen.addActionListener(new ActionListener() {
-			
-			public void actionPerformed(ActionEvent arg0) {
-				int eingabe = JOptionPane.showConfirmDialog(null, "Wollen Sie die Daten bestätigen?", null,
-						JOptionPane.YES_NO_CANCEL_OPTION);
-
-				if (eingabe == 0) {
-					zeitraum = new TreeMap<Integer, String>();
-
-					try {
-
-						// Nutzername des aktuellen MA übergeben
-						username = anmeldungView.getUsername();
-						int terminnr = myModel.getMaxTBlocknr();
-						String bez = (comboBoxTerminGrund.getSelectedItem().toString());
-						String grund = txtFldGrund.getText();
-						zeitr = txtFldVonTerminA.getText().toString() + txtFldBisTermin.getText().toString() + txtFldUhrzeitTerminV.getText().toString()
-								+ txtFldUhrzeitTerminB.getText().toString();
-						zeitraum.put(terminnr, zeitr);
-
-						myView.erstelleTermin(username, bez, zeitraum, grund);
-
-						System.exit(0);
-					}
-
-					catch (Exception e) {
-						JOptionPane.showMessageDialog(null,
-								"Daten konnten nicht umgewandelt werden, da die Dateiformate nicht stimmen! -"
-										+ " Fehler: TerminErstellenView Zeile Button Bestätigen ActionPerformed");
-						e.printStackTrace();
-					}
-				} else {
-					System.exit(0);
-				}
-			}
-		});
+			public void actionPerformed(ActionEvent e) {
+			}});
 		panelTermin.add(btnErstellen);
 
 		setVisible(true);
 	}
-		
+
 	
-}
+	
+	// ACTION PERFORMED METHODEN
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == btnErstellen) {
+			int eingabe = JOptionPane.showConfirmDialog(null, "Wollen Sie die Daten bestätigen?", null,
+					JOptionPane.YES_NO_CANCEL_OPTION);
+			if (eingabe == 0) {
+				zeitraum = new TreeMap<Integer, String>();
+//				try {
+//					// Nutzername des aktuellen MA übergeben
+//					username = anmeldungView.getUsername(); // globale Variable für den Usernamen private oder public
+//															// getter und setter methoden
+//					int terminnr = myModel.getMaxTBlocknr();
+//					String bez = (comboBoxTerminGrund.getSelectedItem().toString());
+//					String grund = txtFldGrund.getText();
+//					zeitr = txtFldVonTerminA.getText().toString() + txtFldBisTermin.getText().toString()
+//							+ txtFldUhrzeitTerminV.getText().toString() + txtFldUhrzeitTerminB.getText().toString();
+//					zeitraum.put(terminnr, zeitr);
+//
+//					myView.erstelleTermin(username, bez, zeitraum, grund);
+//					System.exit(0);
+//				} catch (Exception e1) {
+//					JOptionPane.showMessageDialog(null,
+//							"Daten konnten nicht umgewandelt werden, da die Dateiformate nicht stimmen! -"
+//									+ " Fehler: TerminErstellenView Zeile Button Bestätigen ActionPerformed");
+//					e1.printStackTrace();
+				}
+			} else {
+				System.exit(0);
+			}
+//		}
+		
+
+	};
+	
+	}
+//}
