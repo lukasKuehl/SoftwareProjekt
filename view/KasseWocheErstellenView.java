@@ -9,6 +9,10 @@ import javax.swing.JOptionPane;
 import java.awt.Font;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
+
+import controller.EinsatzplanController;
+import model.Einsatzplanmodel;
+
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
@@ -28,8 +32,15 @@ public class KasseWocheErstellenView extends JFrame {
 			lblHauptzeiten, doppelpunkt_2, lblBis_1, doppelpunkt_3, lblMindestbesetzung,
 			lblMindestbesetzungFrLebensmittel, lblMindestbesetzungFrLebensmittel_1, lblKassen,
 			lblAnzahlZustzlicherMitarbeiter, lblUhr, lblUhr_1, lblUhr_2, lblUhr_3;
+	private EinsatzplanController myController = null;
+	private Einsatzplanmodel myModel = null;
+	private Einsatzplanview myView = null;
 
-	public KasseWocheErstellenView() {
+	public KasseWocheErstellenView(Einsatzplanmodel myModel, Einsatzplanview myView,
+			EinsatzplanController myController) {
+		this.myController = myController;
+		this.myModel = myModel;
+		this.myView = myView;
 		initialize();
 	}
 
@@ -278,11 +289,15 @@ public class KasseWocheErstellenView extends JFrame {
 						JOptionPane.YES_NO_OPTION);
 
 				if (confirmed == JOptionPane.YES_OPTION) {
+					myController.erstelleWochenplanCustom(username(), gibWochenplanbezeichnung(), gibOeffnungszeiten(),
+							gibBesetzung());
 
-					String wpbez = gibWochenplanbezeichnung();
+					// String wpbez = gibWochenplanbezeichnung();
 
-					TreeMap<String, String> eingabeOeffnungszeiten = gibOeffnungszeiten();
-					TreeMap<String, Integer> eingabeBesetzung = gibBesetzung();
+					// TreeMap<String, String> eingabeOeffnungszeiten =
+					// gibOeffnungszeiten();
+					// TreeMap<String, Integer> eingabeBesetzung =
+					// gibBesetzung();
 
 					dispose(); // // auch hier muss natürlich es noch bei JA es
 								// angepasst werden
@@ -385,14 +400,19 @@ public class KasseWocheErstellenView extends JFrame {
 	protected TreeMap<String, String> gibOeffnungszeiten() {
 
 		TreeMap<String, String> zeiten = new TreeMap<String, String>();
-		zeiten.put("OeffnunAnfangA", txtOeffnungAnfangA.getText());
-		zeiten.put("OeffnunAnfangB", txtOeffnungAnfangB.getText());
-		zeiten.put("OeffnungEndeA", txtOeffnungEndeA.getText());
-		zeiten.put("OeffnungEndeB", txtOeffnungEndeB.getText());
-		zeiten.put("AnfangA", txtHauptAnfangA.getText());
-		zeiten.put("AnfangB", txtHauptAnfangB.getText());
-		zeiten.put("EndeA", txtHauptEndeA.getText());
-		zeiten.put("EndeB", txtHauptEndeB.getText());
+		// zeiten.put("OeffnunAnfangA", txtOeffnungAnfangA.getText());
+		zeiten.put("Öffnungszeit", txtOeffnungAnfangA.getText() + ":" + txtOeffnungAnfangB.getText());
+		// zeiten.put("OeffnunAnfangB", txtOeffnungAnfangB.getText());
+		zeiten.put("Schließzeit", txtOeffnungEndeA.getText() + ":" + txtOeffnungEndeB.getText());
+		// zeiten.put("OeffnungEndeA", txtOeffnungEndeA.getText());
+		// zeiten.put("OeffnungEndeB", txtOeffnungEndeB.getText());
+		zeiten.put("HauptzeitBeginn", txtHauptAnfangA.getText() + ":" + txtHauptAnfangB.getText());
+		// zeiten.put("AnfangA", txtHauptAnfangA.getText());
+		// zeiten.put("AnfangB", txtHauptAnfangB.getText());
+		zeiten.put("HauptzeitEnde", txtHauptEndeA.getText() + ":" + txtHauptEndeB.getText());
+		// zeiten.put("EndeA", txtHauptEndeA.getText());
+		// zeiten.put("EndeB", txtHauptEndeB.getText());
+
 		return zeiten;
 
 	}
