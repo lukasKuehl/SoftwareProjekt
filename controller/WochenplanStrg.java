@@ -379,14 +379,7 @@ class WochenplanStrg {
     	}
     	
     	return rueckgabe;
-    }
-    
-    
-    
-    
-    
-    
-    
+    }  
     
 	/**
 	 * @author 
@@ -467,7 +460,14 @@ class WochenplanStrg {
 	
  
 	protected ArrayList<String> getWochenplaene(){
-		ArrayList<String> rueckgabe = null;
+		ArrayList<String> rueckgabe = new ArrayList<String>();
+	
+		TreeMap<Integer, Wochenplan> alleWochenplaene = this.myModel.getWochenpläne();
+		
+		for(Integer i : alleWochenplaene.keySet()){			
+			rueckgabe.add("KW" + alleWochenplaene.get(i).getWpnr());			
+		}	
+		
 		return rueckgabe;
 	}
 	

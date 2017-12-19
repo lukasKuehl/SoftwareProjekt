@@ -316,7 +316,7 @@ public class EinsatzplanController {
 			rueckgabe = this.wochenplanSteuerung.getTage(wpbez);
 		}catch(Exception e){
 			System.out.println("Fehler innerhalb des Controllers:");
-			System.out.println("Fehler beim Aufruf der Methode getMitarbeiterTermine:");
+			System.out.println("Fehler beim Aufruf der Methode getTage:");
 			e.printStackTrace();			
 		}	
 		return rueckgabe;

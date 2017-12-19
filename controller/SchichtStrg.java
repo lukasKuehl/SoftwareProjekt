@@ -193,6 +193,16 @@ class SchichtStrg {
 	
 	protected ArrayList<String> getAndereMitarbeiterSchichten(String wpbez, String tagbez, String username, int schichtNr){
 		ArrayList<String> rueckgabe = null;
+		
+		//Umwandeln der Wpbez in die eindeutige Wochennummer
+    	int wpnr = Integer.parseInt((wpbez.substring(2).trim())); 	
+    	
+    	
+    	
+		
+		
+		
+		
 		return rueckgabe;
 	}
 	
