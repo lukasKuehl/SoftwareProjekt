@@ -15,21 +15,27 @@ public class Einsatzplanview {
 	private Einsatzplanmodel myModel = null;
 	private String username = null;
 
-	public Einsatzplanview(EinsatzplanController einsatzplanController, Einsatzplanmodel model) {
+	public Einsatzplanview(String username, EinsatzplanController einsatzplanController, Einsatzplanmodel model) {
 		this.myController = einsatzplanController;
 		this.myModel = model;
+		this.username = username;
 	}
 
 	/**
 	 * @author - Ramona Gerke
-	 * @info DIe Methoden übergeben die Parameter an den Einsatzplancontroller oder die Views greifen auf den EInsatzplancontroller über die Methoden zu.
+	 * @info Die Methoden übergeben die Parameter an den Einsatzplancontroller oder
+	 *       die Views greifen auf den EInsatzplancontroller über die Methoden zu.
 	 */
 
 	protected String getUsername() {
 		return username;
-	} // AUS DER ANMELDUNGSVIEW WIRD DEN USERNAME ÜBERGEBEN
+	}
 
-	protected boolean erstelleTermin(String username, String bez, TreeMap<Integer, String> zeitraum, String grund) {
+	protected void setUsername(String username) {
+		this.username = username;
+	}
+
+	protected boolean erstelleTermin(String username, String bez, TreeMap<String, String> zeitraum, String grund) {
 		boolean erfolg = false;
 
 		try {
@@ -45,9 +51,6 @@ public class Einsatzplanview {
 		return erfolg;
 	}
 
-	
-	
-	
 	protected boolean entferneTermin(int terminnr, String username) {
 		{
 			boolean erfolg = false;
@@ -67,9 +70,6 @@ public class Einsatzplanview {
 		}
 	}
 
-	
-	
-	
 	public ArrayList<String> getAlleTermine(String username) {
 		ArrayList<String> rueckgabe = null;
 		try {
@@ -80,10 +80,7 @@ public class Einsatzplanview {
 		}
 		return rueckgabe;
 	}
-	
-	
-	
-	
+
 	protected boolean erstelleTauschanfrage(String senderName, int senderSchichtNr, String empfaengerName,
 			int empfaengerSchichtNr) {
 		boolean erfolg = false;
@@ -102,11 +99,7 @@ public class Einsatzplanview {
 
 		return erfolg;
 	}
-	
-	
-	
-	
-	
+
 	protected boolean entferneTauschanfrage(int tauschanfrageNr) {
 		boolean erfolg = false;
 
@@ -123,10 +116,7 @@ public class Einsatzplanview {
 
 		return erfolg;
 	}
-	
-	
-	
-	
+
 	public boolean akzeptiereTauschanfrage(String empfaengerName, int tauschanfrageNr) {
 
 		boolean erfolg = false;
@@ -159,65 +149,67 @@ public class Einsatzplanview {
 			return erfolg;
 		}
 	}
-	
-	public ArrayList<String> getMitarbeiterTermine(String username){
+
+	public ArrayList<String> getMitarbeiterTermine(String username) {
 		ArrayList<String> rueckgabe = null;
-		try{
+		try {
 			rueckgabe = this.myController.getMitarbeiterTermine(username);
-		}catch(Exception e){
+		} catch (Exception e) {
 			JOptionPane.showConfirmDialog(null,
 					"Die Termine des Mitarbeiters konnten nicht angezeigt werden. Bitte die Eingaben prüfen");
-		}	
+		}
 		return rueckgabe;
 	}
-	
-	public ArrayList<String> getTage(String wpbez){
+
+	public ArrayList<String> getTage(String wpbez) {
 		ArrayList<String> rueckgabe = null;
-		try{
+		try {
 			rueckgabe = this.myController.getTage(wpbez);
-		}catch(Exception e){
+		} catch (Exception e) {
 			JOptionPane.showConfirmDialog(null,
 					"Die Tage des Wochenplans konnten nicht angezeigt werden. Bitte die Eingaben prüfen");
-		}	
-		return rueckgabe;		
+		}
+		return rueckgabe;
 	}
-	
-	public ArrayList<String> getMitarbeiterSchichten(String wpbez, String tagbez, String username){
+
+	public ArrayList<String> getMitarbeiterSchichten(String wpbez, String tagbez, String username) {
 		ArrayList<String> rueckgabe = null;
-		try{
+		try {
 			rueckgabe = this.myController.getMitarbeiterSchichten(wpbez, tagbez, username);
-		}catch(Exception e){
+		} catch (Exception e) {
 			JOptionPane.showConfirmDialog(null,
-					"Die Schichten des Mitarbeiters konnten nicht ausgegeben werden. Bitte Eingaben prüfen!");	
-		}	
+					"Die Schichten des Mitarbeiters konnten nicht ausgegeben werden. Bitte Eingaben prüfen!");
+		}
 		return rueckgabe;
 	}
-	
-	public ArrayList<String> getAndereMitarbeiterSchichten(String wpbez, String tagbez, String username, int schichtNr){
+
+	public ArrayList<String> getAndereMitarbeiterSchichten(String wpbez, String tagbez, String username,
+			int schichtNr) {
 		ArrayList<String> rueckgabe = null;
-		try{
-			rueckgabe = this.myController.getAndereMitarbeiterSchichten(wpbez, tagbez, username, schichtNr);   
-		}catch(Exception e){
+		try {
+			rueckgabe = this.myController.getAndereMitarbeiterSchichten(wpbez, tagbez, username, schichtNr);
+		} catch (Exception e) {
 			JOptionPane.showConfirmDialog(null,
-					"Die Schichten des Mitarbeiters konnten nicht ausgegeben werden. Bitte Eingaben prüfen!");			
-		}	
+					"Die Schichten des Mitarbeiters konnten nicht ausgegeben werden. Bitte Eingaben prüfen!");
+		}
 		return rueckgabe;
-	}	
-	
-	public ArrayList<String> getWochenplaene(){
+	}
+
+	public ArrayList<String> getWochenplaene() {
 		ArrayList<String> rueckgabe = null;
-		try{
+		try {
 			rueckgabe = this.myController.getWochenplaene();
-		}catch(Exception e){
+		} catch (Exception e) {
 			JOptionPane.showConfirmDialog(null,
-					"Die Wochenpläne konnten nicht ausgegeben werden. Bitte Eingaben prüfen!");		
-		}	
+					"Die Wochenpläne konnten nicht ausgegeben werden. Bitte Eingaben prüfen!");
+		}
 		return rueckgabe;
-	}	
+	}
 
 	public void update() {
-		
-		// ALLE EINGABEN FÜR DIE ÄNDERUNG IN DER DATENBANK HINTERLEGEN - Welche Daten müssen hinterlegt werden ? Alle Textfelder je 
-//		semesterLabel.setText(myModel.getSemesterString());
+
+		// ALLE EINGABEN FÜR DIE ÄNDERUNG IN DER DATENBANK HINTERLEGEN - Welche Daten
+		// müssen hinterlegt werden ? Alle Textfelder je
+		// semesterLabel.setText(myModel.getSemesterString());
 	}
 }
