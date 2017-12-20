@@ -382,26 +382,27 @@ class WochenplanStrg {
     }  
     
 	/**
-	 * @author 
-	 * @return 
+	 * @author Thomas Friesen 
 	 * @info Veröffentlichen eines erstellten Wochenplanes im System, so dass er von allen Mitarbeitern und nicht nur vom Kassenbüro/Chef gesehen werden kann.
 	 */
 	protected boolean publishWochenplan(String username, String wpbez){
 		
 		boolean success = false;
-		//Ausfüllen
+		int wpnr = Integer.parseInt((wpbez.substring(2).trim()));
+		myModel.öffentlichStatustrue(wpnr);
 		return success;
 		
 	}
 	
 	/**
-	 * @author
+	 * @author Thomas Friesen
 	 * @info Entfernen eines bereits erstellten Wochenplanes aus dem System mit allen daraus resultierenden Informationen über Tage, Schichten und Terminen/Krankheiten/Urlaub
 	 */
 	protected boolean entferneWochenplan(String username, String wpbez){
 		
 		boolean success = false;
-		//ausfüllen
+		int wpnr = Integer.parseInt((wpbez.substring(2).trim()));
+		myModel.öffentlichStatustrue(wpnr);
 		return success;
 	}
 		
