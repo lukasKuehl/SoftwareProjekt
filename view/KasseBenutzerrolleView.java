@@ -14,12 +14,15 @@ import javax.swing.JButton;
 import javax.swing.JOptionPane;
 
 import data.Mitarbeiter;
-import model.Datenbank_Mitarbeiter;
+import model.Einsatzplanmodel;
 
-public class KasseBenutzerrolleView extends JFrame {
+class KasseBenutzerrolleView extends JFrame {
 	private JComboBox cbBerechtigung, cbMitarbeiter;
 	private JButton btnBestaetigen;
 	private JLabel lblBenutzerZuweisen, lblMitarbeiterAuswaehlen, lblBerechtigung;
+	private Einsatzplanmodel myModel = null;
+	private Einsatzplanview myView = null;
+
 	// private JFrame frame;
 
 	/**
@@ -29,7 +32,10 @@ public class KasseBenutzerrolleView extends JFrame {
 	/**
 	 * Create the application.
 	 */
-	public KasseBenutzerrolleView() {
+	public KasseBenutzerrolleView(Einsatzplanmodel myModel, Einsatzplanview myView) {
+		this.myView = myView;
+		this.myModel = myModel;
+
 		initialize();
 	}
 
@@ -56,6 +62,8 @@ public class KasseBenutzerrolleView extends JFrame {
 
 		cbMitarbeiter = new JComboBox();
 		cbMitarbeiter.setBounds(381, 274, 128, 20);
+		// LinkedList<Mitarbeiter>
+		// alleMitarbeiter=this.myModel.getAlleMitarbeiter();
 		/*
 		 * Datenbank_Mitarbeiter dbhandler = new Datenbank_Mitarbeiter();
 		 * LinkedList alleMitarbeiter = dbhandler.getMitarbeiter();

@@ -80,7 +80,7 @@ class BenutzerStrg {
 		/*
 		if(this.myModel.getMitarbeiter(username) != null){
 			try{
-				this.myModel.mitarbeiterAnmelden(username, pw, this.myController.getView());	
+				this.myModel.abonniere(username, pw, this.myController.getView());	
 				success = true;
 			}catch(Exception e){
 				System.out.println("Fehler beim Anmelden des Users " + username + ", bitte Eingaben überprüfen :");

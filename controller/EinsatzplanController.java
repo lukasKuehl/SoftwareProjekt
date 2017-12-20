@@ -10,7 +10,6 @@ import data.Schicht;
 import model.Einsatzplanmodel;
 import view.Einsatzplanview;
 
-
 /**
  * @author Lukas Kühl
  * @info Allgemeiner Controller zum entgegennehmen der Anfragen aus der GUI und weiterleiten an die spezifischen Steuerungen
@@ -48,8 +47,7 @@ public class EinsatzplanController {
 			System.out.println("Fehler innerhalb des Controllers:");
 			System.out.println("Fehler beim Aufruf der Methode benutzerAnmelden:");
 			e.printStackTrace();			
-		}
-		
+		}	
 		
 		return result;
 	}
@@ -82,7 +80,6 @@ public class EinsatzplanController {
 		}	
 		
 		return result;		
-
 	}
 	
 	public boolean benutzerEntfernen(String username){
@@ -97,8 +94,7 @@ public class EinsatzplanController {
 			e.printStackTrace();			
 		}	
 		
-		return result;	
-		
+		return result;		
 	}
 	
 	public boolean benutzerRechteWechsel(String username){
@@ -144,7 +140,6 @@ public class EinsatzplanController {
 		}	
 		
 		return result;		
-	
 	}
 	
 	public boolean entferneTauschanfrage(int tauschanfrageNr){
@@ -159,8 +154,7 @@ public class EinsatzplanController {
 			e.printStackTrace();			
 		}	
 		
-		return result;		
-		
+		return result;			
 	}
 	
 	public boolean akzeptiereTauschanfrage(String empfaengerName, int tauschanfrageNr){
@@ -220,8 +214,7 @@ public class EinsatzplanController {
 			e.printStackTrace();			
 		}	
 		
-		return result;	
-	
+		return result;		
 	}
 	
 	public boolean erstelleWochenplanCustom(String username, String wpbez, TreeMap<String, String> zeiten, TreeMap<String, Integer> besetzung  ){
@@ -251,8 +244,7 @@ public class EinsatzplanController {
 			e.printStackTrace();			
 		}	
 		
-		return result;		
-		
+		return result;			
 	}
 	
 	public boolean entferneWochenplan(String username, String wpbez){
@@ -283,7 +275,6 @@ public class EinsatzplanController {
 		}	
 		
 		return result;			
-		
 	}
 	
 	public ArrayList<String> getAlleTermine(String username){
@@ -319,8 +310,7 @@ public class EinsatzplanController {
 			System.out.println("Fehler beim Aufruf der Methode getTage:");
 			e.printStackTrace();			
 		}	
-		return rueckgabe;
-		
+		return rueckgabe;		
 	}
 	
 	//Aussortierung bereits verplanter Mitarbeiter für die Senderschicht
@@ -346,9 +336,7 @@ public class EinsatzplanController {
 			e.printStackTrace();			
 		}	
 		return rueckgabe;
-	}
-	
-	
+	}	
 	
 	public ArrayList<String> getWochenplaene(){
 		ArrayList<String> rueckgabe = null;
@@ -360,8 +348,7 @@ public class EinsatzplanController {
 			e.printStackTrace();			
 		}	
 		return rueckgabe;
-	}
-	
+	}	
 	
 	protected Einsatzplanview getView(){
 		return this.view;		
