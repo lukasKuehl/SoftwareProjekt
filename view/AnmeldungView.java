@@ -6,6 +6,10 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import controller.EinsatzplanController;
+import model.Einsatzplanmodel;
+
 import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.JTextField;
@@ -24,6 +28,9 @@ public class AnmeldungView extends JFrame implements ActionListener {
 	private JPasswordField passwordField;
 	private JLabel lblAnmeldung, lblBenutzername, lblPasswort;
 	private JButton btnLogin;
+	private EinsatzplanController myController=null;
+	private Einsatzplanmodel myModel=null;
+	private Einsatzplanview myView=null;
 
 	/**
 	 * Launch the application.
@@ -41,10 +48,15 @@ public class AnmeldungView extends JFrame implements ActionListener {
 		});
 	}
 
+
 	/**
 	 * Create the frame.
 	 */
 	public AnmeldungView() {
+		this.myController = myController;
+		this.myModel = myModel;
+		this.myView = myView;
+		
 		setResizable(false);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -92,10 +104,19 @@ public class AnmeldungView extends JFrame implements ActionListener {
 				String pw = new String(passwordField.getPassword());
 				String username = new String(textField.getText());
 
-				// BenutzerStrg.anmelden(pwd,user); je nachdem wie die
-				// "Steuerung"heiﬂt
-				// Abfrage der Benutzerrrolle in der Strg/Controller
-				// dispose wenn fertig
+				if(myController.benutzerAnmelden(username, pw)){
+					if(true){
+						//falls Benutzer normaler Mitarbeiter ist
+						new MitarbeiterWochenView();
+					}
+					else{
+						//falls der Benutzer Chef ist
+						new KasseWochenView(username, myModel, myController, myView)
+					}
+				}
+				else{
+					
+				}
 			}
 		});
 		btnLogin.setBounds(213, 182, 54, 47);

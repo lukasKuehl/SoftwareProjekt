@@ -11,11 +11,13 @@ public class Einsatzplanview {
 
 	private EinsatzplanController myController = null;
 	private Einsatzplanmodel myModel = null;
+	private String username = null;
 	
 	
-	public Einsatzplanview(EinsatzplanController einsatzplanController, Einsatzplanmodel model) {
+	public Einsatzplanview(String username, EinsatzplanController einsatzplanController, Einsatzplanmodel model) {
 		this.myController = einsatzplanController;
 		this.myModel = model;
+		this.username = username;
 	}
 	
 	/**
@@ -102,6 +104,14 @@ public class Einsatzplanview {
 		}
 		
 		return erfolg;
+	}
+	
+	protected String getUsername(){
+		return username;
+	}
+	
+	protected void setUsername(String username){
+		this.username = username;
 	}
 	
 }

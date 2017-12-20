@@ -7,6 +7,9 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.TreeMap;
 
 import javax.swing.DefaultComboBoxModel;
@@ -27,6 +30,7 @@ import javax.swing.UIManager;
 import javax.swing.border.LineBorder;
 
 import controller.EinsatzplanController;
+import model.Datenbank_Connection;
 import model.Einsatzplanmodel;
 
 public class KasseWochenView extends JFrame implements ActionListener {
@@ -55,7 +59,7 @@ public class KasseWochenView extends JFrame implements ActionListener {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					KasseWochenView window = new KasseWochenView(null, null, null, null);
+					KasseWochenView window = new KasseWochenView(null, null, null);
 					// window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -67,9 +71,8 @@ public class KasseWochenView extends JFrame implements ActionListener {
 	/**
 	 * Create the application.
 	 */
-	public KasseWochenView(String username, Einsatzplanmodel myModel, EinsatzplanController myController,
+	public KasseWochenView(Einsatzplanmodel myModel, EinsatzplanController myController,
 			Einsatzplanview myView) {
-		this.username = username;
 		this.myController = myController;
 		this.myModel = myModel;
 		this.myView = myView;
@@ -218,9 +221,15 @@ public class KasseWochenView extends JFrame implements ActionListener {
 		//myController.getWochenplaene();
 		//ArrayList<String> WochenPlaene = myController.getWochenplaene();
 		//TreeMap<Integer, String> WochenMap = new TreeMap<Integer, String>();
-		//for (int i = 0; i < WochenPlaene.size(); i++){
-			
-		//}
+		//Calendar calendar = Calendar.getInstance();
+		//int kw = calendar.get(Calendar.WEEK_OF_YEAR);
+		//for(Map.Entry<Integer, String> entry : WochenMap.entrySet()) {
+		//	  int key = entry.getKey();
+		//	  String value = entry.getValue();
+
+			//  System.out.println(key + " => " + value);
+			//}
+		//lblKW1.setText(WochenMap.firstEntry().getValue());
 			// Map füllen, Jlabel variable setzen um diese zu erneuern
 
 			lblKW1.setFont(new Font("Tahoma", Font.BOLD, 13));
@@ -231,17 +240,19 @@ public class KasseWochenView extends JFrame implements ActionListener {
 		btnRechts.setContentAreaFilled(false);
 		btnRechts.setBorderPainted(false);
 		btnRechts.setOpaque(false);
-		btnRechts.setIcon(new ImageIcon("C:\\Users\\Admin\\git\\SoftwareProjekt\\view\\right.png"));
+		btnRechts.setIcon(new ImageIcon("view/right.png"));
 		btnRechts.setBounds(255, 11, 32, 23);
 		getContentPane().add(btnRechts);
 
 		btnLinks = new JButton("");
 		btnLinks.setBorderPainted(false);
 		btnLinks.setContentAreaFilled(false);
-		btnLinks.setIcon(new ImageIcon("C:\\Users\\Admin\\git\\SoftwareProjekt\\view\\left.png"));
+		btnLinks.setIcon(new ImageIcon("view/left.png"));
 		btnLinks.setBounds(49, 11, 50, 23);
 		getContentPane().add(btnLinks);
 
 		setVisible(true);
 	}
+	
+
 }
