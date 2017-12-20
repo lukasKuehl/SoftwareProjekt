@@ -20,28 +20,25 @@ public class TerminErstellenView extends JFrame {
 	// Initialisierung der Instanzvariablen
 	private JPanel contentPane = null;
 	private JTable table = null;
-	private JFormattedTextField txtFldBisTermin, txtFldVonTerminA, txtFldUhrzeitTerminV, txtFldUhrzeitTerminB,
-			txtFldUhrzeitBisA, txtFldUhrzeitBisB = null;
+	private JFormattedTextField txtFldUhrzeitTerminV, txtFldUhrzeitTerminB, txtFldUhrzeitBisA, txtFldUhrzeitBisB = null;
 	private JTextField txtFldGrund = null;
-	private JComboBox comboBoxTerminGrund = null;
+	private JComboBox<String> comboBoxTerminGrund, comboBoxWochenplaene, comboBoxAnfang, comboBoxEnd = null;
 	private JCheckBox chckbxGanztig = null;
 	private JLabel labelTerminErstellen, lblGrund, labelUhrzeitBis, lblDoppelpunkt2, lblDoppelpunkt1, lblVon, lblVon1,
-			lblTagBis = null;
+			lblTagBis, lblWochenplan = null;
 	private JPanel panelTermin = null;
+	private ArrayList<String> wp = null;
 	private TreeMap<Integer, String> zeitraum = null;
 	private String zeitr, bez, grund, username = null;
 	private JButton btnErstellen = null;
 	private Einsatzplanmodel myModel = null;
 	private Einsatzplanview myView = null;
 	private EinsatzplanController myController = null;
-	private Date formatter = null;
 
-	// Konstruktoraufruf
-	public TerminErstellenView(Einsatzplanmodel myModel, EinsatzplanController MyController) {
-		this.myModel = myModel;
+	public TerminErstellenView(Einsatzplanview myView, Einsatzplanmodel myModel, EinsatzplanController myController) {
+		this.myView = myView;
 		this.myController = myController;
-		formatter = new Date(); 
-
+		this.myModel = myModel;
 		setTitle("Termin erstellen");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -59,52 +56,43 @@ public class TerminErstellenView extends JFrame {
 		contentPane.add(panelTermin);
 		panelTermin.setLayout(null);
 
-		txtFldBisTermin = new JFormattedTextField(formatter);
-		txtFldBisTermin.setBounds(106, 165, 110, 20);
-		txtFldBisTermin.setFont(new Font("Verdana", Font.PLAIN, 14));
-		txtFldBisTermin.setColumns(10);
-		panelTermin.add(txtFldBisTermin);
-
 		labelTerminErstellen = new JLabel("Termin erstellen");
 		labelTerminErstellen.setBounds(64, 43, 200, 28);
 		labelTerminErstellen.setFont(new Font("Verdana", Font.PLAIN, 22));
 		panelTermin.add(labelTerminErstellen);
 
-		txtFldVonTerminA = new JFormattedTextField(formatter);	
-		txtFldVonTerminA.setBounds(106, 114, 110, 20);
-		txtFldVonTerminA.setFont(new Font("Verdana", Font.PLAIN, 14));
-		txtFldVonTerminA.setHorizontalAlignment(SwingConstants.LEFT);
-		txtFldVonTerminA.setColumns(10);
-		panelTermin.add(txtFldVonTerminA);
-
 		try {
 			txtFldUhrzeitTerminV = new JFormattedTextField(new MaskFormatter("##"));
 		} catch (ParseException eUhrzeitTerminV) {
-			JOptionPane.showConfirmDialog(null, "Die Eingabe konnte nicht gewandelt werden. Bitte überprüfen Sie die Eingaben!! - TerminErstellen - txtFldUhrzeitBisA"+ eUhrzeitTerminV );
+			JOptionPane.showConfirmDialog(null,
+					"Die Eingabe konnte nicht gewandelt werden. Bitte überprüfen Sie die Eingaben!! - TerminErstellen - txtFldUhrzeitBisA"
+							+ eUhrzeitTerminV);
 			eUhrzeitTerminV.printStackTrace();
-		} 
+		}
 		txtFldUhrzeitTerminV.setBounds(102, 264, 34, 20);
 		txtFldUhrzeitTerminV.setFont(new Font("Verdana", Font.PLAIN, 14));
 		txtFldUhrzeitTerminV.setColumns(10);
 		panelTermin.add(txtFldUhrzeitTerminV);
 
-		
 		try {
 			txtFldUhrzeitTerminB = new JFormattedTextField(new MaskFormatter("##"));
 		} catch (ParseException eUhrzeitTerminB) {
-			JOptionPane.showConfirmDialog(null, "Die Eingabe konnte nicht gewandelt werden. Bitte überprüfen Sie die Eingaben!! - TerminErstellen - txtFldUhrzeitBisA"+ eUhrzeitTerminB );
+			JOptionPane.showConfirmDialog(null,
+					"Die Eingabe konnte nicht gewandelt werden. Bitte überprüfen Sie die Eingaben!! - TerminErstellen - txtFldUhrzeitBisA"
+							+ eUhrzeitTerminB);
 			eUhrzeitTerminB.printStackTrace();
-		} 
+		}
 		txtFldUhrzeitTerminB.setBounds(162, 264, 34, 20);
 		txtFldUhrzeitTerminB.setFont(new Font("Verdana", Font.PLAIN, 14));
 		txtFldUhrzeitTerminB.setColumns(10);
 		panelTermin.add(txtFldUhrzeitTerminB);
 
-		comboBoxTerminGrund = new JComboBox();
+		comboBoxTerminGrund = new JComboBox<String>();
 		comboBoxTerminGrund.setBackground(Color.WHITE);
-		comboBoxTerminGrund.setBounds(255, 225, 157, 20);
+		comboBoxTerminGrund.setBounds(255, 264, 157, 20);
 		comboBoxTerminGrund.setFont(new Font("Verdana", Font.PLAIN, 14));
-		comboBoxTerminGrund.setModel(new DefaultComboBoxModel(new String[] { "privater Termin", "Krankheit", "Urlaub" }));
+		comboBoxTerminGrund
+				.setModel(new DefaultComboBoxModel<String>(new String[] { "privater Termin", "Krankheit", "Urlaub" }));
 		panelTermin.add(comboBoxTerminGrund);
 
 		lblGrund = new JLabel("Bitte tragen Sie hier den Grund ein:");
@@ -112,7 +100,7 @@ public class TerminErstellenView extends JFrame {
 		lblGrund.setBounds(59, 387, 353, 26);
 		panelTermin.add(lblGrund);
 
-		txtFldGrund = new JTextField(); 
+		txtFldGrund = new JTextField();
 		txtFldGrund.setBounds(59, 414, 353, 116);
 		txtFldGrund.setHorizontalAlignment(SwingConstants.CENTER);
 		panelTermin.add(txtFldGrund);
@@ -120,10 +108,10 @@ public class TerminErstellenView extends JFrame {
 
 		lblVon1 = new JLabel("Von");
 		lblVon1.setFont(new Font("Verdana", Font.PLAIN, 15));
-		lblVon1.setBounds(64, 117, 46, 14);
+		lblVon1.setBounds(64, 137, 46, 14);
 		panelTermin.add(lblVon1);
 
-		lblTagBis = new JLabel("Bis"); 
+		lblTagBis = new JLabel("Bis");
 		lblTagBis.setFont(new Font("Verdana", Font.PLAIN, 15));
 		lblTagBis.setBounds(64, 168, 46, 14);
 		panelTermin.add(lblTagBis);
@@ -140,9 +128,11 @@ public class TerminErstellenView extends JFrame {
 		panelTermin.add(lblVon);
 
 		try {
-			txtFldUhrzeitBisA =  new JFormattedTextField(new MaskFormatter("##"));
+			txtFldUhrzeitBisA = new JFormattedTextField(new MaskFormatter("##"));
 		} catch (ParseException eUhrzeitBisB) {
-			JOptionPane.showConfirmDialog(null, "Die Eingabe konnte nicht gewandelt werden. BItte überprüfen Sie die Eingaben!! - TerminErstellen - txtFldUhrzeitBisA"+ eUhrzeitBisB );
+			JOptionPane.showConfirmDialog(null,
+					"Die Eingabe konnte nicht gewandelt werden. BItte überprüfen Sie die Eingaben!! - TerminErstellen - txtFldUhrzeitBisA"
+							+ eUhrzeitBisB);
 		}
 		txtFldUhrzeitBisA.setFont(new Font("Verdana", Font.PLAIN, 14));
 		txtFldUhrzeitBisA.setColumns(10);
@@ -155,13 +145,41 @@ public class TerminErstellenView extends JFrame {
 		lblDoppelpunkt2.setBounds(131, 295, 41, 28);
 		panelTermin.add(lblDoppelpunkt2);
 
-		
-		// Kontrolle der Format Eingabe  auf 24 Stunden und 60 min  erstellen
+		comboBoxWochenplaene = new JComboBox<String>();
+		wp = myView.getWochenplaene();
+		for (String m : wp) {
+			comboBoxWochenplaene.addItem(m);
+		}
+		comboBoxWochenplaene.setFont(new Font("Verdana", Font.PLAIN, 15));
+		comboBoxWochenplaene.setBounds(162, 105, 110, 20);
+		panelTermin.add(comboBoxWochenplaene);
+
+		lblWochenplan = new JLabel("Wochenplan");
+		lblWochenplan.setFont(new Font("Verdana", Font.PLAIN, 15));
+		lblWochenplan.setBounds(59, 108, 113, 14);
+		panelTermin.add(lblWochenplan);
+
+		comboBoxAnfang = new JComboBox<String>();
+		comboBoxAnfang.setModel(new DefaultComboBoxModel(
+				new String[] { "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag" }));
+		comboBoxAnfang.setFont(new Font("Verdana", Font.PLAIN, 15));
+		comboBoxAnfang.setBounds(162, 136, 110, 20);
+		panelTermin.add(comboBoxAnfang);
+
+		comboBoxEnd = new JComboBox<String>();
+		comboBoxEnd.setModel(new DefaultComboBoxModel(
+				new String[] { "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag" }));
+		comboBoxEnd.setFont(new Font("Verdana", Font.PLAIN, 15));
+		comboBoxEnd.setBounds(162, 167, 110, 20);
+		panelTermin.add(comboBoxEnd);
+
 		try {
 			txtFldUhrzeitBisB = new JFormattedTextField(new MaskFormatter("##"));
 		} catch (ParseException eUhrzeitBisB) {
-			JOptionPane.showConfirmDialog(null, "Die Eingabe konnte nicht gewandelt werden. BItte überprüfen Sie die Eingaben!! - TerminErstellen - txtFldUhrzeitBisB"+ eUhrzeitBisB);
-		}  
+			JOptionPane.showConfirmDialog(null,
+					"Die Eingabe konnte nicht gewandelt werden. BItte überprüfen Sie die Eingaben!! - TerminErstellen - txtFldUhrzeitBisB"
+							+ eUhrzeitBisB);
+		}
 		txtFldUhrzeitBisB.setFont(new Font("Verdana", Font.PLAIN, 14));
 		txtFldUhrzeitBisB.setColumns(10);
 		txtFldUhrzeitBisB.setBounds(162, 299, 34, 20);
@@ -178,26 +196,27 @@ public class TerminErstellenView extends JFrame {
 		chckbxGanztig.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				if (chckbxGanztig.isSelected()) {
-				txtFldUhrzeitTerminV.setEnabled(false);
-				txtFldUhrzeitTerminB.setEnabled(false);
-				labelUhrzeitBis.setEnabled(false);
-				txtFldUhrzeitBisB.setEnabled(false);
-				lblDoppelpunkt1.setEnabled(false);
-				lblDoppelpunkt2.setEnabled(false);
-				txtFldUhrzeitBisA.setEnabled(false);
-				lblVon.setEnabled(false);
+					txtFldUhrzeitTerminV.setEnabled(false);
+					txtFldUhrzeitTerminB.setEnabled(false);
+					labelUhrzeitBis.setEnabled(false);
+					txtFldUhrzeitBisB.setEnabled(false);
+					lblDoppelpunkt1.setEnabled(false);
+					lblDoppelpunkt2.setEnabled(false);
+					txtFldUhrzeitBisA.setEnabled(false);
+					lblVon.setEnabled(false);
 
-			} else {
-				txtFldUhrzeitTerminV.setEnabled(true);
-				txtFldUhrzeitTerminB.setEnabled(true);
-				labelUhrzeitBis.setEnabled(true);
-				txtFldUhrzeitBisB.setEnabled(true);
-				lblDoppelpunkt1.setEnabled(true);
-				lblDoppelpunkt2.setEnabled(true);
-				txtFldUhrzeitBisA.setEnabled(true);
-				lblVon.setEnabled(true);
+				} else {
+					txtFldUhrzeitTerminV.setEnabled(true);
+					txtFldUhrzeitTerminB.setEnabled(true);
+					labelUhrzeitBis.setEnabled(true);
+					txtFldUhrzeitBisB.setEnabled(true);
+					lblDoppelpunkt1.setEnabled(true);
+					lblDoppelpunkt2.setEnabled(true);
+					txtFldUhrzeitBisA.setEnabled(true);
+					lblVon.setEnabled(true);
+
+				}
 			}
-		}
 		});
 		chckbxGanztig.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		chckbxGanztig.setSelected(false);
@@ -208,45 +227,72 @@ public class TerminErstellenView extends JFrame {
 		btnErstellen.setBounds(453, 507, 110, 23);
 		btnErstellen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-			}});
+			}
+		});
 		panelTermin.add(btnErstellen);
 
 		setVisible(true);
 	}
-	
+
+	// KONTROLLE DER MINUTEN UND STUNDEN FÜR DIE UHRZEITEINGABE
+
+	public void kontrolleStunden(JFormattedTextField txtFldUhrzeitBisA) {
+		this.txtFldUhrzeitBisA = txtFldUhrzeitBisA;
+		int i;
+		i = Integer.parseInt(txtFldUhrzeitBisA.getText().toString());
+		if (i >= 24) {
+			JOptionPane.showConfirmDialog(null,
+					"Die Eingabe liegt über 24 Stunden. Bitte geben Sie eine Zahl zwischen 0 und 24 ein.");
+		}
+
+	}
+
+	public void kontrolleMinuten(JFormattedTextField txtFldUhrzeitBisB) {
+		this.txtFldUhrzeitBisB = txtFldUhrzeitBisB;
+		int i;
+		i = Integer.parseInt(txtFldUhrzeitBisB.getText().toString());
+		if (i >= 60) {
+			JOptionPane.showConfirmDialog(null,
+					"Die Eingabe liegt über 60 Minuten. Bitte geben Sie eine Zahl zwischen 0 und 24 ein.");
+		}
+	}
+
 	// ACTION PERFORMED METHODEN
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == btnErstellen) {
 			int eingabe = JOptionPane.showConfirmDialog(null, "Wollen Sie die Daten bestätigen?", null,
 					JOptionPane.YES_NO_CANCEL_OPTION);
 			if (eingabe == 0) {
+				try {
+					kontrolleStunden(txtFldUhrzeitBisA);
+					kontrolleStunden(txtFldUhrzeitTerminV);
+					kontrolleMinuten(txtFldUhrzeitBisB);
+					kontrolleMinuten(txtFldUhrzeitBisB); // ACHTUNG KONTROLLE 24-60
+				} catch (NumberFormatException ex) {
+					JOptionPane.showConfirmDialog(null, "Die Eingabe der Uhrzeit konnte nicht geprüft werden!");
+				}
 				zeitraum = new TreeMap<Integer, String>();
-//				try {
-//					// Nutzername des aktuellen MA übergeben
-//					username = anmeldungView.getUsername(); // globale Variable für den Usernamen private oder public
-//															// getter und setter methoden
-//					int terminnr = myModel.getMaxTBlocknr();
-//					String bez = (comboBoxTerminGrund.getSelectedItem().toString());
-//					String grund = txtFldGrund.getText();
-//					zeitr = txtFldVonTerminA.getText().toString() + txtFldBisTermin.getText().toString()
-//							+ txtFldUhrzeitTerminV.getText().toString() + txtFldUhrzeitTerminB.getText().toString();
-//					zeitraum.put(terminnr, zeitr);
-//
-//					myView.erstelleTermin(username, bez, zeitraum, grund);
-//					System.exit(0);
-//				} catch (Exception e1) {
-//					JOptionPane.showMessageDialog(null,
-//							"Daten konnten nicht umgewandelt werden, da die Dateiformate nicht stimmen! -"
-//									+ " Fehler: TerminErstellenView Zeile Button Bestätigen ActionPerformed");
-//					e1.printStackTrace();
+				try {
+					username = myView.getUsername();
+					int terminnr = myModel.getNewTblocknr();
+					String bez = comboBoxTerminGrund.getSelectedItem().toString();
+					String grund = txtFldGrund.getText();
+					zeitr = comboBoxAnfang.getSelectedItem().toString() + comboBoxEnd.getSelectedItem().toString()
+							+ txtFldUhrzeitTerminV.getText().toString() + txtFldUhrzeitTerminB.getText().toString()
+							+ txtFldUhrzeitBisA.getText().toString() + txtFldUhrzeitBisB.getText().toString();
+					zeitraum.put(terminnr, zeitr);
+
+					myView.erstelleTermin(username, bez, zeitraum, grund);
+					System.exit(0);
+				} catch (Exception e1) {
+					JOptionPane.showMessageDialog(null,
+							"Daten konnten nicht umgewandelt werden, da die Dateiformate nicht stimmen! -"
+									+ " Fehler: TerminErstellenView Zeile Button Bestätigen ActionPerformed");
 				}
 			} else {
 				System.exit(0);
 			}
-//		}
-		
+		}
 
-	};
-	
 	}
-//}
+}

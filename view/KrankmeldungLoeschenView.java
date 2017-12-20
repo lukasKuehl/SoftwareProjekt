@@ -8,6 +8,7 @@ import javafx.scene.control.RadioButton;
 import java.awt.Color;
 import controller.EinsatzplanController;
 import java.awt.event.*;
+import java.util.TreeMap;
 
 
 public class KrankmeldungLoeschenView extends JFrame {
@@ -53,8 +54,16 @@ public class KrankmeldungLoeschenView extends JFrame {
 		btnBestaetigen = new JButton("Bestätigen");
 		btnBestaetigen.setFont(new Font("Verdana", Font.PLAIN, 18));
 		
-		//ACTIONPERFORMED METHODE für den bestätigen Button einfügen
-		
+		btnBestaetigen.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if( e.getSource() == btnBestaetigen) {
+				int eingabe = JOptionPane.showConfirmDialog(null, "Wollen Sie die die Krankmeldung wirklich löschen?", null, JOptionPane.YES_NO_CANCEL_OPTION);
+				if (eingabe== 0) {
+					
+					//LOGIK DER ÜBERGABE
+				}
+				}
+		}});
 		
 		btnBestaetigen.setBounds(497, 445, 141, 35);
 		contentPane.add(btnBestaetigen);

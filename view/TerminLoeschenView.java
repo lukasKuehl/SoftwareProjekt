@@ -18,25 +18,30 @@ import model.Einsatzplanmodel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 
 public class TerminLoeschenView extends JFrame {
 
 	private JPanel contentPane, panelTermin = null;
 	private JLabel lblTerninLoeschen, lblTerminAuswaehlen = null;
-	private JList list = null;
+	private JList<Object> listTermin = null;
 	private String username = null;
+	private DefaultListModel<Object> model = null;
+	private ArrayList <String> tl = null;
 	private Einsatzplanmodel myModel = null;
 	private Einsatzplanview myView = null;
 	private EinsatzplanController myController = null;
 	private JButton btnBesttigen = null;
 
-	protected TerminLoeschenView(Einsatzplanmodel myModel, EinsatzplanController myController) {
-		this.myModel = myModel;
+	protected TerminLoeschenView(Einsatzplanview myView, Einsatzplanmodel myModel, EinsatzplanController myController) {
+		this.myView = myView;
 		this.myController = myController;
+		this.myModel = myModel;
 		setTitle("Termin löschen");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -53,11 +58,17 @@ public class TerminLoeschenView extends JFrame {
 		lblTerninLoeschen.setBounds(60, 83, 199, 26);
 		contentPane.add(lblTerninLoeschen);
 
-		list = new JList(myController.getAlleTermine(username).toArray());
-		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		list.setBounds(65, 145, 282, 355);
-		list.getModel();
-		contentPane.add(list);
+		listTermin = new JList<Object>();
+		tl = myView.getMitarbeiterTermine(myView.getUsername());
+		model = new DefaultListModel<Object> ();
+				for (String m : tl) {
+					model.addElement(m);
+				}
+		listTermin.setModel(model);
+		listTermin.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		listTermin.setBounds(65, 145, 282, 355);
+		listTermin.getModel();
+		contentPane.add(listTermin);
 
 		lblTerminAuswaehlen = new JLabel("Termin auswählen");
 		lblTerminAuswaehlen.setFont(new Font("Verdana", Font.PLAIN, 13));
@@ -74,30 +85,25 @@ public class TerminLoeschenView extends JFrame {
 
 				if (eingabe == 0) {
 
-					if (list.isSelectionEmpty()) {
+					if (listTermin.isSelectionEmpty()) {
 						JOptionPane.showMessageDialog(null, "Es wurde keine Eingabe getätigt", "Error",
 								JOptionPane.ERROR_MESSAGE);
 					} else {
 						try {
 							String s;
-
-							// Terminnr muss aus der Array List gezogen werden und Nummer als terminnr
-							// hinterlgen
-							// vielleicht ist eine Map besser ? wegen der Nr zuweisung und dem primitiven
-							// Datentyp
-
-							list.getSelectedIndex();
-							s = list.toString();
-							int terminnr = Integer.parseInt(s);
-							myView.entferneTermin(terminnr, username);
+							s=listTermin.getSelectedValue().toString();
+							s.trim();
+							s.split("-");
+							int terminnr = Integer.parseInt(s.substring(2));
+							myView.entferneTermin(terminnr, myView.getUsername());
 							System.exit(0);
+							
 						} catch (Exception a) {
 							JOptionPane.showMessageDialog(null,
-									"Die Liste konnte nicht übergeben werden. - Methode ActionPerformed (btnBestätigen)");
+									"Die Liste konnte nicht übergeben werden. - Methode ActionPerformed (btnBestätigen)","Error", 	JOptionPane.ERROR_MESSAGE);
 						}
 					}
 				}
-			
 				 else {
 					System.exit(0);
 				}
@@ -110,10 +116,5 @@ public class TerminLoeschenView extends JFrame {
 		setVisible(true);
 	}
 
-	// Aktuelle testmethode für die Anzeige der Termine
-	private void MaListeAnzeigen() {
-		String s[] = { "Termin 1", "Termin 2" }; // Test s
-
-	}
 
 }

@@ -134,8 +134,8 @@ public class KrankmeldungErstellenView extends JFrame {
 			if (eingabe==0) {
 		 zeitraum  = new TreeMap<Integer, String>();
 				try {	 
-						username = anmeldungView.getUsername();
-						int terminnr = myModel.getMaxTBlocknr();
+						username = myView.getUsername();
+						int terminnr = myModel.getNewTblocknr();
 						String grund=	txtGrund.getText().toString();
 						String bez= comboBoxMA.getSelectedItem().toString();
 						String zeitr= txtVonTermin.getText().toString() + txtBisTermin.getText().toString();
@@ -146,8 +146,7 @@ public class KrankmeldungErstellenView extends JFrame {
 				}
 						       
 		       catch (Exception ex) {
-		    	   // JOPTION PANE DIalog AusgabeSystem.out.println("Daten konnten nicht umgewandelt wrerden, da die Dateiformate nicht stimmen! - Fehle: TerminErstellenView Zeile Button Bestätigen ActionPerformed");
-		    	   ex.printStackTrace();
+		    	   JOptionPane.showConfirmDialog(null, "Daten konnten nicht umgewandelt wrerden, da die Dateiformate nicht stimmen! - Fehle: TerminErstellenView Zeile Button Bestätigen ActionPerformed");
 		       }
 		}
 			else {

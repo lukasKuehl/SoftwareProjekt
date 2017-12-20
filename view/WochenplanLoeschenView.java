@@ -33,8 +33,10 @@ public class WochenplanLoeschenView extends JFrame {
 	private Einsatzplanview myView = null;
 
 	
-		public WochenplanLoeschenView() {
-		
+		public WochenplanLoeschenView(Einsatzplanview myView, Einsatzplanmodel myModel, EinsatzplanController myController) {
+			this.myView = myView;
+			this.myController = myController;
+			this.myModel = myModel;
 		setTitle("Wochenplan löschen");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -54,7 +56,7 @@ public class WochenplanLoeschenView extends JFrame {
 		lblWochenplanLschen.setBounds(51, 61, 243, 27);
 		contentPane.add(lblWochenplanLschen);
 		
-		listWochenplaene = new JList(myController.getWochenplaene().toArray());
+		listWochenplaene = new JList();
 		listWochenplaene.setBorder(new LineBorder(new Color(0, 0, 0)));
 		listWochenplaene.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		listWochenplaene.setBounds(51, 139, 323, 356);
@@ -62,17 +64,17 @@ public class WochenplanLoeschenView extends JFrame {
 		
 		btnLschen = new JButton("löschen");
 		btnLschen.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				
+			public void actionPerformed(ActionEvent e) {
+			if( e.getSource() == btnLschen) {
 			int eingabe = JOptionPane.showConfirmDialog(null, "Wollen Sie die den Wochenplan wirklich löschen?", null, JOptionPane.YES_NO_CANCEL_OPTION);
 			if (eingabe== 0) {
 				
-				
+				//ACTION PERFORMED METHODE + EINSATZPLAN VIEW übergabe der index Nr
 			}else {
 				System.exit(0);
 			}
 			}
-		});
+			}});
 		btnLschen.setBounds(426, 468, 131, 27);
 		contentPane.add(btnLschen);
 		
@@ -81,7 +83,7 @@ public class WochenplanLoeschenView extends JFrame {
 		lblBitteAuswhlen.setBounds(51, 109, 143, 26);
 		contentPane.add(lblBitteAuswhlen);
 		
-		//ACTION PERFORMED METHODE + EINSATZPLAN VIEW übergabe der index Nr
+		
 		
 		setVisible(true);
 	

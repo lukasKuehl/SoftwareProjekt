@@ -2,7 +2,9 @@ package view;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.TreeMap;
 
 import javax.swing.JFrame;
@@ -10,6 +12,8 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import javafx.scene.control.RadioButton;
+import model.Einsatzplanmodel;
+
 import javax.swing.JRadioButton;
 import javax.swing.UIManager;
 import javax.swing.JLabel;
@@ -17,6 +21,9 @@ import java.awt.Color;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.border.LineBorder;
+
+import controller.EinsatzplanController;
+
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -24,17 +31,24 @@ import java.awt.event.ActionEvent;
 import java.awt.Font;
 import javax.swing.ListSelectionModel;
 import javax.swing.AbstractListModel;
+import javax.swing.DefaultListModel;
 
 public class TauschanfrageLoeschenView extends JFrame {
 
 	private JPanel contentPane, panelKrankmeldung= null;
 	private JLabel lblTauschanfrageLoeschen = null;
-	private JList listKrankmeldung = null;
+	private JList<Object> listKrankmeldung = null;
 	private JButton btnBestaetigen = null;
+	private ArrayList<String> kl = null;
+	private DefaultListModel<Object> modelTauschanfrage = null;
 	private Einsatzplanview myView= null;
+	private EinsatzplanController myController = null;
+	private Einsatzplanmodel myModel = null;
 
-		protected TauschanfrageLoeschenView() {
-		
+		protected TauschanfrageLoeschenView(Einsatzplanview myView, Einsatzplanmodel myModel, EinsatzplanController myController) {
+		this.myView = myView;
+		this.myController = myController;
+		this.myModel = myModel;
 		setTitle("Tauschanfrage löschen");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -52,17 +66,18 @@ public class TauschanfrageLoeschenView extends JFrame {
 		contentPane.add(panelKrankmeldung);
 		panelKrankmeldung.setLayout(null);
 		
-
 		lblTauschanfrageLoeschen = new JLabel("Tauschanfrage loeschen:");
 		lblTauschanfrageLoeschen.setFont(new Font("Verdana", Font.BOLD, 20));
 		lblTauschanfrageLoeschen.setBounds(70, 89, 284, 26);
 		panelKrankmeldung.add(lblTauschanfrageLoeschen);
 		
 		listKrankmeldung = new JList<Object>();
-	 // Linked List mit For Each Schleife ausgeben
-		
-	// Termine löschen, Krankmeldungen löschen und Tauschanfragen löschen evtl. doch in Linked List, da ID mit angegeben sollte
-	
+		kl = myView.getTauschanfragen(myView.getUsername());
+		modelTauschanfrage = new DefaultListModel<Object> ();
+				for (String m : kl) {
+					modelTauschanfrage.addElement(m);
+				}
+		listKrankmeldung.setModel(modelTauschanfrage);
 		listKrankmeldung.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		listKrankmeldung.setBounds(71, 126, 340, 392);
 		panelKrankmeldung.add(listKrankmeldung);
