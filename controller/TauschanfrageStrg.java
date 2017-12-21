@@ -64,7 +64,10 @@ class TauschanfrageStrg {
 		
 	}
 		
-	
+	/**
+	 * @author Lukas Kühl
+	 * @info Auslesen aller Tauschanfragen, die an einen bestimmten Mitarbeiter gerichtet sind (Mitarbeiter ist somit als Empfänger eingetragen) und Aufbereitung für Anzeige in der View
+	 */
 	protected ArrayList<String> getTauschanfragen(String username){
 		ArrayList<String> rueckgabe = new ArrayList<String>();
 		
