@@ -15,6 +15,7 @@ import javax.swing.JOptionPane;
 
 import data.Mitarbeiter;
 import model.Einsatzplanmodel;
+import controller.EinsatzplanController;
 
 class KasseBenutzerrolleView extends JFrame {
 	private JComboBox cbBerechtigung, cbMitarbeiter;
@@ -22,6 +23,7 @@ class KasseBenutzerrolleView extends JFrame {
 	private JLabel lblBenutzerZuweisen, lblMitarbeiterAuswaehlen, lblBerechtigung;
 	private Einsatzplanmodel myModel = null;
 	private Einsatzplanview myView = null;
+	private EinsatzplanController myController=null;
 
 	// private JFrame frame;
 
@@ -35,6 +37,7 @@ class KasseBenutzerrolleView extends JFrame {
 	public KasseBenutzerrolleView(Einsatzplanmodel myModel, Einsatzplanview myView) {
 		this.myView = myView;
 		this.myModel = myModel;
+		this.myController=myController;
 
 		initialize();
 	}
@@ -89,13 +92,8 @@ class KasseBenutzerrolleView extends JFrame {
 						JOptionPane.YES_NO_OPTION);
 
 				if (confirmed == JOptionPane.YES_OPTION) {
-					// String benutzerrolle = gibBenutzerrolle(); wie übergeben
-					// ( da protected)
-					dispose(); // hier muss natürlich bei JA dann der controller
-								// angesteuert werden
-					// Controller.wocheErstellen(a,b,c,d)
-					// dispose wenn keine Fehlermeldung kommt und öffne
-					// KasseWocheErstellenPlanView
+				myController.benutzerRechteWechsel(gibAusgewaehltenMitarbeiter(), gibAusgewaehlteBenutzerrolle());
+				dispose();
 				}
 			}
 		});
@@ -109,8 +107,12 @@ class KasseBenutzerrolleView extends JFrame {
 		 */
 	}
 
-	public String gibBenutzerrolle() {
+	protected String gibAusgewaehlteBenutzerrolle() {
 		return cbBerechtigung.getSelectedItem().toString();
+	}
+	protected String gibAusgewaehltenMitarbeiter(){
+		return cbMitarbeiter.getSelectedItem().toString();
+	}
 	}
 
 }
