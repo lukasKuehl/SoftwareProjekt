@@ -15,11 +15,12 @@ public class Einsatzplanview {
 	private Einsatzplanmodel myModel = null;
 	private String username = null;
 
-	public Einsatzplanview(String username, EinsatzplanController einsatzplanController, Einsatzplanmodel model) {
+	public Einsatzplanview(EinsatzplanController einsatzplanController, Einsatzplanmodel model) {
 		this.myController = einsatzplanController;
-		this.myModel = model;
-		this.username = username;
+		this.myModel = model;		
+		AnmeldungView view = new AnmeldungView();
 	}
+	
 
 	/**
 	 * @author - Ramona Gerke
@@ -208,6 +209,7 @@ public class Einsatzplanview {
 
 	public void update() {
 
+		// suche aktuelle Woche und dann generie die Wochenplan
 		// ALLE EINGABEN FÜR DIE ÄNDERUNG IN DER DATENBANK HINTERLEGEN - Welche Daten
 		// müssen hinterlegt werden ? Alle Textfelder je
 		// semesterLabel.setText(myModel.getSemesterString());
