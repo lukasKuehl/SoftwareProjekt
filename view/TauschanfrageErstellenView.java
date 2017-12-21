@@ -33,26 +33,10 @@ public class TauschanfrageErstellenView extends JFrame {
 			lblSchichtAuswhlen, lblTagAuswhlen, labelSchichtAndererMA = null;
 	private JComboBox<String> cmbBoxWP, cmbBoxTag, cmbBoxSchicht, comboBoxTagAndererMA, comboBoxSchichtAndererMA = null;
 	private ArrayList<String> wp, tagMa, SchichtAndererMa, TagAndererMa, SchichtMa = null;
-	private JButton btnLoeschen = null;
-	private static EinsatzplanController myController = null;
-	private static Einsatzplanview myView = null;
-	private static Einsatzplanmodel myModel = null;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					TauschanfrageErstellenView frame = new TauschanfrageErstellenView(myModel, myView, myController);
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+	private JButton btnErstellen = null;
+	private  EinsatzplanController myController = null;
+	private  Einsatzplanview myView = null;
+	private  Einsatzplanmodel myModel = null;
 
 	/**
 	 * Create the frame.
@@ -77,13 +61,13 @@ public class TauschanfrageErstellenView extends JFrame {
 		lblTauschanfrageStellen.setBounds(62, 91, 385, 26);
 		contentPane.add(lblTauschanfrageStellen);
 
-		btnLoeschen = new JButton("loeschen");
-		btnLoeschen.setFont(new Font("Verdana", Font.PLAIN, 15));
-		btnLoeschen.setBounds(532, 455, 136, 36);
-		btnLoeschen.addActionListener(new ActionListener() {
+		btnErstellen = new JButton("erstellen");
+		btnErstellen.setFont(new Font("Verdana", Font.PLAIN, 15));
+		btnErstellen.setBounds(532, 455, 136, 36);
+		btnErstellen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 		}});
-		contentPane.add(btnLoeschen);
+		contentPane.add(btnErstellen);
 
 		cmbBoxWP = new JComboBox<String>();
 		 wp = myView.getWochenplaene();
@@ -235,9 +219,9 @@ public class TauschanfrageErstellenView extends JFrame {
 			}
 		});
 		
-		btnLoeschen.addActionListener(new ActionListener() {
+		btnErstellen.addActionListener(new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
-			if (e.getSource() == btnLoeschen) {
+			if (e.getSource() == btnErstellen) {
 				
 				String senderName = myView.getUsername();
 				int senderSchichtNr=0;  //= myModel.getSchichten().toString(); // SCHICHT NR AUS DEM MODEL ????
@@ -248,8 +232,7 @@ public class TauschanfrageErstellenView extends JFrame {
 				
 			}
 		}});
-		
-		
+				
 		setVisible(true);
 
 	}

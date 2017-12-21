@@ -28,7 +28,7 @@ public class TerminErstellenView extends JFrame {
 			lblTagBis, lblWochenplan = null;
 	private JPanel panelTermin = null;
 	private ArrayList<String> wp = null;
-	private TreeMap<Integer, String> zeitraum = null;
+	private TreeMap<String, String> zeitraum = null;
 	private String zeitr, bez, grund, username = null;
 	private JButton btnErstellen = null;
 	private Einsatzplanmodel myModel = null;
@@ -160,14 +160,14 @@ public class TerminErstellenView extends JFrame {
 		panelTermin.add(lblWochenplan);
 
 		comboBoxAnfang = new JComboBox<String>();
-		comboBoxAnfang.setModel(new DefaultComboBoxModel(
+		comboBoxAnfang.setModel(new DefaultComboBoxModel<String>(
 				new String[] { "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag" }));
 		comboBoxAnfang.setFont(new Font("Verdana", Font.PLAIN, 15));
 		comboBoxAnfang.setBounds(162, 136, 110, 20);
 		panelTermin.add(comboBoxAnfang);
 
 		comboBoxEnd = new JComboBox<String>();
-		comboBoxEnd.setModel(new DefaultComboBoxModel(
+		comboBoxEnd.setModel(new DefaultComboBoxModel<String>(
 				new String[] { "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag" }));
 		comboBoxEnd.setFont(new Font("Verdana", Font.PLAIN, 15));
 		comboBoxEnd.setBounds(162, 167, 110, 20);
@@ -178,7 +178,7 @@ public class TerminErstellenView extends JFrame {
 		} catch (ParseException eUhrzeitBisB) {
 			JOptionPane.showConfirmDialog(null,
 					"Die Eingabe konnte nicht gewandelt werden. BItte überprüfen Sie die Eingaben!! - TerminErstellen - txtFldUhrzeitBisB"
-							+ eUhrzeitBisB);
+							+ eUhrzeitBisB.getStackTrace());
 		}
 		txtFldUhrzeitBisB.setFont(new Font("Verdana", Font.PLAIN, 14));
 		txtFldUhrzeitBisB.setColumns(10);
@@ -194,6 +194,7 @@ public class TerminErstellenView extends JFrame {
 		chckbxGanztig.setBackground(Color.WHITE);
 		chckbxGanztig.setBounds(64, 225, 97, 23);
 		chckbxGanztig.addActionListener(new ActionListener() {
+			
 			public void actionPerformed(ActionEvent arg0) {
 				if (chckbxGanztig.isSelected()) {
 					txtFldUhrzeitTerminV.setEnabled(false);
@@ -257,32 +258,37 @@ public class TerminErstellenView extends JFrame {
 		}
 	}
 
-	// ACTION PERFORMED METHODEN
+	// ACTION PERFORMED METHODE
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == btnErstellen) {
 			int eingabe = JOptionPane.showConfirmDialog(null, "Wollen Sie die Daten bestätigen?", null,
 					JOptionPane.YES_NO_CANCEL_OPTION);
 			if (eingabe == 0) {
 				try {
+					
 					kontrolleStunden(txtFldUhrzeitBisA);
 					kontrolleStunden(txtFldUhrzeitTerminV);
 					kontrolleMinuten(txtFldUhrzeitBisB);
 					kontrolleMinuten(txtFldUhrzeitBisB); // ACHTUNG KONTROLLE 24-60
+					
+					
 				} catch (NumberFormatException ex) {
 					JOptionPane.showConfirmDialog(null, "Die Eingabe der Uhrzeit konnte nicht geprüft werden!");
 				}
-				zeitraum = new TreeMap<Integer, String>();
+				zeitraum = new TreeMap<String, String>();
 				try {
 					username = myView.getUsername();
 					int terminnr = myModel.getNewTblocknr();
+					
 					String bez = comboBoxTerminGrund.getSelectedItem().toString();
-					String grund = txtFldGrund.getText();
+					String grund = txtFldGrund.getText().toString();
+					String wpbez = comboBoxWochenplaene.getSelectedItem().toString() + String.valueOf(terminnr);  
 					zeitr = comboBoxAnfang.getSelectedItem().toString() + comboBoxEnd.getSelectedItem().toString()
 							+ txtFldUhrzeitTerminV.getText().toString() + txtFldUhrzeitTerminB.getText().toString()
 							+ txtFldUhrzeitBisA.getText().toString() + txtFldUhrzeitBisB.getText().toString();
-					zeitraum.put(terminnr, zeitr);
+					zeitraum.put(wpbez, zeitr);
 
-					myView.erstelleTermin(username, bez, zeitraum, grund);
+					myController.erstelleTermin(username, bez, zeitraum, grund);
 					System.exit(0);
 				} catch (Exception e1) {
 					JOptionPane.showMessageDialog(null,

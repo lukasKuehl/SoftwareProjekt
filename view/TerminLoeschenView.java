@@ -94,7 +94,8 @@ public class TerminLoeschenView extends JFrame {
 							s=listTermin.getSelectedValue().toString();
 							s.trim();
 							s.split("-");
-							int terminnr = Integer.parseInt(s.substring(2));
+							s.substring(0,2);
+							int terminnr = Integer.parseInt(s);
 							myView.entferneTermin(terminnr, myView.getUsername());
 							System.exit(0);
 							

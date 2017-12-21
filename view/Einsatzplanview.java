@@ -15,19 +15,18 @@ public class Einsatzplanview {
 	private Einsatzplanmodel myModel = null;
 	private String username = null;
 
+	/**
+	 * @author - Ramona Gerke
+	 * @info Der Konstruktor ruft die AnmeldungsView auf.
+	 */
+
+	
 	public Einsatzplanview(EinsatzplanController einsatzplanController, Einsatzplanmodel model) {
 		this.myController = einsatzplanController;
 		this.myModel = model;		
 		AnmeldungView view = new AnmeldungView();
 	}
 	
-
-	/**
-	 * @author - Ramona Gerke
-	 * @info Die Methoden übergeben die Parameter an den Einsatzplancontroller oder
-	 *       die Views greifen auf den EInsatzplancontroller über die Methoden zu.
-	 */
-
 	protected String getUsername() {
 		return username;
 	}
@@ -35,6 +34,12 @@ public class Einsatzplanview {
 	protected void setUsername(String username) {
 		this.username = username;
 	}
+	
+	/**
+	 * @author - Ramona Gerke
+	 * @info Die Methoden übergeben die Parameter an den Einsatzplancontroller oder
+	 *       die Views greifen auf den EInsatzplancontroller über die Methoden zu.
+	 */
 
 	protected boolean erstelleTermin(String username, String bez, TreeMap<String, String> zeitraum, String grund) {
 		boolean erfolg = false;
@@ -146,7 +151,6 @@ public class Einsatzplanview {
 				JOptionPane.showConfirmDialog(null,
 						"Der Termin konnte nicht erstellt werden. Bitte die Eingaben prüfen");
 			}
-
 			return erfolg;
 		}
 	}
@@ -209,9 +213,9 @@ public class Einsatzplanview {
 
 	public void update() {
 
-		// suche aktuelle Woche und dann generie die Wochenplan
+		// suche aktuelle Woche und dann generie den aktuellenWochenplan
 		// ALLE EINGABEN FÜR DIE ÄNDERUNG IN DER DATENBANK HINTERLEGEN - Welche Daten
-		// müssen hinterlegt werden ? Alle Textfelder je
+	
 		// semesterLabel.setText(myModel.getSemesterString());
 	}
 }
