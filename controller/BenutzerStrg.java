@@ -21,7 +21,7 @@ class BenutzerStrg {
 	//private JDialog myDialog = null;
 			
 	/**
-	 * @author 
+	 * @author Lukas Kühl	
 	 * @info Erzeugen eines Objektes der Klasse BenutzerStrg. Setzen des allgemeinen EinsatzplanControllers als Parent. Die Variable myDialog wird erst bei jedem Methodenaufruf neu erzeugt und wird deshalb später zugewiesen.
 	 */
 	protected BenutzerStrg(EinsatzplanController myController, Einsatzplanmodel myModel){
@@ -30,7 +30,7 @@ class BenutzerStrg {
 	}	
 	
 	/**
-	 * @author 
+	 * @author Lukas Kühl	
 	 * @info Anlegen eines neuen Benutzers für einen Mitarbeiter eines Warenhauses im System. 
 	 */
 	protected boolean benutzerErstellen(String username, String pw){
@@ -47,7 +47,7 @@ class BenutzerStrg {
 	}
 		
 	/**
-	 * @author 
+	 * @author Lukas Kühl	
 	 * @info Entfernen eines nicht mehr benötigten Users für einen Mitarbeiter eines Warenhauses
 	 */
 	protected boolean benutzerEntfernen(String username){
@@ -71,7 +71,7 @@ class BenutzerStrg {
 	}
 		
 	/**
-	 * @author 
+	 * @author Lukas Kühl
 	 * @info Login Angaben für einen spezifischen Nutzer überprüfen und bei korrekten Angaben einloggen des Benutzers ins System
 	 */
 	protected boolean benutzerAnmelden(String username, String pw){
@@ -118,7 +118,7 @@ class BenutzerStrg {
 	}
 	
 	/**
-	 * @author 
+	 * @author Lukas Kühl	
 	 * @info Ändern der jeweiligen Rechte eines Mitarbeiters von Mitarbeiter- zu Kassenbüro-Rechten oder umgekehrt(je nach derzeitigen Berechtigungen) 
 	 */
 	protected boolean benutzerRechteÄndern(String username){

@@ -1,8 +1,13 @@
 package controller;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+
 import javax.swing.JDialog;
 
+import data.Mitarbeiter;
 import data.Schicht;
+import data.Tauschanfrage;
 import model.Einsatzplanmodel;
 
 /**
@@ -59,4 +64,39 @@ class TauschanfrageStrg {
 		
 	}
 		
+	
+	protected ArrayList<String> getTauschanfragen(String username){
+		ArrayList<String> rueckgabe = new ArrayList<String>();
+		
+		LinkedList<Tauschanfrage> alleTauschanfragen = this.myModel.getTauschanfragen(); 
+		LinkedList<Tauschanfrage> mitarbeiterTauschanfragen = new LinkedList<Tauschanfrage>();
+		
+		//Suche alle Tauschanfragen, die für den übergebenen Mitarbeiternamen bestimmt sind, für die die Person als Empfänger eingetragen ist.		
+		for(Tauschanfrage ta: alleTauschanfragen){			
+			if(ta.getEmpfänger().equals(username)){
+				mitarbeiterTauschanfragen.add(ta);		
+			}			
+		}		
+		
+		//Generiere für jede Tauschanfrage eine Zeile nach folgendem Muster Sendername - SenderSchichtNr - KW - TagSender - ZeitraumSender || Empfängername - EmpfängerSchichtNr - KW - TagEmpfänger - ZeitraumEmpfänger
+		//--> Ein Tausch ist somit nur innerhalb einer Woche möglich
+		for(Tauschanfrage t: mitarbeiterTauschanfragen){
+			
+			Mitarbeiter sender = this.myModel.getMitarbeiter(t.getSender());
+			Schicht senderSchicht = this.myModel.getSchicht(t.getSchichtnrsender());
+			Mitarbeiter empfaenger = this.myModel.getMitarbeiter(t.getEmpfänger());
+			Schicht empfaengerSchicht = this.myModel.getSchicht(t.getSchichtnrempfänger());			
+			
+			//Eintragen Sender-Informationen
+			String temp = sender.getVorname() + " " + sender.getName() + " - " + senderSchicht.getSchichtnr() + " - " + "KW" + senderSchicht.getWpnr() + " - " + senderSchicht.getTbez() + " - " + senderSchicht.getAnfanguhrzeit() + "-" + senderSchicht.getEndeuhrzeit() + "\n --> ";
+									
+			//Eintragen Empfänger-Informationen
+			temp = temp + empfaenger.getVorname() + " " + empfaenger.getName() + " - " + empfaengerSchicht.getSchichtnr() + " - " + "KW" + empfaengerSchicht.getWpnr() + " - " + empfaengerSchicht.getTbez() + " - " + empfaengerSchicht.getAnfanguhrzeit() + ":" + empfaengerSchicht.getEndeuhrzeit();
+			
+			rueckgabe.add(temp);			
+		}	
+		
+		return rueckgabe;
+	}
+	
 }

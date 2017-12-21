@@ -350,6 +350,22 @@ public class EinsatzplanController {
 		return rueckgabe;
 	}	
 	
+	public ArrayList<String> getTauschanfragen(String username){
+		ArrayList<String> rueckgabe = null;
+		
+		try{
+			rueckgabe = this.tauschanfrageSteuerung.getTauschanfragen(username);
+		}catch(Exception e){
+			System.out.println("Fehler innerhalb des Controllers:");
+			System.out.println("Fehler beim Aufruf der Methode getTauschanfragen:");
+			e.printStackTrace();			
+		}	
+		
+		return rueckgabe;
+	}
+	
+	
+	
 	protected Einsatzplanview getView(){
 		return this.view;		
 	}	

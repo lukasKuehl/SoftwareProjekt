@@ -133,7 +133,7 @@ class TerminStrg {
 			Date endUhrzeitDate = null;
 			
 			
-			SimpleDateFormat sdf = new SimpleDateFormat("hh:ss");
+			SimpleDateFormat sdf = new SimpleDateFormat("hh:mm");
 			
 			try{
 				anfangsUhrzeitDate = sdf.parse(anfangsUhrzeit);
