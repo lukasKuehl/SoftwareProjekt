@@ -68,6 +68,7 @@ private JButton btnPlanBestaetigen,btnTagAuswahl,btnSchichtAuswahl,btnMitarbeite
 		cbTage = new JComboBox();
 		cbTage.setBounds(22, 383, 243, 22);
 		getContentPane().add(cbTage);
+		cbTage.setEnabled(false);
 		
 		btnTagAuswahl = new JButton("New button");
 		btnTagAuswahl.addActionListener(new ActionListener() {
@@ -85,6 +86,7 @@ private JButton btnPlanBestaetigen,btnTagAuswahl,btnSchichtAuswahl,btnMitarbeite
 		listSchichtAuswahl = new JList();
 		listSchichtAuswahl.setBounds(22, 496, 243, 128);
 		getContentPane().add(listSchichtAuswahl);
+		listSchichtAuswahl.setEnabled(false);
 		
 		btnSchichtAuswahl = new JButton("New button");
 		btnSchichtAuswahl.addActionListener(new ActionListener() {
@@ -102,6 +104,7 @@ private JButton btnPlanBestaetigen,btnTagAuswahl,btnSchichtAuswahl,btnMitarbeite
 		listAlleMitarbeiter = new JList();
 		listAlleMitarbeiter.setBounds(644, 183, 299, 489);
 		getContentPane().add(listAlleMitarbeiter);
+		listAlleMitarbeiter.setEnabled(false);
 		
 		btnMitarbeiterBestaetigen = new JButton("best\u00E4tigen");
 		btnMitarbeiterBestaetigen.addActionListener(new ActionListener() {
