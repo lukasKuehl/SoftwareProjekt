@@ -12,11 +12,12 @@ import data.Tag;
 import data.Tauschanfrage;
 import data.Tblock_Tag;
 import data.TerminBlockierung;
+import data.Userrecht;
 import data.Warenhaus;
 import data.Wochenplan;
 import controller.EinsatzplanController;
 import view.Einsatzplanview;
-
+import java.sql.Connection;
 
 /**
  * @author Anes Preljevic
@@ -25,9 +26,11 @@ import view.Einsatzplanview;
 public class Einsatzplanmodel {
 
 	//Initialiserung der Instanzvariablen
-	private EinsatzplanController controller = null;
+	//private EinsatzplanController controller = null;
 	private Einsatzplanview view = null;
+	//private Observer view=null;
 	private Datenbank_Connection dataConnection = null;
+	private Connection con=null;
 	private Datenbank_Ma_Schicht dataMa_Schicht = null;
 	private Datenbank_Mitarbeiter dataMitarbeiter = null;
 	private Datenbank_Schicht dataSchicht=null;
@@ -43,20 +46,40 @@ public class Einsatzplanmodel {
 	public Einsatzplanmodel(){
 		
 		
-		
+		this.dataConnection=new Datenbank_Connection();
+		this.con = dataConnection.createCon();
 		this.dataWochenplan= new Datenbank_Wochenplan();
+		this.dataMa_Schicht=new Datenbank_Ma_Schicht();
+		this.dataMitarbeiter=new Datenbank_Mitarbeiter();
+		this.dataSchicht=new Datenbank_Schicht();
+		this.dataStandardeinstellungen=new Datenbank_Standardeinstellungen();
+		this.dataTag=new Datenbank_Tag();
+		this.dataTauschanfrage=new Datenbank_Tauschanfrage();
+		this.dataTblock_Tag=new Datenbank_Tblock_Tag();
+		this.dataTerminBlockierung=new Datenbank_TerminBlockierung();
+		this.dataUserrecht=new Datenbank_Userrecht();
+		this.dataWarenhaus=new Datenbank_Warenhaus();
+		
 		
 	}
-
-	public TreeMap<Integer, Wochenplan> getWochenpläne(){
+	//public void abbonnieren(Observer view) {
 		
-		TreeMap<Integer, Wochenplan> result = null;;
+	//	this.view = view;
+	//}
+	//public void deabbonnieren(Observer view) {
+	//	this.view = view;
+	//}
+
+
+	public LinkedList<Wochenplan> getWochenplaene(){
+		
+		LinkedList<Wochenplan> result = null;;
 		try{
-			result = this.dataWochenplan.getWochenpläne();
+			result = this.dataWochenplan.getWochenplaene(con);
 			
 		}catch(Exception e){
-			System.out.println("Fehler innerhalb des Controllers:");
-			System.out.println("Fehler beim Aufruf der Methode benutzerAnmelden:");
+			System.out.println("Fehler innerhalb des Modells:");
+			System.out.println("Fehler beim Aufruf der Methode getWochenplaene:");
 			e.printStackTrace();			
 		}
 		return result;
@@ -66,11 +89,11 @@ public class Einsatzplanmodel {
 		
 		Wochenplan result = null;;
 		try{
-			result = this.dataWochenplan.getWochenplan(wpnr);
+			result = this.dataWochenplan.getWochenplan(wpnr,con);
 			
 		}catch(Exception e){
-			System.out.println("Fehler innerhalb des Controllers:");
-			System.out.println("Fehler beim Aufruf der Methode benutzerAnmelden:");
+			System.out.println("Fehler innerhalb des Modells:");
+			System.out.println("Fehler beim Aufruf der Methode getWochenplan");
 			e.printStackTrace();			
 		}
 		
@@ -81,11 +104,11 @@ public class Einsatzplanmodel {
 		
 		
 		try{
-			this.dataWochenplan.addWochenplan(wochenplan);
+			this.dataWochenplan.addWochenplan(wochenplan,con);
 			
 		}catch(Exception e){
-			System.out.println("Fehler innerhalb des Controllers:");
-			System.out.println("Fehler beim Aufruf der Methode benutzerAnmelden:");
+			System.out.println("Fehler innerhalb des modells:");
+			System.out.println("Fehler beim Aufruf der Methode addWochenplan:");
 			e.printStackTrace();			
 		}
 		
@@ -96,11 +119,11 @@ public class Einsatzplanmodel {
 		
 		
 		try{
-			this.dataWochenplan.updateWochenplan(wochenplan);
+			this.dataWochenplan.updateWochenplan(wochenplan,con);
 			
 		}catch(Exception e){
-			System.out.println("Fehler innerhalb des Controllers:");
-			System.out.println("Fehler beim Aufruf der Methode benutzerAnmelden:");
+			System.out.println("Fehler innerhalb des modells:");
+			System.out.println("Fehler beim Aufruf der Methode updateWochenplan:");
 			e.printStackTrace();			
 		}
 	}
@@ -108,11 +131,11 @@ public class Einsatzplanmodel {
 		
 		
 		try{
-			this.dataWochenplan.setzeÖffentlichstatustrue(wpnr);
+			this.dataWochenplan.setzeÖffentlichstatustrue(wpnr,con);
 			
 		}catch(Exception e){
-			System.out.println("Fehler innerhalb des Controllers:");
-			System.out.println("Fehler beim Aufruf der Methode benutzerAnmelden:");
+			System.out.println("Fehler innerhalb des modells:");
+			System.out.println("Fehler beim Aufruf der Methode setzeöffentlichtrue:");
 			e.printStackTrace();			
 		}
 	}
@@ -120,22 +143,22 @@ public class Einsatzplanmodel {
 		
 		
 		try{
-			this.dataWochenplan.setzeÖffentlichstatusfalse(wpnr);
+			this.dataWochenplan.setzeÖffentlichstatusfalse(wpnr,con);
 			
 		}catch(Exception e){
-			System.out.println("Fehler innerhalb des Controllers:");
-			System.out.println("Fehler beim Aufruf der Methode benutzerAnmelden:");
+			System.out.println("Fehler innerhalb des Modells:");
+			System.out.println("Fehler beim Aufruf der Methode setzeöffentlichfalse:");
 			e.printStackTrace();			
 		}
 	}
 	public boolean checkWochenplan(int wpnr) {
 		boolean result =false;
 		try{
-			result = this.dataWochenplan.checkWochenplan(wpnr);
+			result = this.dataWochenplan.checkWochenplan(wpnr,con);
 			
 		}catch(Exception e){
-			System.out.println("Fehler innerhalb des Controllers:");
-			System.out.println("Fehler beim Aufruf der Methode benutzerAnmelden:");
+			System.out.println("Fehler innerhalb des Modells:");
+			System.out.println("Fehler beim Aufruf der Methode checkWochenplan");
 			e.printStackTrace();			
 		}
 		return result;
@@ -143,11 +166,11 @@ public class Einsatzplanmodel {
 	public boolean deleteWochenplan(int wpnr) {
 		boolean result =false;
 		try{
-			result = this.dataWochenplan.deleteWochenplan(wpnr);
+			result = this.dataWochenplan.deleteWochenplan(wpnr,con);
 			
 		}catch(Exception e){
-			System.out.println("Fehler innerhalb des Controllers:");
-			System.out.println("Fehler beim Aufruf der Methode benutzerAnmelden:");
+			System.out.println("Fehler innerhalb des Modells:");
+			System.out.println("Fehler beim Aufruf der Methode deleteWochenplan:");
 			e.printStackTrace();			
 		}
 		return result;
@@ -155,11 +178,11 @@ public class Einsatzplanmodel {
 	public  int getNewWpnr() {
 		int result = 0;
 		try{
-			result = this.dataWochenplan.getNewWpnr();
+			result = this.dataWochenplan.getNewWpnr(con);
 			
 		}catch(Exception e){
-			System.out.println("Fehler innerhalb des Controllers:");
-			System.out.println("Fehler beim Aufruf der Methode benutzerAnmelden:");
+			System.out.println("Fehler innerhalb des Modells:");
+			System.out.println("Fehler beim Aufruf der Methode getNewWpnr:");
 			e.printStackTrace();			
 		}
 		return result;
@@ -168,24 +191,38 @@ public class Einsatzplanmodel {
 		
 		LinkedList<Ma_Schicht>  result = null;;
 		try{
-			result = this.dataMa_Schicht.getMitarbeiterausderSchicht(schichtnr);
+			result = this.dataMa_Schicht.getMitarbeiterausderSchicht(schichtnr,con);
 			
 		}catch(Exception e){
-			System.out.println("Fehler innerhalb des Controllers:");
-			System.out.println("Fehler beim Aufruf der Methode benutzerAnmelden:");
+			System.out.println("Fehler innerhalb des Modells:");
+			System.out.println("Fehler beim Aufruf der Methode MitarbeiterausderSchicht:");
 			e.printStackTrace();			
 		}
 		return result;
 	}	
+	public LinkedList<Ma_Schicht> getSchichteneinesMitarbeiters(String benutzername){
+		
+		LinkedList<Ma_Schicht>  result = null;;
+		try{
+			result = this.dataMa_Schicht.getSchichteneinesMitarbeiters(benutzername,con);
+			
+		}catch(Exception e){
+			System.out.println("Fehler innerhalb des Modells:");
+			System.out.println("Fehler beim Aufruf der Methode getSchichteneinesMitarbeiters:");
+			e.printStackTrace();			
+		}
+		return result;
+	}
+	
 	public LinkedList<Ma_Schicht> getMa_Schicht(){
 		
 		LinkedList<Ma_Schicht>  result = null;;
 		try{
-			result = this.dataMa_Schicht.getMa_Schicht();
+			result = this.dataMa_Schicht.getMa_Schicht(con);
 			
 		}catch(Exception e){
-			System.out.println("Fehler innerhalb des Controllers:");
-			System.out.println("Fehler beim Aufruf der Methode benutzerAnmelden:");
+			System.out.println("Fehler innerhalb des Modells:");
+			System.out.println("Fehler beim Aufruf der Methode getMa_schicht:");
 			e.printStackTrace();			
 		}
 		return result;
@@ -196,11 +233,11 @@ public class Einsatzplanmodel {
 		
 		
 		try{
-			this.dataMa_Schicht.addMa_Schicht(ma_schicht);
+			this.dataMa_Schicht.addMa_Schicht(ma_schicht,con);
 			
 		}catch(Exception e){
-			System.out.println("Fehler innerhalb des Controllers:");
-			System.out.println("Fehler beim Aufruf der Methode benutzerAnmelden:");
+			System.out.println("Fehler innerhalb des Modells:");
+			System.out.println("Fehler beim Aufruf der Methode addMa_Schicht:");
 			e.printStackTrace();			
 		}
 		
@@ -211,11 +248,11 @@ public class Einsatzplanmodel {
 	public boolean checkMa_Schicht(int schichtnr, String benutzername) {
 		boolean result =false;
 		try{
-			result = this.dataMa_Schicht.checkMa_Schicht(schichtnr, benutzername);
+			result = this.dataMa_Schicht.checkMa_Schicht(schichtnr, benutzername,con);
 			
 		}catch(Exception e){
-			System.out.println("Fehler innerhalb des Controllers:");
-			System.out.println("Fehler beim Aufruf der Methode benutzerAnmelden:");
+			System.out.println("Fehler innerhalb des Modells:");
+			System.out.println("Fehler beim Aufruf der Methode checkMa_Schicht:");
 			e.printStackTrace();			
 		}
 		return result;
@@ -223,11 +260,11 @@ public class Einsatzplanmodel {
 	public boolean deleteMa_Schicht(int schichtnr, String benutzername) {
 		boolean result =false;
 		try{
-			result = this.dataMa_Schicht.deleteMa_Schicht(schichtnr, benutzername);
+			result = this.dataMa_Schicht.deleteMa_Schicht(schichtnr, benutzername,con);
 			
 		}catch(Exception e){
-			System.out.println("Fehler innerhalb des Controllers:");
-			System.out.println("Fehler beim Aufruf der Methode benutzerAnmelden:");
+			System.out.println("Fehler innerhalb des Modells:");
+			System.out.println("Fehler beim Aufruf der Methode deleteMa_Schicht:");
 			e.printStackTrace();			
 		}
 		return result;
@@ -235,11 +272,11 @@ public class Einsatzplanmodel {
 	public LinkedList<Mitarbeiter> getAlleMitarbeiter() {
 		LinkedList<Mitarbeiter>  result = null;;
 		try{
-			result = this.dataMitarbeiter.getAlleMitarbeiter();
+			result = this.dataMitarbeiter.getAlleMitarbeiter(con);
 			
 		}catch(Exception e){
-			System.out.println("Fehler innerhalb des Controllers:");
-			System.out.println("Fehler beim Aufruf der Methode benutzerAnmelden:");
+			System.out.println("Fehler innerhalb des Modells:");
+			System.out.println("Fehler beim Aufruf der Methode getAlleMitarbeiter:");
 			e.printStackTrace();			
 		}
 		return result;
@@ -247,11 +284,11 @@ public class Einsatzplanmodel {
 	public Mitarbeiter getMitarbeiter(String benutzername) {
 		Mitarbeiter  result = null;;
 		try{
-			result = this.dataMitarbeiter.getMitarbeiter(benutzername);
+			result = this.dataMitarbeiter.getMitarbeiter(benutzername,con);
 			
 		}catch(Exception e){
-			System.out.println("Fehler innerhalb des Controllers:");
-			System.out.println("Fehler beim Aufruf der Methode benutzerAnmelden:");
+			System.out.println("Fehler innerhalb des Modells:");
+			System.out.println("Fehler beim Aufruf der Methode getMitarbeiter:");
 			e.printStackTrace();			
 		}
 		return result;
@@ -259,11 +296,11 @@ public class Einsatzplanmodel {
 	public boolean checkMitarbeiter(String benutzername) {
 		boolean result =false;
 		try{
-			result = this.dataMitarbeiter.checkMitarbeiter(benutzername);
+			result = this.dataMitarbeiter.checkMitarbeiter(benutzername,con);
 			
 		}catch(Exception e){
-			System.out.println("Fehler innerhalb des Controllers:");
-			System.out.println("Fehler beim Aufruf der Methode benutzerAnmelden:");
+			System.out.println("Fehler innerhalb des Modells:");
+			System.out.println("Fehler beim Aufruf der Methode checkMitarbeiter:");
 			e.printStackTrace();			
 		}
 		return result;
@@ -272,7 +309,7 @@ public class Einsatzplanmodel {
 		
 		LinkedList<Schicht> result = null;;
 		try{
-			result = this.dataSchicht.getSchichten();
+			result = this.dataSchicht.getSchichten(con);
 			
 		}catch(Exception e){
 			System.out.println("Fehler innerhalb des Modells:");
@@ -286,7 +323,7 @@ public class Einsatzplanmodel {
 		
 		Schicht result = null;;
 		try{
-			result = this.dataSchicht.getSchicht(schichtnr);
+			result = this.dataSchicht.getSchicht(schichtnr,con);
 			
 		}catch(Exception e){
 			System.out.println("Fehler innerhalb des Modells:");
@@ -301,7 +338,7 @@ public class Einsatzplanmodel {
 		
 		
 		try{
-			this.dataSchicht.addSchicht(schicht);
+			this.dataSchicht.addSchicht(schicht,con);
 			
 		}catch(Exception e){
 			System.out.println("Fehler innerhalb des Modells:");
@@ -316,7 +353,7 @@ public class Einsatzplanmodel {
 	public boolean checkSchicht(int schichtnr) {
 		boolean result =false;
 		try{
-			result = this.dataSchicht.checkSchicht(schichtnr);
+			result = this.dataSchicht.checkSchicht(schichtnr,con);
 			
 		}catch(Exception e){
 			System.out.println("Fehler innerhalb des Modells:");
@@ -328,7 +365,7 @@ public class Einsatzplanmodel {
 	public boolean deleteSchicht(int wpnr) {
 		boolean result =false;
 		try{
-			result = this.dataSchicht.deleteSchicht(wpnr);
+			result = this.dataSchicht.deleteSchicht(wpnr,con);
 			
 		}catch(Exception e){
 			System.out.println("Fehler innerhalb des Modells:");
@@ -340,7 +377,7 @@ public class Einsatzplanmodel {
 	public  int getNewSchichtnr() {
 		int result = 0;
 		try{
-			result = this.dataSchicht.getNewSchichtnr();
+			result = this.dataSchicht.getNewSchichtnr(con);
 			
 		}catch(Exception e){
 			System.out.println("Fehler innerhalb des Modells:");
@@ -352,11 +389,11 @@ public class Einsatzplanmodel {
 	public Standardeinstellungen getStandardeinstellungen() {
 		Standardeinstellungen result = null;;
 		try{
-			result = this.dataStandardeinstellungen.getStandardeinstellungen();
+			result = this.dataStandardeinstellungen.getStandardeinstellungen(con);
 			
 		}catch(Exception e){
 			System.out.println("Fehler innerhalb des Modells:");
-			System.out.println("Fehler beim Aufruf der Methode getSchicht:");
+			System.out.println("Fehler beim Aufruf der Methode getStandardeinstellungen:");
 			e.printStackTrace();			
 		}
 		return result;
@@ -365,7 +402,7 @@ public class Einsatzplanmodel {
 		
 		LinkedList<Tauschanfrage> result = null;;
 		try{
-			result = this.dataTauschanfrage.getTauschanfragen();
+			result = this.dataTauschanfrage.getTauschanfragen(con);
 			
 		}catch(Exception e){
 			System.out.println("Fehler innerhalb des Modells:");
@@ -378,7 +415,7 @@ public class Einsatzplanmodel {
 	public Tauschanfrage getTauschanfrage(int tauschnr) {
 		Tauschanfrage result = null;;
 		try{
-			result = this.dataTauschanfrage.getTauschanfrage(tauschnr);
+			result = this.dataTauschanfrage.getTauschanfrage(tauschnr,con);
 			
 		}catch(Exception e){
 			System.out.println("Fehler innerhalb des Modells:");
@@ -389,11 +426,11 @@ public class Einsatzplanmodel {
 	}	
 		
 	
-	public void addTauschanfrage(Tauschanfrage tauschanfrage){
+	public void addTauschanfrage(int tauschNr, String senderName, int senderSchichtNr, String empfaengerName, int empfaengerSchichtNr){
 		
 		
 		try{
-			this.dataTauschanfrage.addTauschanfrage(tauschanfrage);
+			this.dataTauschanfrage.addTauschanfrage(tauschNr, senderName, senderSchichtNr,  empfaengerName,empfaengerSchichtNr, con);
 			
 		}catch(Exception e){
 			System.out.println("Fehler innerhalb des Modells:");
@@ -408,7 +445,7 @@ public class Einsatzplanmodel {
 	public boolean checkTauschanfrage(int tauschnr) {
 		boolean result =false;
 		try{
-			result = this.dataTauschanfrage.checkTauschanfrage(tauschnr);
+			result = this.dataTauschanfrage.checkTauschanfrage(tauschnr,con);
 			
 		}catch(Exception e){
 			System.out.println("Fehler innerhalb des Modells:");
@@ -420,7 +457,7 @@ public class Einsatzplanmodel {
 	public boolean deleteTauschanfrage(int tauschnr) {
 		boolean result =false;
 		try{
-			result = this.dataTauschanfrage.deleteTauschanfrage(tauschnr);
+			result = this.dataTauschanfrage.deleteTauschanfrage(tauschnr,con);
 			
 		}catch(Exception e){
 			System.out.println("Fehler innerhalb des Modells:");
@@ -433,7 +470,7 @@ public class Einsatzplanmodel {
 		
 		
 		try{
-			this.dataTauschanfrage.updateTauschanfrage(tauschanfrage);
+			this.dataTauschanfrage.updateTauschanfrage(tauschanfrage,con);
 			
 		}catch(Exception e){
 			System.out.println("Fehler innerhalb des Modells:");
@@ -445,18 +482,18 @@ public class Einsatzplanmodel {
 		
 		
 		try{
-			this.dataTauschanfrage.bestätigeTauschanfrage(tauschnr);
+			this.dataTauschanfrage.bestätigeTauschanfrage(tauschnr,con);
 			
 		}catch(Exception e){
 			System.out.println("Fehler innerhalb des Modells:");
-			System.out.println("Fehler beim Aufruf der Methode bestätzigeTauschanfrage:");
+			System.out.println("Fehler beim Aufruf der Methode bestätigeTauschanfrage:");
 			e.printStackTrace();			
 		}
 	}
 	protected  int getNewTauschnr() {
 		int result = 0;
 		try{
-			result = this.dataTauschanfrage.getNewTauschnr();
+			result = this.dataTauschanfrage.getNewTauschnr(con);
 			
 		}catch(Exception e){
 			System.out.println("Fehler innerhalb des Modells:");
@@ -468,11 +505,11 @@ public class Einsatzplanmodel {
 	public LinkedList<Tag> getTage() {	
 		LinkedList<Tag> result = null;;
 		try{
-			result = this.dataTag.getTage();
+			result = this.dataTag.getTage(con);
 			
 		}catch(Exception e){
 			System.out.println("Fehler innerhalb des Modells:");
-			System.out.println("Fehler beim Aufruf der Methode getTauschanfragen:");
+			System.out.println("Fehler beim Aufruf der Methode getTage:");
 			e.printStackTrace();			
 		}
 		return result;
@@ -482,7 +519,7 @@ public class Einsatzplanmodel {
 		
 		
 		try{
-			this.dataTag.addTag(tag);
+			this.dataTag.addTag(tag,con);
 			
 		}catch(Exception e){
 			System.out.println("Fehler innerhalb des Modells:");
@@ -497,7 +534,7 @@ public class Einsatzplanmodel {
 	public boolean checkTag(String tbez, int wpnr) {
 		boolean result =false;
 		try{
-			result = this.dataTag.checkTag(tbez,wpnr);
+			result = this.dataTag.checkTag(tbez,wpnr,con);
 			
 		}catch(Exception e){
 			System.out.println("Fehler innerhalb des Modells:");
@@ -509,7 +546,7 @@ public class Einsatzplanmodel {
 	public boolean deleteTag(int wpnr) {
 		boolean result =false;
 		try{
-			result = this.dataTag.deleteTag(wpnr);
+			result = this.dataTag.deleteTag(wpnr,con);
 			
 		}catch(Exception e){
 			System.out.println("Fehler innerhalb des Modells:");
@@ -522,7 +559,7 @@ public class Einsatzplanmodel {
 		
 		
 		try{
-			this.dataTag.updateTag(tag);
+			this.dataTag.updateTag(tag,con);
 			
 		}catch(Exception e){
 			System.out.println("Fehler innerhalb des Modells:");
@@ -534,7 +571,7 @@ public class Einsatzplanmodel {
 		
 		
 		try{
-			this.dataTag.setzeFeiertagtrue(tbez,wpnr);
+			this.dataTag.setzeFeiertagtrue(tbez,wpnr,con);
 			
 		}catch(Exception e){
 			System.out.println("Fehler innerhalb des Modells:");
@@ -546,7 +583,7 @@ public class Einsatzplanmodel {
 		
 		
 		try{
-			this.dataTag.setzeFeiertagfalse(tbez,wpnr);
+			this.dataTag.setzeFeiertagfalse(tbez,wpnr,con);
 			
 		}catch(Exception e){
 			System.out.println("Fehler innerhalb des Modells:");
@@ -557,11 +594,11 @@ public class Einsatzplanmodel {
 	public LinkedList<Tblock_Tag> getAlleTblock_Tag() {	
 		LinkedList<Tblock_Tag> result = null;;
 		try{
-			result = this.dataTblock_Tag.getAlleTblock_Tag();
+			result = this.dataTblock_Tag.getAlleTblock_Tag(con);
 			
 		}catch(Exception e){
 			System.out.println("Fehler innerhalb des Modells:");
-			System.out.println("Fehler beim Aufruf der Methode getTauschanfragen:");
+			System.out.println("Fehler beim Aufruf der Methode getAlleTblock_Tag:");
 			e.printStackTrace();			
 		}
 		return result;
@@ -569,7 +606,7 @@ public class Einsatzplanmodel {
 	public Tblock_Tag getTblock_TagTB(int tblocknr) {	
 		Tblock_Tag result = null;;
 		try{
-			result = this.dataTblock_Tag.getTblock_TagTB(tblocknr);
+			result = this.dataTblock_Tag.getTblock_TagTB(tblocknr,con);
 			
 		}catch(Exception e){
 			System.out.println("Fehler innerhalb des Modells:");
@@ -581,7 +618,7 @@ public class Einsatzplanmodel {
 	public Tblock_Tag getTblock_TagT(String tbez,int wpnr) {	
 		Tblock_Tag result = null;;
 		try{
-			result = this.dataTblock_Tag.getTblock_TagT(tbez, wpnr);
+			result = this.dataTblock_Tag.getTblock_TagT(tbez, wpnr,con);
 			
 		}catch(Exception e){
 			System.out.println("Fehler innerhalb des Modells:");
@@ -594,7 +631,7 @@ public class Einsatzplanmodel {
 		
 		
 		try{
-			this.dataTblock_Tag.addTblock_Tag(tblocktag);
+			this.dataTblock_Tag.addTblock_Tag(tblocktag,con);
 			
 		}catch(Exception e){
 			System.out.println("Fehler innerhalb des Modells:");
@@ -609,7 +646,7 @@ public class Einsatzplanmodel {
 	public boolean checkTblock_TagTB(int tblocknr) {
 		boolean result =false;
 		try{
-			result = this.dataTblock_Tag.checkTblock_TagTB(tblocknr);
+			result = this.dataTblock_Tag.checkTblock_TagTB(tblocknr,con);
 			
 		}catch(Exception e){
 			System.out.println("Fehler innerhalb des Modells:");
@@ -621,7 +658,7 @@ public class Einsatzplanmodel {
 	public boolean checkTblock_TagTA(String tbez, int wpnr) {
 		boolean result =false;
 		try{
-			result = this.dataTblock_Tag.checkTblock_TagTA(tbez,wpnr);
+			result = this.dataTblock_Tag.checkTblock_TagTA(tbez,wpnr,con);
 			
 		}catch(Exception e){
 			System.out.println("Fehler innerhalb des Modells:");
@@ -634,7 +671,7 @@ public class Einsatzplanmodel {
 	public boolean deleteTblock_Tag(int tblocknr) {
 		boolean result =false;
 		try{
-			result = this.dataTblock_Tag.deleteTblock_Tag(tblocknr);
+			result = this.dataTblock_Tag.deleteTblock_Tag(tblocknr,con);
 			
 		}catch(Exception e){
 			System.out.println("Fehler innerhalb des Modells:");
@@ -647,11 +684,11 @@ public class Einsatzplanmodel {
 		
 		LinkedList<TerminBlockierung> result = null;;
 		try{
-			result = this.dataTerminBlockierung.getTerminBlockierungen();
+			result = this.dataTerminBlockierung.getTerminBlockierungen(con);
 			
 		}catch(Exception e){
 			System.out.println("Fehler innerhalb des Modells:");
-			System.out.println("Fehler beim Aufruf der Methode getTerminBlockierung:");
+			System.out.println("Fehler beim Aufruf der Methode getTerminBlockierungen:");
 			e.printStackTrace();			
 		}
 		return result;
@@ -662,7 +699,7 @@ public class Einsatzplanmodel {
 		
 		
 		try{
-			this.dataTerminBlockierung.addTerminBlockierung(terminblockierung);
+			this.dataTerminBlockierung.addTerminBlockierung(terminblockierung,con);
 			
 		}catch(Exception e){
 			System.out.println("Fehler innerhalb des Modells:");
@@ -677,7 +714,7 @@ public class Einsatzplanmodel {
 	public boolean checkTerminBlockierung(int tblocknr) {
 		boolean result =false;
 		try{
-			result = this.dataTerminBlockierung.checkTerminBlockierung(tblocknr);
+			result = this.dataTerminBlockierung.checkTerminBlockierung(tblocknr,con);
 			
 		}catch(Exception e){
 			System.out.println("Fehler innerhalb des Modells:");
@@ -689,7 +726,7 @@ public class Einsatzplanmodel {
 	public boolean deleteTerminBlockierung(int tblocknr) {
 		boolean result =false;
 		try{
-			result = this.dataTerminBlockierung.deleteTerminBlockierung(tblocknr);
+			result = this.dataTerminBlockierung.deleteTerminBlockierung(tblocknr,con);
 			
 		}catch(Exception e){
 			System.out.println("Fehler innerhalb des Modells:");
@@ -701,7 +738,7 @@ public class Einsatzplanmodel {
 	public  int getNewTblocknr() {
 		int result = 0;
 		try{
-			result = this.dataTerminBlockierung.getNewTblocknr();
+			result = this.dataTerminBlockierung.getNewTblocknr(con);
 			
 		}catch(Exception e){
 			System.out.println("Fehler innerhalb des Modells:");
@@ -713,7 +750,7 @@ public class Einsatzplanmodel {
 	public LinkedList<Warenhaus> getWarenhaus() {
 		LinkedList<Warenhaus> result = null;;
 		try{
-			result = this.dataWarenhaus.getWarenhaus();
+			result = this.dataWarenhaus.getWarenhaus(con);
 			
 		}catch(Exception e){
 			System.out.println("Fehler innerhalb des Modells:");
@@ -727,7 +764,7 @@ public class Einsatzplanmodel {
 		
 		
 		try{
-			this.dataWarenhaus.addWarenhaus(warenhaus);
+			this.dataWarenhaus.addWarenhaus(warenhaus,con);
 			
 		}catch(Exception e){
 			System.out.println("Fehler innerhalb des Modells:");
@@ -735,16 +772,29 @@ public class Einsatzplanmodel {
 			e.printStackTrace();			
 		}		
 	}
-	public void setzeBenutzerrolleAdmin() {
+	public void wechselBenutzerrolle(String benutzername) {
 		try{
-			this.dataUserrecht.setzeBenutzerrolleAdmin();
+			this.dataMitarbeiter.wechselBenutzerrolle(benutzername,con);
 			
 		}catch(Exception e){
 			System.out.println("Fehler innerhalb des Modells:");
-			System.out.println("Fehler beim Aufruf der Methode setzeBenutzerrolleAdmin:");
+			System.out.println("Fehler beim Aufruf der Methode wechselBenutzerrolle:");
 			e.printStackTrace();			
 		}
 	}
+	public LinkedList<Userrecht> getUserrecht() {
+		LinkedList<Userrecht> result=null;
+		try{
+			result=this.dataUserrecht.getUserrecht(con);
+			
+		}catch(Exception e){
+			System.out.println("Fehler innerhalb des Modells:");
+			System.out.println("Fehler beim Aufruf der Methode wechselBenutzerrolle:");
+			e.printStackTrace();			
+		}
+		return result;
+	}
+	
 }
 
 

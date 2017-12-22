@@ -213,7 +213,7 @@ class Datenbank_Mitarbeiter {
 			return null;
 		}
 		}}
-		protected void WechselBenutzerrolle(String benutzername, Connection con) {
+		protected void wechselBenutzerrolle(String benutzername, Connection con) {
 
 			Datenbank_Mitarbeiter ma = new Datenbank_Mitarbeiter();
 			Mitarbeiter m = ma.getMitarbeiter(benutzername,con);
