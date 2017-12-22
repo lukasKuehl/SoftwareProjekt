@@ -243,12 +243,14 @@ import data.Ma_Schicht;
 		Statement stmt = null;
 		ResultSet rs = null;
 		String sqlStatement = "DELETE from Ma_Schicht where schichtnr = '"+schichtnr+"' and benutzername= '"+benutzername+"'";
+		
 		try {
+			con.setAutoCommit(false);
 			stmt = con.createStatement();
 			stmt.execute(sqlStatement);
 			con.commit();
+			
 			con.setAutoCommit(true);
-
 			return true;
 		}			catch (SQLException sql) {
 			System.err.println("Methode deleteMa_Schicht SQL-Fehler: " + sql.getMessage());

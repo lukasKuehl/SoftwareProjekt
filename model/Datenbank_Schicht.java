@@ -197,7 +197,7 @@ class Datenbank_Schicht {
 		Statement stmt = null;
 		ResultSet rs = null;
 
-		String sqlStatement = "select Schichtnr,Tbez, Anzschicht, Anfanguhrzeit, Endeuhrzeit from Schicht Where Schichtnr ="+schichtnr;
+		String sqlStatement = "select Schichtnr,Tbez,Wpnr, Anzschicht, Anfanguhrzeit, Endeuhrzeit from Schicht Where Schichtnr ="+schichtnr;
 
 		try {
 			stmt = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
