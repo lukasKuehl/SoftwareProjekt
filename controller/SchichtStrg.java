@@ -110,57 +110,16 @@ class SchichtStrg {
 			maxDauer = m.getMaxstunden();
 					
 			//Bereits vorhande Schichten werden addiert um momentane Auslastung zu ermitteln
-			for(Schicht schicht: mitarbeiterSchichten){
-			
-				//Lese den Zeitraum für die Schicht aus dem Schichtobjekt
-				String anfangsZeit = schicht.getAnfanguhrzeit();
-				String endZeit = schicht.getEndeuhrzeit();
-				
-				try{
-					
-					//Konvertiere die zwei Zeitpunkte ins Date-Format
-					SimpleDateFormat sdf = new SimpleDateFormat("hh:mm");
-					Date anfangDate = sdf.parse(anfangsZeit);
-					Date endDate = sdf.parse(endZeit);
-					
-					//Berechne die Differenz der beiden Zeitpunkt
-					long dauerSchichtLong = endDate.getTime() - anfangDate.getTime();
-					
-					//Rechne den Zeitunterschied in Std. um
-					int dauerSchichtInt  =  Math.round((long) dauerSchichtLong / (1000 * 60 * 60));
-					
-					dauer = dauer + dauerSchichtInt;
-					
-					
-				}catch(Exception e){
-					System.out.println("Fehler beim Bestimmen der Dauer von der Schicht: " + schicht.getSchichtnr());
-				}			
+			for(Schicht schicht: mitarbeiterSchichten){			
+				dauer = dauer + getSchichtDauer(schicht);	
 			}
 			
 			//Addieren der zusätzlich notwendigen Auslastung für die neue Schicht
 			
-			Schicht neueSchicht = this.myModel.getSchicht(schichtNr);
+			Schicht neueSchicht = this.myModel.getSchicht(schichtNr);			
+			dauer = dauer + getSchichtDauer(neueSchicht);
 			
-			String anfangsZeit = neueSchicht.getAnfanguhrzeit();
-			String endZeit = neueSchicht.getEndeuhrzeit();			
-			
-			try{
-				
-				SimpleDateFormat sdf = new SimpleDateFormat("hh:mm");
-				Date anfangDate = sdf.parse(anfangsZeit);
-				Date endDate = sdf.parse(endZeit);
-				
-				long dauerSchichtLong = endDate.getTime() - anfangDate.getTime();
-				
-				int dauerSchichtInt  =  Math.round((long) dauerSchichtLong / (1000 * 60 * 60));
-				
-				dauer = dauer + dauerSchichtInt;
-				
-				
-			}catch(Exception e){
-				System.out.println("Fehler beim Bestimmen der Dauer von der neuen Schicht: " + neueSchicht.getSchichtnr());
-			}		
-			
+			//Prüfe, ob durch die zusätzliche Schicht nicht die maximale Kapazität für den Mitarbeiter überschritten wurde.
 			if(dauer <= maxDauer ){
 								
 				LinkedList<TerminBlockierung> alleTerminBlockierungen = this.myModel.getTerminBlockierungen();
@@ -316,4 +275,40 @@ class SchichtStrg {
 		return rueckgabe;
 		
 	}	
+	
+	/**
+	 * @author Lukas Kühl
+	 * @info Hilfsmethode zur Berechnung der Dauer einen bestimmten Schicht(in Std.)
+	 */
+	private int getSchichtDauer(Schicht s){
+		
+		int dauer = 0;
+		
+		//Lese den Zeitraum für die Schicht aus dem Schichtobjekt
+		String anfangsZeit = s.getAnfanguhrzeit();
+		String endZeit = s.getEndeuhrzeit();
+		
+		try{
+			
+			//Konvertiere die zwei Zeitpunkte ins Date-Format
+			SimpleDateFormat sdf = new SimpleDateFormat("hh:mm");
+			Date anfangDate = sdf.parse(anfangsZeit);
+			Date endDate = sdf.parse(endZeit);
+			
+			//Berechne die Differenz der beiden Zeitpunkt
+			long dauerSchichtLong = endDate.getTime() - anfangDate.getTime();
+			
+			//Rechne den Zeitunterschied in Std. um
+			int dauerSchichtInt  =  Math.round((long) dauerSchichtLong / (1000 * 60 * 60));
+			
+			dauer = dauer + dauerSchichtInt;
+			
+			
+		}catch(Exception e){
+			System.out.println("Fehler beim Bestimmen der Dauer von der Schicht: " + s.getSchichtnr());
+		}			
+		
+		return dauer;
+	}
+	
 }
