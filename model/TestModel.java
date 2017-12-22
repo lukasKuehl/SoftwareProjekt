@@ -54,6 +54,7 @@ public class TestModel {
 		}
 		else{
 			System.out.println("fail delete maschicht");
+			
 		}
 		int nextnr = wps.getNewWpnr();
 		

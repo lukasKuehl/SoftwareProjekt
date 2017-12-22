@@ -193,6 +193,7 @@ class Datenbank_Schicht {
 		if (!checkSchicht(schichtnr,con)){
 			return null;
 		}
+		
 		else{
 		Statement stmt = null;
 		ResultSet rs = null;

@@ -250,6 +250,7 @@ import data.Ma_Schicht;
 			stmt.execute(sqlStatement);
 			con.commit();
 			
+			
 			con.setAutoCommit(true);
 			return true;
 		}			catch (SQLException sql) {
