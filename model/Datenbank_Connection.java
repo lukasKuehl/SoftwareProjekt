@@ -10,12 +10,14 @@ public class Datenbank_Connection{
 
 	private Connection con = null;	
 
-	
+	public Datenbank_Connection(){
+		
+	}
 	protected  Connection createCon() {
 		
 		try{
 			
-			return  DriverManager.getConnection("jdbc:mysql://localhost:3306/sys?autoReconnect=true&useSSL=false", "root", "famasb0b12");
+			return  DriverManager.getConnection("jdbc:mysql://localhost:3306/apreljevic?autoReconnect=true&useSSL=false", "root", "famasb0b12");
 
 		}catch(SQLException sqle){
 			

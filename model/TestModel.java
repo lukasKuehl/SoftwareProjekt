@@ -19,6 +19,20 @@ public class TestModel {
 			+ "  " + d.getMehrbesetzung()+ "  " + d.getSchlieﬂzeit()+ "  " + d.getHauptzeitbeginn());
 		
 		}
+		LinkedList<Tag>  tags = wps.getTage();
+		
+		for(Tag t:tags){
+			
+			System.out.println( t.getTbez() + "  " + t.getWpnr()+ "   " + t.isFeiertag());
+		
+		}
+		LinkedList<Schicht>  sch = wps.getSchichten();
+		
+		for(Schicht scht:sch){
+			
+			System.out.println( scht.getAnfanguhrzeit() + "  " + scht.getEndeuhrzeit()+ "   " + scht.getSchichtnr());
+		
+		}
 
 	}
 

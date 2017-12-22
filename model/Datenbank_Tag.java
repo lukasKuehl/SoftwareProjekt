@@ -279,10 +279,10 @@ class Datenbank_Tag {
 
 			
 			Datenbank_Schicht schicht = new Datenbank_Schicht();
-			LinkedList<Schicht> schichtList = schicht.getSchichten(con);
+			//LinkedList<Schicht> schichtList = schicht.getSchichten(con);
 			
 			Datenbank_Tblock_Tag tblock_tag = new Datenbank_Tblock_Tag();
-			LinkedList<Tblock_Tag> tblocktagList = tblock_tag.getAlleTblock_Tag(con);
+			//LinkedList<Tblock_Tag> tblocktagList = tblock_tag.getAlleTblock_Tag(con);
 			
 			Statement stmt = null;
 			ResultSet rs = null;
@@ -298,18 +298,18 @@ class Datenbank_Tag {
 					Tag t = new Tag(rs.getString("Tbez"),rs.getInt("Wpnr"),rs.getBoolean("Feiertag"));
 
 					
-					for (Schicht sch : schichtList) {
-						if (sch.getWpnr() == t.getWpnr()&& sch.getTbez() == t.getTbez()) {
-							t.setLinkedListSchichten(sch);
-						}
-					}
-					for (Tblock_Tag tbt : tblocktagList) {
-						if (tbt.getWpnr() == t.getWpnr()&& tbt.getTbez() == t.getTbez()) {
-							t.setLinkedListTblock_Tag(tbt);
-						}
-					}
+				//	for (Schicht sch : schichtList) {
+				//		if (sch.getWpnr() == t.getWpnr()&& sch.getTbez() == t.getTbez()) {
+				//			t.setLinkedListSchichten(sch);
+				//		}
+				//	}
+				//	for (Tblock_Tag tbt : tblocktagList) {
+				//		if (tbt.getWpnr() == t.getWpnr()&& tbt.getTbez() == t.getTbez()) {
+				//			t.setLinkedListTblock_Tag(tbt);
+				//		}
+				//	}
 					
-
+					tagList.add(t);
 				}
 
 				rs.close();
