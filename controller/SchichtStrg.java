@@ -112,17 +112,21 @@ class SchichtStrg {
 			//Bereits vorhande Schichten werden addiert um momentane Auslastung zu ermitteln
 			for(Schicht schicht: mitarbeiterSchichten){
 			
+				//Lese den Zeitraum für die Schicht aus dem Schichtobjekt
 				String anfangsZeit = schicht.getAnfanguhrzeit();
 				String endZeit = schicht.getEndeuhrzeit();
 				
 				try{
 					
+					//Konvertiere die zwei Zeitpunkte ins Date-Format
 					SimpleDateFormat sdf = new SimpleDateFormat("hh:mm");
 					Date anfangDate = sdf.parse(anfangsZeit);
 					Date endDate = sdf.parse(endZeit);
 					
+					//Berechne die Differenz der beiden Zeitpunkt
 					long dauerSchichtLong = endDate.getTime() - anfangDate.getTime();
 					
+					//Rechne den Zeitunterschied in Std. um
 					int dauerSchichtInt  =  Math.round((long) dauerSchichtLong / (1000 * 60 * 60));
 					
 					dauer = dauer + dauerSchichtInt;
