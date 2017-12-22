@@ -1,8 +1,8 @@
 package data;
 
 public class Userrecht {
-	private String job;
-	private String benutzerrolle;
+	private String job=null;
+	private String benutzerrolle=null;
 	/**
 	 * @author Anes Preljevic
 	 * @info Erzeugen eines Objektes vom Typ Userrecht und 

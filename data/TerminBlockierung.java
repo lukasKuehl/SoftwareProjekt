@@ -1,14 +1,14 @@
 package data;
 
 public class TerminBlockierung {
-	private int tblocknr;
-	private String benutzername;
-	private String bbez;
-	private String anfzeitraum;
-	private String endzeitraum;
-	private String anfanguhrzeit;
-	private String endeuhrzeit;
-	private String grund;
+	private int tblocknr=0;
+	private String benutzername=null;
+	private String bbez=null;
+	private String anfzeitraum=null;
+	private String endzeitraum=null;
+	private String anfanguhrzeit=null;
+	private String endeuhrzeit=null;
+	private String grund=null;
 	
 	/**
 	 * @author Anes Preljevic
@@ -26,6 +26,7 @@ public class TerminBlockierung {
 		this.endzeitraum=endzeitraum;
 		this.anfanguhrzeit=anfanguhrzeit;
 		this.endeuhrzeit=endeuhrzeit;
+		this.grund=grund;
 	}
 
 	public int getTblocknr() {

@@ -6,17 +6,17 @@ import data.Tag;
 
 public class Wochenplan {
 
-	private int wpnr;
-	private boolean öffentlichstatus;
-	private String öffnungszeit;
-	private String schließzeit;
-	private String hauptzeitbeginn;
-	private String hauptzeitende;
-	private String benutzername;
-	private int minanzinfot;
-	private int minanzinfow;
-	private int minanzkasse;
-	private int mehrbesetzung;
+	private int wpnr=0;
+	private boolean öffentlichstatus=false;
+	private String öffnungszeit=null;
+	private String schließzeit=null;
+	private String hauptzeitbeginn=null;
+	private String hauptzeitende=null;
+	private String benutzername=null;
+	private int minanzinfot=0;
+	private int minanzinfow=0;
+	private int minanzkasse=0;
+	private int mehrbesetzung=0;
 	
 	private LinkedList<Tag> ll_tag = new LinkedList<Tag>();
 	

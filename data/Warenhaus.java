@@ -1,9 +1,9 @@
 package data;
 
 public class Warenhaus {
-	private String whname;
-	private int anzkasse;
-	private int anzinfo;
+	private String whname=null;
+	private int anzkasse=0;
+	private int anzinfo=0;
 	/**
 	 * @author Anes Preljevic
 	 * @info Erzeugen eines Objektes vom Typ Warenhaus und 

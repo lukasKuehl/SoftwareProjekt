@@ -3,9 +3,9 @@ package data;
 import java.util.LinkedList;
 
 public class Tblock_Tag {
-	private int tblocknr;
-	private String tbez;
-	private int wpnr;
+	private int tblocknr=0;
+	private String tbez=null;
+	private int wpnr=0;
 	private LinkedList<TerminBlockierung> ll_termin = new LinkedList<TerminBlockierung>();
 	
 	/**
