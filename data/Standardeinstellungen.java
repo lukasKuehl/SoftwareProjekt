@@ -4,15 +4,14 @@ import java.util.LinkedList;
 
 public class Standardeinstellungen {
 	
-	private String öffnungszeit;
-	private String schließzeit;
-	private String hauptzeitbeginn;
-	private String hauptzeitende;
-	private int anzschicht;
-	private int mehrbesetzungkasse;
-	private int minanzkasse;
-	private int minanzinfot;
-	private int minanzinfow;
+	private String öffnungszeit=null;
+	private String schließzeit=null;
+	private String hauptzeitbeginn=null;
+	private String hauptzeitende=null;
+	private int mehrbesetzung=0;
+	private int minanzkasse=0;
+	private int minanzinfot=0;
+	private int minanzinfow=0;
 	
 	/**
 	 * @author Anes Preljevic
@@ -21,13 +20,12 @@ public class Standardeinstellungen {
 	 */
 	
 	public Standardeinstellungen(String öffnungszeit, String schließzeit, String hauptzeitbeginn,
-			String hauptzeitende, int anzschicht, int mehrbesetzungkasse, int minanzkasse, int minanzinfot, int minanzinfow) {
+			String hauptzeitende,  int mehrbesetzung, int minanzkasse, int minanzinfot, int minanzinfow) {
 		this.öffnungszeit=öffnungszeit;
 		this.schließzeit=schließzeit;
 		this.hauptzeitbeginn=hauptzeitbeginn;
 		this.hauptzeitende=hauptzeitende;
-		this.anzschicht=anzschicht;
-		this.mehrbesetzungkasse=mehrbesetzungkasse;
+		this.mehrbesetzung=mehrbesetzung;
 		this.minanzkasse=minanzkasse;
 		this.minanzinfot=minanzinfot;
 		this.minanzinfow=minanzinfow;
@@ -65,20 +63,13 @@ public class Standardeinstellungen {
 		this.hauptzeitende = hauptzeitende;
 	}
 
-	public int getAnzschicht() {
-		return anzschicht;
+
+	public int getMehrbesetzung() {
+		return mehrbesetzung;
 	}
 
-	public void setAnzschicht(int anzschicht) {
-		this.anzschicht = anzschicht;
-	}
-
-	public int getMehrbesetzungkasse() {
-		return mehrbesetzungkasse;
-	}
-
-	public void setMehrbesetzungkasse(int mehrbesetzungkasse) {
-		this.mehrbesetzungkasse = mehrbesetzungkasse;
+	public void setMehrbesetzung(int mehrbesetzung) {
+		this.mehrbesetzung = mehrbesetzung;
 	}
 
 	public int getMinanzkasse() {

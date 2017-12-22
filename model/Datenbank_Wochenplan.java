@@ -10,24 +10,19 @@ import java.sql.Statement;
 import java.util.LinkedList;
 import java.util.TreeMap;
 
-
-
+import data.Schicht;
 import data.Tag;
 
 
 import data.Wochenplan;
 
 class Datenbank_Wochenplan {
-	Datenbank_Connection db_con = new Datenbank_Connection();
-	Connection con = db_con.getCon();
-
-
 
 	/**
 	 * @Thomas Friesen
 	 * @info Die Methode fügt einen Datensatz in die Wochenplan Tabelle hinzu.
 	 */
-	protected Boolean addWochenplan(Wochenplan wochenplan) {
+	protected Boolean addWochenplan(Wochenplan wochenplan,Connection con) {
 		boolean success = false;
 		
 		String sqlStatement = null;
@@ -68,7 +63,7 @@ class Datenbank_Wochenplan {
 			
 			con.setAutoCommit(false);
 
-			if (checkWochenplan(wpnr)) {
+			if (checkWochenplan(wpnr,con)) {
 				System.out.println("Der Wochenplan ist bereits in der Tabelle eingetragen");
 			}
 			else{
@@ -135,14 +130,13 @@ class Datenbank_Wochenplan {
 		return success;
 	}
 
-	
 	/**
 	 * @author Anes Preljevic
 	 * @info Prüft ob es zu der eingegebenen Wochenplannr einen Wochenplan gibt,
 	 * bei existenz return true sonst false
 	 */
 	
-	protected boolean checkWochenplan(int wpnr) {
+	protected boolean checkWochenplan(int wpnr,Connection con) {
 		Statement stmt = null;
 		ResultSet rs = null;
 		String sqlQuery = "select wpnr from Wochenplan where wpnr = " + wpnr;
@@ -172,7 +166,7 @@ class Datenbank_Wochenplan {
 	 */
 	
 	
-	protected void updateWochenplan(Wochenplan wochenplan) {
+	protected void updateWochenplan(Wochenplan wochenplan,Connection con) {
 
 		int wpnr = wochenplan.getWpnr();
 		boolean öffentlichstatus = wochenplan.isÖffentlichstatus();
@@ -216,7 +210,7 @@ class Datenbank_Wochenplan {
 	 * @author Anes Preljevic
 	 * @info Ändert den Öffentlichstatus auf true, bei der Woche mit der übergebenen Wochenplannr
 	 */
-	protected void setzeÖffentlichstatustrue(int wpnr) {
+	protected void setzeÖffentlichstatustrue(int wpnr,Connection con) {
 		
 		Statement stmt = null;
 		String sqlStatement;
@@ -256,11 +250,11 @@ class Datenbank_Wochenplan {
 	 * @info Ändert den Öffentlichstatus auf false, bei der Woche mit der übergebenen Wochenplannr
 	 */
 	
-	protected void setzeÖffentlichstatusfalse(int wpnr) {
+	protected void setzeÖffentlichstatusfalse(int wpnr,Connection con) {
 		
 		Statement stmt = null;
 		String sqlStatement;
-		sqlStatement = "UPDATE WOCHENPLAN SET Oeffentlichstatus = false WHERE Wpnr =" + wpnr;
+		sqlStatement = "UPDATE WOCHENPLAN SET Öffentlichkeitsstatus = false WHERE Wpnr =" + wpnr;
 		
 		
 		try {
@@ -298,39 +292,33 @@ class Datenbank_Wochenplan {
 	 * werden in einer LinkedList gespeichert.( in diesen werden zusätzlich die zugehörigen Schichten ausgelesen) 
 	 * Diese Liste ist in der TreeMap enthalten welche außerdem den Ausgabewert darstellt.
 	 */
-	protected TreeMap<Integer , Wochenplan> getWochenpläne() {
+	protected LinkedList<Wochenplan> getWochenplaene(Connection con) {
 
 		Datenbank_Tag tag = new Datenbank_Tag();
-		//Datenbank_Schicht schicht = new Datenbank_Schicht();
+		
 
-		LinkedList<Tag> tageList = tag.getTage();;
-		//LinkedList<Schicht> schichtList = schicht.getSchicht();
+		LinkedList<Tag> tageList = tag.getTage(con);;
+	
 
 		Statement stmt = null;
 		ResultSet rs = null;
-		String sqlStatement = "select Wpnr, Oeffentlichstatus, Oeffnungszeit, Schließzeit, Hauptzeitbeginn, Hauptzeitende, Benutzername,"
+		String sqlStatement = "select Wpnr, Öffentlichkeitsstatus, Öffnungszeit, Schließzeit, Hauptzeitbeginn, Hauptzeitende, Benutzername,"
 				+ "Minanzinfot, Minanzinfow, Minanzkasse, Mehrbesetzung from Wochenplan";
 
 		try {
+		
 			stmt = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
 			rs = stmt.executeQuery(sqlStatement);
 
-			TreeMap<Integer, Wochenplan> wochenplanList = new TreeMap<>();
+			LinkedList<Wochenplan> wochenplanList = new LinkedList<>();
 
 			while (rs.next()) {
-				Wochenplan wp = new Wochenplan(0, false, sqlStatement, sqlStatement, sqlStatement, sqlStatement, sqlStatement, 0, 0, 0, 0);
+				
+				Wochenplan wp = new Wochenplan(rs.getInt("Wpnr"),rs.getBoolean("Öffentlichkeitsstatus"),rs.getTime("Öffnungszeit").toString(),
+						rs.getTime("SchließZeit").toString(),rs.getTime("Hauptzeitbeginn").toString(),rs.getTime("Hauptzeitende").toString(),
+						rs.getString("Benutzername"),rs.getInt("Minanzinfot"),
+						rs.getInt("Minanzinfow"),rs.getInt("Minanzkasse"),rs.getInt("Mehrbesetzung"));
 
-				wp.setWpnr(rs.getInt("Wpnr"));
-				wp.setÖffentlichstatus(rs.getBoolean("Oeffentlichstatus"));
-				wp.setÖffnungszeit(rs.getString("Oeffnungszeit"));
-				wp.setSchließzeit(rs.getString("Schließzeit"));
-				wp.setHauptzeitbeginn(rs.getString("Hauptzeitbeginn"));
-				wp.setHauptzeitende(rs.getString("Hauptzeitende"));
-				wp.setBenutzername(rs.getString("Benutzername"));
-				wp.setMinanzinfot(rs.getInt("Minanzinfot"));
-				wp.setMinanzinfow(rs.getInt("Minanzinfow"));
-				wp.setMinanzkasse(rs.getInt("Minanzkasse"));
-				wp.setMehrbesetzung(rs.getInt("Mehrbesetzung"));
 				for (Tag ta : tageList) {
 					if (ta.getWpnr() == wp.getWpnr()) {
 						wp.setLinkedListTage(ta);
@@ -341,19 +329,20 @@ class Datenbank_Wochenplan {
 				//			if (sch.getWpnr() == ta.getWpnr()&&(sch.getWpnr() == ta.getWpnr()&& sch.getTbez() == ta.getTbez())) {
 					//			s.setLinkedListSchichten(sch);
 						//	}
-						//}
-					}
+						}
+					
 				}
 
-				wochenplanList.put(wp.getWpnr(), wp);
+				wochenplanList.add(wp);
+			
 			}
-
 			rs.close();
 			stmt.close();
 
 			return wochenplanList;
 
 		} catch (SQLException sql) {
+			System.err.println("Methode getWochenplaene SQL-Fehler: " + sql.getMessage());
 			return null;
 		}
 	}
@@ -363,48 +352,39 @@ class Datenbank_Wochenplan {
 		*  Die zugehörigen Tage werden in einer LinkedList gespeichert.( in diesen werden zusätzlich die zugehörigen Schichten ausgelesen) 
 		* Diese Liste ist in dem Objekt enthalten welches außerdem den Ausgabewert darstellt.
 		*/
-	protected Wochenplan getWochenplan(int wpnr) {
+	protected Wochenplan getWochenplan(int wpnr,Connection con) {
 
 		Datenbank_Tag tag = new Datenbank_Tag();
-		LinkedList<Tag> tageList = tag.getTage();;
+		LinkedList<Tag> tageList = tag.getTage(con);;
 	
 		
-		if (!checkWochenplan(wpnr)){
+		if (!checkWochenplan(wpnr,con)){
 			return null;
 		}
 		else{
 		Statement stmt = null;
 		ResultSet rs = null;
-		String sqlStatement = "select Wpnr, Oeffentlichstatus, Oeffnungszeit, Schließzeit, Hauptzeitbeginn, Hauptzeitende, Benutzername,"
+		String sqlStatement = "select Wpnr, Öffentlichkeitsstatus, Öffnungszeit, Schließzeit, Hauptzeitbeginn, Hauptzeitende, Benutzername,"
 				+ "Minanzinfot, Minanzinfow, Minanzkasse, Mehrbesetzung from Wochenplan where Wpnr ="+wpnr;
 
 		try {
 			stmt = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
 			rs = stmt.executeQuery(sqlStatement);
-
+	
+			rs.next();
+			int mehrb=rs.getInt("Mehrbesetzung");
+			if (rs.wasNull())
+				mehrb = 0;
 			
-				Wochenplan wp = new Wochenplan(0, false, sqlStatement, sqlStatement, sqlStatement, sqlStatement, sqlStatement, 0, 0, 0, 0);
+				Wochenplan wp = new Wochenplan(rs.getInt("Wpnr"),rs.getBoolean("Öffentlichkeitsstatus"),rs.getTime("Öffnungszeit").toString(),
+						rs.getTime("SchließZeit").toString(),rs.getTime("Hauptzeitbeginn").toString(),rs.getTime("Hauptzeitende").toString(),
+						rs.getString("Benutzername"),rs.getInt("Minanzinfot"),
+						rs.getInt("Minanzinfow"),rs.getInt("Minanzkasse"),mehrb);
 
-				wp.setWpnr(rs.getInt("Wpnr"));
-				wp.setÖffentlichstatus(rs.getBoolean("Oeffentlichstatus"));
-				wp.setÖffnungszeit(rs.getString("Oeffnungszeit"));
-				wp.setSchließzeit(rs.getString("Schließzeit"));
-				wp.setHauptzeitbeginn(rs.getString("Hauptzeitbeginn"));
-				wp.setHauptzeitende(rs.getString("Hauptzeitende"));
-				wp.setBenutzername(rs.getString("Benutzername"));
-				wp.setMinanzinfot(rs.getInt("Minanzinfot"));
-				wp.setMinanzinfow(rs.getInt("Minanzinfow"));
-				wp.setMinanzkasse(rs.getInt("Minanzkasse"));
-				wp.setMehrbesetzung(rs.getInt("Mehrbesetzung"));
-				if (rs.wasNull())
-					sqlStatement = "--";
 				for (Tag ta : tageList) {
 					if (ta.getWpnr() == wp.getWpnr()) {
 						wp.setLinkedListTage(ta);
-				
-
 			
-
 			rs.close();
 			stmt.close();
 					}
@@ -413,50 +393,52 @@ class Datenbank_Wochenplan {
 			return wp;
 		}
 		catch (SQLException sql) {
+			System.err.println("Methode getWochenplan SQL-Fehler: " + sql.getMessage());
+		}
 			return null;
 		}
 		}
-	}
+	//}
 	/**
 	 * @author Anes Preljevic
 	 * @info Löschen eines Wochenplans mit zugehörigen Tagen (schichten)  aus den Datenbank Tabellen 
 	 * Wochenplan, Tag, Schicht, Ma-Schicht ( Schicht und Ma-Schicht werden über die Tag/Schicht - deleteMethode gelöscht).
 	 */
 	
-	protected boolean deleteWochenplan(int wpnr) {
+	protected boolean deleteWochenplan(int wpnr,Connection con) {
 		Datenbank_Tag tag = new Datenbank_Tag();
-		LinkedList<Tag> tageList = tag.getTage();
+		LinkedList<Tag> tageList = tag.getTage(con);
 
-		if (!checkWochenplan(wpnr)){
+		if (!checkWochenplan(wpnr, con)){
 			return false;
 		}
 		else{
 		Statement stmt = null;
 		ResultSet rs = null;
-		String sqlQuery = "DELETE FROM WOCHENPLAN WHERE Wpnr = " + wpnr;
+		String sqlStatement = "DELETE FROM WOCHENPLAN WHERE Wpnr = " + wpnr;
 		for (Tag ta : tageList) {
 			if (ta.getWpnr() == wpnr) {
-				tag.deleteTag(wpnr);
+				tag.deleteTag(wpnr,con);
 			}
 			}
 		
 		try {
 			stmt = con.createStatement();
-			rs = stmt.executeQuery(sqlQuery);
+			stmt.execute(sqlStatement);
 			con.commit();
 
 			con.setAutoCommit(true);
 			return true;
 			}
 			catch (SQLException sql) {
-			System.err.println("Methode deleteTauschanfrage SQL-Fehler: " + sql.getMessage());
+			System.err.println("Methode deleteWochenplan SQL-Fehler: " + sql.getMessage());
 			try {
 				
 				con.rollback();
 				con.setAutoCommit(true);
 				return false;
 			} catch (SQLException sqlRollback) {
-					System.err.println("Methode deleteTauschanfrage " + "- Rollback -  SQL-Fehler: " + sqlRollback.getMessage());
+					System.err.println("Methode deleteWochenplan " + "- Rollback -  SQL-Fehler: " + sqlRollback.getMessage());
 					return false;
 				}
 		} 
@@ -469,8 +451,9 @@ class Datenbank_Wochenplan {
 			} catch (SQLException e) {
 				System.err.println("Methode deleteWochenplan (finally) SQL-Fehler: " + e.getMessage());
 			}
-			}}
+			}
 		}
+	}
 	
 
 //	if(tmp[3].equalsIgnoreCase("null"))
@@ -483,10 +466,10 @@ class Datenbank_Wochenplan {
 	 * eines Wochenplans die nächste Wpnr vorliegt.
 	 */
 	
-	protected  int getNewWpnr() {
+	public int getNewWpnr(Connection con) {
 		Statement stmt = null;
 		ResultSet rs = null;
-		String sqlQuery = "select max (wpnr)+1 from Wochenplan";
+		String sqlQuery = "select max(wpnr)+1 from Wochenplan";
 
 		try {
 			stmt = con.createStatement();
@@ -497,9 +480,11 @@ class Datenbank_Wochenplan {
 			stmt.close();
 			return maxWpnr;
 		} catch (SQLException sql) {
-			System.err.println("Methode getNewEmpno SQL-Fehler: "
+			System.err.println("Methode getNewWpnr SQL-Fehler: "
 					+ sql.getMessage());
 			return -1;
 		}
 	}
 }
+
+	

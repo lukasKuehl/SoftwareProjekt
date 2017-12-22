@@ -14,18 +14,12 @@ import data.TerminBlockierung;
 
 class Datenbank_Schicht {
 
-	Datenbank_Connection db_con = new Datenbank_Connection();
-	Connection con = db_con.getCon();
-
-
-	
-
 
 	/**
 	 * @Thomas Friesen
 	 * @info Die Methode fügt einen Datensatz in die Schicht Tabelle hinzu.
 	 */
-	public boolean addSchicht(Schicht schicht) {
+	public boolean addSchicht(Schicht schicht,Connection con) {
 		boolean success = false;
 		
 		
@@ -53,7 +47,7 @@ class Datenbank_Schicht {
 			
 			con.setAutoCommit(false);
 
-			if (checkSchicht(schichtnr)) {
+			if (checkSchicht(schichtnr,con)) {
 				System.out.println("Diese schichtnr existiert bereits in der Tabelle Schicht!");
 			}
 			else{
@@ -117,7 +111,7 @@ class Datenbank_Schicht {
 	 * bei existenz return true sonst false
 	 */
 	
-	protected boolean checkSchicht(int schichtnr) {
+	protected boolean checkSchicht(int schichtnr,Connection con) {
 		Statement stmt = null;
 		ResultSet rs = null;
 		String sqlQuery = "select schichtnr from Schicht where schichtnr = " + schichtnr;
@@ -149,13 +143,13 @@ class Datenbank_Schicht {
 	 * Diese werden in eine LinkedList abgelegt und ausgegeben.
 	 * Die zugehörigen Mitarbeiter und Schicht Beziehungen werden als LinkedList in den Schichten gespeichert.
 	 */
-	protected LinkedList<Schicht> getSchichten() {
+	protected LinkedList<Schicht> getSchichten(Connection con) {
 		Datenbank_Ma_Schicht ma_schicht = new Datenbank_Ma_Schicht();
-		LinkedList<Ma_Schicht> maschichtList = ma_schicht.getMa_Schicht();;
+		LinkedList<Ma_Schicht> maschichtList = ma_schicht.getMa_Schicht(con);;
 		Statement stmt = null;
 		ResultSet rs = null;
 
-		String sqlStatement = "select Schichtnr,Tbez, Anzschicht, Anfanguhrzeit, Endeuhrzeit from Schicht";
+		String sqlStatement = "select Schichtnr,Tbez, Anfanguhrzeit, Endeuhrzeit from Schicht";
 
 		try {
 			stmt = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
@@ -164,13 +158,10 @@ class Datenbank_Schicht {
 			LinkedList<Schicht> schichtList = new LinkedList<>();
 
 			while (rs.next()) {
-				Schicht s = new Schicht(0, sqlStatement, 0, sqlStatement, sqlStatement);
+				Schicht s = new Schicht(rs.getInt("Schichtnr"), rs.getString("Tbez"),
+						rs.getInt("Wpnr"), rs.getString("Anfanguhrzeit").toString(),
+						rs.getString("Endeuhrzeit").toString());
 
-				s.setSchichtnr(rs.getInt("Schichtnr"));
-				s.setTbez(rs.getString("Tbez"));
-				s.setWpnr(rs.getInt("Wpnr"));
-				s.setAnfanguhrzeit(rs.getString("Anfanguhrzeit"));
-				s.setEndeuhrzeit(rs.getString("Endeuhrzeit"));
 				for (Ma_Schicht mas : maschichtList) {
 					if (mas.getSchichtnr() == s.getSchichtnr()) {
 						s.setLinkedListMa_Schicht(mas);
@@ -186,6 +177,7 @@ class Datenbank_Schicht {
 			return schichtList;
 
 		} catch (SQLException sql) {
+			System.err.println("Methode getSchicht SQL-Fehler: " + sql.getMessage());
 			return null;
 		}
 	}
@@ -195,10 +187,10 @@ class Datenbank_Schicht {
 	 * @info Auslesen einer bestimmten Schicht aus der Datenbank und erzeugen eines Schicht Objektes,
 	 * welches anschließend ausgegeben wird.
 	 */
-	protected Schicht getSchicht(int schichtnr) {
+	protected Schicht getSchicht(int schichtnr,Connection con) {
 		Datenbank_Ma_Schicht ma_schicht = new Datenbank_Ma_Schicht();
-		LinkedList<Ma_Schicht> maschichtList = ma_schicht.getMa_Schicht();;
-		if (!checkSchicht(schichtnr)){
+		LinkedList<Ma_Schicht> maschichtList = ma_schicht.getMa_Schicht(con);;
+		if (!checkSchicht(schichtnr,con)){
 			return null;
 		}
 		else{
@@ -210,14 +202,11 @@ class Datenbank_Schicht {
 		try {
 			stmt = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
 			rs = stmt.executeQuery(sqlStatement);
+			rs.next();
+			Schicht s = new Schicht(rs.getInt("Schichtnr"), rs.getString("Tbez"),
+					rs.getInt("Wpnr"), rs.getString("Anfanguhrzeit").toString(),
+					rs.getString("Endeuhrzeit").toString());
 
-				Schicht s = new Schicht(0, sqlStatement, 0, sqlStatement, sqlStatement);
-
-				s.setSchichtnr(rs.getInt("Schichtnr"));
-				s.setTbez(rs.getString("Tbez"));
-				s.setWpnr(rs.getInt("Wpnr"));
-				s.setAnfanguhrzeit(rs.getString("Anfanguhrzeit"));
-				s.setEndeuhrzeit(rs.getString("Endeuhrzeit"));
 				for (Ma_Schicht mas : maschichtList) {
 					if (mas.getSchichtnr() == s.getSchichtnr()) {
 						s.setLinkedListMa_Schicht(mas);
@@ -230,6 +219,7 @@ class Datenbank_Schicht {
 			return s;
 
 		} catch (SQLException sql) {
+			System.err.println("Methode getSchicht SQL-Fehler: " + sql.getMessage());
 			return null;
 		}
 		}
@@ -240,33 +230,34 @@ class Datenbank_Schicht {
 	 * @info Löschen einer Schicht mit zugehörigen Ma_Schicht (Mitarbeitern in Schichten)aus den Datenbank Tabellen 
 	 * Schicht, Ma-Schicht.
 	 */
-	protected boolean deleteSchicht(int wpnr) {
+	protected boolean deleteSchicht(int wpnr,Connection con) {
 		Datenbank_Schicht schicht = new Datenbank_Schicht();
-		LinkedList<Schicht> schichtList = schicht.getSchichten();
+		LinkedList<Schicht> schichtList = schicht.getSchichten(con);
 		Datenbank_Ma_Schicht masch = new Datenbank_Ma_Schicht();
-		LinkedList<Ma_Schicht> maschichtList = masch.getMa_Schicht();;
+		LinkedList<Ma_Schicht> maschichtList = masch.getMa_Schicht(con);;
 
 		Statement stmt = null;
 		ResultSet rs = null;
-		String sqlQuery = "DELETE FROM Schicht WHERE wpnr= "+wpnr;
+		String sqlStatement = "DELETE FROM Schicht WHERE wpnr= "+wpnr;
 		for (Schicht sch : schichtList) {
 			if (sch.getWpnr() == wpnr) {
 
 		
 		for (Ma_Schicht ms : maschichtList) {
 			if (ms.getSchichtnr() == sch.getSchichtnr()) {
-				masch.deleteMa_SchichtWochenplan(sch.getSchichtnr());
+				masch.deleteMa_SchichtWochenplan(sch.getSchichtnr(),con);
 			}
 			}
 		}
 		}	
 		try {
 			stmt = con.createStatement();
-			rs = stmt.executeQuery(sqlQuery);
+			stmt.execute(sqlStatement);
 
 			
 			return true;
 		} catch (SQLException sql) {
+			System.err.println("Methode deleteSchicht SQL-Fehler: " + sql.getMessage());
 			return false;
 		} finally {
 			try {
@@ -284,10 +275,10 @@ class Datenbank_Schicht {
 	 * @info Fragt die höchste Schichtnr und erhöht diese um 1, sodass bei neu Erstellung
 	 * einer Schicht die nächste Schichtnr vorliegt.
 	 */
-	protected  int getNewSchichtnr() {
+	protected  int getNewSchichtnr(Connection con) {
 		Statement stmt = null;
 		ResultSet rs = null;
-		String sqlQuery = "select max (schichtnr)+1 from Schicht";
+		String sqlQuery = "select max(schichtnr)+1 from Schicht";
 
 		try {
 			stmt = con.createStatement();

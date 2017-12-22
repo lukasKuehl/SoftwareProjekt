@@ -13,16 +13,12 @@ import data.Tblock_Tag;
 
 class Datenbank_Tblock_Tag {
 
-	Datenbank_Connection db_con = new Datenbank_Connection();
-	Connection con = db_con.getCon();
-
-
 	
 	/**
 	 * @Thomas Friesen
 	 * @info Die Methode fügt einen Datensatz in die Tblock_Tag Tabelle ein.
 	 */
-	protected boolean addTblock_Tag(Tblock_Tag tblock_tag) {
+	protected boolean addTblock_Tag(Tblock_Tag tblock_tag,Connection con) {
 		boolean success = false;
 		
 		
@@ -46,10 +42,10 @@ class Datenbank_Tblock_Tag {
 			
 			con.setAutoCommit(false);
 
-			if (checkTblock_TagTB(tBlockNr)) {
+			if (checkTblock_TagTB(tBlockNr,con)) {
 				System.out.println("Keine Beziehung von Terminblockierung zu Tagen!");
 			}
-			if (checkTblock_TagTA(tbez,wpnr)) {
+			if (checkTblock_TagTA(tbez,wpnr,con)) {
 				System.out.println("Keine Beziehung von Terminbezeichnung und Wochenplannummern zu Tagen vorhanden!");
 			}
 			else{
@@ -111,7 +107,7 @@ class Datenbank_Tblock_Tag {
 	 * @info Prüft ob es zu der eingegebenen Tblocknr eine Beziehung von Blockierungen zu Tagen  gibt,
 	 * bei Existenz return true sonst false
 	 */
-	protected boolean checkTblock_TagTB(int tblocknr) {
+	protected boolean checkTblock_TagTB(int tblocknr, Connection con) {
 		Statement stmt = null;
 		ResultSet rs = null;
 		String sqlQuery = "select tblocknr from Tblock_TagTB where tblocknr = "+tblocknr;
@@ -140,7 +136,7 @@ class Datenbank_Tblock_Tag {
 	 * @info Prüft ob es zu der eingegebenen Tagbez und der Wochenplannr eine Beziehung von Tagen zu Blockierungen  gibt,
 	 * bei existenz return true sonst false
 	 */
-	protected boolean checkTblock_TagTA(String tbez, int wpnr) {
+	protected boolean checkTblock_TagTA(String tbez, int wpnr, Connection con) {
 		Statement stmt = null;
 		ResultSet rs = null;
 		String sqlQuery = "select tbez, wpnr from Tblock_TagTA where tbez= '"+tbez+"'and wpnr '"+wpnr+"'";
@@ -171,9 +167,9 @@ class Datenbank_Tblock_Tag {
 	 * @info Auslesen aller Beziehungen von TerminBlockierungen zu Tagen  aus der Datenbank und erzeugen von Tblock_Tag Objekten.
 	 * Diese und eine Liste mit zugehörigen TerminBlockierungen werden in eine LinkedList abgelegt und ausgegeben.
 	 */
-	protected LinkedList<Tblock_Tag> getAlleTblock_Tag() {
+	protected LinkedList<Tblock_Tag> getAlleTblock_Tag(Connection con) {
 		Datenbank_TerminBlockierung terminblockierung = new Datenbank_TerminBlockierung();
-		LinkedList<TerminBlockierung> terminList = terminblockierung.getTerminBlockierungen();;
+		LinkedList<TerminBlockierung> terminList = terminblockierung.getTerminBlockierungen(con);;
 		Statement stmt = null;
 		ResultSet rs = null;
 
@@ -186,11 +182,9 @@ class Datenbank_Tblock_Tag {
 			LinkedList<Tblock_Tag> tblock_tagList = new LinkedList<>();
 
 			while (rs.next()) {
-				Tblock_Tag tbt = new Tblock_Tag(0, sqlStatement,0);
+				Tblock_Tag tbt = new Tblock_Tag(rs.getInt("Tblocknr"),rs.getString("Tbez"),rs.getInt("Wpnr"));
 
-				tbt.setTblocknr(rs.getInt("Tblocknr"));
-				tbt.setTbez(rs.getString("Tbez"));
-				tbt.setWpnr(rs.getInt("Wpnr"));
+
 				for (TerminBlockierung tb : terminList) {
 					if (tb.getTblocknr() == tbt.getTblocknr()) {
 						tbt.setLinkedList_termine(tb);
@@ -205,6 +199,7 @@ class Datenbank_Tblock_Tag {
 			return tblock_tagList;
 
 		} catch (SQLException sql) {
+			System.err.println("Methode getAlleTblock_Tag SQL-Fehler: " + sql.getMessage());
 			return null;
 		}
 	}
@@ -213,10 +208,10 @@ class Datenbank_Tblock_Tag {
 	 * @info Auslesen einer bestimmten Termin zu Tag Beziehung aus der Datenbank und erzeugen eines Tblock_Tag Objektes,
 	 * welches anschließend ausgegeben wird mit einer Liste zugehöriger TerminBlockierungen.
 	 */
-	protected Tblock_Tag getTblock_TagTB(int tblocknr) {
+	protected Tblock_Tag getTblock_TagTB(int tblocknr,Connection con) {
 		Datenbank_TerminBlockierung terminblockierung = new Datenbank_TerminBlockierung();
-		LinkedList<TerminBlockierung> terminList = terminblockierung.getTerminBlockierungen();;
-		if (!checkTblock_TagTB(tblocknr)){
+		LinkedList<TerminBlockierung> terminList = terminblockierung.getTerminBlockierungen(con);;
+		if (!checkTblock_TagTB(tblocknr,con)){
 			return null;
 		}
 		else{
@@ -228,12 +223,10 @@ class Datenbank_Tblock_Tag {
 		try {
 			stmt = con.createStatement();
 			rs = stmt.executeQuery(sqlStatement);
+				rs.next();
+				Tblock_Tag tbt = new Tblock_Tag(rs.getInt("Tblocknr"), rs.getString("Tbez"),rs.getInt("Wpnr"));
 
-				Tblock_Tag tbt = new Tblock_Tag(0, sqlStatement,0);
-
-				tbt.setTblocknr(rs.getInt("Tblocknr"));
-				tbt.setTbez(rs.getString("Tbez"));
-				tbt.setWpnr(rs.getInt("Wpnr"));
+				
 				for (TerminBlockierung tb : terminList) {
 					if (tb.getTblocknr() == tbt.getTblocknr()) {
 						tbt.setLinkedList_termine(tb);
@@ -245,6 +238,7 @@ class Datenbank_Tblock_Tag {
 			return tbt;
 
 		} catch (SQLException sql) {
+			System.err.println("Methode getTblock_TagTB SQL-Fehler: " + sql.getMessage());
 			return null;
 		}
 		}
@@ -254,10 +248,10 @@ class Datenbank_Tblock_Tag {
 	 * @info Auslesen einer bestimmten Termin zu Tag Beziehung aus der Datenbank und erzeugen eines Tblock_Tag Objektes,
 	 * welches anschließend ausgegeben wird mit einer Liste zugehöriger TerminBlockierungen.
 	 */
-	protected Tblock_Tag getTblock_TagT(String tbez, int wpnr) {
+	protected Tblock_Tag getTblock_TagT(String tbez, int wpnr,Connection con) {
 		Datenbank_TerminBlockierung terminblockierung = new Datenbank_TerminBlockierung();
-		LinkedList<TerminBlockierung> terminList = terminblockierung.getTerminBlockierungen();;
-		if (!checkTblock_TagTA(tbez, wpnr)){
+		LinkedList<TerminBlockierung> terminList = terminblockierung.getTerminBlockierungen(con);;
+		if (!checkTblock_TagTA(tbez, wpnr,con)){
 			return null;
 		}
 		else{
@@ -269,12 +263,9 @@ class Datenbank_Tblock_Tag {
 		try {
 			stmt = con.createStatement();
 			rs = stmt.executeQuery(sqlStatement);
+				rs.next();
+				Tblock_Tag tbt = new Tblock_Tag(rs.getInt("Tblocknr"), rs.getString("Tbez"),rs.getInt("Wpnr"));
 
-				Tblock_Tag tbt = new Tblock_Tag(0, sqlStatement,0);
-
-				tbt.setTblocknr(rs.getInt("Tblocknr"));
-				tbt.setTbez(rs.getString("Tbez"));
-				tbt.setWpnr(rs.getInt("Wpnr"));
 				for (TerminBlockierung tb : terminList) {
 					if (tb.getTblocknr() == tbt.getTblocknr()) {
 						tbt.setLinkedList_termine(tb);
@@ -286,6 +277,7 @@ class Datenbank_Tblock_Tag {
 			return tbt;
 
 		} catch (SQLException sql) {
+			System.err.println("Methode getTblock_TagT SQL-Fehler: " + sql.getMessage());
 			return null;
 		}
 		}
@@ -296,10 +288,10 @@ class Datenbank_Tblock_Tag {
 	 * @info Löscht die Blockierung eines Tages welche zu der Tblocknr gehört. Der Datensatz 
 	 * wird aus der Tabelle Tblock_Tag gelöscht. Löscht die zugehörigen TerminBlockierungen.
 	 */
-	protected boolean deleteTblock_Tag(int tblocknr) {
+	protected boolean deleteTblock_Tag(int tblocknr,Connection con) {
 		Datenbank_TerminBlockierung terminblockierung = new Datenbank_TerminBlockierung();
-		LinkedList<TerminBlockierung> terminList = terminblockierung.getTerminBlockierungen();;
-		if (!checkTblock_TagTB(tblocknr)){
+		LinkedList<TerminBlockierung> terminList = terminblockierung.getTerminBlockierungen(con);;
+		if (!checkTblock_TagTB(tblocknr,con)){
 			return false;
 		}
 		Statement stmt = null;
@@ -307,12 +299,12 @@ class Datenbank_Tblock_Tag {
 		String sqlQuery = "DELETE FROM Tblock_Tag WHERE Tblocknr = "+tblocknr;
 		for (TerminBlockierung tb : terminList) {
 			if (tb.getTblocknr() == tblocknr) {
-				terminblockierung.deleteTerminBlockierung(tblocknr);
+				terminblockierung.deleteTerminBlockierung(tblocknr,con);
 			}
 			}
 		try {
 			stmt = con.createStatement();
-			rs = stmt.executeQuery(sqlQuery);
+			stmt.execute(sqlQuery);
 			return true;
 		} catch (SQLException sql) {
 			return false;

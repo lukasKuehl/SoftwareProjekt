@@ -11,17 +11,12 @@ import data.Ma_Schicht;
 
  class Datenbank_Ma_Schicht {
 
-	Datenbank_Connection db_con = new  Datenbank_Connection();
-	Connection con = db_con.getCon();
 
-
-
-	
 	/**
 	 * @Thomas Friesen
 	 * @info Die Methode fügt einen Datensatz in die Ma_Schicht Tabelle ein.
 	 */
-	public boolean addMa_Schicht(Ma_Schicht ma_schicht) {
+	public boolean addMa_Schicht(Ma_Schicht ma_schicht,Connection con) {
 		boolean success = false;
 	
 		String sqlStatement;
@@ -42,7 +37,7 @@ import data.Ma_Schicht;
 			
 			con.setAutoCommit(false);
 
-			if (checkMa_Schicht(schichtnr, benutzername)) {
+			if (checkMa_Schicht(schichtnr, benutzername,con)) {
 				System.out.println("Der Mitarbeiter wurde bereits in die Schicht eingeteilt!");
 			}
 			else{
@@ -101,10 +96,10 @@ import data.Ma_Schicht;
 	 * @author Anes Preljevic
 	 * @info Prüft ob es zu der eingegebenen schichtnr und dem benutzernamen bereits einen Mitarbeiter in der Schicht gibt, bei existenz return true, sonst false
 	 */
-	protected boolean checkMa_Schicht(int schichtnr, String benutzername) {
+	public boolean checkMa_Schicht(int schichtnr, String benutzername,Connection con) {
 		Statement stmt = null;
 		ResultSet rs = null;
-		String sqlQuery = "select schichtnr, benutzernaeme from Ma_Schicht where schichtnr = '"+schichtnr+"' and benutzername= '"+benutzername+"'";
+		String sqlQuery = "select schichtnr, benutzername from Ma_Schicht where schichtnr = '"+schichtnr+"' and benutzername= '"+benutzername+"'";
 
 		try {
 			stmt = con.createStatement();
@@ -131,26 +126,23 @@ import data.Ma_Schicht;
 	 * @author Anes Preljevic
 	 * @info Auslesen der Mitarbeiter mit den zugehörigen Schichten aus der Datenbank und hinzufügen in eine Liste, welche den Ausgabewert darstellt 
 	 */
-	protected LinkedList<Ma_Schicht> getMa_Schicht() {
+	public LinkedList<Ma_Schicht> getMa_Schicht(Connection con) {
 
 		Statement stmt = null;
 		ResultSet rs = null;
 
-		String sqlStatement = "select Schichtnr, Benutzername from Ma_Schicht";
+		String sqlStatement = "SELECT Benutzername, Schichtnr FROM Ma_Schicht";
 
 		try {
-			stmt = con.createStatement();
+			stmt = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
 			rs = stmt.executeQuery(sqlStatement);
-
+			
 			LinkedList<Ma_Schicht> ma_schichtList = new LinkedList<>();
 
 			while (rs.next()) {
-				Ma_Schicht ms = new Ma_Schicht(sqlStatement,0);
 
-				ms.setSchichtnr(rs.getInt("Schichtnr"));
-				ms.setBenutzername(rs.getString("Benutzername"));
-				
-				
+				Ma_Schicht ms = new Ma_Schicht(rs.getString("Benutzername"),rs.getInt("Schichtnr"));
+
 				ma_schichtList.add(ms);
 			}
 
@@ -160,6 +152,7 @@ import data.Ma_Schicht;
 			return ma_schichtList;
 
 		} catch (SQLException sql) {
+			System.err.println("Methode getMa_Schicht SQL-Fehler: " + sql.getMessage());
 			return null;
 		}
 	}
@@ -170,24 +163,23 @@ import data.Ma_Schicht;
 	*  erstellen eines Objektes Ma_Schicht mit den Daten aus der Datenbank. Liste mit den Ma_Schicht Objekten
 	*  wird ausgegeben.
 	*/
-	protected LinkedList<Ma_Schicht> getMitarbeiterausderSchicht(int schichtnr) {
+	protected LinkedList<Ma_Schicht> getMitarbeiterausderSchicht(int schichtnr,Connection con) {
 
 		Statement stmt = null;
 		ResultSet rs = null;
 
-		String sqlStatement = "SELECT Schichtnr, Benutzername from Ma_Schicht WHERE schichtnr="+schichtnr;
+		String sqlStatement = "SELECT Benutzername, Schichtnr from Ma_Schicht WHERE schichtnr="+schichtnr;
 
 		try {
-			stmt = con.createStatement();
+			stmt = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
 			rs = stmt.executeQuery(sqlStatement);
 
 			LinkedList<Ma_Schicht> ma_schichtList = new LinkedList<>();
 
 			while (rs.next()) {
-				Ma_Schicht ms = new Ma_Schicht(sqlStatement,0);
+				Ma_Schicht ms = new Ma_Schicht(rs.getString("Benutzername"),rs.getInt("Schichtnr"));
 
-				ms.setSchichtnr(rs.getInt("Schichtnr"));
-				ms.setBenutzername(rs.getString("Benutzername"));
+
 				
 				
 				ma_schichtList.add(ms);
@@ -199,6 +191,43 @@ import data.Ma_Schicht;
 			return ma_schichtList;
 
 		} catch (SQLException sql) {
+			System.err.println("Methode getMitarbeiterausderSchicht SQL-Fehler: " + sql.getMessage());
+			return null;
+		}
+	}
+	/**
+	* @author Anes Preljevic
+	* @info Auslesen der Mitarbeiter die in eine Schicht gehören mit der übergebenen Schichtnr aus der Datenbank,
+	*  erstellen eines Objektes Ma_Schicht mit den Daten aus der Datenbank. Liste mit den Ma_Schicht Objekten
+	*  wird ausgegeben.
+	*/
+	protected LinkedList<Ma_Schicht> getSchichteneinesMitarbeiters(String benutzername,Connection con) {
+
+		Statement stmt = null;
+		ResultSet rs = null;
+
+		String sqlStatement = "SELECT Schichtnr, Benutzername from Ma_Schicht WHERE benutzername="+benutzername;
+
+		try {
+			stmt = con.createStatement();
+			rs = stmt.executeQuery(sqlStatement);
+
+			LinkedList<Ma_Schicht> ma_schichtList = new LinkedList<>();
+
+			while (rs.next()) {
+				Ma_Schicht ms = new Ma_Schicht(rs.getString("Benutzername"),rs.getInt("Schichtnr"));
+
+				
+				ma_schichtList.add(ms);
+			}
+
+			rs.close();
+			stmt.close();
+
+			return ma_schichtList;
+
+		} catch (SQLException sql) {
+			System.err.println("Methode getSchichteneinesMitarbeiters SQL-Fehler: " + sql.getMessage());
 			return null;
 		}
 	}
@@ -206,21 +235,33 @@ import data.Ma_Schicht;
 	 * @author Anes Preljevic
 	 * @info Löschen eines Mitarbeiters aus einer Schicht
 	 */
-	protected boolean deleteMa_Schicht(int schichtnr, String benutzername) {
-		if(!checkMa_Schicht(schichtnr, benutzername)){
+	protected boolean deleteMa_Schicht(int schichtnr, String benutzername, Connection con) {
+		if(checkMa_Schicht(schichtnr, benutzername,con)==false){
 			return false;
 		}
+		else{
 		Statement stmt = null;
 		ResultSet rs = null;
-		String sqlQuery = "DELETE FROM Ma_Schicht WHERE Schichtnr = "+schichtnr+" and Benutzername= "+benutzername+"";
-
+		String sqlStatement = "DELETE from Ma_Schicht where schichtnr = '"+schichtnr+"' and benutzername= '"+benutzername+"'";
 		try {
 			stmt = con.createStatement();
-			rs = stmt.executeQuery(sqlQuery);
+			stmt.execute(sqlStatement);
+			con.commit();
+			con.setAutoCommit(true);
+
 			return true;
-		} catch (SQLException sql) {
-			return false;
-		} finally {
+		}			catch (SQLException sql) {
+			System.err.println("Methode deleteMa_Schicht SQL-Fehler: " + sql.getMessage());
+			try {
+				
+				con.rollback();
+				con.setAutoCommit(true);
+				return false;
+			} catch (SQLException sqlRollback) {
+					System.err.println("Methode deleteMa_schicht " + "- Rollback -  SQL-Fehler: " + sqlRollback.getMessage());
+					return false;
+				}
+		}  finally {
 			try {
 				if (rs != null)
 					rs.close();
@@ -229,25 +270,40 @@ import data.Ma_Schicht;
 			} catch (SQLException e) {
 				System.err.println("Methode deleteMa_Schicht (finally) SQL-Fehler: " + e.getMessage());
 			}
-		}
+		}}
 	}
 	/**
 	 * @author Anes Preljevic
 	 * @info Löscht den Ma_Schicht Datensatz aus der Tabelle Ma_Schicht, mit dem die übergebene Schichtnr übereinstimmt,
 	 * wenn die Schicht gelöscht wurde.
 	 */
-	protected boolean deleteMa_SchichtWochenplan(int schichtnr) {
+	protected boolean deleteMa_SchichtWochenplan(int schichtnr,Connection con) {
 		Statement stmt = null;
 		ResultSet rs = null;
-		String sqlQuery = "DELETE FROM Ma_Schicht WHERE Schichtnr = "+schichtnr;
+		String sqlStatement = "DELETE FROM Ma_Schicht WHERE Schichtnr = "+schichtnr;
 
 		try {
 			stmt = con.createStatement();
-			rs = stmt.executeQuery(sqlQuery);
+			stmt.execute(sqlStatement);
+			
+			con.commit();
+			con.setAutoCommit(true);
+			
 			return true;
-		} catch (SQLException sql) {
-			return false;
-		} finally {
+			
+			
+		}			catch (SQLException sql) {
+			System.err.println("Methode deleteWochenplan SQL-Fehler: " + sql.getMessage());
+			try {
+				
+				con.rollback();
+				con.setAutoCommit(true);
+				return false;
+			} catch (SQLException sqlRollback) {
+					System.err.println("Methode deleteWochenplan " + "- Rollback -  SQL-Fehler: " + sqlRollback.getMessage());
+					return false;
+				}
+		}  finally {
 			try {
 				if (rs != null)
 					rs.close();

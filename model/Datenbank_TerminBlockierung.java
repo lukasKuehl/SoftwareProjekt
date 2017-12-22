@@ -1,26 +1,24 @@
 package model;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.LinkedList;
 
 import data.TerminBlockierung;
 
 class Datenbank_TerminBlockierung {
 
-	Datenbank_Connection db_con = new Datenbank_Connection();
-	Connection con = db_con.getCon();
-
-
-
 	/**
 	 * @Thomas Friesen
 	 * @info  Fügt einen neuen Termin-Datensatz in die TerminBlockierung Tabelle hinzu.
 	 */
-	protected boolean addTerminBlockierung(TerminBlockierung terminBlockierung) {
+	protected boolean addTerminBlockierung(TerminBlockierung terminBlockierung,Connection con) {
 		boolean success = false;
 	
 		
@@ -54,7 +52,7 @@ class Datenbank_TerminBlockierung {
 			
 			con.setAutoCommit(false);
 
-			if (checkTerminBlockierung(tBlockNr)) {
+			if (checkTerminBlockierung(tBlockNr,con)) {
 				System.out.println("Der Termin wurde bereits in die TerminBlockierung-Tabelle eingetragen");
 			}
 			else{
@@ -122,7 +120,7 @@ class Datenbank_TerminBlockierung {
 	 * @info Prüft ob es zu der eingegebenen Tblocknr eine TerminBlockierung gibt,
 	 * bei existenz return true sonst false
 	 */
-	protected boolean checkTerminBlockierung(int tblocknr) {
+	protected boolean checkTerminBlockierung(int tblocknr,Connection con) {
 		Statement stmt = null;
 		ResultSet rs = null;
 		String sqlQuery = "select tblocknr from TerminBlockierung where tblocknr = " + tblocknr;
@@ -153,31 +151,27 @@ class Datenbank_TerminBlockierung {
 	 * @info Auslesen aller TerminBlockierungen aus der Datenbank und erzeugen von TerminBlockierung Objekten.
 	 * Diese werden in eine LinkedList abgelegt und ausgegeben.
 	 */
-	protected LinkedList<TerminBlockierung> getTerminBlockierungen() {
+	protected LinkedList<TerminBlockierung> getTerminBlockierungen(Connection con) {
 
 		Statement stmt = null;
 		ResultSet rs = null;
 
-		String sqlStatement = "select Tblocknr, Benutzername, Bbez, Anfzeitraum, Endzeitraum,Anfanguhrzeit, Endeuhrzeit, Grund from TerminBlockierung";
+		String sqlStatement = "select Tblocknr, Benutzername, Bbez, Anfangzeitraum, Endezeitraum,Anfanguhrzeit, Endeuhrzeit, Grund from TerminBlockierung";
 
 		try {
 			stmt = con.createStatement();
 			rs = stmt.executeQuery(sqlStatement);
 
 			LinkedList<TerminBlockierung> terminBlockierungList = new LinkedList<>();
-
+			DateFormat df = new SimpleDateFormat("MM-dd-yyyy");
 			while (rs.next()) {
-				TerminBlockierung tb = new TerminBlockierung(0, sqlStatement, sqlStatement, sqlStatement, sqlStatement, sqlStatement, sqlStatement, sqlStatement);
+				Date anfangzeitraumsql = rs.getDate("Anfangzeitraum"); 
+				Date endezeitraumsql = rs.getDate("Endezeitraum"); 
+				String anfangzeitraum = df.format(anfangzeitraumsql);
+				String endezeitraum = df.format(endezeitraumsql);
+				TerminBlockierung tb = new TerminBlockierung(rs.getInt("Tauschnr"),rs.getString("Benutzername"), rs.getString("Bbez"),
+						anfangzeitraum, endezeitraum, rs.getTime("Anfanguhrzeit").toString(),rs.getTime("Endeuhrzeit").toString(),rs.getString("Grund") );
 
-				tb.setTblocknr(rs.getInt("Tauschnr"));
-				tb.setBenutzername(rs.getString("Benutzername"));
-				tb.setBbez(rs.getString("Bbez"));
-				tb.setAnfzeitraum(rs.getString("Anfzeitraum"));
-				tb.setEndzeitraum(rs.getString("Endzeitraum"));
-				tb.setAnfanguhrzeit(rs.getString("Anfanguhrzeit"));
-				tb.setEndeuhrzeit(rs.getString("Endeuhrzeit"));
-				tb.setGrund(rs.getString("Grund"));
-				
 				terminBlockierungList.add(tb);
 			}
 
@@ -187,6 +181,7 @@ class Datenbank_TerminBlockierung {
 			return terminBlockierungList;
 
 		} catch (SQLException sql) {
+			System.err.println("Methode getTerminBlockierungen SQL-Fehler: " + sql.getMessage());
 			return null;
 		}
 	}
@@ -195,14 +190,14 @@ class Datenbank_TerminBlockierung {
 	 * @info Löschen der TerminBlockierung aus der Tabelle TerminBlockierung in der Datenbank,
 	 * welche die übergebene Tblocknr besitzt.
 	 */
-	protected boolean deleteTerminBlockierung(int tblocknr) {
+	protected boolean deleteTerminBlockierung(int tblocknr,Connection con) {
 		Statement stmt = null;
 		ResultSet rs = null;
 		String sqlQuery = "DELETE FROM TerminBlockierung WHERE Tblocknr = "+tblocknr;
 
 		try {
 			stmt = con.createStatement();
-			rs = stmt.executeQuery(sqlQuery);
+			stmt.execute(sqlQuery);
 			return true;
 		} catch (SQLException sql) {
 			return false;
@@ -223,10 +218,10 @@ class Datenbank_TerminBlockierung {
 	 * einer TerminBlockierung die nächste Tblocknr vorliegt.
 	 */
 	
-	protected  int getNewTblocknr() {
+	protected  int getNewTblocknr(Connection con) {
 		Statement stmt = null;
 		ResultSet rs = null;
-		String sqlQuery = "select max (wpnr)+1 from Wochenplan";
+		String sqlQuery = "select max(tblocknr)+1 from TerminBlockierung";
 
 		try {
 			stmt = con.createStatement();
@@ -237,7 +232,7 @@ class Datenbank_TerminBlockierung {
 			stmt.close();
 			return maxTblocknr;
 		} catch (SQLException sql) {
-			System.err.println("Methode getNewEmpno SQL-Fehler: "
+			System.err.println("Methode getNewTblocknr SQL-Fehler: "
 					+ sql.getMessage());
 			return -1;
 		}

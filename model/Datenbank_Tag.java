@@ -16,18 +16,12 @@ import data.Schicht;
 
 
 class Datenbank_Tag {
-	
-	Datenbank_Connection db_con = new Datenbank_Connection();
-	Connection con = db_con.getCon();
-	
-	
 
-	
 	/**
 	 * @Thomas Friesen
 	 * @info Die Methode fügt einen Datensatz in die Tag Tabelle ein.
 	 */
-	protected boolean addTag(Tag tag) {	
+	protected boolean addTag(Tag tag,Connection con) {	
 		boolean success = false;
 		
 		
@@ -48,12 +42,12 @@ class Datenbank_Tag {
 			//Auslesen der als Parameter übergebenen Mitarbeiter-Schicht-Beziehung
 			tbez = tag.getTbez();
 			wpnr = tag.getWpnr();
-			anzschicht = tag.getAnzschicht();
+
 			
 			
 			con.setAutoCommit(false);
 
-			if (checkTag(tbez,wpnr)) {
+			if (checkTag(tbez,wpnr, con)) {
 				System.out.println("Dieser Tag existiert bereits in dem angegebenen Wochenplan!");
 			}
 			else{
@@ -111,10 +105,10 @@ class Datenbank_Tag {
 	}
 	
 	/**
-	 * @Thomas Friesen
+	 * @Anes Preljevic
 	 * @info Die Methode überprüft, ob ein Datensatz mit den angegebenen Parametern bereits in der Datenbank existiert
 	 */
-	protected boolean checkTag(String tbez, int wpnr) {
+	protected boolean checkTag(String tbez, int wpnr, Connection con) {
 		Statement stmt = null;
 		ResultSet rs = null;
 		String sqlQuery = "select tbez,wpnr from tag where tbez = '"+tbez+"' and wpnr= '"+wpnr+"'";
@@ -147,18 +141,16 @@ class Datenbank_Tag {
 	 */
 	
 	
-	protected void updateTag(Tag tag) {
+	protected void updateTag(Tag tag, Connection con ) {
 		
 		String tbez = tag.getTbez();
 		int wpnr = tag.getWpnr();
-		int anzschicht = tag.getAnzschicht();
 		boolean feiertag = tag.isFeiertag();
 		
 		String sqlStatement;
 		
 		sqlStatement = "UPDATE Tag "
-					+ "SET Anzschicht = ? " +"Set Feiertag = ?"
-					+ "WHERE where tbez = '"+tbez+"' and wpnr= '"+wpnr+"'";
+					+ "SET Anzschicht = ? "+ "WHERE where tbez = '"+tbez+"' and wpnr= '"+wpnr+"'";
 		PreparedStatement pstmt = null;
 		
 		try {	
@@ -166,7 +158,6 @@ class Datenbank_Tag {
 			pstmt = con.prepareStatement(sqlStatement);		
 
 			con.setAutoCommit(false);			
-			pstmt.setInt(1, anzschicht);
 			pstmt.setBoolean(2, feiertag);
 			pstmt.executeUpdate();
 			con.commit();			
@@ -198,7 +189,7 @@ class Datenbank_Tag {
 	 * @author Anes Preljevic
 	 * @info Ändert den Feiertag status auf true, bei dem Tag mit der übergebenen Tbez und wpnr.
 	 */
-	protected void setzeFeiertagtrue(String tbez, int wpnr) {
+	protected void setzeFeiertagtrue(String tbez, int wpnr, Connection con) {
 		Statement stmt = null;
 		String sqlStatement;
 		sqlStatement = "UPDATE Tag Set Feiertag = true"
@@ -240,7 +231,7 @@ class Datenbank_Tag {
 	 * @info Ändert den Feiertag status auf false, bei dem Tag mit der übergebenen Tbez und wpnr.
 	 */
 	
-	protected void setzeFeiertagfalse(String tbez, int wpnr) {
+	protected void setzeFeiertagfalse(String tbez, int wpnr,Connection con) {
 		Statement stmt = null;
 		String sqlStatement;
 		sqlStatement = "UPDATE Tag Set Feiertag = false"
@@ -284,18 +275,18 @@ class Datenbank_Tag {
 	 * werden in einer LinkedList gespeichert.
 	 * Diese Liste ist in der Tag List enthalten welche außerdem den Ausgabewert darstellt.
 	 */
-	protected LinkedList<Tag> getTage() {
+	protected LinkedList<Tag> getTage(Connection con) {
 
 			
 			Datenbank_Schicht schicht = new Datenbank_Schicht();
-			LinkedList<Schicht> schichtList = schicht.getSchichten();
+			LinkedList<Schicht> schichtList = schicht.getSchichten(con);
 			
 			Datenbank_Tblock_Tag tblock_tag = new Datenbank_Tblock_Tag();
-			LinkedList<Tblock_Tag> tblocktagList = tblock_tag.getAlleTblock_Tag();
+			LinkedList<Tblock_Tag> tblocktagList = tblock_tag.getAlleTblock_Tag(con);
 			
 			Statement stmt = null;
 			ResultSet rs = null;
-			String sqlStatement = "select Tbez, Wpnr, Anzschicht, Feiertag from Tag";
+			String sqlStatement = "select Tbez, Wpnr, Feiertag from Tag";
 
 			try {
 				stmt = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
@@ -304,13 +295,8 @@ class Datenbank_Tag {
 				LinkedList<Tag> tagList = new LinkedList<>();
 
 				while (rs.next()) {
-					Tag t = new Tag(sqlStatement, 0, 0, false);
+					Tag t = new Tag(rs.getString("Tbez"),rs.getInt("Wpnr"),rs.getBoolean("Feiertag"));
 
-					t.setTbez(rs.getString("Tbez"));
-					t.setWpnr(rs.getInt("Wpnr"));
-					t.setAnzschicht(rs.getInt("Anzschicht"));
-					t.setFeiertag(rs.getBoolean("Feiertag"));
-			
 					
 					for (Schicht sch : schichtList) {
 						if (sch.getWpnr() == t.getWpnr()&& sch.getTbez() == t.getTbez()) {
@@ -332,6 +318,7 @@ class Datenbank_Tag {
 				return tagList;
 
 			} catch (SQLException sql) {
+				System.err.println("Methode getTage SQL-Fehler: " + sql.getMessage());
 				return null;
 			}
 		}
@@ -343,36 +330,36 @@ class Datenbank_Tag {
 	 * Tag, Schicht, Ma-Schicht (  Ma-Schicht wird über die Schicht - deleteMethode gelöscht).
 	 */
 	
-	protected boolean deleteTag(int wpnr) {
+	protected boolean deleteTag(int wpnr,Connection con) {
 		Datenbank_Schicht schicht = new Datenbank_Schicht();
-		LinkedList<Schicht> schichtList = schicht.getSchichten();
+		LinkedList<Schicht> schichtList = schicht.getSchichten(con);
 		
 		Datenbank_Tblock_Tag tblock_tag = new Datenbank_Tblock_Tag();
-		LinkedList<Tblock_Tag> tblocktagList = tblock_tag.getAlleTblock_Tag();
+		LinkedList<Tblock_Tag> tblocktagList = tblock_tag.getAlleTblock_Tag(con);
 		
 		Datenbank_Tag tag = new Datenbank_Tag();
-		LinkedList<Tag> tageList = tag.getTage();
+		LinkedList<Tag> tageList = tag.getTage(con);
 		
 		Statement stmt = null;
 		ResultSet rs = null;
 		String sqlQuery = "DELETE FROM tag WHERE tag.wpnr= "+wpnr;
 		for (Schicht sch : schichtList) {
 			if (sch.getWpnr() == wpnr) {
-				schicht.deleteSchicht(wpnr);;
+				schicht.deleteSchicht(wpnr,con);;
 			}
 			for (Tag t : tageList) {
 				if (t.getWpnr() == wpnr) {
 
 			for (Tblock_Tag tbt : tblocktagList) {
 				if (tbt.getWpnr() == wpnr && tbt.getTbez() == t.getTbez()) {
-					tblock_tag.deleteTblock_Tag(wpnr);;
+					tblock_tag.deleteTblock_Tag(wpnr,con);;
 				}
 			}
 				}}
 		}
 		try {
 			stmt = con.createStatement();
-			rs = stmt.executeQuery(sqlQuery);
+			stmt.execute(sqlQuery);
 			return true;
 		} catch (SQLException sql) {
 			System.err.println("Methode deleteTag SQL-Fehler: "

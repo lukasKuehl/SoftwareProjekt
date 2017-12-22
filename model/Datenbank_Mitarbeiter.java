@@ -11,16 +11,12 @@ import data.Mitarbeiter;
 
 class Datenbank_Mitarbeiter {
 
-	Datenbank_Connection db_con = new  Datenbank_Connection();
-	Connection con = db_con.getCon();
-
-	
 	
 	/**
 	 * @Thomas Friesen
 	 * @info Die Methode fügt einen Mitarbeiter in die Datenbank hinein
 	 */
-	public boolean addMitarbeiter(Mitarbeiter ma) {
+	public boolean addMitarbeiter(Mitarbeiter ma, Connection con) {
 		boolean success = false;
 	
 		String sqlStatement;
@@ -51,7 +47,7 @@ class Datenbank_Mitarbeiter {
 			// Verhindert das Commit nach jeder Anweisung. Nicht zwangsläufig notwendig bei einem einzelnen SQL-Befehl
 			con.setAutoCommit(false);
 
-			if (checkMitarbeiter(benutzername)) {
+			if (checkMitarbeiter(benutzername,con)) {
 				System.out.println("Der Mitarbeiter wurde bereits in die Schicht eingeteilt!");
 			}
 			else{
@@ -113,13 +109,12 @@ class Datenbank_Mitarbeiter {
 
 	
 	
-	
 	/**
 	 * @author Anes Preljevic
 	 * @info Auslesen aller Mitarbeiter aus der Datenbank und erzeugen von Mitarbeiter Objekten.
 	 * Diese werden in eine LinkedList abgelegt und ausgegeben.
 	 */
-	protected LinkedList<Mitarbeiter> getAlleMitarbeiter() {
+	protected LinkedList<Mitarbeiter> getAlleMitarbeiter(Connection con) {
 
 		Statement stmt = null;
 		ResultSet rs = null;
@@ -133,15 +128,10 @@ class Datenbank_Mitarbeiter {
 			LinkedList<Mitarbeiter> mitarbeiterList = new LinkedList<>();
 
 			while (rs.next()) {
-				Mitarbeiter m = new Mitarbeiter(sqlStatement, sqlStatement, sqlStatement, sqlStatement, sqlStatement, 0, sqlStatement, sqlStatement);
+				Mitarbeiter m = new Mitarbeiter(rs.getString("Benutzername"), rs.getString("Passwort"),
+						rs.getString("Job"), rs.getString("Vorname"), rs.getString("Name"),
+						rs.getInt("Maxstunden"),rs.getString("Whname"),rs.getString("Email"));
 
-				m.setBenutzername(rs.getString("Benutzername"));
-				m.setPasswort(rs.getString("Passwort"));
-				m.setJob(rs.getString("Job"));
-				m.setVorname(rs.getString("Vorname"));
-				m.setName(rs.getString("Name"));
-				m.setMaxstunden(rs.getInt("Maxstunden"));
-				m.setWhname(rs.getString("Whname"));
 				mitarbeiterList.add(m);
 			}
 
@@ -151,6 +141,7 @@ class Datenbank_Mitarbeiter {
 			return mitarbeiterList;
 
 		} catch (SQLException sql) {
+			System.err.println("Methode getAlleMitarbeiter SQL-Fehler: " + sql.getMessage());
 			return null;
 		}
 	}
@@ -160,7 +151,7 @@ class Datenbank_Mitarbeiter {
 	 * bei existenz return true sonst false
 	 */
 	
-	protected boolean checkMitarbeiter(String benutzername) {
+	protected boolean checkMitarbeiter(String benutzername,Connection con) {
 		Statement stmt = null;
 		ResultSet rs = null;
 		String sqlQuery = "select Benutzername from Mitarbeiter where benutzername = " + benutzername;
@@ -189,34 +180,28 @@ class Datenbank_Mitarbeiter {
 	 * @info Auslesen eines bestimmten Mitarbeiters aus der Datenbank und erzeugen eines Mitarbeiter Objektes,
 	 * welches anschließend ausgegeben wird.
 	 */
-	public Mitarbeiter getMitarbeiter(String benutzername) {
-		if (!checkMitarbeiter(benutzername)){
+	public Mitarbeiter getMitarbeiter(String benutzername, Connection con) {
+		if (!checkMitarbeiter(benutzername, con)){
 			return null;
 		}
 		else{
 		Statement stmt = null;
 		ResultSet rs = null;
 
-		String sqlStatement = "select Benutzername, Passwort, Job, Vorname, Name, Maxstunden, Whname,Email  from Mitarbeiter";
+		String sqlStatement = "select Benutzername, Passwort, Job, Vorname, Name, Maxstunden, Whname,Email  from Mitarbeiter where benutzername="+benutzername;
 
 		try {
 			stmt = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
 			rs = stmt.executeQuery(sqlStatement);
 
 			
-
+				rs.next();
 			
-				Mitarbeiter m = new Mitarbeiter(sqlStatement, sqlStatement, sqlStatement, sqlStatement, sqlStatement, 0, sqlStatement, sqlStatement);
+				Mitarbeiter m = new Mitarbeiter(rs.getString("Benutzername"),
+						rs.getString("Passwort"), rs.getString("Job"),
+						rs.getString("Vorname"),rs.getString("Name"),rs.getInt("Maxstunden"),
+						rs.getString("Whname"), rs.getString("Email"));
 
-				m.setBenutzername(rs.getString("Benutzername"));
-				m.setPasswort(rs.getString("Passwort"));
-				m.setJob(rs.getString("Job"));
-				m.setVorname(rs.getString("Vorname"));
-				m.setName(rs.getString("Name"));
-				m.setMaxstunden(rs.getInt("Maxstunden"));
-				m.setWhname(rs.getString("Whname"));
-				
-			
 
 			rs.close();
 			stmt.close();
@@ -224,9 +209,101 @@ class Datenbank_Mitarbeiter {
 			return m;
 
 		} catch (SQLException sql) {
+			System.err.println("Methode getMitarbeiter SQL-Fehler: " + sql.getMessage());
 			return null;
 		}
+		}}
+		protected void WechselBenutzerrolle(String benutzername, Connection con) {
+
+			Datenbank_Mitarbeiter ma = new Datenbank_Mitarbeiter();
+			Mitarbeiter m = ma.getMitarbeiter(benutzername,con);
+			Statement stmt = null;
+			String sqlStatement1;
+			String sqlStatement2;
+
+
+			try {
+				stmt = con.createStatement();
+				con.setAutoCommit(false);
+				if(m.getJob()=="Kassierer" || m.getJob()=="Information"){
+					sqlStatement1 = "UPDATE Mitarbeiter SET Job = Kassenbüro WHERE benutzername="+benutzername;
+				stmt.executeUpdate(sqlStatement1);
+				}
+					else{
+						sqlStatement2="UPDATE Mitarbeiter SET Job = Kassierer WHERE benutzername="+benutzername;
+						stmt.executeUpdate(sqlStatement2);
+					}	
+					
+
+				
+				con.commit();
+				con.setAutoCommit(true);
+
+			} catch (SQLException sql) {
+				System.err.println("Methode wechselBenutzerrolle SQL-Fehler: " + sql.getMessage());
+				try {
+					con.rollback();
+					con.setAutoCommit(true);
+				} catch (SQLException sqlRollback) {
+					System.err.println("Methode wechselBenutzerrolle " + "- Rollback -  SQL-Fehler: " + sqlRollback.getMessage());
+				}
+			} finally {
+				try {
+					if (stmt != null)
+						stmt.close();
+				} catch (SQLException e) {
+					System.err.println("Methode wechselBenutzerrolle (finally) SQL-Fehler: " + e.getMessage());
+				}
+			}
 		}
-	}
+		/**
+		 * @author Anes Preljevic
+		 * @info Löschen eines Wochenplans mit zugehörigen Tagen (schichten)  aus den Datenbank Tabellen 
+		 * Wochenplan, Tag, Schicht, Ma-Schicht ( Schicht und Ma-Schicht werden über die Tag/Schicht - deleteMethode gelöscht).
+		 */
+		
+		protected boolean deleteMitarbeiter(String benutzername,Connection con) {
+
+			if (!checkMitarbeiter(benutzername, con)){
+				return false;
+			}
+			else{
+			Statement stmt = null;
+			ResultSet rs = null;
+			String sqlStatement = "DELETE FROM Mitarbeiter WHERE benutzername = " + benutzername;
+	
+			
+			try {
+				stmt = con.createStatement();
+				stmt.execute(sqlStatement);
+				con.commit();
+
+				con.setAutoCommit(true);
+				return true;
+				}
+				catch (SQLException sql) {
+				System.err.println("Methode deleteMitarbeiter SQL-Fehler: " + sql.getMessage());
+				try {
+					
+					con.rollback();
+					con.setAutoCommit(true);
+					return false;
+				} catch (SQLException sqlRollback) {
+						System.err.println("Methode deleteMitarbeiter " + "- Rollback -  SQL-Fehler: " + sqlRollback.getMessage());
+						return false;
+					}
+			} 
+				finally {
+				try {
+					if (rs != null)
+						rs.close();
+					if (stmt != null)
+						stmt.close();
+				} catch (SQLException e) {
+					System.err.println("Methode deleteMitarbeiter (finally) SQL-Fehler: " + e.getMessage());
+				}
+				}
+			}
+		}
 
 }

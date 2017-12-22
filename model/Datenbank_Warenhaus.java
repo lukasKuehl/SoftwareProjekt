@@ -12,11 +12,9 @@ import data.Warenhaus;
 
 class Datenbank_Warenhaus {
 
-	Datenbank_Connection db_con = new Datenbank_Connection();
-	Connection con = db_con.getCon();
 
 
-	protected void addWarenhaus(Warenhaus warenhaus) {
+	protected void addWarenhaus(Warenhaus warenhaus, Connection con) {
 
 		String sqlStatement;
 		sqlStatement = "insert into Warenhaus (Whname,Anzkasse,Anzinfo) values( ?, ?, ?)";
@@ -60,10 +58,39 @@ class Datenbank_Warenhaus {
 	}
 	/**
 	 * @author Anes Preljevic
+	 * @info Prüft ob es zu der eingegebenen schichtnr und dem benutzernamen bereits einen Mitarbeiter in der Schicht gibt, bei existenz return true, sonst false
+	 */
+	public boolean checkWarenhaus(String whname,Connection con) {
+		Statement stmt = null;
+		ResultSet rs = null;
+		String sqlQuery = "select whname, anzkasse, anzinfo from Ma_Schicht where whname ="+whname;
+
+		try {
+			stmt = con.createStatement();
+			rs = stmt.executeQuery(sqlQuery);
+			return rs.next();
+
+		} catch (SQLException sql) {
+			System.err.println("Methode checkWarenhaus SQL-Fehler: " + sql.getMessage());
+			return false;
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (stmt != null)
+					stmt.close();
+			} catch (SQLException e) {
+				System.err.println("Methode checkWarenhaus (finally) SQL-Fehler: " + e.getMessage());
+			}
+		}
+	}
+
+	/**
+	 * @author Anes Preljevic
 	 * @info Auslesen der Warenhäuser aus der Datenbank und erzeugen von Warenhaus Objekten.
 	 * Diese werden in eine LinkedList abgelegt und ausgegeben.
 	 */
-	protected LinkedList<Warenhaus> getWarenhaus() {
+	protected LinkedList<Warenhaus> getWarenhaus(Connection con) {
 
 		Statement stmt = null;
 		ResultSet rs = null;
@@ -77,12 +104,8 @@ class Datenbank_Warenhaus {
 			LinkedList<Warenhaus> warenhausList = new LinkedList<>();
 
 			while (rs.next()) {
-				Warenhaus wh = new Warenhaus(sqlStatement, 0, 0);
+				Warenhaus wh = new Warenhaus(rs.getString("Whname"),rs.getInt("Anzkasse"), rs.getInt("Anzinfo"));
 
-				wh.setWhname(rs.getString("Whname"));
-				wh.setAnzkasse(rs.getInt("Anzkasse"));
-				wh.setAnzinfo(rs.getInt("Anzinfo"));
-				
 				warenhausList.add(wh);
 			}
 
@@ -92,6 +115,7 @@ class Datenbank_Warenhaus {
 			return warenhausList;
 
 		} catch (SQLException sql) {
+			System.err.println("Methode getWarenhaus SQL-Fehler: " + sql.getMessage());
 			return null;
 		}
 	}

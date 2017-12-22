@@ -4,10 +4,9 @@ import java.util.LinkedList;
 import data.Schicht;
 
 public class Tag {
-	private String tbez;
-	private int wpnr;
-	private int anzschicht;
-	private boolean feiertag;
+	private String tbez=null;
+	private int wpnr=0;
+	private boolean feiertag=false;
 	private LinkedList<Schicht> ll_schicht = new LinkedList<Schicht>();
 	private LinkedList<Tblock_Tag> ll_tblocktag = new LinkedList<Tblock_Tag>();
 	
@@ -16,9 +15,9 @@ public class Tag {
 	 * @info Erzeugen eines Objektes vom Typ Tag und 
 	 * Wertzuweisung der Instanzvariablen. Getter/Setter für alle Variablen.
 	 */
-	public Tag(String tbez, int wpnr, int anzschicht, boolean feiertag){
+	public Tag(String tbez, int wpnr, boolean feiertag){
+		this.tbez=tbez;
 		this.wpnr=wpnr;
-		this.anzschicht=anzschicht;
 		this.feiertag=feiertag;
 		
 	}
@@ -39,13 +38,7 @@ public class Tag {
 		this.wpnr = wpnr;
 	}
 
-	public int getAnzschicht() {
-		return anzschicht;
-	}
 
-	public void setAnzschicht(int anzschicht) {
-		this.anzschicht = anzschicht;
-	}
 
 	public boolean isFeiertag() {
 		return feiertag;

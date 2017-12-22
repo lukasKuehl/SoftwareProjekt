@@ -16,19 +16,12 @@ class Datenbank_Tauschanfrage {
 
 
 
-	Datenbank_Connection db_con = new Datenbank_Connection();
-	Connection con = db_con.getCon();
-
-
-
-	
-
 	/**
 	 * @Thomas Friesen
 	 * @info  Fügt eine neue Tauschanfrage in der Tabelle Tauschanfrage hinzu
 	 */
 
-	protected boolean addTauschanfrage(int tauschNr, String senderName, int senderSchichtNr, String empfaengerName, int empfaengerSchichtNr ) {
+	protected boolean addTauschanfrage(int tauschNr, String senderName, int senderSchichtNr, String empfaengerName, int empfaengerSchichtNr,Connection con ) {
 		boolean success = false;
 	
 		
@@ -45,7 +38,7 @@ class Datenbank_Tauschanfrage {
 			
 			con.setAutoCommit(false);
 
-			if (checkTauschanfrage(tauschNr)) {
+			if (checkTauschanfrage(tauschNr, con)) {
 				System.out.println("Die Tauschnummer befindet sich bereits in der Datenbank!");
 			}
 			else{
@@ -107,7 +100,7 @@ class Datenbank_Tauschanfrage {
 	 * @Anes Preljevic
 	 * @info Prüft ob es zu der eingegebenen tauschnr eine Tauschtanfrage gibt, bei existenz return true sonst false.
 	 */
-	protected boolean checkTauschanfrage(int tauschnr) {
+	protected boolean checkTauschanfrage(int tauschnr,Connection con) {
 		Statement stmt = null;
 		ResultSet rs = null;
 		String sqlQuery = "select tauschnr from Tauschanfrage where tauschnr = " + tauschnr;
@@ -136,7 +129,7 @@ class Datenbank_Tauschanfrage {
 	 * @Anes Preljevic
 	 * @info Ändert den Bestätigungsstatus der übergebenen Tauschanfrage
 	 */
-	protected void updateTauschanfrage(Tauschanfrage tauschanfrage) {
+	protected void updateTauschanfrage(Tauschanfrage tauschanfrage,Connection con) {
 
 
 		boolean bestätigungsstatus = tauschanfrage.isBestätigungsstatus();
@@ -179,7 +172,7 @@ class Datenbank_Tauschanfrage {
 	 * @Anes Preljevic
 	 * @info Ändert den Bestätigungsstatus der übergebenen Tauschanfrage
 	 */
-	protected void bestätigeTauschanfrage(int tauschnr) {
+	protected void bestätigeTauschanfrage(int tauschnr,Connection con) {
 
 
 		String sqlStatement;
@@ -218,14 +211,14 @@ class Datenbank_Tauschanfrage {
 	 * Diese beinhaltet die zugehörigen Mitarbeiter und Schichten der Sender und Empfänger.
 	 * Es werden Mitarbeiter, Schicht Objekte welche dem Sender/Empfänger entsprechen für jede Tauschanfrage gespeichert.
 	 */
-	protected LinkedList<Tauschanfrage> getTauschanfragen() {
+	protected LinkedList<Tauschanfrage> getTauschanfragen(Connection con) {
 		Datenbank_Schicht schicht = new Datenbank_Schicht();
-		LinkedList<Schicht> schichtsenderList = schicht.getSchichten();
-		LinkedList<Schicht> schichtempfängerList = schicht.getSchichten();
+		LinkedList<Schicht> schichtsenderList = schicht.getSchichten(con);
+		LinkedList<Schicht> schichtempfängerList = schicht.getSchichten(con);
 		
 		Datenbank_Mitarbeiter mitarbeiter = new Datenbank_Mitarbeiter();
-		LinkedList<Mitarbeiter> senderList = mitarbeiter.getAlleMitarbeiter();
-		LinkedList<Mitarbeiter> empfängerList = mitarbeiter.getAlleMitarbeiter();
+		LinkedList<Mitarbeiter> senderList = mitarbeiter.getAlleMitarbeiter(con);
+		LinkedList<Mitarbeiter> empfängerList = mitarbeiter.getAlleMitarbeiter(con);
 		
 		Statement stmt = null;
 		ResultSet rs = null;
@@ -240,14 +233,9 @@ class Datenbank_Tauschanfrage {
 			LinkedList<Tauschanfrage> tauschanfrageList = new LinkedList<>();
 
 			while (rs.next()) {
-				Tauschanfrage tanf = new Tauschanfrage(sqlStatement, sqlStatement, false, 0, 0, 0);
+				Tauschanfrage tanf = new Tauschanfrage(rs.getString("Empfänger"),rs.getString("Sender"), rs.getBoolean("Bestätigunsstatus")
+						,rs.getInt("Schichtnrsender"), rs.getInt("Schichtnrempfänger"), rs.getInt("Tauschnr"));
 
-				tanf.setEmpfänger(rs.getString("Empfänger"));
-				tanf.setSender(rs.getString("Sender"));
-				tanf.setBestätigungsstatus(rs.getBoolean("Bestätigunsstatus"));
-				tanf.setSchichtnrsender(rs.getInt("Schichtnrsender"));
-				tanf.setSchichtnrempfänger(rs.getInt("Schichtnrempfänger"));
-				tanf.setTauschnr(rs.getInt("Tauschnr"));
 				for (Schicht sch : schichtsenderList) {
 					if (sch.getSchichtnr() == tanf.getSchichtnrsender()) {
 						tanf.setLinkedListSchichtensender(sch);
@@ -277,6 +265,7 @@ class Datenbank_Tauschanfrage {
 			return tauschanfrageList;
 
 		} catch (SQLException sql) {
+			System.err.println("Methode getTauschanfragen SQL-Fehler: " + sql.getMessage());
 			return null;
 		}
 	}
@@ -286,14 +275,14 @@ class Datenbank_Tauschanfrage {
 	 * Diese beinhaltet die zugehörigen Mitarbeiter und Schichten der Sender und Empfänger.
 	 * Es werden Mitarbeiter, Schicht Objekte welche dem Sender/Empfänger entsprechen für jede Tauschanfrage gespeichert.
 	 */
-	protected Tauschanfrage getTauschanfrage(int tauschnr) {
+	protected Tauschanfrage getTauschanfrage(int tauschnr, Connection con ) {
 		Datenbank_Schicht schicht = new Datenbank_Schicht();
-		LinkedList<Schicht> schichtsenderList = schicht.getSchichten();
-		LinkedList<Schicht> schichtempfängerList = schicht.getSchichten();
+		LinkedList<Schicht> schichtsenderList = schicht.getSchichten(con);
+		LinkedList<Schicht> schichtempfängerList = schicht.getSchichten(con);
 		
 		Datenbank_Mitarbeiter mitarbeiter = new Datenbank_Mitarbeiter();
-		LinkedList<Mitarbeiter> senderList = mitarbeiter.getAlleMitarbeiter();
-		LinkedList<Mitarbeiter> empfängerList = mitarbeiter.getAlleMitarbeiter();
+		LinkedList<Mitarbeiter> senderList = mitarbeiter.getAlleMitarbeiter(con);
+		LinkedList<Mitarbeiter> empfängerList = mitarbeiter.getAlleMitarbeiter(con);
 		
 		Statement stmt = null;
 		ResultSet rs = null;
@@ -307,15 +296,11 @@ class Datenbank_Tauschanfrage {
 
 			
 
-			
-				Tauschanfrage tanf = new Tauschanfrage(sqlStatement, sqlStatement, false, 0, 0, 0);
+				rs.next();
+				Tauschanfrage tanf = new Tauschanfrage(rs.getString("Empfänger"),rs.getString("Sender"), rs.getBoolean("Bestätigunsstatus")
+						,rs.getInt("Schichtnrsender"), rs.getInt("Schichtnrempfänger"), rs.getInt("Tauschnr"));
 
-				tanf.setEmpfänger(rs.getString("Empfänger"));
-				tanf.setSender(rs.getString("Sender"));
-				tanf.setBestätigungsstatus(rs.getBoolean("Bestätigunsstatus"));
-				tanf.setSchichtnrsender(rs.getInt("Schichtnrsender"));
-				tanf.setSchichtnrempfänger(rs.getInt("Schichtnrempfänger"));
-				tanf.setTauschnr(rs.getInt("Tauschnr"));
+
 				for (Schicht sch : schichtsenderList) {
 					if (sch.getSchichtnr() == tanf.getSchichtnrsender()) {
 						tanf.setLinkedListSchichtensender(sch);
@@ -345,6 +330,7 @@ class Datenbank_Tauschanfrage {
 			return tanf;
 
 		} catch (SQLException sql) {
+			System.err.println("Methode getTauschanfrage SQL-Fehler: " + sql.getMessage());
 			return null;
 		}
 	}
@@ -352,8 +338,8 @@ class Datenbank_Tauschanfrage {
 	 * @Anes Preljevic
 	 * @info Löschen einer Tauschanfrage aus der Datenbank Tabelle Tauschanfrage
 	 */
-	protected boolean deleteTauschanfrage(int tauschnr) {
-		if (!checkTauschanfrage(tauschnr)){
+	protected boolean deleteTauschanfrage(int tauschnr, Connection con) {
+		if (!checkTauschanfrage(tauschnr,con)){
 			return false;
 		}
 		else{
@@ -363,7 +349,7 @@ class Datenbank_Tauschanfrage {
 
 		try {
 			stmt = con.createStatement();
-			rs = stmt.executeQuery(sqlQuery);
+			stmt.execute(sqlQuery);
 			
 			con.commit();
 
@@ -401,10 +387,10 @@ class Datenbank_Tauschanfrage {
 	 * @info Fragt die höchste Tauschnr ab und erhöht diese um 1, sodass bei neu Erstellung
 	 * einer Tauschanfrage die nächste Tauschnr vorliegt.
 	 */
-	protected  int getNewTauschnr() {
+	protected  int getNewTauschnr(Connection con) {
 		Statement stmt = null;
 		ResultSet rs = null;
-		String sqlQuery = "select max (tauschnr)+1 from Tauschanfrage";
+		String sqlQuery = "select max(tauschnr)+1 from Tauschanfrage";
 
 		try {
 			stmt = con.createStatement();
