@@ -1,6 +1,8 @@
 package controller;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedList;
 
 import javax.swing.JDialog;
@@ -81,23 +83,79 @@ class SchichtStrg {
 	 */
 	protected LinkedList<String> getVerfügbareMitarbeiter(int schichtNr){
 		LinkedList<String> verfuegbareMitarbeiter = new LinkedList<String>();
-		/*
-		LinkedList<Mitarbeiter> alleMitarbeiter = this.myModel.getAlleMitarbeiter();
 		
+		LinkedList<Mitarbeiter> alleMitarbeiter = this.myModel.getAlleMitarbeiter();
+				
 		for(Mitarbeiter m: alleMitarbeiter){		
-			LinkedList<Schicht> schichten = this.myModel.getSchichten(m.getUsername());
+			
+			
+			LinkedList<Schicht> alleSchichten = this.myModel.getSchichten();
+			LinkedList<Ma_Schicht> alleSchichtEinteilungen = this.myModel.getMa_Schicht();
+			LinkedList<Schicht> mitarbeiterSchichten = new LinkedList<Schicht>();
+			
+			
+			for(Schicht s : alleSchichten){
+				
+				for(Ma_Schicht mas: alleSchichtEinteilungen){
+					if(s.getSchichtnr() == mas.getSchichtnr()){
+						if(m.getBenutzername().equals(mas.getBenutzername())){
+							mitarbeiterSchichten.add(s);
+						}						
+					}				
+				}			
+			}		
 			
 			int maxDauer, dauer = 0; 
 			
 			maxDauer = m.getMaxstunden();
-			
+					
 			//Bereits vorhande Schichten werden addiert um momentane Auslastung zu ermitteln
-			for(Schicht schicht: schichten){
-				dauer = dauer + schicht.getDauer();
+			for(Schicht schicht: mitarbeiterSchichten){
+			
+				String anfangsZeit = schicht.getAnfanguhrzeit();
+				String endZeit = schicht.getEndeuhrzeit();
+				
+				try{
+					
+					SimpleDateFormat sdf = new SimpleDateFormat("hh:mm");
+					Date anfangDate = sdf.parse(anfangsZeit);
+					Date endDate = sdf.parse(endZeit);
+					
+					long dauerSchichtLong = endDate.getTime() - anfangDate.getTime();
+					
+					int dauerSchichtInt  =  Math.round((long) dauerSchichtLong / (1000 * 60 * 60));
+					
+					dauer = dauer + dauerSchichtInt;
+					
+					
+				}catch(Exception e){
+					System.out.println("Fehler beim Bestimmen der Dauer von der Schicht: " + schicht.getSchichtnr());
+				}			
 			}
 			
 			//Addieren der zusätzlich notwendigen Auslastung für die neue Schicht
-			dauer = dauer + this.myModel.getSchichtDauer(schichtNr);
+			
+			Schicht neueSchicht = this.myModel.getSchicht(schichtNr);
+			
+			String anfangsZeit = neueSchicht.getAnfanguhrzeit();
+			String endZeit = neueSchicht.getEndeuhrzeit();			
+			
+			try{
+				
+				SimpleDateFormat sdf = new SimpleDateFormat("hh:mm");
+				Date anfangDate = sdf.parse(anfangsZeit);
+				Date endDate = sdf.parse(endZeit);
+				
+				long dauerSchichtLong = endDate.getTime() - anfangDate.getTime();
+				
+				int dauerSchichtInt  =  Math.round((long) dauerSchichtLong / (1000 * 60 * 60));
+				
+				dauer = dauer + dauerSchichtInt;
+				
+				
+			}catch(Exception e){
+				System.out.println("Fehler beim Bestimmen der Dauer von der neuen Schicht: " + neueSchicht.getSchichtnr());
+			}		
 			
 			if(dauer <= maxDauer ){
 								
@@ -135,7 +193,7 @@ class SchichtStrg {
 				}	
 			}			
 		}
-		*/
+		
 		
 		return verfuegbareMitarbeiter;
 	}

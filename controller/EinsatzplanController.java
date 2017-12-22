@@ -364,8 +364,6 @@ public class EinsatzplanController {
 		return rueckgabe;
 	}
 	
-	
-	
 	protected Einsatzplanview getView(){
 		return this.view;		
 	}	
