@@ -538,6 +538,18 @@ public class Einsatzplanmodel {
 		}
 		return result;
 	}
+	public LinkedList<Tag> getTagewp(int wpnr) {	
+		LinkedList<Tag> result = null;;
+		try{
+			result = this.dataTag.getTagewp(wpnr,con);
+			
+		}catch(Exception e){
+			System.out.println("Fehler innerhalb des Modells:");
+			System.out.println("Fehler beim Aufruf der Methode getTagewp:");
+			e.printStackTrace();			
+		}
+		return result;
+	}
 	
 	public void addTag(Tag tag){
 		

@@ -235,7 +235,7 @@ class Datenbank_Tag {
 			
 			Statement stmt = null;
 			ResultSet rs = null;
-			String sqlStatement = "SELECT tbez, wpnr, Feiertag FROM Tag ORDER BY wpnr , FIELD(tbez, 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag','Freitag','Samstag','Sonntag') + WEEKDAY(NOW())%7";
+			String sqlStatement = "SELECT tbez, wpnr, Feiertag FROM Tag ORDER BY wpnr , FIELD(tbez, 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag','Freitag','Samstag','Sonntag')";
 
 			try {
 				stmt = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
@@ -272,6 +272,60 @@ class Datenbank_Tag {
 			}
 		}
 	
+	/**
+	 * @author Anes Preljevic
+	 * @info Auslesen aller Tage aus der Datenbank und erzeugen von Tag Objekten.
+	 * Diese werden in eine LinkedList abgelegt. Die zugehörigen Schichten  
+	 * werden in einer LinkedList gespeichert.
+	 * Diese Liste ist in der Tag List enthalten welche außerdem den Ausgabewert darstellt.
+	 */
+	protected LinkedList<Tag> getTagewp(int wpnr, Connection con) {
+
+			
+			Datenbank_Schicht schicht = new Datenbank_Schicht();
+			//LinkedList<Schicht> schichtList = schicht.getSchichten(con);
+			
+			Datenbank_Tblock_Tag tblock_tag = new Datenbank_Tblock_Tag();
+			//LinkedList<Tblock_Tag> tblocktagList = tblock_tag.getAlleTblock_Tag(con);
+			
+			Statement stmt = null;
+			ResultSet rs = null;
+			String sqlStatement = "SELECT tbez, wpnr, feiertag FROM Tag where wpnr='"+wpnr+"' ORDER BY FIELD(tbez, 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag','Freitag','Samstag','Sonntag')";
+
+			try {
+				stmt = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+				rs = stmt.executeQuery(sqlStatement);
+
+				LinkedList<Tag> tagList = new LinkedList<>();
+
+				while (rs.next()) {
+					Tag t = new Tag(rs.getString("Tbez"),rs.getInt("Wpnr"),rs.getBoolean("Feiertag"));
+
+					
+				//	for (Schicht sch : schichtList) {
+				//		if (sch.getWpnr() == t.getWpnr()&& sch.getTbez() == t.getTbez()) {
+				//			t.setLinkedListSchichten(sch);
+				//		}
+				//	}
+				//	for (Tblock_Tag tbt : tblocktagList) {
+				//		if (tbt.getWpnr() == t.getWpnr()&& tbt.getTbez() == t.getTbez()) {
+				//			t.setLinkedListTblock_Tag(tbt);
+				//		}
+				//	}
+					
+					tagList.add(t);
+				}
+
+				rs.close();
+				stmt.close();
+
+				return tagList;
+
+			} catch (SQLException sql) {
+				System.err.println("Methode getTage SQL-Fehler: " + sql.getMessage());
+				return null;
+			}
+		}
 	
 	/**
 	 * @author Anes Preljevic

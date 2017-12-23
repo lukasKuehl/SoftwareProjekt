@@ -74,6 +74,14 @@ public class TestModel {
 			System.out.println( t.getTbez() + "  " + t.getWpnr()+ "   " + t.isFeiertag());
 
 		}
+		System.out.println("für wochenplan");
+		int tgwp=1000;
+		LinkedList<Tag> tagefürwp=wps.getTagewp(tgwp);
+		for(Tag t0:tagefürwp){
+			
+			System.out.println( t0.getTbez() + "  " + t0.getWpnr()+ "   " + t0.isFeiertag());
+
+		}
 		String t1="Tag1";
 		int wptag=1000;
 		//wps.setzeFeiertagtrue(t1,wptag);
