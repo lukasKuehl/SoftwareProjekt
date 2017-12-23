@@ -462,10 +462,10 @@ class WochenplanStrg {
 	protected ArrayList<String> getWochenplaene(){
 		ArrayList<String> rueckgabe = new ArrayList<String>();
 	
-		TreeMap<Integer, Wochenplan> alleWochenplaene = this.myModel.getWochenpläne();
+		LinkedList<Wochenplan> alleWochenplaene = this.myModel.getWochenplaene();
 		
-		for(Integer i : alleWochenplaene.keySet()){			
-			rueckgabe.add("KW" + alleWochenplaene.get(i).getWpnr());			
+		for(Wochenplan wp : alleWochenplaene){			
+			rueckgabe.add("KW" + wp.getWpnr());			
 		}	
 		
 		return rueckgabe;
