@@ -36,14 +36,14 @@ public class TestModel {
 		if(checkwp==true){
 			System.out.println("success");
 		}
-		//boolean deletewp=wps.deleteWochenplan(testwp);
-		//if(deletewp==true){
-		//	System.out.println("success delete Wochenplan");
-		//}
-		//else{
-		//	System.out.println("fail delete Wochenplan");
+		boolean deletewp=wps.deleteWochenplan(testwp);
+		if(deletewp==true){
+			System.out.println("success delete Wochenplan");
+		}
+		else{
+			System.out.println("fail delete Wochenplan");
 			
-		//}
+		}
 		//Standardeinstellungen test
 		Standardeinstellungen std = wps.getStandardeinstellungen();
 		System.out.println(std.get÷ffnungszeit() + "  " + std.getMinanzinfot()
@@ -122,7 +122,7 @@ public class TestModel {
 		int wpnrsch=1000;
 		//boolean delete33=wps.deleteSchicht(wpnrsch);
 		//if(delete33==true){
-		//	System.out.println("success delete schicht------------");
+			//System.out.println("success delete schicht------------");
 		//}
 		//else{
 			//System.out.println("fail delete schicht--------------");
