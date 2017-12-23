@@ -32,7 +32,7 @@ public class TerminLoeschenView extends JFrame {
 	private JList<Object> listTermin = null;
 	private String username = null;
 	private DefaultListModel<Object> model = null;
-	private ArrayList <String> tl = null;
+	private ArrayList<String> tl = null;
 	private Einsatzplanmodel myModel = null;
 	private Einsatzplanview myView = null;
 	private EinsatzplanController myController = null;
@@ -60,10 +60,10 @@ public class TerminLoeschenView extends JFrame {
 
 		listTermin = new JList<Object>();
 		tl = myView.getMitarbeiterTermine(myView.getUsername());
-		model = new DefaultListModel<Object> ();
-				for (String m : tl) {
-					model.addElement(m);
-				}
+		model = new DefaultListModel<Object>();
+		for (String m : tl) {
+			model.addElement(m);
+		}
 		listTermin.setModel(model);
 		listTermin.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		listTermin.setBounds(65, 145, 282, 355);
@@ -74,7 +74,7 @@ public class TerminLoeschenView extends JFrame {
 		lblTerminAuswaehlen.setFont(new Font("Verdana", Font.PLAIN, 13));
 		lblTerminAuswaehlen.setBounds(62, 120, 152, 14);
 		contentPane.add(lblTerminAuswaehlen);
-		
+
 		btnBesttigen = new JButton("bestätigen");
 		btnBesttigen.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		btnBesttigen.addActionListener(new ActionListener() {
@@ -91,31 +91,30 @@ public class TerminLoeschenView extends JFrame {
 					} else {
 						try {
 							String s;
-							s=listTermin.getSelectedValue().toString();
+							s = listTermin.getSelectedValue().toString();
 							s.trim();
 							s.split("-");
-							s.substring(0,2);
+							s.substring(0, 2);
 							int terminnr = Integer.parseInt(s);
 							myView.entferneTermin(terminnr, myView.getUsername());
 							System.exit(0);
-							
+
 						} catch (Exception a) {
 							JOptionPane.showMessageDialog(null,
-									"Die Liste konnte nicht übergeben werden. - Methode ActionPerformed (btnBestätigen)","Error", 	JOptionPane.ERROR_MESSAGE);
+									"Die Liste konnte nicht übergeben werden. - Methode ActionPerformed (btnBestätigen)",
+									"Error", JOptionPane.ERROR_MESSAGE);
 						}
 					}
-				}
-				 else {
+				} else {
 					System.exit(0);
 				}
 			}
-			
+
 		});
 		btnBesttigen.setBounds(437, 465, 119, 26);
 		contentPane.add(btnBesttigen);
 
 		setVisible(true);
 	}
-
 
 }

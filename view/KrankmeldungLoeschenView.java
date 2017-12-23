@@ -5,83 +5,116 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.*;
 import javafx.scene.control.RadioButton;
+import model.Einsatzplanmodel;
+
 import java.awt.Color;
 import controller.EinsatzplanController;
 import java.awt.event.*;
+import java.util.ArrayList;
 import java.util.TreeMap;
-
 
 public class KrankmeldungLoeschenView extends JFrame {
 
-	
-	/**
-	 * @RamonaGerke
-	 * @Info
-	 */
-	
-	private JPanel contentPane,  panelKrankmeldung = null;
+	// Initialisierung der Instanzvariablen
+	private JPanel contentPane, panelKrankmeldung = null;
 	private JLabel lblKrankmeldungLoeschen = null;
-	private JList listKrankmeldung=null;
-	private JButton btnBestaetigen=null;
+	private JList<Object> listKrankmeldung = null;
+	private JButton btnBestaetigen = null;
+	private String username = null;
+	private JLabel lblBitteAuswaehlen = null;
+	private Einsatzplanview myView = null;
+	private Einsatzplanmodel myModel = null;
 	private EinsatzplanController myController = null;
-	private String username= null;
-	private JLabel lblBitteAuswaehlen=null;
-	
-	
-		protected KrankmeldungLoeschenView() {
+	private ArrayList<String> kl = null;
+	private DefaultListModel<Object> model = null;
+
+	/**
+	 * @author RamonaGerke
+	 * @Info Konstruktor der View Krankmeldung löschen.
+	 */
+
+	protected KrankmeldungLoeschenView(Einsatzplanview myView, Einsatzplanmodel myModel,
+			EinsatzplanController myController) {
+		this.myView = myView;
+		this.myController = myController;
+		this.myModel = myModel;
 		setTitle("Krankmeldung löschen");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(250, 250, 800,600);
-		
+		setBounds(250, 250, 800, 600);
+
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.WHITE);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
-		
+
 		lblKrankmeldungLoeschen = new JLabel("Krankmeldung löschen");
 		lblKrankmeldungLoeschen.setFont(new Font("Verdana", Font.BOLD, 21));
 		lblKrankmeldungLoeschen.setBounds(95, 74, 362, 26);
 		contentPane.add(lblKrankmeldungLoeschen);
-		
-		
-		listKrankmeldung = new JList(myController.getAlleTermine(username).toArray());
+
+		listKrankmeldung = new JList<Object>();
+		// String grund = "Krankheit";
+		// kl = myController.getAlleTermin(myView.getUsername(), grund);
+		model = new DefaultListModel<Object>();
+		for (String m : kl) {
+			model.addElement(m);
+		}
+		listKrankmeldung.setModel(model);
+		listKrankmeldung.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		listKrankmeldung.setBounds(65, 145, 282, 355);
+		listKrankmeldung.getModel();
 		listKrankmeldung.setBounds(95, 126, 443, 437);
 		panelKrankmeldung.add(listKrankmeldung);
-		
+
 		btnBestaetigen = new JButton("Bestätigen");
 		btnBestaetigen.setFont(new Font("Verdana", Font.PLAIN, 18));
-		
-		btnBestaetigen.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if( e.getSource() == btnBestaetigen) {
-				int eingabe = JOptionPane.showConfirmDialog(null, "Wollen Sie die die Krankmeldung wirklich löschen?", null, JOptionPane.YES_NO_CANCEL_OPTION);
-				if (eingabe== 0) {
-					
-					//LOGIK DER ÜBERGABE
-				}
-				}
-		}});
-		
 		btnBestaetigen.setBounds(497, 445, 141, 35);
 		contentPane.add(btnBestaetigen);
-		
-		listKrankmeldung = new JList();
-		
-		// LINKED LIST MIT TERMIN NR  // AUSGABE DER LISTE
-		listKrankmeldung.setBorder(new LineBorder(new Color(0, 0, 0)));
-		listKrankmeldung.setBounds(95, 144, 315, 336);
-		contentPane.add(listKrankmeldung);
-		
+
 		lblBitteAuswaehlen = new JLabel("Bitte auswählen:");
 		lblBitteAuswaehlen.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		lblBitteAuswaehlen.setBounds(95, 128, 113, 14);
 		contentPane.add(lblBitteAuswaehlen);
-	
-		setVisible(true);
-			
-		}
-	}
 
+		setVisible(true);
+
+		/**
+		 * @author Ramona Gerke
+		 * @Info Die ActionPerformed Methode wird nach dem drücken des Buttons
+		 *       "bestätigen" ausgeführt. Die liest eine ArrayList aus und wandelt die
+		 *       benötigten Werte für die Methode myController.entferneTermin um.
+		 */
+
+		btnBestaetigen.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+				if (e.getSource() == btnBestaetigen) {
+					int eingabe = JOptionPane.showConfirmDialog(null,
+							"Wollen Sie die die Krankmeldung wirklich löschen?", null,
+							JOptionPane.YES_NO_CANCEL_OPTION);
+					if (eingabe == 0) {
+						int tblocknr = 0;
+						String temp[] = new String[5];
+						kl = myController.getAlleTermine(myView.getUsername());
+						for (String m : kl) {
+							m.toString();
+							m.trim();
+							temp = m.split("-");
+							String grund = temp[0];
+							String wpBez = temp[1];
+							tblocknr = Integer.parseInt(wpBez.substring(2));
+							String anfangstag = temp[2];
+							String endtag = temp[3];
+							String nfangsuhrzeit = temp[4];
+							String enduhrzeit = temp[5];
+
+							myController.entferneTermin(tblocknr, grund);
+						}
+					}
+				}
+			}
+		});
+	}
+}
