@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
+import java.util.TreeMap;
 
 import javax.swing.JDialog;
 
@@ -215,35 +216,56 @@ class SchichtStrg {
 	
 	
 	protected ArrayList<String> getAndereMitarbeiterSchichten(String wpbez, String username, int schichtNr){
-		ArrayList<String> rueckgabe = new ArrayList<String>();
+		LinkedList<Schicht> uebergabe = new LinkedList<Schicht>();
 		
 		//Umwandeln der Wpbez in die eindeutige Wochennummer
     	int wpnr = Integer.parseInt((wpbez.substring(2).trim())); 	
     	
     	LinkedList<Ma_Schicht> einteilung = this.myModel.getMa_Schicht();
 		LinkedList<Ma_Schicht> andereMitarbeiterEinteilung = new LinkedList<Ma_Schicht>();
+		LinkedList<Integer> belegteSchichtnummern = new LinkedList<Integer>();
 		
-		for(Ma_Schicht mas : einteilung){
-			if(!mas.getBenutzername().equals(username)){
-				andereMitarbeiterEinteilung.add(mas);
+		for(Ma_Schicht mas : einteilung){			
+			//Der Mitarbeiterbenutzername ist gleich dem Anfrager --> Tausch wäre nicht sinnvoll, da Schicht bereits belegt
+			if(mas.getBenutzername().equals(username)){				
+				if(!belegteSchichtnummern.contains(mas.getSchichtnr())){
+					belegteSchichtnummern.add(mas.getSchichtnr());
+				}							
 			}
 		}
 		
+		//Sortiere alle Schichteinteilungen aus, in denen eine Schicht auftaucht, die vom übergebenen Mitarbeiter selbst belegt ist
+		for(Ma_Schicht mas: einteilung){
+			boolean frei = true;
+			for(Integer i: belegteSchichtnummern){
+				if(i == mas.getSchichtnr()){
+					frei = false;
+				}			
+			}
+			if(frei){
+				andereMitarbeiterEinteilung.add(mas);
+			}	
+		}	
+		
 		//Abfrage vorhandenen Schichten in der Datenbank und Suche nach den Schichtnummern der Einteilung s.o.
 		LinkedList<Schicht> alleSchichten = this.myModel.getSchichten();
-		LinkedList<Schicht> andereMitarbeiterSchichtenAlle =new LinkedList<Schicht>();
+		// Potentielle Schichten zum Tauschen, in denen der übergebene Mitarbeiter selbst nicht vorhanden ist
+		TreeMap <Integer, Schicht> andereMitarbeiterSchichtenAlle = new TreeMap<Integer, Schicht>();
 				
-		for(Schicht s: alleSchichten){
-				
+		for(Schicht s: alleSchichten){				
 			for(Ma_Schicht mas: andereMitarbeiterEinteilung){
 						
-				if(s.getSchichtnr() == mas.getSchichtnr()){
-					andereMitarbeiterSchichtenAlle.add(s);
+				if(s.getSchichtnr() == mas.getSchichtnr() && (!andereMitarbeiterSchichtenAlle.containsKey(s.getSchichtnr()))){
+					andereMitarbeiterSchichtenAlle.put(s.getSchichtnr(),s);
 				}			
 			}		
 		}			
 		
-		return getSchichteinteilungView(andereMitarbeiterSchichtenAlle);
+		 for(Integer i: andereMitarbeiterSchichtenAlle.keySet()){
+			 uebergabe.add(andereMitarbeiterSchichtenAlle.get(i));
+		 }	
+		
+		return getSchichteinteilungView(uebergabe);
 	}
 	
 	
