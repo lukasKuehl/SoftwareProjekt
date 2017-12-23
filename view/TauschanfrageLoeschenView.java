@@ -17,11 +17,11 @@ import javax.swing.DefaultListModel;
 
 public class TauschanfrageLoeschenView extends JFrame {
 
-	private JPanel contentPane, panelKrankmeldung = null;
+	private JPanel contentPane, panelTauschanfrage = null;
 	private JLabel lblTauschanfrageLoeschen = null;
-	private JList<Object> listKrankmeldung = null;
+	private JList<Object> listTauschanfragen = null;
 	private JButton btnBestaetigen = null;
-	private ArrayList<String> kl, al = null;
+	private ArrayList<String> tl, al = null;
 	private DefaultListModel<Object> modelTauschanfrage = null;
 	private Einsatzplanview myView = null;
 	private EinsatzplanController myController = null;
@@ -42,28 +42,28 @@ public class TauschanfrageLoeschenView extends JFrame {
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
 
-		panelKrankmeldung = new JPanel();
-		panelKrankmeldung.setBackground(Color.WHITE);
-		panelKrankmeldung.setBounds(29, 30, 1188, 728);
-		panelKrankmeldung.setBorder(UIManager.getBorder("Button.border"));
-		contentPane.add(panelKrankmeldung);
-		panelKrankmeldung.setLayout(null);
+		panelTauschanfrage = new JPanel();
+		panelTauschanfrage.setBackground(Color.WHITE);
+		panelTauschanfrage.setBounds(29, 30, 1188, 728);
+		panelTauschanfrage.setBorder(UIManager.getBorder("Button.border"));
+		contentPane.add(panelTauschanfrage);
+		panelTauschanfrage.setLayout(null);
 
 		lblTauschanfrageLoeschen = new JLabel("Tauschanfrage loeschen:");
 		lblTauschanfrageLoeschen.setFont(new Font("Verdana", Font.BOLD, 20));
 		lblTauschanfrageLoeschen.setBounds(70, 89, 284, 26);
-		panelKrankmeldung.add(lblTauschanfrageLoeschen);
+		panelTauschanfrage.add(lblTauschanfrageLoeschen);
 
-		listKrankmeldung = new JList<Object>();
-		kl = myController.getTauschanfragen(myView.getUsername());
+		listTauschanfragen = new JList<Object>();
+		tl = myController.getTauschanfragen(myView.getUsername());
 		modelTauschanfrage = new DefaultListModel<Object>();
-		for (String m : kl) {
+		for (String m : tl) {
 			modelTauschanfrage.addElement(m);
 		}
-		listKrankmeldung.setModel(modelTauschanfrage);
-		listKrankmeldung.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		listKrankmeldung.setBounds(71, 126, 340, 392);
-		panelKrankmeldung.add(listKrankmeldung);
+		listTauschanfragen.setModel(modelTauschanfrage);
+		listTauschanfragen.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		listTauschanfragen.setBounds(71, 126, 340, 392);
+		panelTauschanfrage.add(listTauschanfragen);
 
 		btnBestaetigen = new JButton("Bestätigen");
 		btnBestaetigen.addActionListener(new ActionListener() {
@@ -71,7 +71,7 @@ public class TauschanfrageLoeschenView extends JFrame {
 			}
 		});
 		btnBestaetigen.setBounds(519, 483, 141, 35);
-		panelKrankmeldung.add(btnBestaetigen);
+		panelTauschanfrage.add(btnBestaetigen);
 
 		setVisible(true);
 
@@ -97,41 +97,49 @@ public class TauschanfrageLoeschenView extends JFrame {
 
 			if (eingabe == 0) {
 				try {
-					String temp[] = new String[14];
-					al = myController.getTauschanfragen(myView.getUsername());
-					for (String m : al) {
-						m.toString();
-						m.trim();
-						temp = m.split("-");
-						// tauschanfrageNrS = temp [0];
-						String senderVorname = temp[0];
-						String senderName = temp[1];
-						String senderSchichtnr = temp[2];
-						String senderWpNr = temp[3];
-						String senderTbez = temp[4];
-						String senderAnfangsuhrzeit = temp[5];
-						String senderEnduhrzeit = temp[6];
-						String empfaengerVorname = temp[7];
-						String empfaengerName = temp[8];
-						String empfaengerSchichtNr = temp[9];
-						String empfaengerWpBez = temp[10];
-						String empfaengerTagBez = temp[11];
-						String empfaengerAnfangsuhrzeit = temp[12];
-						String emfaengerEnduhrzeit = temp[13];
+					if (listTauschanfragen.isSelectionEmpty()) {
+						JOptionPane.showMessageDialog(null,
+								"Es wurde keine Tauschanfrage ausgewählt. Bitte wählen Sie eine Tauschanfrage aus.",
+								"Error", JOptionPane.ERROR_MESSAGE);
+
+					} else {
+						String temp[] = new String[14];
+						al = myView.getTauschanfragen(myView.getUsername());
+						for (String m : al) {
+							m.toString();
+							m.trim();
+							temp = m.split("-");
+							// tauschanfrageNrS = temp [0];
+							String senderVorname = temp[0];
+							String senderName = temp[1];
+							String senderSchichtnr = temp[2];
+							String senderWpNr = temp[3];
+							String senderTbez = temp[4];
+							String senderAnfangsuhrzeit = temp[5];
+							String senderEnduhrzeit = temp[6];
+							String empfaengerVorname = temp[7];
+							String empfaengerName = temp[8];
+							String empfaengerSchichtNr = temp[9];
+							String empfaengerWpBez = temp[10];
+							String empfaengerTagBez = temp[11];
+							String empfaengerAnfangsuhrzeit = temp[12];
+							String emfaengerEnduhrzeit = temp[13];
+						}
+						// Integer.parseInt(tauschanfrageNrS);
+						int tauschanfrageNr = 0;
+						myController.entferneTauschanfrage(tauschanfrageNr);
+						System.exit(0);
 					}
-					// Integer.parseInt(tauschanfrageNrS);
-					int tauschanfrageNr = 0;
-					myController.entferneTauschanfrage(tauschanfrageNr);
 				} catch (Exception ex) {
 					ex.getStackTrace();
 					System.err.println(
 							"Fehler in der Eingabe der Daten - ActionPerformed Button Bestätigen und Klasse TauschanfrageLoeschen");
 				}
-			} else {
-				System.exit(0);
 			}
-
+		} else {
+			System.exit(0);
 		}
-		;
-	}
+
+		setVisible(true);
+	};
 }

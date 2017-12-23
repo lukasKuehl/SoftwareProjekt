@@ -6,7 +6,7 @@ import java.awt.EventQueue;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.Font;
-import javax.swing.DefaultListModel;
+
 import javax.swing.border.LineBorder;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -19,7 +19,7 @@ public class WochenplanLoeschenView extends JFrame {
 	// Initialisierung der Instanzvariablen
 	private JPanel contentPane = null;;
 	private JLabel lblWochenplanLschen, lblBitteAuswhlen = null;
-	private JList listWochenplaene = null;
+	private JList<Object> listWochenplaene = null;
 	private JButton btnLschen = null;
 	private EinsatzplanController myController = null;
 	private Einsatzplanmodel myModel = null;
@@ -31,7 +31,7 @@ public class WochenplanLoeschenView extends JFrame {
 
 	/**
 	 * 
-	 * @author Ramona Gerke 
+	 * @author Ramona Gerke
 	 * @Info Konstruktor der die View Krankmeldung löschen erstellt.
 	 */
 	public WochenplanLoeschenView(Einsatzplanview myView, Einsatzplanmodel myModel,
@@ -55,7 +55,7 @@ public class WochenplanLoeschenView extends JFrame {
 		lblWochenplanLschen.setBounds(51, 61, 243, 27);
 		contentPane.add(lblWochenplanLschen);
 
-		listWochenplaene = new JList();
+		listWochenplaene = new JList<Object>();
 		wpl = myController.getWochenplaene();
 		model = new DefaultListModel<Object>();
 		for (String m : wpl) {
@@ -76,36 +76,49 @@ public class WochenplanLoeschenView extends JFrame {
 		lblBitteAuswhlen.setBounds(51, 109, 143, 26);
 		contentPane.add(lblBitteAuswhlen);
 
-		setVisible(true);
-
 		btnLschen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (e.getSource() == btnLschen) {
 					int eingabe = JOptionPane.showConfirmDialog(null, "Wollen Sie die den Wochenplan wirklich löschen?",
 							null, JOptionPane.YES_NO_CANCEL_OPTION);
-					if (eingabe == 0) {
-						int wpbez = 0;
-						String temp[] = new String[4];
-						wpli = myController.getWochenplaene();
-						for (String m : wpli) {
-							m.toString();
-							m.trim();
-							temp = m.split("-");
-							wpbez = Integer.parseInt(temp[0].substring(2));
-							String oeffnungszeitenAnfang = temp[1];
-							String oeffnungszeitenEnd = temp[2];
-							String hauptzeitAnfang = temp[3];
-							String hauptzeitEnd = temp[4];
 
-							// Methode entferne Wochenplan bereits in Int gewandelt
-							myController.entferneWochenplan(myView.getUsername(), wpbez);
-						}
+					if (listWochenplaene.isSelectionEmpty()) {
+						JOptionPane.showMessageDialog(null, "Es wurde keine Eingabe getätigt", "Error",
+								JOptionPane.ERROR_MESSAGE);
 					} else {
-						System.exit(0);
+						try {
+							if (eingabe == 0) {
+								int wpbez = 0;
+								String temp[] = new String[4];
+								wpli = myController.getWochenplaene();
+								for (String m : wpli) {
+									m.toString();
+									m.trim();
+									temp = m.split("-");
+									wpbez = Integer.parseInt(temp[0].substring(2));
+									String oeffnungszeitenAnfang = temp[1];
+									String oeffnungszeitenEnd = temp[2];
+									String hauptzeitAnfang = temp[3];
+									String hauptzeitEnd = temp[4];
+
+//									// Methode entferne Wochenplan WpBez bereits in Int gewandelt
+//									myController.entferneWochenplan(myView.getUsername(), wpbez);
+									System.exit(0);
+								}
+							}
+						} catch (Exception a) {
+							JOptionPane.showMessageDialog(null,
+									"Die Liste konnte nicht übergeben werden. - Methode ActionPerformed (btnBLoeschen, WPLoeschen)",
+									"Error", JOptionPane.ERROR_MESSAGE);
+						}
 					}
+				} else {
+					System.exit(0);
 				}
 			}
+
 		});
 
+		setVisible(true);
 	}
 }

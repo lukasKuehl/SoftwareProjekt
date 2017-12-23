@@ -7,37 +7,25 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.TreeMap;
 
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
-import javax.swing.UIManager;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 import controller.EinsatzplanController;
 import data.Mitarbeiter;
 import model.Einsatzplanmodel;
 
-import javax.swing.JFormattedTextField;
-
 public class KrankmeldungErstellenView extends JFrame {
-	
+
 	// Initialisierung der Instanzvariablen
 	private JPanel contentPane, panelKrankmeldung, panelTermin = null;
 	private JFormattedTextField txtBisTermin, txtVonTermin = null;
 	private JComboBox<String> comboBoxMA, comboBoxWochenplaene, comboBoxAnfang, comboBoxEnd = null;
-	private JLabel labelKrankmeldungErstellen, lblMitarbeiterAuswaehlen,lblWochenplan, lblNotizEintragen, lblVon, lblBis = null;
+	private JLabel labelKrankmeldungErstellen, lblMitarbeiterAuswaehlen, lblWochenplan, lblNotizEintragen, lblVon,
+			lblBis = null;
 	private JTextField txtGrund = null;
 	private JButton buttonBestaetigen = null;;
 	private String username = null;
@@ -46,9 +34,10 @@ public class KrankmeldungErstellenView extends JFrame {
 	private EinsatzplanController myController = null;
 	private TreeMap<String, String> zeitraum = null;
 	private ArrayList<String> wp = null;
-	private LinkedList <Mitarbeiter> ma = null;
+	private LinkedList<Mitarbeiter> ma = null;
 
-	protected KrankmeldungErstellenView(Einsatzplanview myView, Einsatzplanmodel myModel, EinsatzplanController myController) {
+	protected KrankmeldungErstellenView(Einsatzplanview myView, Einsatzplanmodel myModel,
+			EinsatzplanController myController) {
 		this.myView = myView;
 		this.myController = myController;
 		this.myModel = myModel;
@@ -94,8 +83,7 @@ public class KrankmeldungErstellenView extends JFrame {
 		comboBoxAnfang.setFont(new Font("Verdana", Font.PLAIN, 15));
 		comboBoxAnfang.setBounds(162, 146, 110, 20);
 		panelKrankmeldung.add(comboBoxAnfang);
-		
-		
+
 		comboBoxEnd = new JComboBox<String>();
 		comboBoxEnd.setModel(new DefaultComboBoxModel<String>(
 				new String[] { "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag" }));
@@ -106,8 +94,8 @@ public class KrankmeldungErstellenView extends JFrame {
 		comboBoxMA = new JComboBox<String>();
 		ma = myModel.getAlleMitarbeiter();
 		for (Mitarbeiter m : ma) {
-			comboBoxWochenplaene.addItem(m.getBenutzername() + m.getVorname() + " "+m.getName());
-			} 
+			comboBoxWochenplaene.addItem(m.getBenutzername() + m.getVorname() + " " + m.getName());
+		}
 		comboBoxMA.setBounds(150, 229, 180, 20);
 		panelKrankmeldung.add(comboBoxMA);
 		txtGrund = new JTextField();
@@ -152,34 +140,36 @@ public class KrankmeldungErstellenView extends JFrame {
 
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == buttonBestaetigen) {
-			int eingabe = JOptionPane.showConfirmDialog(null, "Wollen Sie die Daten bestätigen?", null, JOptionPane.YES_NO_CANCEL_OPTION);
+			int eingabe = JOptionPane.showConfirmDialog(null, "Wollen Sie die Daten bestätigen?", null,
+					JOptionPane.YES_NO_CANCEL_OPTION);
 
-			if (eingabe==0) {
-		 zeitraum  = new TreeMap<String, String>();
-				try {	 
-						username = comboBoxMA.getSelectedItem().toString();
-						username.split("-");
-						username.substring(0, 10); // ggf. muss geschaut werden wie das noch optimiert werden kann
-						username.trim();
-						int terminnr = myModel.getNewTblocknr();
-						String bez = "Krankheit";
-						String grund=	txtGrund.getText().toString();
-						String wpbez = comboBoxWochenplaene.getSelectedItem().toString() + String.valueOf(terminnr);  
-					
-						String zeitr= comboBoxAnfang.getSelectedItem().toString() + comboBoxEnd.getSelectedItem().toString();
-						zeitraum.put(wpbez, zeitr);
-	
-						myController.erstelleTermin(username, bez, zeitraum, grund);
-						System.exit(0);
+			if (eingabe == 0) {
+				zeitraum = new TreeMap<String, String>();
+				try {
+					username = comboBoxMA.getSelectedItem().toString();
+					username.trim();
+					username.split("-");
+					 username.substring(0); 
+					String bez = "Krankheit";
+					String grund = txtGrund.getText().toString();
+					String wpbez = comboBoxWochenplaene.getSelectedItem().toString();
+
+					String zeitr = comboBoxAnfang.getSelectedItem().toString()
+							+ comboBoxEnd.getSelectedItem().toString();
+					zeitraum.put(wpbez, zeitr);
+
+					myView.erstelleTermin(username, bez, zeitraum, grund);
+					System.exit(0);
 				}
-						       
-		       catch (Exception ex) {
-		    	   JOptionPane.showConfirmDialog(null, "Daten konnten nicht umgewandelt wrerden, da die Dateiformate nicht stimmen! - Fehle: TerminErstellenView Zeile Button Bestätigen ActionPerformed");
-		       }
-		}
-			else {
+
+				catch (Exception ex) {
+					JOptionPane.showMessageDialog(null,
+							"Daten konnten nicht umgewandelt wrerden, da die Dateiformate nicht stimmen! - Fehler: TerminErstellenView Zeile Button Bestätigen ActionPerformed",
+							"Error", JOptionPane.ERROR_MESSAGE);
+				}
+			} else {
 				System.exit(0);
 			}
 		}
 	}
-					}
+}

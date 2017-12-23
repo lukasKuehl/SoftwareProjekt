@@ -77,6 +77,14 @@ public class TerminLoeschenView extends JFrame {
 
 		btnBesttigen = new JButton("bestätigen");
 		btnBesttigen.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		btnBesttigen.setBounds(437, 465, 119, 26);
+		contentPane.add(btnBesttigen);
+
+		/**
+		 * @author Ramona Gerke
+		 * @Info Action Performed Methode
+		 */
+		// ACTION PERFROMED Methode	
 		btnBesttigen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
@@ -101,7 +109,7 @@ public class TerminLoeschenView extends JFrame {
 
 						} catch (Exception a) {
 							JOptionPane.showMessageDialog(null,
-									"Die Liste konnte nicht übergeben werden. - Methode ActionPerformed (btnBestätigen)",
+									"Die Liste konnte nicht übergeben werden. - Methode ActionPerformed (btnBestätigen, TerminLoeschen)",
 									"Error", JOptionPane.ERROR_MESSAGE);
 						}
 					}
@@ -111,8 +119,6 @@ public class TerminLoeschenView extends JFrame {
 			}
 
 		});
-		btnBesttigen.setBounds(437, 465, 119, 26);
-		contentPane.add(btnBesttigen);
 
 		setVisible(true);
 	}

@@ -8,6 +8,9 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import controller.EinsatzplanController;
+import data.Mitarbeiter;
+import data.Schicht;
+import data.Tauschanfrage;
 import model.Einsatzplanmodel;
 
 import javax.swing.JLabel;
@@ -22,6 +25,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.awt.event.ActionEvent;
 
 import controller.EinsatzplanController;
@@ -34,13 +38,17 @@ public class TauschanfrageErstellenView extends JFrame {
 	private JComboBox<String> cmbBoxWP, cmbBoxTag, cmbBoxSchicht, comboBoxTagAndererMA, comboBoxSchichtAndererMA = null;
 	private ArrayList<String> wp, tagMa, SchichtAndererMa, TagAndererMa, SchichtMa = null;
 	private JButton btnErstellen = null;
-	private  EinsatzplanController myController = null;
-	private  Einsatzplanview myView = null;
-	private  Einsatzplanmodel myModel = null;
-
+	private EinsatzplanController myController = null;
+	private Einsatzplanview myView = null;
+	private Einsatzplanmodel myModel = null;
+	private Schicht mySchicht = null;
+	
+	
 	/**
-	 * Create the frame.
+	 * @author Ramona Gerke	
+	 * @Info Konstruktor der  View TauschanfrageErstellenView. Beinhaltet die gesamten Swing Komponenten. 
 	 */
+	
 	protected TauschanfrageErstellenView(Einsatzplanmodel myModel, Einsatzplanview myView, EinsatzplanController myController) {
 		 this.myView = myView;
 		 this.myController = myController;
@@ -82,10 +90,9 @@ public class TauschanfrageErstellenView extends JFrame {
 		contentPane.add(cmbBoxWP);
 		
 		cmbBoxTag = new JComboBox<String>();
-		
 		tagMa = myView.getTage(cmbBoxWP.getSelectedItem().toString());
 		for (String s : tagMa) {
-		cmbBoxWP.addItem(s);
+		cmbBoxTag.addItem(s);
 		}
 		cmbBoxTag.setEnabled(false);
 		cmbBoxTag.setFont(new Font("Verdana", Font.PLAIN, 15));
@@ -99,7 +106,7 @@ public class TauschanfrageErstellenView extends JFrame {
 		cmbBoxSchicht = new JComboBox<String>();
 		SchichtMa = myView.getMitarbeiterSchichten(cmbBoxWP.getSelectedItem().toString(), cmbBoxTag.getSelectedItem().toString(), myView.getUsername());
 		for (String v : SchichtMa) {
-		cmbBoxWP.addItem(v);
+		cmbBoxSchicht.addItem(v);
 		}
 		cmbBoxSchicht.setEnabled(false);
 		cmbBoxSchicht.setFont(new Font("Verdana", Font.PLAIN, 15));
@@ -147,7 +154,7 @@ public class TauschanfrageErstellenView extends JFrame {
 		comboBoxTagAndererMA = new JComboBox<String>();
 		TagAndererMa = myView.getTage(cmbBoxWP.getSelectedItem().toString());
 		for (String n : TagAndererMa) {
-		cmbBoxWP.addItem(n);
+		comboBoxTagAndererMA.addItem(n);
 		}
 		comboBoxTagAndererMA.setEnabled(false);
 		comboBoxTagAndererMA.setFont(new Font("Verdana", Font.PLAIN, 15));
@@ -165,11 +172,38 @@ public class TauschanfrageErstellenView extends JFrame {
 		labelSchichtAndererMA.setBounds(62, 409, 136, 26);
 		contentPane.add(labelSchichtAndererMA);
 
+		
+		
 		comboBoxSchichtAndererMA = new JComboBox<String>();
-//		SchichtAndererMa = myView.getAndereMitarbeiterSchichten(cmbBoxWP.getSelectedItem().toString(), cmbBoxTag.getSelectedItem().toString(), myView.getUsername(), schichtNr) // WO BEKOMME ICH DIE HER??
-//				for (String c : SchichtAndererMa) {
-//				cmbBoxWP.addItem(c);
-//		}
+		
+			String temp[] = new String[14];
+		ArrayList <String>al = myView.getTauschanfragen(myView.getUsername());
+		for (String m : al) {
+			m.toString();
+			m.trim();
+			temp = m.split("-");
+			// tauschanfrageNrS = temp [0];
+			String senderVorname = temp[0];
+			String senderName = temp[1];
+			String senderSchichtnr = temp[2];
+			String senderWpNr = temp[3];
+			String senderTbez = temp[4];
+			String senderAnfangsuhrzeit = temp[5];
+			String senderEnduhrzeit = temp[6];
+			String empfaengerVorname = temp[7];
+			String empfaengerName = temp[8];
+			String empfaengerSchichtNr = temp[9];
+			String empfaengerWpBez = temp[10];
+			String empfaengerTagBez = temp[11];
+			String empfaengerAnfangsuhrzeit = temp[12];
+			String emfaengerEnduhrzeit = temp[13];
+		}
+		
+		
+		 myView.getAndereMitarbeiterSchichten(cmbBoxWP.getSelectedItem().toString(), cmbBoxTag.getSelectedItem().toString(), myView.getUsername(), senderSchichtnr);
+				for (String c : SchichtAndererMa) {
+					comboBoxSchichtAndererMA.addItem(c);
+		}
 		comboBoxSchichtAndererMA.setEnabled(false);
 		comboBoxSchichtAndererMA.setFont(new Font("Verdana", Font.PLAIN, 15));
 		comboBoxSchichtAndererMA.addActionListener(new ActionListener() {
@@ -179,8 +213,11 @@ public class TauschanfrageErstellenView extends JFrame {
 		});
 		comboBoxSchichtAndererMA.setBounds(249, 409, 136, 26);
 		contentPane.add(comboBoxSchichtAndererMA);
-		
-		
+
+/**
+ * @author Ramona Gerke
+ * @Info Action Performed Methoden, die die Sichtbarkeit der ComboBoxen ändert.
+ */
 		// ACTION PERFORMED METHODEN  
 		cmbBoxWP.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -236,7 +273,8 @@ public class TauschanfrageErstellenView extends JFrame {
 		setVisible(true);
 
 	}
-}
-		
 	
+	
+	
+}
 

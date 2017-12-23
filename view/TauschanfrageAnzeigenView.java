@@ -17,11 +17,13 @@ import javax.swing.JOptionPane;
 
 import java.awt.Font;
 import javax.swing.JComboBox;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import java.awt.Color;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.TreeMap;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextArea;
@@ -30,14 +32,14 @@ public class TauschanfrageAnzeigenView extends JFrame {
 
 	private JPanel contentPane = null;
 	private JTextField textFieldDatum =null;
-	private JLabel lblTauschanfrageAnzeigen, lblMitarbeiterAuswaehlen  =null;
-	private JButton btnVersenden, btnAnnehmen = null;
-	private JList listTauschanfragen = null;
-	private JComboBox cmbBoxMa = null;
+	private JLabel lblTauschanfrageAnzeigen  =null;
+	private JButton  btnAnnehmen = null;
+	private JList<Object> listTauschanfragen = null;
 	private Einsatzplanmodel myModel = null;
 	private Einsatzplanview myView = null;
 	private EinsatzplanController myController = null;
-	
+	private DefaultListModel<Object> modelTauschanfrage = null;
+	private ArrayList <String> tl = null;
 	
 		protected TauschanfrageAnzeigenView(Einsatzplanview myView, Einsatzplanmodel myModel, EinsatzplanController myController) {
 		this.myView = myView;
@@ -53,17 +55,16 @@ public class TauschanfrageAnzeigenView extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
-		
-		listTauschanfragen = new JList();
-		
-		// LINKED LIST MIT TERMIN NR  // AUSGABE DER LISTE
+				
+		listTauschanfragen = new JList<Object>();
+		tl = myController.getTauschanfragen(myView.getUsername());
+		modelTauschanfrage = new DefaultListModel<Object>();
+		for (String m : tl) {
+			modelTauschanfrage.addElement(m);
+		}
 		listTauschanfragen.setBorder(new LineBorder(new Color(0, 0, 0)));
 		listTauschanfragen.setBounds(95, 144, 315, 336);
 		contentPane.add(listTauschanfragen);
-		
-		//ANZEIGE ÜBER JLIST mit TauschanfrageID und NAMEN
-		
 		
 		lblTauschanfrageAnzeigen = new JLabel("Tauschanfragen");
 		lblTauschanfrageAnzeigen.setFont(new Font("Verdana", Font.BOLD, 21));
@@ -78,9 +79,38 @@ public class TauschanfrageAnzeigenView extends JFrame {
 					int eingabe = JOptionPane.showConfirmDialog(null, "Wollen Sie die Tauschanfrage annehmen?", null,
 							JOptionPane.YES_NO_CANCEL_OPTION);
 					if (eingabe == 0) {
-					// LOGIK
-					}
+						if (tl.isEmpty()) {
+							JOptionPane.showMessageDialog(null,"Es wurde keine Tauschanfrage ausgewählt. Bitte wählen Sie eine Tauschanfrage aus.", "Error", JOptionPane.ERROR_MESSAGE);
+								}
+						else {
+							String empfaengerName = null;
+							int tauschanfrageNr = 0;
+							String temp [] = new String [14];
+							tl = myController.getTauschanfragen(myView.getUsername());
+							for (String m : tl) {
+								m.toString();
+								m.trim();
+								temp = m.split("-");
+								// tauschanfrageNrS = temp [0];
+								String senderVorname = temp[0];
+								String senderName = temp[1];
+								String senderSchichtnr = temp[2];
+								String senderWpNr = temp[3];
+								String senderTbez = temp[4];
+								String senderAnfangsuhrzeit = temp[5];
+								String senderEnduhrzeit = temp[6];
+								String empfaengerVorname = temp[7];
+								empfaengerName = temp[8];
+								String empfaengerSchichtNr = temp[9];
+								String empfaengerWpBez = temp[10];
+								String empfaengerTagBez = temp[11];
+								String empfaengerAnfangsuhrzeit = temp[12];
+								String emfaengerEnduhrzeit = temp[13];
+							}
+							myView.akzeptiereTauschanfrage(empfaengerName, tauschanfrageNr);
+						}
 			}
+				}
 			}});
 		btnAnnehmen.setBounds(499, 419, 136, 38);
 		contentPane.add(btnAnnehmen);

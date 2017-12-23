@@ -38,7 +38,8 @@ public class Einsatzplanview {
 	/**
 	 * @author - Ramona Gerke
 	 * @info Die Methoden übergeben die Parameter an den Einsatzplancontroller oder
-	 *       die Views greifen auf den EInsatzplancontroller über die Methoden zu.
+	 *       die Views greifen auf den EInsatzplancontroller über die Methoden zu. 
+	 *       Es wird eine Erfolgsmeldung ausgegeben.
 	 */
 
 	protected boolean erstelleTermin(String username, String bez, TreeMap<String, String> zeitraum, String grund) {
@@ -51,7 +52,7 @@ public class Einsatzplanview {
 
 		}
 		if (erfolg == false) {
-			JOptionPane.showConfirmDialog(null, "Der Termin konnte erstellt werden. Bitte die Eingaben prüfen");
+			JOptionPane.showMessageDialog(null, "Der Termin konnte erstellt werden. Bitte die Eingaben prüfen");
 		}
 
 		return erfolg;
@@ -63,12 +64,12 @@ public class Einsatzplanview {
 
 			try {
 				erfolg = this.myController.entferneTermin(terminnr, username);
-
+				JOptionPane.showConfirmDialog(null, "Termin erfolgreich gelöscht");
 			} catch (Exception e) {
 
 			}
 			if (erfolg == false) {
-				JOptionPane.showConfirmDialog(null,
+				JOptionPane.showMessageDialog(null,
 						"Der Termin konnte nicht gelöscht werden. Bitte die Auswahl prüfen");
 			}
 
@@ -81,8 +82,8 @@ public class Einsatzplanview {
 		try {
 			rueckgabe = this.myController.getAlleTermine(username);
 		} catch (Exception e) {
-			JOptionPane.showConfirmDialog(null,
-					"Die Termine konnten nicht aufgerufen werden. Bitte die Eingaben prüfen");
+			JOptionPane.showMessageDialog(null,
+					"Die Termine konnten nicht aufgerufen werden. Bitte die Eingaben prüfen!", "Error", JOptionPane.ERROR_MESSAGE);
 		}
 		return rueckgabe;
 	}
@@ -94,13 +95,14 @@ public class Einsatzplanview {
 		try {
 			erfolg = this.myController.erstelleTauschanfrage(senderName, senderSchichtNr, empfaengerName,
 					empfaengerSchichtNr);
+			JOptionPane.showConfirmDialog(null, "Tauschanfrage erfolgreich erstellt");
 
 		} catch (Exception e) {
 
 		}
 		if (erfolg == false) {
-			JOptionPane.showConfirmDialog(null,
-					"Die Tauschanfrage konnte nicht angelegt werden. Bitte die Eingaben prüfen");
+			JOptionPane.showMessageDialog(null,
+					"Die Tauschanfrage konnte nicht angelegt werden. Bitte die Eingaben prüfen!", "Error", JOptionPane.ERROR_MESSAGE);
 		}
 
 		return erfolg;
@@ -111,13 +113,13 @@ public class Einsatzplanview {
 
 		try {
 			erfolg = this.myController.entferneTauschanfrage(tauschanfrageNr);
-
+			JOptionPane.showConfirmDialog(null, "Tauschanfrage wurde gelöscht");
 		} catch (Exception e) {
 
 		}
 		if (erfolg == false) {
-			JOptionPane.showConfirmDialog(null,
-					"Die Tauschanfrage konnte nicht entfernt werden. Bitte die Eingaben prüfen");
+			JOptionPane.showMessageDialog(null,
+					"Die Tauschanfrage konnte nicht entfernt werden. Bitte die Eingaben prüfen!", "Error", JOptionPane.ERROR_MESSAGE);
 		}
 
 		return erfolg;
@@ -130,8 +132,8 @@ public class Einsatzplanview {
 			erfolg = this.myController.akzeptiereTauschanfrage(empfaengerName, tauschanfrageNr);
 
 		} catch (Exception e) {
-			JOptionPane.showConfirmDialog(null,
-					"Die Tauschanfrage konnte nicht angenommen werden. Bitte die Eingaben prüfen");
+			JOptionPane.showMessageDialog(null,
+					"Die Tauschanfrage konnte nicht angenommen werden. Bitte die Eingaben prüfen!", "Error", JOptionPane.ERROR_MESSAGE);
 		}
 
 		return erfolg;
@@ -148,8 +150,8 @@ public class Einsatzplanview {
 
 			}
 			if (erfolg == false) {
-				JOptionPane.showConfirmDialog(null,
-						"Der Termin konnte nicht erstellt werden. Bitte die Eingaben prüfen");
+				JOptionPane.showMessageDialog(null,
+						"Der Termin konnte nicht erstellt werden. Bitte die Eingaben prüfen!", "Error", JOptionPane.ERROR_MESSAGE);
 			}
 			return erfolg;
 		}
@@ -161,7 +163,7 @@ public class Einsatzplanview {
 			rueckgabe = this.myController.getMitarbeiterTermine(username);
 		} catch (Exception e) {
 			JOptionPane.showConfirmDialog(null,
-					"Die Termine des Mitarbeiters konnten nicht angezeigt werden. Bitte die Eingaben prüfen");
+					"Die Termine des Mitarbeiters konnten nicht angezeigt werden. Bitte die Eingaben prüfen!", "Error", JOptionPane.ERROR_MESSAGE);
 		}
 		return rueckgabe;
 	}
@@ -172,7 +174,7 @@ public class Einsatzplanview {
 			rueckgabe = this.myController.getTage(wpbez);
 		} catch (Exception e) {
 			JOptionPane.showConfirmDialog(null,
-					"Die Tage des Wochenplans konnten nicht angezeigt werden. Bitte die Eingaben prüfen");
+					"Die Tage des Wochenplans konnten nicht angezeigt werden. Bitte die Eingaben prüfen!", "Error", JOptionPane.ERROR_MESSAGE);
 		}
 		return rueckgabe;
 	}
@@ -183,7 +185,7 @@ public class Einsatzplanview {
 			rueckgabe = this.myController.getMitarbeiterSchichten(wpbez, tagbez, username);
 		} catch (Exception e) {
 			JOptionPane.showConfirmDialog(null,
-					"Die Schichten des Mitarbeiters konnten nicht ausgegeben werden. Bitte Eingaben prüfen!");
+					"Die Schichten des Mitarbeiters konnten nicht ausgegeben werden. Bitte Eingaben prüfen!", "Error", JOptionPane.ERROR_MESSAGE);
 		}
 		return rueckgabe;
 	}
@@ -195,7 +197,7 @@ public class Einsatzplanview {
 			rueckgabe = this.myController.getAndereMitarbeiterSchichten(wpbez, tagbez, username, schichtNr);
 		} catch (Exception e) {
 			JOptionPane.showConfirmDialog(null,
-					"Die Schichten des Mitarbeiters konnten nicht ausgegeben werden. Bitte Eingaben prüfen!");
+					"Die Schichten des Mitarbeiters konnten nicht ausgegeben werden. Bitte Eingaben prüfen!", "Error", JOptionPane.ERROR_MESSAGE);
 		}
 		return rueckgabe;
 	}
@@ -205,12 +207,29 @@ public class Einsatzplanview {
 		try {
 			rueckgabe = this.myController.getWochenplaene();
 		} catch (Exception e) {
-			JOptionPane.showConfirmDialog(null,
-					"Die Wochenpläne konnten nicht ausgegeben werden. Bitte Eingaben prüfen!");
+			JOptionPane.showMessageDialog(null,
+					"Die Wochenpläne konnten nicht ausgegeben werden. Bitte Eingaben prüfen!", "Error", JOptionPane.ERROR_MESSAGE);
 		}
 		return rueckgabe;
 	}
 
+	public ArrayList<String> getTauschanfragen(String username){
+		ArrayList<String> rueckgabe = null;
+		
+		try{
+			rueckgabe = this.myController.getTauschanfragen(username);
+		}catch(Exception e){
+			JOptionPane.showMessageDialog(null,
+					"Die Wochenpläne konnten nicht ausgegeben werden. Bitte Eingaben prüfen!", "Error", JOptionPane.ERROR_MESSAGE);
+		}
+		
+		return rueckgabe;
+	
+	}
+	/**
+	 *@author Ramona Gerke
+	 *@Info Update Methode, sobald sich die Daten aus dem aktuellen geändert haben, wird ein neur Wochenplan generiert.
+	 */
 	public void update() {
 
 		// suche aktuelle Woche und dann generie den aktuellenWochenplan

@@ -78,8 +78,6 @@ public class KrankmeldungLoeschenView extends JFrame {
 		lblBitteAuswaehlen.setBounds(95, 128, 113, 14);
 		contentPane.add(lblBitteAuswaehlen);
 
-		setVisible(true);
-
 		/**
 		 * @author Ramona Gerke
 		 * @Info Die ActionPerformed Methode wird nach dem drücken des Buttons
@@ -87,6 +85,7 @@ public class KrankmeldungLoeschenView extends JFrame {
 		 *       benötigten Werte für die Methode myController.entferneTermin um.
 		 */
 
+		// ACTION PERFROMED METHODE
 		btnBestaetigen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
@@ -95,26 +94,42 @@ public class KrankmeldungLoeschenView extends JFrame {
 							"Wollen Sie die die Krankmeldung wirklich löschen?", null,
 							JOptionPane.YES_NO_CANCEL_OPTION);
 					if (eingabe == 0) {
-						int tblocknr = 0;
-						String temp[] = new String[5];
-						kl = myController.getAlleTermine(myView.getUsername());
-						for (String m : kl) {
-							m.toString();
-							m.trim();
-							temp = m.split("-");
-							String grund = temp[0];
-							String wpBez = temp[1];
-							tblocknr = Integer.parseInt(wpBez.substring(2));
-							String anfangstag = temp[2];
-							String endtag = temp[3];
-							String nfangsuhrzeit = temp[4];
-							String enduhrzeit = temp[5];
+						if (listKrankmeldung.isSelectionEmpty()) {
+							JOptionPane.showMessageDialog(null, "Es wurde keine Eingabe getätigt", "Error",
+									JOptionPane.ERROR_MESSAGE);
+						} else {
+							try {
+								int tblocknr = 0;
+								String temp[] = new String[5];
+								kl = myController.getAlleTermine(myView.getUsername());
+								for (String m : kl) {
+									m.toString();
+									m.trim();
+									temp = m.split("-");
+									String grund = temp[0];
+									String wpBez = temp[1];
+									tblocknr = Integer.parseInt(wpBez.substring(2));
+									String anfangstag = temp[2];
+									String endtag = temp[3];
+									String nfangsuhrzeit = temp[4];
+									String enduhrzeit = temp[5];
 
-							myController.entferneTermin(tblocknr, grund);
+									myController.entferneTermin(tblocknr, grund);
+									System.exit(0);
+								}
+							} catch (Exception a) {
+								JOptionPane.showMessageDialog(null,
+										"Die Liste konnte nicht übergeben werden. - Methode ActionPerformed (btnBestätigen, TerminLoeschen)",
+										"Error", JOptionPane.ERROR_MESSAGE);
+							}
 						}
+					} else {
+						System.exit(0);
 					}
 				}
 			}
 		});
+
+		setVisible(true);
 	}
 }

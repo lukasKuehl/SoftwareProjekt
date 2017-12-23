@@ -254,7 +254,7 @@ public class TerminErstellenView extends JFrame {
 		i = Integer.parseInt(txtFldUhrzeitBisB.getText().toString());
 		if (i >= 60) {
 			JOptionPane.showConfirmDialog(null,
-					"Die Eingabe liegt über 60 Minuten. Bitte geben Sie eine Zahl zwischen 0 und 24 ein.");
+					"Die Eingabe liegt über 60 Minuten. Bitte geben Sie eine Zahl zwischen 0 und 60 ein.");
 		}
 	}
 
@@ -269,11 +269,10 @@ public class TerminErstellenView extends JFrame {
 					kontrolleStunden(txtFldUhrzeitBisA);
 					kontrolleStunden(txtFldUhrzeitTerminV);
 					kontrolleMinuten(txtFldUhrzeitBisB);
-					kontrolleMinuten(txtFldUhrzeitBisB); // ACHTUNG KONTROLLE 24-60
-					
-					
+					kontrolleMinuten(txtFldUhrzeitBisB);
+
 				} catch (NumberFormatException ex) {
-					JOptionPane.showConfirmDialog(null, "Die Eingabe der Uhrzeit konnte nicht geprüft werden!");
+					JOptionPane.showMessageDialog(null, "Die Eingabe der Uhrzeit konnte nicht geprüft werden!" ,"Error", JOptionPane.ERROR_MESSAGE);
 				}
 				zeitraum = new TreeMap<String, String>();
 				try {
@@ -284,16 +283,16 @@ public class TerminErstellenView extends JFrame {
 					String grund = txtFldGrund.getText().toString();
 					String wpbez = comboBoxWochenplaene.getSelectedItem().toString() + String.valueOf(terminnr);  
 					zeitr = comboBoxAnfang.getSelectedItem().toString() + comboBoxEnd.getSelectedItem().toString()
-							+ txtFldUhrzeitTerminV.getText().toString() + txtFldUhrzeitTerminB.getText().toString()
-							+ txtFldUhrzeitBisA.getText().toString() + txtFldUhrzeitBisB.getText().toString();
+							+ txtFldUhrzeitTerminV.getText().toString() + ":"+ txtFldUhrzeitTerminB.getText().toString()
+							+ txtFldUhrzeitBisA.getText().toString() + ":" + txtFldUhrzeitBisB.getText().toString();
 					zeitraum.put(wpbez, zeitr);
 
-					myController.erstelleTermin(username, bez, zeitraum, grund);
+					myView.erstelleTermin(username, bez, zeitraum, grund);
 					System.exit(0);
 				} catch (Exception e1) {
 					JOptionPane.showMessageDialog(null,
 							"Daten konnten nicht umgewandelt werden, da die Dateiformate nicht stimmen! -"
-									+ " Fehler: TerminErstellenView Zeile Button Bestätigen ActionPerformed");
+									+ " Fehler: TerminErstellenView Zeile Button Bestätigen ActionPerformed","Error", JOptionPane.ERROR_MESSAGE);
 				}
 			} else {
 				System.exit(0);
