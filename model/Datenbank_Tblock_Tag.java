@@ -110,7 +110,7 @@ class Datenbank_Tblock_Tag {
 	protected boolean checkTblock_TagTB(int tblocknr, Connection con) {
 		Statement stmt = null;
 		ResultSet rs = null;
-		String sqlQuery = "select tblocknr from Tblock_TagTB where tblocknr = "+tblocknr;
+		String sqlQuery = "select tblocknr from Tblock_Tag where tblocknr = "+tblocknr;
 
 		try {
 			stmt = con.createStatement();
@@ -139,7 +139,7 @@ class Datenbank_Tblock_Tag {
 	protected boolean checkTblock_TagTA(String tbez, int wpnr, Connection con) {
 		Statement stmt = null;
 		ResultSet rs = null;
-		String sqlQuery = "select tbez, wpnr from Tblock_TagTA where tbez= '"+tbez+"'and wpnr '"+wpnr+"'";
+		String sqlQuery = "select tbez, wpnr from Tblock_Tag where tbez= '"+tbez+"'and wpnr ="+wpnr;
 
 		try {
 			stmt = con.createStatement();
@@ -218,7 +218,7 @@ class Datenbank_Tblock_Tag {
 		Statement stmt = null;
 		ResultSet rs = null;
 
-		String sqlStatement = "select Tblocknr, Tbez, Wpnr from Tblock_Tag where tblocknr"+tblocknr;
+		String sqlStatement = "select Tblocknr, Tbez, Wpnr from Tblock_Tag where tblocknr="+tblocknr;
 
 		try {
 			stmt = con.createStatement();
@@ -258,7 +258,7 @@ class Datenbank_Tblock_Tag {
 		Statement stmt = null;
 		ResultSet rs = null;
 
-		String sqlStatement = "select Tblocknr, Tbez, Wpnr from Tblock_Tag where tbez='"+tbez+"'and wpnr '"+wpnr+"'";
+		String sqlStatement = "select Tblocknr, Tbez, Wpnr from Tblock_Tag where tbez='"+tbez+"'and wpnr="+wpnr;
 
 		try {
 			stmt = con.createStatement();

@@ -44,8 +44,8 @@ class Datenbank_TerminBlockierung {
 			tBlockNr = terminBlockierung.getTblocknr();
 			benutzername = terminBlockierung.getBenutzername();	
 			bbez = terminBlockierung.getBbez();
-			anfangzeitraum = terminBlockierung.getAnfzeitraum();
-			endezeitraum = terminBlockierung.getEndzeitraum();
+			anfangzeitraum = terminBlockierung.getAnfangzeitraum();
+			endezeitraum = terminBlockierung.getEndezeitraum();
 			anfanguhrzeit = terminBlockierung.getAnfanguhrzeit();
 			endeuhrzeit = terminBlockierung.getEndeuhrzeit();
 			grund = terminBlockierung.getGrund();
@@ -163,13 +163,13 @@ class Datenbank_TerminBlockierung {
 			rs = stmt.executeQuery(sqlStatement);
 
 			LinkedList<TerminBlockierung> terminBlockierungList = new LinkedList<>();
-			DateFormat df = new SimpleDateFormat("MM-dd-yyyy");
+			DateFormat df = new SimpleDateFormat("DD-MM-YYYY");
 			while (rs.next()) {
 				Date anfangzeitraumsql = rs.getDate("Anfangzeitraum"); 
 				Date endezeitraumsql = rs.getDate("Endezeitraum"); 
 				String anfangzeitraum = df.format(anfangzeitraumsql);
 				String endezeitraum = df.format(endezeitraumsql);
-				TerminBlockierung tb = new TerminBlockierung(rs.getInt("Tauschnr"),rs.getString("Benutzername"), rs.getString("Bbez"),
+				TerminBlockierung tb = new TerminBlockierung(rs.getInt("Tblocknr"),rs.getString("Benutzername"), rs.getString("Bbez"),
 						anfangzeitraum, endezeitraum, rs.getTime("Anfanguhrzeit").toString(),rs.getTime("Endeuhrzeit").toString(),rs.getString("Grund") );
 
 				terminBlockierungList.add(tb);

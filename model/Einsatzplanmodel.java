@@ -115,7 +115,7 @@ public class Einsatzplanmodel {
 		
 		
 	}
-	public void öffentlichStatusändern(Wochenplan wochenplan){
+	public void oeffentlichStatusaendern(Wochenplan wochenplan){
 		
 		
 		try{
@@ -127,11 +127,11 @@ public class Einsatzplanmodel {
 			e.printStackTrace();			
 		}
 	}
-	public void öffentlichStatustrue(int wpnr){
+	public void oeffentlichStatustrue(int wpnr){
 		
 		
 		try{
-			this.dataWochenplan.setzeÖffentlichstatustrue(wpnr,con);
+			this.dataWochenplan.setzeOeffentlichstatustrue(wpnr,con);
 			
 		}catch(Exception e){
 			System.out.println("Fehler innerhalb des modells:");
@@ -139,11 +139,11 @@ public class Einsatzplanmodel {
 			e.printStackTrace();			
 		}
 	}
-	public void öffentlichStatusfalse(int wpnr){
+	public void oeffentlichStatusfalse(int wpnr){
 		
 		
 		try{
-			this.dataWochenplan.setzeÖffentlichstatusfalse(wpnr,con);
+			this.dataWochenplan.setzeOeffentlichstatusfalse(wpnr,con);
 			
 		}catch(Exception e){
 			System.out.println("Fehler innerhalb des Modells:");
@@ -265,6 +265,18 @@ public class Einsatzplanmodel {
 		}catch(Exception e){
 			System.out.println("Fehler innerhalb des Modells:");
 			System.out.println("Fehler beim Aufruf der Methode deleteMa_Schicht:");
+			e.printStackTrace();			
+		}
+		return result;
+	}
+	public boolean deleteMa_SchichtWochenplan(int schichtnr) {
+		boolean result =false;
+		try{
+			result = this.dataMa_Schicht.deleteMa_SchichtWochenplan(schichtnr,con);
+			
+		}catch(Exception e){
+			System.out.println("Fehler innerhalb des Modells:");
+			System.out.println("Fehler beim Aufruf der Methode deleteMa_SchichWochenplan:");
 			e.printStackTrace();			
 		}
 		return result;
@@ -397,6 +409,18 @@ public class Einsatzplanmodel {
 			e.printStackTrace();			
 		}
 		return result;
+	}
+	public void updateStanadardeinstellungen(Standardeinstellungen standardeinstellungen){
+		
+		
+		try{
+			this.dataStandardeinstellungen.updateStandardeinstellungen(standardeinstellungen,con);
+			
+		}catch(Exception e){
+			System.out.println("Fehler innerhalb des Modells:");
+			System.out.println("Fehler beim Aufruf der Methode updateStandardeinstellungen:");
+			e.printStackTrace();			
+		}
 	}
 	public LinkedList<Tauschanfrage> getTauschanfragen(){
 		
@@ -555,18 +579,7 @@ public class Einsatzplanmodel {
 		}
 		return result;
 	}
-	public void updateTag(Tag tag){
-		
-		
-		try{
-			this.dataTag.updateTag(tag,con);
-			
-		}catch(Exception e){
-			System.out.println("Fehler innerhalb des Modells:");
-			System.out.println("Fehler beim Aufruf der Methode updateTag:");
-			e.printStackTrace();			
-		}
-	}
+
 	public void setzeFeiertagtrue(String tbez, int wpnr){
 		
 		

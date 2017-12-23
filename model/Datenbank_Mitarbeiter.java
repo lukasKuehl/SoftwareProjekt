@@ -154,7 +154,7 @@ class Datenbank_Mitarbeiter {
 	protected boolean checkMitarbeiter(String benutzername,Connection con) {
 		Statement stmt = null;
 		ResultSet rs = null;
-		String sqlQuery = "select Benutzername from Mitarbeiter where benutzername = " + benutzername;
+		String sqlQuery = "select Benutzername from Mitarbeiter where benutzername = '"+benutzername+"'";
 
 		try {
 			stmt = con.createStatement();
@@ -188,7 +188,7 @@ class Datenbank_Mitarbeiter {
 		Statement stmt = null;
 		ResultSet rs = null;
 
-		String sqlStatement = "select Benutzername, Passwort, Job, Vorname, Name, Maxstunden, Whname,Email  from Mitarbeiter where benutzername="+benutzername;
+		String sqlStatement = "select Benutzername, Passwort, Job, Vorname, Name, Maxstunden, Whname,Email  from Mitarbeiter where benutzername='"+benutzername+"'";
 
 		try {
 			stmt = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
@@ -226,12 +226,12 @@ class Datenbank_Mitarbeiter {
 				stmt = con.createStatement();
 				con.setAutoCommit(false);
 				if(m.getJob()=="Kassierer" || m.getJob()=="Information"){
-					sqlStatement1 = "UPDATE Mitarbeiter SET Job = Kassenbüro WHERE benutzername="+benutzername;
-				stmt.executeUpdate(sqlStatement1);
+					sqlStatement1 = "UPDATE Mitarbeiter SET Job = 'Kassenbüro' WHERE benutzername='"+benutzername+"'";
+				stmt.execute(sqlStatement1);
 				}
 					else{
-						sqlStatement2="UPDATE Mitarbeiter SET Job = Kassierer WHERE benutzername="+benutzername;
-						stmt.executeUpdate(sqlStatement2);
+						sqlStatement2="UPDATE Mitarbeiter SET Job = 'Kassierer' WHERE benutzername='"+benutzername+"'";
+						stmt.execute(sqlStatement2);
 					}	
 					
 

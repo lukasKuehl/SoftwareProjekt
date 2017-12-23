@@ -135,56 +135,7 @@ class Datenbank_Tag {
 		}
 	}
 	
-	/**
-	 * @author Anes Preljevic
-	 * @info Ändert den Feiertag status auf den Wert des übergebenen Tages.
-	 */
-	
-	
-	protected void updateTag(Tag tag, Connection con ) {
-		
-		String tbez = tag.getTbez();
-		int wpnr = tag.getWpnr();
-		boolean feiertag = tag.isFeiertag();
-		
-		String sqlStatement;
-		
-		sqlStatement = "UPDATE Tag "
-					+ "SET Anzschicht = ? "+ "WHERE where tbez = '"+tbez+"' and wpnr= '"+wpnr+"'";
-		PreparedStatement pstmt = null;
-		
-		try {	
-			
-			pstmt = con.prepareStatement(sqlStatement);		
 
-			con.setAutoCommit(false);			
-			pstmt.setBoolean(2, feiertag);
-			pstmt.executeUpdate();
-			con.commit();			
-
-			con.setAutoCommit(true);
-			
-		} catch (SQLException sql) {
-			System.err.println("Methode updateTag SQL-Fehler: "
-					+ sql.getMessage());
-			try {
-				con.rollback();
-				con.setAutoCommit(true);
-			} catch (SQLException sqlRollback) {
-				System.err.println("Methode updateTag "
-						+ "- Rollback -  SQL-Fehler: "
-						+ sqlRollback.getMessage());
-			}
-		} finally {
-			try {
-				if (pstmt != null)
-					pstmt.close();
-			} catch (SQLException e) {
-				System.err.println("Methode updateTag (finally) SQL-Fehler: "
-						+ e.getMessage());
-			}
-		}
-	}	
 	/**
 	 * @author Anes Preljevic
 	 * @info Ändert den Feiertag status auf true, bei dem Tag mit der übergebenen Tbez und wpnr.
@@ -192,8 +143,7 @@ class Datenbank_Tag {
 	protected void setzeFeiertagtrue(String tbez, int wpnr, Connection con) {
 		Statement stmt = null;
 		String sqlStatement;
-		sqlStatement = "UPDATE Tag Set Feiertag = true"
-					+ "WHERE where tbez = '"+tbez+"' and wpnr= '"+wpnr+"'";
+		sqlStatement = "UPDATE Tag Set Feiertag=true  WHERE Tbez = '"+tbez+"' and Wpnr="+wpnr;
 		
 		
 		try {	
@@ -234,8 +184,7 @@ class Datenbank_Tag {
 	protected void setzeFeiertagfalse(String tbez, int wpnr,Connection con) {
 		Statement stmt = null;
 		String sqlStatement;
-		sqlStatement = "UPDATE Tag Set Feiertag = false"
-					+ "WHERE where tbez = '"+tbez+"' and wpnr= '"+wpnr+"'";
+		sqlStatement ="UPDATE Tag Set Feiertag=false WHERE Tbez = '"+tbez+"' and Wpnr="+wpnr;
 		
 		
 		try {	
@@ -286,7 +235,7 @@ class Datenbank_Tag {
 			
 			Statement stmt = null;
 			ResultSet rs = null;
-			String sqlStatement = "select Tbez, Wpnr, Feiertag from Tag";
+			String sqlStatement = "SELECT tbez, wpnr, Feiertag FROM Tag ORDER BY wpnr , FIELD(tbez, 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag','Freitag','Samstag','Sonntag') + WEEKDAY(NOW())%7";
 
 			try {
 				stmt = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
@@ -360,7 +309,9 @@ class Datenbank_Tag {
 		try {
 			stmt = con.createStatement();
 			stmt.execute(sqlQuery);
+			System.out.println("Tag gelöscht");
 			return true;
+			
 		} catch (SQLException sql) {
 			System.err.println("Methode deleteTag SQL-Fehler: "
 					+ sql.getMessage());

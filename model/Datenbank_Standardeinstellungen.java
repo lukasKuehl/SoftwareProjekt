@@ -30,7 +30,7 @@ class Datenbank_Standardeinstellungen {
 		ResultSet rs = null;
 		String sqlStatement = "select ÷ffnungszeit, Schlieﬂzeit, Hauptzeitbeginn,"
 				+ " Hauptzeitende, Mehrbesetzung,"
-				+ "Minanzinfot, Minanzinfow, Minanzkasse from Standardeinstellungen";
+				+ "Minanzinfot, Minanzinfow, Minanzkasse from Standardeinstellung";
 
 		try {
 			stmt = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
@@ -77,7 +77,8 @@ class Datenbank_Standardeinstellungen {
 		String sqlStatement;
 
 		sqlStatement = "UPDATE Standardeinstellungen " + "SET ÷ffnungszeit = ?"
-				+ "SET Schlieﬂzeit= ?"+ "SET hauptzeitbeginn = ?";
+				+ "SET Schlieﬂzeit= ?"+ "SET hauptzeitbeginn = ?"+ "SET hauptzeitende = ?"
+						+ "SET mehrbsetzung = ?"+ "SET minanzinfot = ?"+ "SET minanzinfow = ?"+ "SET minanzkasse = ?";
 		PreparedStatement pstmt = null;
 
 		try {
@@ -85,9 +86,17 @@ class Datenbank_Standardeinstellungen {
 			pstmt = con.prepareStatement(sqlStatement);
 
 			con.setAutoCommit(false);
-			//pstmt.setBoolean(1, );
+			pstmt.setString(1, ˆffnungszeit);
+			pstmt.setString(2,schlieﬂzeit );
+			pstmt.setString(3, hauptzeitbeginn);
+			pstmt.setString(4,hauptzeitende );
+			pstmt.setInt(5,mehrbesetzung );
+			pstmt.setInt(6,minanzinfot );
+			pstmt.setInt(7, minanzinfow);
+			pstmt.setInt(8,minanzkasse );
 			
-			pstmt.executeUpdate();
+			
+			pstmt.execute();
 			con.commit();
 
 			con.setAutoCommit(true);

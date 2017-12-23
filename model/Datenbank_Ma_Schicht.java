@@ -16,7 +16,7 @@ import data.Ma_Schicht;
 	 * @Thomas Friesen
 	 * @info Die Methode fügt einen Datensatz in die Ma_Schicht Tabelle ein.
 	 */
-	public boolean addMa_Schicht(Ma_Schicht ma_schicht,Connection con) {
+	protected boolean addMa_Schicht(Ma_Schicht ma_schicht,Connection con) {
 		boolean success = false;
 	
 		String sqlStatement;
@@ -96,7 +96,7 @@ import data.Ma_Schicht;
 	 * @author Anes Preljevic
 	 * @info Prüft ob es zu der eingegebenen schichtnr und dem benutzernamen bereits einen Mitarbeiter in der Schicht gibt, bei existenz return true, sonst false
 	 */
-	public boolean checkMa_Schicht(int schichtnr, String benutzername,Connection con) {
+	protected boolean checkMa_Schicht(int schichtnr, String benutzername,Connection con) {
 		Statement stmt = null;
 		ResultSet rs = null;
 		String sqlQuery = "select schichtnr, benutzername from Ma_Schicht where schichtnr = '"+schichtnr+"' and benutzername= '"+benutzername+"'";
@@ -126,7 +126,7 @@ import data.Ma_Schicht;
 	 * @author Anes Preljevic
 	 * @info Auslesen der Mitarbeiter mit den zugehörigen Schichten aus der Datenbank und hinzufügen in eine Liste, welche den Ausgabewert darstellt 
 	 */
-	public LinkedList<Ma_Schicht> getMa_Schicht(Connection con) {
+	protected LinkedList<Ma_Schicht> getMa_Schicht(Connection con) {
 
 		Statement stmt = null;
 		ResultSet rs = null;
@@ -179,9 +179,6 @@ import data.Ma_Schicht;
 			while (rs.next()) {
 				Ma_Schicht ms = new Ma_Schicht(rs.getString("Benutzername"),rs.getInt("Schichtnr"));
 
-
-				
-				
 				ma_schichtList.add(ms);
 			}
 
@@ -206,10 +203,10 @@ import data.Ma_Schicht;
 		Statement stmt = null;
 		ResultSet rs = null;
 
-		String sqlStatement = "SELECT Schichtnr, Benutzername from Ma_Schicht WHERE benutzername="+benutzername;
+		String sqlStatement = "SELECT Benutzername, Schichtnr from Ma_Schicht WHERE benutzername='"+benutzername+"'";
 
 		try {
-			stmt = con.createStatement();
+			stmt = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
 			rs = stmt.executeQuery(sqlStatement);
 
 			LinkedList<Ma_Schicht> ma_schichtList = new LinkedList<>();
@@ -286,6 +283,7 @@ import data.Ma_Schicht;
 		String sqlStatement = "DELETE FROM Ma_Schicht WHERE Schichtnr = "+schichtnr;
 
 		try {
+			con.setAutoCommit(false);
 			stmt = con.createStatement();
 			stmt.execute(sqlStatement);
 			
