@@ -231,11 +231,11 @@ class TerminStrg {
 			String temp = tb.getBbez() + " - KW" + mitarbeiterTerminZuordnungen.get(String.valueOf(tb.getTblocknr())) + " - ";
 			
 			//Falls es sich um einen eintägigen Termin handelt, wird der Anfangs- und Endtag zusammengefasst
-			if(tb.getAnfzeitraum().equals(tb.getEndzeitraum())){
-				temp = temp + tb.getAnfzeitraum() + " - ";
+			if(tb.getAnfangzeitraum().equals(tb.getEndezeitraum())){
+				temp = temp + tb.getAnfangzeitraum() + " - ";
 			}
 			else{
-				temp = temp + tb.getAnfzeitraum() + "-" + tb.getEndzeitraum() + " - ";
+				temp = temp + tb.getAnfangzeitraum() + "-" + tb.getEndezeitraum() + " - ";
 			}
 			
 			temp = temp + tb.getAnfanguhrzeit() + "-" + tb.getEndeuhrzeit() + " Uhr";
