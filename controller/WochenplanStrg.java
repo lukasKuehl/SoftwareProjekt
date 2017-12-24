@@ -179,58 +179,68 @@ class WochenplanStrg {
     	int wpnr = Integer.parseInt((wpbez.substring(2).trim()));  			
 		
 		LinkedList<Tag> alleTage = myModel.getTage();
-    	LinkedList<Tag> wochenTage = new LinkedList<Tag>();
+    	TreeMap<Integer, Tag> wochenTage = new TreeMap<Integer, Tag>();
+    	//Nummerierung der Tage von 1 aufsteigend
+    	int counter = 1;
     	
     	//Sortiere alle Tage aus, die nicht zu der angefragten Woche gehören
     	for(Tag t: alleTage){
     		if(t.getWpnr() == wpnr){
-    			wochenTage.add(t);
+    			wochenTage.put(counter, t);
+    			counter++;
     		}    		
-    	}		
+    	}  	
+    	
+		//LinkedList<Mitarbeiter> alleMitarbeiter = myModel.getAlleMitarbeiter();
+		TreeMap<String, Mitarbeiter> tempMitarbeiter = new TreeMap<String, Mitarbeiter>();
+		LinkedList<Mitarbeiter> wochenMitarbeiter = new LinkedList<Mitarbeiter>();
 		
-		LinkedList<Mitarbeiter> mitarbeiterList = myModel.getAlleMitarbeiter();
-		String[] spaltennamen = null;
-		String[][] zeilen = null;
+		LinkedList<Schicht> alleSchichten = myModel.getSchichten();
+		LinkedList<Ma_Schicht> alleSchichtEinteilungen = myModel.getMa_Schicht();
 		
-		if(wochenTage.size() == 6){
-			
-			String[] tempSpaltennamen = {"", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"};
-			spaltennamen = tempSpaltennamen;
-			
-			LinkedList <String[]> temp = new LinkedList<String[]>();
-			
-			for(Mitarbeiter m : mitarbeiterList){
-				temp.add(generiereMitarbeiterSpalte(wpnr, m, wochenTage.size()));				
-			}
-			
-			zeilen = new String[temp.size()][];
-			
-			for(int i = 0; i < zeilen.length; i++){
-				zeilen[i]= temp.get(i);			
-			}	
+		for(Schicht s: alleSchichten){
+			if(s.getWpnr() == wpnr){
+				
+				for(Ma_Schicht mas : alleSchichtEinteilungen){
+					
+					if(!tempMitarbeiter.containsKey(mas.getBenutzername())){
+						tempMitarbeiter.put(mas.getBenutzername(), this.myModel.getMitarbeiter(mas.getBenutzername()));
+					}				
+				}						
+			}			
 		}
 		
-		if(wochenTage.size() == 7){
+		for(String s: tempMitarbeiter.keySet()){
+			wochenMitarbeiter.add(tempMitarbeiter.get(s));			
+		}	
+		
+		String[] spaltennamen = new String[wochenTage.size()+1];
+		String[][] zeilen = new String[wochenMitarbeiter.size()][wochenTage.size()+1];
+				
+		for(int i = 0; i< spaltennamen.length; i++){	
 			
-			String[] tempSpaltennamen = {"", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"};
-			spaltennamen = tempSpaltennamen;
-			
-			LinkedList <String[]> temp = new LinkedList<String[]>();
-			
-			for(Mitarbeiter m : mitarbeiterList){
-				temp.add(generiereMitarbeiterSpalte(wpnr, m, wochenTage.size()));				
+			if(i == 0){				
+				spaltennamen[0] = "";
 			}
-			
-			zeilen = new String[temp.size()][];
-			
-			for(int i = 0; i < zeilen.length; i++){
-				zeilen[i]= temp.get(i);			
-			}	
+			else{				
+				spaltennamen[i] = wochenTage.get(i).getTbez();
+			}			
 		}
 		
-		try{
+		LinkedList <String[]> temp = new LinkedList<String[]>();
+		
+		for(Mitarbeiter m : wochenMitarbeiter){
+			temp.add(generiereMitarbeiterSpalte(wpnr, m, spaltennamen));				
+		}	
+		
+		for(int i = 0; i < zeilen.length; i++){
+			zeilen[i]= temp.get(i);			
+		}				
+		
+		try{		
 			wochenplan = new JTable(zeilen,spaltennamen);
 		}catch(Exception e){
+			System.out.println("Fehler beim Erstellen eines neuen JTables für den Wochenplan" + wpbez);
 			e.printStackTrace();
 		}
 		
@@ -243,20 +253,10 @@ class WochenplanStrg {
 	 * @author Lukas Kühl
 	 * @info Hilfsmethode zum Erzeugen einer Zeile in der Wochenplantabelle für einen spezifischen Mitarbeiter
 	 */
-    private String[] generiereMitarbeiterSpalte(int wpnr, Mitarbeiter ma, int tageAnzahl){
+    private String[] generiereMitarbeiterSpalte(int wpnr, Mitarbeiter ma, String[] wochenTage){
     
     	//Symbolisiert eine Mitarbeiterzeile in der Wochenplantabelle
-    	String[] rueckgabe = new String[tageAnzahl+1];     	
-    	
-    	LinkedList<Tag> alleTage = myModel.getTage();
-    	LinkedList<Tag> wochenTage = new LinkedList<Tag>();
-    	
-    	//Sortiere alle Tage aus, die nicht zu der angefragten Woche gehören
-    	for(Tag t: alleTage){
-    		if(t.getWpnr() == wpnr){
-    			wochenTage.add(t);
-    		}    		
-    	}    	  	
+    	String[] rueckgabe = new String[wochenTage.length];      	  	
     	
     	//Abfrage der gesamten Zuordnung und Suche nach den Schichten, die dem übergebenen Mitarbeiter zugeordet sind
     	LinkedList<Ma_Schicht> einteilung = this.myModel.getMa_Schicht();
@@ -285,50 +285,30 @@ class WochenplanStrg {
     	
     	Map<String, LinkedList<Schicht>> tageSchichtenMap = new TreeMap<String, LinkedList<Schicht>>();    	
     	
-    	for(Tag t: wochenTage){    	
+    	
+    	for(int i = 1; i< rueckgabe.length; i++){   		
     		
-    		for(Schicht s: mitarbeiterSchichten){  
-    			
-    			if(s.getTbez().equals(t.getTbez())){
+    		for(Schicht s: mitarbeiterSchichten){
+    			if(s.getTbez().equals(wochenTage[i])){
     				
-    				if(tageSchichtenMap.get(t.getTbez()) == null){
-    					tageSchichtenMap.put(t.getTbez(), new LinkedList<Schicht>());    					
+    				if(tageSchichtenMap.get(wochenTage[i]) == null){
+    					tageSchichtenMap.put(wochenTage[i], new LinkedList<Schicht>());    					
     				}
-    				tageSchichtenMap.get(t.getTbez()).add(s);   				
-    				   				
-    			}   			
-    		}    		
-    	}       	
+    				tageSchichtenMap.get(wochenTage[i]).add(s);    				
+    			}
+    		}
+    		
+    	}    	
     	
-    	String montagsSchichten = getTageszeitraum(tageSchichtenMap.get("Montag"));   	
-    	String dienstagsSchichten = getTageszeitraum(tageSchichtenMap.get("Dienstag"));
-    	String mittwochsSchichten = getTageszeitraum(tageSchichtenMap.get("Mittwoch"));
-    	String donnerstagsSchichten = getTageszeitraum(tageSchichtenMap.get("Donnerstag"));
-    	String freitagsSchichten = getTageszeitraum(tageSchichtenMap.get("Freitag"));
-    	String samstagsSchichten = getTageszeitraum(tageSchichtenMap.get("Samstag"));
-    	String sonntagsSchichten = getTageszeitraum(tageSchichtenMap.get("Sonntag"));
-    	
-    	if(tageAnzahl == 6){
-    		rueckgabe[0] = ma.getVorname() + " " + ma.getName();
-    		rueckgabe[1] = montagsSchichten;
-    		rueckgabe[2] = dienstagsSchichten;
-    		rueckgabe[3] = mittwochsSchichten;
-    		rueckgabe[4] = donnerstagsSchichten;
-    		rueckgabe[5] = freitagsSchichten;
-    		rueckgabe[6] = samstagsSchichten;
-    	}
-    	
-    	//Sonderfall: Verkaufsoffener Sonntag
-    	if(tageAnzahl == 7){
-    		rueckgabe[0] = ma.getVorname() + " " + ma.getName();
-    		rueckgabe[1] = montagsSchichten;
-    		rueckgabe[2] = dienstagsSchichten;
-    		rueckgabe[3] = mittwochsSchichten;
-    		rueckgabe[4] = donnerstagsSchichten;
-    		rueckgabe[5] = freitagsSchichten;
-    		rueckgabe[6] = samstagsSchichten;
-    		rueckgabe[7] = sonntagsSchichten;
-    	}   	
+    	for(int i = 0; i< rueckgabe.length; i++){
+    		
+    		if(i == 0){
+    			rueckgabe[0] = ma.getVorname() + " " + ma.getName();
+    		}
+    		else{
+    			rueckgabe[i] = getTageszeitraum(tageSchichtenMap.get(wochenTage[i]));
+    		}
+    	} 	
     	
     	return rueckgabe;
     }
@@ -353,28 +333,45 @@ class WochenplanStrg {
     		// Iteriere durch die übergebene Schichtenliste und konvertiere die vorhanden Zeiten ins Date Format
     		for(Schicht s : schichten){
     				
-    			String anfangsZeitString = s.getAnfanguhrzeit();
-    			String endZeitString = s.getEndeuhrzeit();
-    			SimpleDateFormat format = new SimpleDateFormat("hh:mm");
+    			String anfangsZeitString = s.getAnfanguhrzeit().substring(0, 5);
+    			String endZeitString = s.getEndeuhrzeit().substring(0, 5);
+    		
+    			SimpleDateFormat format = new SimpleDateFormat("kk:mm");
     								
     			try{
-    				Date tempAnfang = format.parse(anfangsZeitString);	    					
+    				Date tempAnfang = format.parse(anfangsZeitString);    				
     				zeitenDate.add(tempAnfang);			
     				Date tempEnde = format.parse(endZeitString);
-    				zeitenDate.add(tempEnde);
+    				zeitenDate.add(tempEnde);    				
     					
     			}catch(Exception e){
     				System.out.println("Fehler beim Konvertieren eines Datums");					
     			}			   				
-    		}  	
-    			
+    		}  	   		
+    		
     		// Konvertierung war erfolgreich und es ist mindestens eine Schicht vorhanden, da Anfangs- und Endzeit da sind --> mind. 2 Werte
     		if(zeitenDate.size() >= 2){
     			
-    			Collections.sort(zeitenDate);    			
-    			
     			//Gebe die frühste und die späteste Zeit aus der Liste zurück --> Gesamter Zeitraum abgedeckt
-    			rueckgabe = zeitenDate.getFirst() + "-" + zeitenDate.getLast();    				
+    			Collections.sort(zeitenDate);       			
+    			
+    			//Fülle die offen gebliebenen Stellen mit führenden Nullen auf
+    			String startStunden = String.valueOf(zeitenDate.getFirst().getHours());
+    			while(startStunden.length() <2){startStunden = "0" + startStunden;}
+    			
+    			String startMinuten = String.valueOf(zeitenDate.getFirst().getMinutes());
+    			while(startMinuten.length() <2){startMinuten = "0" + startMinuten;}
+    			
+    			String endStunden = String.valueOf(zeitenDate.getLast().getHours());
+    			while(endStunden.length() <2){endStunden = "0" + endStunden;}
+    			
+    			String endMinuten = String.valueOf(zeitenDate.getLast().getMinutes());
+    			while(endMinuten.length() <2){endMinuten = "0" + endMinuten;}
+    			
+    			String start = startStunden + ":" + startMinuten;
+    			String ende = endStunden + ":" + endMinuten;    			
+    			
+    			rueckgabe =  start + "-" + ende;    				
     		}     		
     	}
     	
