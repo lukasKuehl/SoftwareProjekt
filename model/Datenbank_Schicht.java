@@ -10,6 +10,7 @@ import java.util.LinkedList;
 import data.Ma_Schicht;
 import data.Schicht;
 import data.Tag;
+import data.Tauschanfrage;
 import data.TerminBlockierung;
 
 class Datenbank_Schicht {
@@ -188,8 +189,9 @@ class Datenbank_Schicht {
 	 * welches anschlieﬂend ausgegeben wird.
 	 */
 	protected Schicht getSchicht(int schichtnr,Connection con) {
+
 		Datenbank_Ma_Schicht ma_schicht = new Datenbank_Ma_Schicht();
-		LinkedList<Ma_Schicht> maschichtList = ma_schicht.getMa_Schicht(con);;
+		LinkedList<Ma_Schicht> maschichtList = ma_schicht.getMa_Schicht(con);
 		if (!checkSchicht(schichtnr,con)){
 			return null;
 		}
@@ -198,7 +200,7 @@ class Datenbank_Schicht {
 		Statement stmt = null;
 		ResultSet rs = null;
 
-		String sqlStatement = "select Schichtnr,Tbez,Wpnr, Anzschicht, Anfanguhrzeit, Endeuhrzeit from Schicht Where Schichtnr ="+schichtnr;
+		String sqlStatement = "select Schichtnr,Tbez,Wpnr, Anfanguhrzeit, Endeuhrzeit from Schicht Where Schichtnr ="+schichtnr;
 
 		try {
 			stmt = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
@@ -207,7 +209,8 @@ class Datenbank_Schicht {
 			Schicht s = new Schicht(rs.getInt("Schichtnr"), rs.getString("Tbez"),
 					rs.getInt("Wpnr"), rs.getString("Anfanguhrzeit").toString(),
 					rs.getString("Endeuhrzeit").toString());
-
+				
+				
 				for (Ma_Schicht mas : maschichtList) {
 					if (mas.getSchichtnr() == s.getSchichtnr()) {
 						s.setLinkedListMa_Schicht(mas);
@@ -232,6 +235,8 @@ class Datenbank_Schicht {
 	 * Schicht, Ma-Schicht.
 	 */
 	protected boolean deleteSchicht(int wpnr,Connection con) {
+		Datenbank_Tauschanfrage tauschanfrage = new Datenbank_Tauschanfrage();
+		LinkedList<Tauschanfrage> tauschList = tauschanfrage.getTauschanfragen(con);
 		Datenbank_Schicht schicht = new Datenbank_Schicht();
 		LinkedList<Schicht> schichtList = schicht.getSchichten(con);
 		Datenbank_Ma_Schicht masch = new Datenbank_Ma_Schicht();
@@ -242,8 +247,12 @@ class Datenbank_Schicht {
 		String sqlStatement = "DELETE FROM Schicht WHERE wpnr= "+wpnr;
 		for (Schicht sch : schichtList) {
 			if (sch.getWpnr() == wpnr) {
-
-		
+				
+		for (Tauschanfrage tausch : tauschList) {
+				if (tausch.getSchichtnrsender() == sch.getSchichtnr()||tausch.getSchichtnrempf‰nger() == sch.getSchichtnr()) {
+					tauschanfrage.deleteTauschanfrage(tausch.getTauschnr(),con);
+				}
+				}
 		for (Ma_Schicht ms : maschichtList) {
 			if (ms.getSchichtnr() == sch.getSchichtnr()) {
 				masch.deleteMa_SchichtWochenplan(sch.getSchichtnr(),con);

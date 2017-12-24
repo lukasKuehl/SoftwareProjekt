@@ -174,7 +174,7 @@ class Datenbank_Wochenplan {
 
 		String sqlStatement;
 
-		sqlStatement = "UPDATE WOCHENPLAN " + "SET Oeffentlichstatus = ? WHERE Wpnr =" + wpnr;
+		sqlStatement = "UPDATE WOCHENPLAN " + "SET Öffentlichkeitsstatus = ? WHERE Wpnr =" + wpnr;
 		PreparedStatement pstmt = null;
 
 		try {
@@ -210,12 +210,12 @@ class Datenbank_Wochenplan {
 	 * @author Anes Preljevic
 	 * @info Ändert den Öffentlichstatus auf true, bei der Woche mit der übergebenen Wochenplannr
 	 */
-	protected void setzeÖffentlichstatustrue(int wpnr,Connection con) {
+	protected void setzeOeffentlichstatustrue(int wpnr,Connection con) {
 		
 		Statement stmt = null;
 		String sqlStatement;
 
-		sqlStatement = "UPDATE WOCHENPLAN " + "SET Oeffentlichstatus = true WHERE Wpnr =" + wpnr;
+		sqlStatement = "UPDATE WOCHENPLAN " + "SET Öffentlichkeitsstatus = true WHERE Wpnr =" + wpnr;
 		
 		
 		try {
@@ -229,7 +229,7 @@ class Datenbank_Wochenplan {
 			con.setAutoCommit(true);
 
 		} catch (SQLException sql) {
-			System.err.println("Methode updateWochenplan SQL-Fehler: " + sql.getMessage());
+			System.err.println("Methode setzeÖffentlichstatustrue SQL-Fehler: " + sql.getMessage());
 			try {
 				con.rollback();
 				con.setAutoCommit(true);
@@ -250,7 +250,7 @@ class Datenbank_Wochenplan {
 	 * @info Ändert den Öffentlichstatus auf false, bei der Woche mit der übergebenen Wochenplannr
 	 */
 	
-	protected void setzeÖffentlichstatusfalse(int wpnr,Connection con) {
+	protected void setzeOeffentlichstatusfalse(int wpnr,Connection con) {
 		
 		Statement stmt = null;
 		String sqlStatement;
@@ -268,7 +268,7 @@ class Datenbank_Wochenplan {
 			con.setAutoCommit(true);
 
 		} catch (SQLException sql) {
-			System.err.println("Methode updateWochenplan SQL-Fehler: " + sql.getMessage());
+			System.err.println("Methode setzeÖffentlichstatusfalse SQL-Fehler: " + sql.getMessage());
 			try {
 				con.rollback();
 				con.setAutoCommit(true);
@@ -423,6 +423,7 @@ class Datenbank_Wochenplan {
 			}
 		
 		try {
+			con.setAutoCommit(false);
 			stmt = con.createStatement();
 			stmt.execute(sqlStatement);
 			con.commit();

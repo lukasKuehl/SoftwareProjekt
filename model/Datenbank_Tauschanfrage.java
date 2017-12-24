@@ -176,7 +176,7 @@ class Datenbank_Tauschanfrage {
 
 
 		String sqlStatement;
-		sqlStatement = "UPDATE Tauschanfrage " + "SET Bestätigunsstatus = true " + "WHERE Tauschnr =" + tauschnr;
+		sqlStatement = "UPDATE Tauschanfrage SET Bestätigungsstatus = true WHERE Tauschnr =" + tauschnr;
 		Statement stmt = null;
 
 		try {
@@ -233,7 +233,7 @@ class Datenbank_Tauschanfrage {
 			LinkedList<Tauschanfrage> tauschanfrageList = new LinkedList<>();
 
 			while (rs.next()) {
-				Tauschanfrage tanf = new Tauschanfrage(rs.getString("Empfänger"),rs.getString("Sender"), rs.getBoolean("Bestätigunsstatus")
+				Tauschanfrage tanf = new Tauschanfrage(rs.getString("Empfänger"),rs.getString("Sender"), rs.getBoolean("Bestätigungsstatus")
 						,rs.getInt("Schichtnrsender"), rs.getInt("Schichtnrempfänger"), rs.getInt("Tauschnr"));
 
 				for (Schicht sch : schichtsenderList) {
@@ -297,7 +297,7 @@ class Datenbank_Tauschanfrage {
 			
 
 				rs.next();
-				Tauschanfrage tanf = new Tauschanfrage(rs.getString("Empfänger"),rs.getString("Sender"), rs.getBoolean("Bestätigunsstatus")
+				Tauschanfrage tanf = new Tauschanfrage(rs.getString("Empfänger"),rs.getString("Sender"), rs.getBoolean("Bestätigungsstatus")
 						,rs.getInt("Schichtnrsender"), rs.getInt("Schichtnrempfänger"), rs.getInt("Tauschnr"));
 
 
@@ -339,17 +339,18 @@ class Datenbank_Tauschanfrage {
 	 * @info Löschen einer Tauschanfrage aus der Datenbank Tabelle Tauschanfrage
 	 */
 	protected boolean deleteTauschanfrage(int tauschnr, Connection con) {
-		if (!checkTauschanfrage(tauschnr,con)){
+	if (checkTauschanfrage(tauschnr,con)==false){
 			return false;
-		}
-		else{
+	}
+	else{
 		Statement stmt = null;
 		ResultSet rs = null;
-		String sqlQuery = "DELETE FROM Tauschanfrage WHERE Tauschnr= "+tauschnr;
+		String sqlStatement = "DELETE FROM Tauschanfrage WHERE Tauschnr= "+tauschnr;
 
 		try {
+			con.setAutoCommit(false);
 			stmt = con.createStatement();
-			stmt.execute(sqlQuery);
+			stmt.execute(sqlStatement);
 			
 			con.commit();
 
@@ -357,8 +358,7 @@ class Datenbank_Tauschanfrage {
 			
 		
 		return true;
-		}
-		catch (SQLException sql) {
+		}catch (SQLException sql) {
 			System.err.println("Methode deleteTauschanfrage SQL-Fehler: " + sql.getMessage());
 			try {
 				
@@ -379,7 +379,8 @@ class Datenbank_Tauschanfrage {
 				System.err.println("Methode deleteTauschanfrage (finally) SQL-Fehler: " + e.getMessage());
 			}
 		}
-		}
+		
+	}
 		
 	}
 	/**

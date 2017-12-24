@@ -34,7 +34,7 @@ class Datenbank_Userrecht {
 
 			while (rs.next()) {
 
-				Userrecht u = new Userrecht(rs.getString("Job"),rs.getString("Userrecht"));
+				Userrecht u = new Userrecht(rs.getString("Job"),rs.getString("Benutzerrolle"));
 
 				userrechtList.add(u);
 			}

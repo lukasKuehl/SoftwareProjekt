@@ -15,7 +15,7 @@ public class Mitarbeiter {
 	 * @info Erzeugen eines Objektes vom Typ Mitarbeiter und 
 	 * Wertzuweisung der Instanzvariablen. Getter/Setter für alle Variablen.
 	 */
-	public Mitarbeiter(String benutzername, String passwort, String job, String vorname, String name, int Maxstunden, String Whname, String Email){
+	public Mitarbeiter(String benutzername, String passwort, String job, String vorname, String name, int maxstunden, String Whname, String email){
 		this.benutzername = benutzername;
 		this.passwort = passwort;
 		this.job = job;

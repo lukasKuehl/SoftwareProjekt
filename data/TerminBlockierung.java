@@ -53,19 +53,19 @@ public class TerminBlockierung {
 		this.bbez = bbez;
 	}
 
-	public String getAnfzeitraum() {
+	public String getAnfangzeitraum() {
 		return anfzeitraum;
 	}
 
-	public void setAnfzeitraum(String anfzeitraum) {
+	public void setAnfangzeitraum(String anfzeitraum) {
 		this.anfzeitraum = anfzeitraum;
 	}
 
-	public String getEndzeitraum() {
+	public String getEndezeitraum() {
 		return endzeitraum;
 	}
 
-	public void setEndzeitraum(String endzeitraum) {
+	public void setEndezeitraum(String endzeitraum) {
 		this.endzeitraum = endzeitraum;
 	}
 
