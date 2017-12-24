@@ -42,7 +42,8 @@ public class TauschanfrageErstellenView extends JFrame {
 	private Einsatzplanview myView = null;
 	private Einsatzplanmodel myModel = null;
 	private Schicht mySchicht = null;
-	
+	private int senderSchichtnr = 0;
+	String temp[] = new String[14];
 	
 	/**
 	 * @author Ramona Gerke	
@@ -176,7 +177,7 @@ public class TauschanfrageErstellenView extends JFrame {
 		
 		comboBoxSchichtAndererMA = new JComboBox<String>();
 		
-			String temp[] = new String[14];
+			
 		ArrayList <String>al = myView.getTauschanfragen(myView.getUsername());
 		for (String m : al) {
 			m.toString();
@@ -185,7 +186,8 @@ public class TauschanfrageErstellenView extends JFrame {
 			// tauschanfrageNrS = temp [0];
 			String senderVorname = temp[0];
 			String senderName = temp[1];
-			String senderSchichtnr = temp[2];
+			String senderSchichtNr = temp[2];
+			senderSchichtnr =  Integer.parseInt(temp[2]);
 			String senderWpNr = temp[3];
 			String senderTbez = temp[4];
 			String senderAnfangsuhrzeit = temp[5];
@@ -261,11 +263,10 @@ public class TauschanfrageErstellenView extends JFrame {
 			if (e.getSource() == btnErstellen) {
 				
 				String senderName = myView.getUsername();
-				int senderSchichtNr=0;  //= myModel.getSchichten().toString(); // SCHICHT NR AUS DEM MODEL ????
-				String empfaengerName= null; // Username des Mitarbeiter hinzufügen
-				int empfaengerSchichtNr= 0; // = getUsernameAndererMA();
-
-				myView.erstelleTauschanfrage(senderName, senderSchichtNr, empfaengerName, empfaengerSchichtNr );
+				int senderSchichtnr = Integer.parseInt(temp [2]);
+				String empfaengerName= temp [8];
+				int empfaengerSchichtNr= Integer.parseInt(temp [9]);
+				myView.erstelleTauschanfrage(senderName, senderSchichtnr, empfaengerName, empfaengerSchichtNr );
 				
 			}
 		}});
