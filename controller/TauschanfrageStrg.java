@@ -90,8 +90,11 @@ class TauschanfrageStrg {
 			Mitarbeiter empfaenger = this.myModel.getMitarbeiter(t.getEmpfänger());
 			Schicht empfaengerSchicht = this.myModel.getSchicht(t.getSchichtnrempfänger());			
 						
+			//Hinterlegen der individuellen Tausch-Nr
+			String temp = "Tausch-Nr: " + t.getTauschnr() + " - ";
+			
 			//Eintragen Sender-Informationen
-			String temp = sender.getVorname() + " " + sender.getName() + " - " + senderSchicht.getSchichtnr() + " - " + "KW" + senderSchicht.getWpnr() + " - " + senderSchicht.getTbez() + " - " + senderSchicht.getAnfanguhrzeit() + "-" + senderSchicht.getEndeuhrzeit() + "\n --> ";
+			temp = temp + sender.getVorname() + " " + sender.getName() + " - " + senderSchicht.getSchichtnr() + " - " + "KW" + senderSchicht.getWpnr() + " - " + senderSchicht.getTbez() + " - " + senderSchicht.getAnfanguhrzeit() + "-" + senderSchicht.getEndeuhrzeit() + "\n --> ";
 									
 			//Eintragen Empfänger-Informationen
 			temp = temp + empfaenger.getVorname() + " " + empfaenger.getName() + " - " + empfaengerSchicht.getSchichtnr() + " - " + "KW" + empfaengerSchicht.getWpnr() + " - " + empfaengerSchicht.getTbez() + " - " + empfaengerSchicht.getAnfanguhrzeit() + ":" + empfaengerSchicht.getEndeuhrzeit();
