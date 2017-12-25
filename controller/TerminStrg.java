@@ -9,7 +9,9 @@ import java.util.TreeMap;
 
 import javax.swing.JDialog;
 
+import data.Ma_Schicht;
 import data.Mitarbeiter;
+import data.Schicht;
 import data.Tag;
 import data.Tblock_Tag;
 import data.TerminBlockierung;
@@ -150,7 +152,64 @@ class TerminStrg {
 				int newTbNr = this.myModel.getNewTblocknr();
 				
 				TerminBlockierung tb = new TerminBlockierung(newTbNr, username, bez, zeitraum.get("anfangsZeitraum"), zeitraum.get("endZeitraum"), zeitraum.get("anfangsUhrzeit"), zeitraum.get("endZeitraum"), grund);
-				this.myModel.addTerminBlockierung(tb);	
+				this.myModel.addTerminBlockierung(tb);				
+				
+				//Da nun eine Terminblockierung vorliegt, muss überprüft werden, ob der Mitarbeiter nun für bereits eingeteilte Schichten nicht mehr zur Verfügung steht und somit aus der Zurodnung entfernt werden muss
+						
+				//Ermittlung der Schichten eines Mitarbeiters
+				LinkedList<Schicht> alleSchichten = this.myModel.getSchichten();
+				LinkedList<Schicht> mitarbeiterSchichten = new LinkedList<Schicht>();
+				LinkedList<Ma_Schicht> mitarbeiterEinteilung = this.myModel.getSchichteneinesMitarbeiters(username);
+								
+				for(Schicht s: alleSchichten){
+					
+					for(Ma_Schicht mas : mitarbeiterEinteilung){
+						if(s.getSchichtnr() == mas.getSchichtnr()){
+							mitarbeiterSchichten.add(s);							
+						}						
+					}						
+				}			
+				
+				//Ermittlung der Terminzuordnungen eines Mitarbeiters
+				LinkedList<Tblock_Tag> alleTerminZuordnungen = this.myModel.getAlleTblock_Tag();
+				LinkedList<Tblock_Tag> betroffeneTerminZuordnungen = new LinkedList<Tblock_Tag>();
+				
+				for(Tblock_Tag tbl: alleTerminZuordnungen){
+					if(newTbNr == tbl.getTblocknr()){
+						betroffeneTerminZuordnungen.add(tbl);
+					}				
+				}
+				
+				//Ermittlung der Termine eines Mitarbeiters
+				LinkedList<TerminBlockierung> alleTerminBlockierungen = this.myModel.getTerminBlockierungen();
+				LinkedList<TerminBlockierung> mitarbeiterTerminBlockierungen = new LinkedList<TerminBlockierung>();
+				
+				for(TerminBlockierung t: alleTerminBlockierungen){
+					if(tb.getBenutzername().equals(username)){
+						mitarbeiterTerminBlockierungen.add(t);
+					}
+				}			
+				
+				for(Schicht s: mitarbeiterSchichten){
+					
+					for(Tblock_Tag tbt: betroffeneTerminZuordnungen){
+						
+						for(TerminBlockierung t: mitarbeiterTerminBlockierungen){
+							//Abgleich zum Ausschluss ungleicher Termine & Terminzuordungen
+							if(t.getTblocknr() == tbt.getTblocknr()){
+								
+								//Suche die TerminBlockierungen für den zugehörigen Wochenplan
+								if(s.getWpnr() == tbt.getWpnr()){									
+									//Prüfe, ob der Mitarbeiter an dem Tag einen neuen Termin hinterlegt hat und somit aus der Schicht entfernt werden muss
+									if(s.getTbez().equals(tbt.getTbez())){
+										this.myModel.deleteMa_Schicht(s.getSchichtnr(), username);
+									}									
+								}							
+							}					
+						}					
+					}						
+				}			
+				
 				success = true;
 			}
 		}catch(Exception e){
