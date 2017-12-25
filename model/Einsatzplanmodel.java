@@ -502,11 +502,11 @@ public class Einsatzplanmodel {
 			e.printStackTrace();			
 		}
 	}
-	public void bestätigeTauschanfrage(int tauschnr){
+	public void bestätigeTauschanfrage(String empfänger,int tauschnr){
 		
 		
 		try{
-			this.dataTauschanfrage.bestätigeTauschanfrage(tauschnr,con);
+			this.dataTauschanfrage.bestätigeTauschanfrage(empfänger, tauschnr,con);
 			
 		}catch(Exception e){
 			System.out.println("Fehler innerhalb des Modells:");

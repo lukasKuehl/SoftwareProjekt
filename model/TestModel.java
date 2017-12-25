@@ -210,6 +210,7 @@ public class TestModel {
 		//}
 		//Tauschanfrage test
 		int tauschnr=100000;
+		String empfänger="Kmuster";
 		boolean testtauscha = wps.checkTauschanfrage(tauschnr);
 		if(testtauscha==true){
 			System.out.println("successtauschanfrage");
@@ -217,7 +218,7 @@ public class TestModel {
 		else{
 			System.out.println("failtauschanfrage");
 		}
-		wps.bestätigeTauschanfrage(tauschnr);
+		wps.bestätigeTauschanfrage(empfänger, tauschnr);
 		
 		LinkedList<Tauschanfrage> tauschList =wps.getTauschanfragen();
 		for(Tauschanfrage tausch:tauschList){

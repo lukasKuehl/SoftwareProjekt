@@ -32,7 +32,7 @@ class TauschanfrageStrg {
 	}	
 	
 	/**
-	 * @author 
+	 * @author Anes Preljevic
 	 * @info Anlegen einer neuen Tauschanfrage zum Tausch einer Schicht eines Mitarbeiters mit der Schicht eines anderen Mitarbeiters
 	 */
 	protected boolean erstelleTauschanfrage(String senderName, int senderSchichtNr, String empfaengerName, int empfaengerSchichtNr ){
@@ -43,23 +43,35 @@ class TauschanfrageStrg {
 	}	
 	
 	/**
-	 * @author 
+	 * @author Anes Preljevic
 	 * @info Eine bereits existierende Tauschanfrage soll aus dem System entfernt werden
 	 */
 	protected boolean entferneTauschanfrage(int tauschanfrageNr){
 		
-		boolean success = false;	
-		//Ausfüllen
+		boolean success = false;		
+			try{				
+				this.myModel.deleteTauschanfrage(tauschanfrageNr);
+				success = true;
+			}catch(Exception e){
+				System.out.println("Controller: Fehler beim Entfernen einer Tauschanfrage aus der Datenbank: ");
+				e.printStackTrace();
+			}		
 		return success;
 	}	
 	
 	/**
-	 * @author 
+	 * @Anes Preljevic 
 	 * @info Der Empfänger einer Tauschanfrage möchte diese annehmen, um seine/ihre Schicht mit einer anderen zu tauschen
 	 */
-	protected boolean akzeptiereTauschanfrage(String emfaengerName, int tauschanfrageNr){	
+	protected boolean akzeptiereTauschanfrage(String empfaengerName, int tauschanfrageNr){	
 		boolean success = false;	
-		//Ausfüllen
+		try{				
+			this.myModel.bestätigeTauschanfrage(empfaengerName,tauschanfrageNr);
+			success = true;
+		}catch(Exception e){
+			System.out.println("Controller: Fehler beim bestätigen einer Tauschanfrage: ");
+			e.printStackTrace();
+		}	
 		return success;
 		
 	}

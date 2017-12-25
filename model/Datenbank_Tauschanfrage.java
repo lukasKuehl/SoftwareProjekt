@@ -172,11 +172,11 @@ class Datenbank_Tauschanfrage {
 	 * @Anes Preljevic
 	 * @info Ändert den Bestätigungsstatus der übergebenen Tauschanfrage
 	 */
-	protected void bestätigeTauschanfrage(int tauschnr,Connection con) {
+	protected void bestätigeTauschanfrage(String empfänger , int tauschnr,Connection con) {
 
 
 		String sqlStatement;
-		sqlStatement = "UPDATE Tauschanfrage SET Bestätigungsstatus = true WHERE Tauschnr =" + tauschnr;
+		sqlStatement = "UPDATE Tauschanfrage SET Bestätigungsstatus = true WHERE empfänger='"+empfänger+"' and Tauschnr =" + tauschnr;
 		Statement stmt = null;
 
 		try {
@@ -357,7 +357,9 @@ class Datenbank_Tauschanfrage {
 	 */
 	protected boolean deleteTauschanfrage(int tauschnr, Connection con) {
 	if (checkTauschanfrage(tauschnr,con)==false){
-			return false;
+		System.out.println("Tauschanfrage kann nicht gelöscht werden, da nicht vorhanden");	
+		return false;
+		
 	}
 	else{
 		Statement stmt = null;
