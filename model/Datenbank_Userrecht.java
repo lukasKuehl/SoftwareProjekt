@@ -19,30 +19,30 @@ class Datenbank_Userrecht {
 	 * @author Anes Preljevic
 	 * @info Auslesen der Userrecht aus der Datenbank und hinzufügen in eine Liste, welche den Ausgabewert darstellt 
 	 */
-	public LinkedList<Userrecht> getUserrecht(Connection con) {
+	public Userrecht getUserrecht(String job ,Connection con) {
 
 		Statement stmt = null;
 		ResultSet rs = null;
 
-		String sqlStatement = "SELECT Job,Benutzerrolle  FROM Userrecht";
+		String sqlStatement = "SELECT Job,Benutzerrolle  FROM Userrecht where job ='"+job+"'";
 
 		try {
 			stmt = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
 			rs = stmt.executeQuery(sqlStatement);
 			
-			LinkedList<Userrecht> userrechtList = new LinkedList<>();
+			
 
-			while (rs.next()) {
+			rs.next();
 
 				Userrecht u = new Userrecht(rs.getString("Job"),rs.getString("Benutzerrolle"));
 
-				userrechtList.add(u);
-			}
+				
+			
 
 			rs.close();
 			stmt.close();
 
-			return userrechtList;
+			return u;
 
 		} catch (SQLException sql) {
 			System.err.println("Methode getUserrecht SQL-Fehler: " + sql.getMessage());

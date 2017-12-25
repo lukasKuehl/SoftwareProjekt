@@ -807,10 +807,10 @@ public class Einsatzplanmodel {
 			e.printStackTrace();			
 		}
 	}
-	public LinkedList<Userrecht> getUserrecht() {
-		LinkedList<Userrecht> result=null;
+	public Userrecht getUserrecht(String job) {
+		Userrecht result=null;
 		try{
-			result=this.dataUserrecht.getUserrecht(con);
+			result=this.dataUserrecht.getUserrecht(job, con);
 			
 		}catch(Exception e){
 			System.out.println("Fehler innerhalb des Modells:");

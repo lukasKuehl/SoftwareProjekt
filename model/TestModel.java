@@ -339,10 +339,11 @@ public class TestModel {
 		int nexttbnr = wps.getNewTblocknr();
 		System.out.println( nexttbnr);
 		//Test Userrecht
-		LinkedList<Userrecht> userrList=wps.getUserrecht();
-		for(Userrecht ur:userrList){
-			System.out.println(ur.getJob()+" "+ur.getBenutzerrolle());
-		}
+		String job ="Kassierer";
+		Userrecht userr=wps.getUserrecht(job);
+		
+			System.out.println(userr.getJob()+" "+userr.getBenutzerrolle());
+		
 		//Test Warenhaus
 		LinkedList<Warenhaus> whList=wps.getWarenhaus();
 		for(Warenhaus wh:whList){
