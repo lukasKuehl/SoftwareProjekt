@@ -514,7 +514,7 @@ public class Einsatzplanmodel {
 			e.printStackTrace();			
 		}
 	}
-	protected  int getNewTauschnr() {
+	public  int getNewTauschnr() {
 		int result = 0;
 		try{
 			result = this.dataTauschanfrage.getNewTauschnr(con);

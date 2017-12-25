@@ -8,6 +8,7 @@ import javax.swing.JDialog;
 import data.Mitarbeiter;
 import data.Schicht;
 import data.Tauschanfrage;
+import data.TerminBlockierung;
 import model.Einsatzplanmodel;
 
 /**
@@ -36,9 +37,36 @@ class TauschanfrageStrg {
 	 * @info Anlegen einer neuen Tauschanfrage zum Tausch einer Schicht eines Mitarbeiters mit der Schicht eines anderen Mitarbeiters
 	 */
 	protected boolean erstelleTauschanfrage(String senderName, int senderSchichtNr, String empfaengerName, int empfaengerSchichtNr ){
+		boolean success = false;
+		boolean valid=false;
 		
-		boolean success = false;	
-		//Ausfüllen
+		Schicht senderSchicht=this.myModel.getSchicht(senderSchichtNr);
+		Schicht empfaengerSchicht=this.myModel.getSchicht(empfaengerSchichtNr);
+		Mitarbeiter sender=this.myModel.getMitarbeiter(senderName);
+		Mitarbeiter empfaenger=this.myModel.getMitarbeiter(empfaengerName);
+		LinkedList<Tauschanfrage> alleTauschanfragen=this.myModel.getTauschanfragen();
+		
+		int tauschNr=this.myModel.getNewTauschnr();
+		
+		if(senderSchicht!=null && empfaengerSchicht!=null && sender!=null && empfaenger!=null){
+			valid=true;
+			for(Tauschanfrage ta: alleTauschanfragen){
+				if(ta.getEmpfänger()==empfaengerName && ta.getSender()==senderName && ta.getSchichtnrempfänger()==empfaengerSchichtNr && ta.getSchichtnrsender()==senderSchichtNr){
+					valid=false;
+				}
+			}
+		}
+		
+		if(valid){
+		try{
+			this.myModel.addTauschanfrage(tauschNr, senderName, senderSchichtNr, empfaengerName, empfaengerSchichtNr);
+			success=true;
+		}catch(Exception e){
+			System.out.println("Controller: Fehler beim erstellen einer Tauschanfrage: ");
+			e.printStackTrace();
+		}
+		
+		}	
 		return success;
 	}	
 	
@@ -64,16 +92,32 @@ class TauschanfrageStrg {
 	 * @info Der Empfänger einer Tauschanfrage möchte diese annehmen, um seine/ihre Schicht mit einer anderen zu tauschen
 	 */
 	protected boolean akzeptiereTauschanfrage(String empfaengerName, int tauschanfrageNr){	
-		boolean success = false;	
+		boolean success = false;
+		boolean valid = false;
+
+		LinkedList<Tauschanfrage> alleTauschanfragen=this.myModel.getTauschanfragen();
+
+				for(Tauschanfrage ta: alleTauschanfragen){
+				if((ta.getTauschnr() == tauschanfrageNr) && ta.getEmpfänger().equals(empfaengerName)){
+					valid = true;	
+				}
+				}
+			
+		if(valid){
 		try{				
 			this.myModel.bestätigeTauschanfrage(empfaengerName,tauschanfrageNr);
-			success = true;
-		}catch(Exception e){
+		}	
+		catch(Exception e){
 			System.out.println("Controller: Fehler beim bestätigen einer Tauschanfrage: ");
 			e.printStackTrace();
-		}	
+		}
+		success=true;
+		}
+		else{
+			System.out.println("Tauschanfrage kann nicht bestätigt werden, User ist nicht der Empfänger oder Tauschanfrage nicht vorhanden ");
+		}
 		return success;
-		
+	
 	}
 		
 	/**
