@@ -295,8 +295,6 @@ class Datenbank_Wochenplan {
 	protected LinkedList<Wochenplan> getWochenplaene(Connection con) {
 
 		Datenbank_Tag tag = new Datenbank_Tag();
-		
-
 		LinkedList<Tag> tageList = tag.getTage(con);;
 	
 
@@ -318,21 +316,13 @@ class Datenbank_Wochenplan {
 						rs.getTime("SchlieﬂZeit").toString(),rs.getTime("Hauptzeitbeginn").toString(),rs.getTime("Hauptzeitende").toString(),
 						rs.getString("Benutzername"),rs.getInt("Minanzinfot"),
 						rs.getInt("Minanzinfow"),rs.getInt("Minanzkasse"),rs.getInt("Mehrbesetzung"));
-
+				LinkedList<Tag> tagewp=new LinkedList<>();
 				for (Tag ta : tageList) {
 					if (ta.getWpnr() == wp.getWpnr()) {
-						wp.setLinkedListTage(ta);
-				
-
-			//			for (Schicht sch : schichtList) {
-					
-				//			if (sch.getWpnr() == ta.getWpnr()&&(sch.getWpnr() == ta.getWpnr()&& sch.getTbez() == ta.getTbez())) {
-					//			s.setLinkedListSchichten(sch);
-						//	}
-						}
-					
+						tagewp.add(ta);
+					}
 				}
-
+				wp.setLinkedListTage(tagewp);
 				wochenplanList.add(wp);
 			
 			}
@@ -380,15 +370,20 @@ class Datenbank_Wochenplan {
 						rs.getTime("SchlieﬂZeit").toString(),rs.getTime("Hauptzeitbeginn").toString(),rs.getTime("Hauptzeitende").toString(),
 						rs.getString("Benutzername"),rs.getInt("Minanzinfot"),
 						rs.getInt("Minanzinfow"),rs.getInt("Minanzkasse"),mehrb);
-
+				LinkedList<Tag> tagewp=new LinkedList<>();
 				for (Tag ta : tageList) {
 					if (ta.getWpnr() == wp.getWpnr()) {
-						wp.setLinkedListTage(ta);
-			
-			rs.close();
-			stmt.close();
+						
+						tagewp.add(ta);
+						
+				
 					}
 				}
+				wp.setLinkedListTage(tagewp);
+			rs.close();
+			stmt.close();
+					
+			
 
 			return wp;
 		}
@@ -407,7 +402,7 @@ class Datenbank_Wochenplan {
 	
 	protected boolean deleteWochenplan(int wpnr,Connection con) {
 		Datenbank_Tag tag = new Datenbank_Tag();
-		LinkedList<Tag> tageList = tag.getTage(con);
+		
 
 		if (!checkWochenplan(wpnr, con)){
 			return false;
@@ -416,11 +411,9 @@ class Datenbank_Wochenplan {
 		Statement stmt = null;
 		ResultSet rs = null;
 		String sqlStatement = "DELETE FROM WOCHENPLAN WHERE Wpnr = " + wpnr;
-		for (Tag ta : tageList) {
-			if (ta.getWpnr() == wpnr) {
-				tag.deleteTag(wpnr,con);
-			}
-			}
+		tag.deleteTag(wpnr,con);
+			
+			
 		
 		try {
 			con.setAutoCommit(false);

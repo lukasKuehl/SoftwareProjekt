@@ -8,7 +8,7 @@ public class Schicht {
 	private int wpnr=0;
 	private String anfanguhrzeit=null;
 	private String endeuhrzeit=null;
-	private LinkedList<Ma_Schicht> ll_ma_schicht = new LinkedList<Ma_Schicht>();
+	private LinkedList<Ma_Schicht> ll_ma_schicht = null;
 	/**
 	 * @author Anes Preljevic
 	 * @info Erzeugen eines Objektes vom Typ Schicht und 
@@ -74,7 +74,7 @@ public class Schicht {
 		return ll_ma_schicht;
 	}
 
-	public void setLinkedListMa_Schicht(Ma_Schicht mas) {
+	public void setLinkedListMa_Schicht(LinkedList<Ma_Schicht> ll_ma_schicht) {
 		this.ll_ma_schicht=ll_ma_schicht;
 		
 	}

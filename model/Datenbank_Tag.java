@@ -12,6 +12,7 @@ import model.Datenbank_Connection;
 
 import data.Tag;
 import data.Tblock_Tag;
+import data.Mitarbeiter;
 import data.Schicht;
 
 
@@ -228,10 +229,10 @@ class Datenbank_Tag {
 
 			
 			Datenbank_Schicht schicht = new Datenbank_Schicht();
-			//LinkedList<Schicht> schichtList = schicht.getSchichten(con);
+			LinkedList<Schicht> schichtList = schicht.getSchichten(con);
 			
 			Datenbank_Tblock_Tag tblock_tag = new Datenbank_Tblock_Tag();
-			//LinkedList<Tblock_Tag> tblocktagList = tblock_tag.getAlleTblock_Tag(con);
+			LinkedList<Tblock_Tag> tblocktagList = tblock_tag.getAlleTblock_Tag(con);
 			
 			Statement stmt = null;
 			ResultSet rs = null;
@@ -246,19 +247,27 @@ class Datenbank_Tag {
 				while (rs.next()) {
 					Tag t = new Tag(rs.getString("Tbez"),rs.getInt("Wpnr"),rs.getBoolean("Feiertag"));
 
-					
-				//	for (Schicht sch : schichtList) {
-				//		if (sch.getWpnr() == t.getWpnr()&& sch.getTbez() == t.getTbez()) {
-				//			t.setLinkedListSchichten(sch);
-				//		}
-				//	}
-				//	for (Tblock_Tag tbt : tblocktagList) {
-				//		if (tbt.getWpnr() == t.getWpnr()&& tbt.getTbez() == t.getTbez()) {
-				//			t.setLinkedListTblock_Tag(tbt);
-				//		}
-				//	}
-					
-					tagList.add(t);
+					LinkedList<Schicht> schichttagList = new LinkedList<>();	
+					for (Schicht sch : schichtList) {
+						if (sch.getWpnr() == t.getWpnr()&& sch.getTbez().equals(t.getTbez())) {	
+							schichttagList.add(sch);
+						}
+					}
+					t.setLinkedListSchichten(schichttagList);
+				
+				LinkedList<Tblock_Tag> tblocktagtList = new LinkedList<>();
+				
+				for (Tblock_Tag tbt : tblocktagList) {
+					// && tbt.getTbez().equals(t.getTbez())
+						if (tbt.getWpnr() == t.getWpnr()&& tbt.getTbez().equals(t.getTbez())) {
+							tblocktagtList.add(tbt);
+							//System.out.println(tbt.getTbez() + "  " + tbt.getWpnr()+ "   " +tbt.getTblocknr());
+							//System.out.println(t.getTbez() + "  " + t.getWpnr());
+						}
+				}
+				t.setLinkedListTblock_Tag(tblocktagtList);
+				
+				tagList.add(t);
 				}
 
 				rs.close();
@@ -281,12 +290,10 @@ class Datenbank_Tag {
 	 */
 	protected LinkedList<Tag> getTagewp(int wpnr, Connection con) {
 
-			
 			Datenbank_Schicht schicht = new Datenbank_Schicht();
-			//LinkedList<Schicht> schichtList = schicht.getSchichten(con);
-			
+			LinkedList<Schicht> schichtList = schicht.getSchichten(con);
 			Datenbank_Tblock_Tag tblock_tag = new Datenbank_Tblock_Tag();
-			//LinkedList<Tblock_Tag> tblocktagList = tblock_tag.getAlleTblock_Tag(con);
+			LinkedList<Tblock_Tag> tblocktagList = tblock_tag.getAlleTblock_Tag(con);
 			
 			Statement stmt = null;
 			ResultSet rs = null;
@@ -302,16 +309,24 @@ class Datenbank_Tag {
 					Tag t = new Tag(rs.getString("Tbez"),rs.getInt("Wpnr"),rs.getBoolean("Feiertag"));
 
 					
-				//	for (Schicht sch : schichtList) {
-				//		if (sch.getWpnr() == t.getWpnr()&& sch.getTbez() == t.getTbez()) {
-				//			t.setLinkedListSchichten(sch);
-				//		}
-				//	}
-				//	for (Tblock_Tag tbt : tblocktagList) {
-				//		if (tbt.getWpnr() == t.getWpnr()&& tbt.getTbez() == t.getTbez()) {
-				//			t.setLinkedListTblock_Tag(tbt);
-				//		}
-				//	}
+					for (Schicht sch : schichtList) {
+						if (sch.getWpnr() == t.getWpnr()&& sch.getTbez() == t.getTbez()) {
+							LinkedList<Schicht> schichttagList = new LinkedList<>();	
+							schichttagList.add(sch);
+							t.setLinkedListSchichten(schichttagList);
+							
+						}
+					}
+				
+				for (Tblock_Tag tbt : tblocktagList) {
+						if (tbt.getWpnr() == t.getWpnr()&& tbt.getTbez() == t.getTbez()) {
+							LinkedList<Tblock_Tag> tblocktagtList = new LinkedList<>();
+							tblocktagtList.add(tbt);
+							t.setLinkedListTblock_Tag(tblocktagList);
+							
+						}
+				
+				}
 					
 					tagList.add(t);
 				}
@@ -335,31 +350,27 @@ class Datenbank_Tag {
 	
 	protected boolean deleteTag(int wpnr,Connection con) {
 		Datenbank_Schicht schicht = new Datenbank_Schicht();
-		LinkedList<Schicht> schichtList = schicht.getSchichten(con);
-		
+		Datenbank_TerminBlockierung terminblockierung = new Datenbank_TerminBlockierung();
 		Datenbank_Tblock_Tag tblock_tag = new Datenbank_Tblock_Tag();
 		LinkedList<Tblock_Tag> tblocktagList = tblock_tag.getAlleTblock_Tag(con);
 		
-		Datenbank_Tag tag = new Datenbank_Tag();
-		LinkedList<Tag> tageList = tag.getTage(con);
+
 		
 		Statement stmt = null;
 		ResultSet rs = null;
 		String sqlQuery = "DELETE FROM tag WHERE tag.wpnr= "+wpnr;
-		for (Schicht sch : schichtList) {
-			if (sch.getWpnr() == wpnr) {
-				schicht.deleteSchicht(wpnr,con);;
-			}
-			for (Tag t : tageList) {
-				if (t.getWpnr() == wpnr) {
 
-			for (Tblock_Tag tbt : tblocktagList) {
-				if (tbt.getWpnr() == wpnr && tbt.getTbez() == t.getTbez()) {
-					tblock_tag.deleteTblock_Tag(wpnr,con);;
-				}
+		for (Tblock_Tag tbt : tblocktagList) {
+			if (tbt.getWpnr() == wpnr) {
+				terminblockierung.deleteTerminBlockierung(tbt.getTblocknr(),con);;
 			}
-				}}
 		}
+			
+
+		schicht.deleteSchicht(wpnr,con);;
+		
+	
+	
 		try {
 			stmt = con.createStatement();
 			stmt.execute(sqlQuery);

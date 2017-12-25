@@ -213,12 +213,11 @@ class Datenbank_Tauschanfrage {
 	 */
 	protected LinkedList<Tauschanfrage> getTauschanfragen(Connection con) {
 		Datenbank_Schicht schicht = new Datenbank_Schicht();
-		LinkedList<Schicht> schichtsenderList = schicht.getSchichten(con);
-		LinkedList<Schicht> schichtempfängerList = schicht.getSchichten(con);
-		
+		LinkedList<Schicht> schichtList = schicht.getSchichten(con);
 		Datenbank_Mitarbeiter mitarbeiter = new Datenbank_Mitarbeiter();
-		LinkedList<Mitarbeiter> senderList = mitarbeiter.getAlleMitarbeiter(con);
-		LinkedList<Mitarbeiter> empfängerList = mitarbeiter.getAlleMitarbeiter(con);
+		LinkedList<Mitarbeiter> mitarbeiterList = mitarbeiter.getAlleMitarbeiter(con);
+		
+		
 		
 		Statement stmt = null;
 		ResultSet rs = null;
@@ -235,27 +234,38 @@ class Datenbank_Tauschanfrage {
 			while (rs.next()) {
 				Tauschanfrage tanf = new Tauschanfrage(rs.getString("Empfänger"),rs.getString("Sender"), rs.getBoolean("Bestätigungsstatus")
 						,rs.getInt("Schichtnrsender"), rs.getInt("Schichtnrempfänger"), rs.getInt("Tauschnr"));
-
-				for (Schicht sch : schichtsenderList) {
-					if (sch.getSchichtnr() == tanf.getSchichtnrsender()) {
-						tanf.setLinkedListSchichtensender(sch);
+				LinkedList<Mitarbeiter> senderList = new LinkedList<>();
+				for (Mitarbeiter ma : mitarbeiterList) {
+					if (ma.getBenutzername().equals(tanf.getSender())) {
+						senderList.add(ma);	
 					}
 				}
-				for (Schicht sch : schichtempfängerList) {
+				tanf.setLinkedListSender(senderList);
+				
+				LinkedList<Mitarbeiter> empfängerList = new LinkedList<>();
+				for (Mitarbeiter ma : mitarbeiterList) {
+					if (ma.getBenutzername().equals(tanf.getEmpfänger())) {
+						empfängerList.add(ma);
+					}
+				}
+				tanf.setLinkedListEmpfänger(empfängerList);
+				
+				LinkedList<Schicht> schichtnrSenderList = new LinkedList<>();
+				for (Schicht sch : schichtList) {
+					if (sch.getSchichtnr()==tanf.getSchichtnrsender()) {
+						schichtnrSenderList.add(sch);
+					}
+				}
+				tanf.setLinkedListSchichtensender(schichtnrSenderList);
+				
+				LinkedList<Schicht> schichtnrEmpfängerList = new LinkedList<>();
+				for (Schicht sch : schichtList) {
 					if (sch.getSchichtnr() == tanf.getSchichtnrempfänger()) {
-						tanf.setLinkedListSchichtenempfänger(sch);
+						schichtnrEmpfängerList.add(sch);
 					}
 				}
-				for (Mitarbeiter ma : senderList) {
-					if (ma.getBenutzername() == tanf.getSender()) {
-						tanf.setLinkedListSender(ma);
-					}
-				}
-				for (Mitarbeiter ma : empfängerList) {
-					if (ma.getBenutzername() == tanf.getEmpfänger()) {
-						tanf.setLinkedListEmpfänger(ma);
-					}
-				}
+				tanf.setLinkedListSchichtenempfänger(schichtnrEmpfängerList);
+
 				tauschanfrageList.add(tanf);
 			}
 
@@ -277,12 +287,10 @@ class Datenbank_Tauschanfrage {
 	 */
 	protected Tauschanfrage getTauschanfrage(int tauschnr, Connection con ) {
 		Datenbank_Schicht schicht = new Datenbank_Schicht();
-		LinkedList<Schicht> schichtsenderList = schicht.getSchichten(con);
-		LinkedList<Schicht> schichtempfängerList = schicht.getSchichten(con);
-		
+		LinkedList<Schicht> schichtList = schicht.getSchichten(con);
 		Datenbank_Mitarbeiter mitarbeiter = new Datenbank_Mitarbeiter();
-		LinkedList<Mitarbeiter> senderList = mitarbeiter.getAlleMitarbeiter(con);
-		LinkedList<Mitarbeiter> empfängerList = mitarbeiter.getAlleMitarbeiter(con);
+		LinkedList<Mitarbeiter> mitarbeiterList = mitarbeiter.getAlleMitarbeiter(con);
+		
 		
 		Statement stmt = null;
 		ResultSet rs = null;
@@ -300,28 +308,37 @@ class Datenbank_Tauschanfrage {
 				Tauschanfrage tanf = new Tauschanfrage(rs.getString("Empfänger"),rs.getString("Sender"), rs.getBoolean("Bestätigungsstatus")
 						,rs.getInt("Schichtnrsender"), rs.getInt("Schichtnrempfänger"), rs.getInt("Tauschnr"));
 
-
-				for (Schicht sch : schichtsenderList) {
-					if (sch.getSchichtnr() == tanf.getSchichtnrsender()) {
-						tanf.setLinkedListSchichtensender(sch);
+				for (Mitarbeiter ma : mitarbeiterList) {
+					
+					if (ma.getBenutzername().equals(tanf.getSender())) {
+						LinkedList<Mitarbeiter> senderList = new LinkedList<>();
+						//System.out.println(ma.getBenutzername()+" "+ tanf.getSender());	
+						senderList.add(ma);
+						tanf.setLinkedListSender(senderList);
+						
 					}
 				}
-				for (Schicht sch : schichtempfängerList) {
-					if (sch.getSchichtnr() == tanf.getSchichtnrempfänger()) {
-						tanf.setLinkedListSchichtenempfänger(sch);
-					}
-				}
-				for (Mitarbeiter ma : senderList) {
-					if (ma.getBenutzername() == tanf.getSender()) {
-						tanf.setLinkedListSender(ma);
-					}
-				}
-				for (Mitarbeiter ma : empfängerList) {
-					if (ma.getBenutzername() == tanf.getEmpfänger()) {
-						tanf.setLinkedListEmpfänger(ma);
+				for (Mitarbeiter ma : mitarbeiterList) {
+					if (ma.getBenutzername().equals(tanf.getEmpfänger())) {
+						
+						LinkedList<Mitarbeiter> empfängerList = new LinkedList<>();
+						empfängerList.add(ma);
+						tanf.setLinkedListEmpfänger(empfängerList);
 					}
 				}
 				
+				for (Schicht sch : schichtList) {
+					LinkedList<Schicht> schichtnrSenderList = new LinkedList<>();
+					if (sch.getSchichtnr() == tanf.getSchichtnrsender()) {
+						tanf.setLinkedListSchichtensender(schichtnrSenderList);
+					}
+				}
+				for (Schicht sch : schichtList) {
+					LinkedList<Schicht> schichtnrEmpfängerList = new LinkedList<>();
+					if (sch.getSchichtnr() == tanf.getSchichtnrempfänger()) {
+						tanf.setLinkedListSchichtenempfänger(schichtnrEmpfängerList);
+					}
+				}
 			
 
 			rs.close();

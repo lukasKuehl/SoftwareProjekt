@@ -21,6 +21,13 @@ public class TestModel {
 			
 			System.out.println(d.getWpnr()+" "+ d.get÷ffnungszeit() + "  " + d.getMinanzinfot()
 			+ "  " + d.getMehrbesetzung()+ "  " + d.getSchlieﬂzeit()+ "  " + d.getHauptzeitbeginn());
+			LinkedList<Tag> wptage=d.getLl_tag();
+			
+			for(Tag twp: wptage){
+				
+				System.out.println( twp.getTbez() + "  " + twp.getWpnr());
+			
+			}
 		
 		}
 		Wochenplan wp = wps.getWochenplan(testwp);
@@ -36,14 +43,14 @@ public class TestModel {
 		if(checkwp==true){
 			System.out.println("success");
 		}
-		boolean deletewp=wps.deleteWochenplan(testwp);
-		if(deletewp==true){
-			System.out.println("success delete Wochenplan");
-		}
-		else{
-			System.out.println("fail delete Wochenplan");
+		//boolean deletewp=wps.deleteWochenplan(testwp);
+		//if(deletewp==true){
+			//System.out.println("success delete Wochenplan");
+		//}
+		//else{
+			//System.out.println("fail delete Wochenplan");
 			
-		}
+		//}
 		//Standardeinstellungen test
 		Standardeinstellungen std = wps.getStandardeinstellungen();
 		System.out.println(std.get÷ffnungszeit() + "  " + std.getMinanzinfot()
@@ -72,6 +79,21 @@ public class TestModel {
 		for(Tag t:tags){
 			
 			System.out.println( t.getTbez() + "  " + t.getWpnr()+ "   " + t.isFeiertag());
+			LinkedList<Schicht> schichttag=t.getLl_Schicht();
+			
+			for(Schicht scht:schichttag){
+				
+				System.out.println( scht.getTbez() + "  " + scht.getWpnr()+ "   " +scht.getSchichtnr()
+				+" "+ scht.getAnfanguhrzeit());
+			
+			}
+			LinkedList<Tblock_Tag> tbttag22=t.getLl_Tblocktag();
+			
+			for(Tblock_Tag tbtt:tbttag22){
+				
+				System.out.println(tbtt.getTbez() + "  " + tbtt.getWpnr()+ "   " +tbtt.getTblocknr());
+			
+			}
 
 		}
 		System.out.println("f¸r wochenplan");
@@ -106,10 +128,23 @@ public class TestModel {
 		for(Schicht scht:sch){
 			
 			System.out.println( scht.getAnfanguhrzeit() + "  " + scht.getEndeuhrzeit()+ "   " + scht.getSchichtnr());
-		
+			LinkedList<Ma_Schicht> masch=scht.getLl_maschicht();
+			
+			for(Ma_Schicht sch1:masch){
+				
+				System.out.println( sch1.getSchichtnr()+" "+ sch1.getBenutzername());
+			
+			}
 		}
 		Schicht schicht0 =wps.getSchicht(ss);
 		System.out.println( schicht0.getAnfanguhrzeit() + "  " + schicht0.getEndeuhrzeit()+ "   " + schicht0.getSchichtnr());
+		LinkedList<Ma_Schicht> masch22=schicht0.getLl_maschicht();
+		
+		for(Ma_Schicht sch1:masch22){
+			
+			System.out.println( sch1.getSchichtnr()+" "+ sch1.getBenutzername());
+		
+		}
 		boolean test22 = wps.checkSchicht(ss);
 		if(test22==true){
 			System.out.println("success");
@@ -156,23 +191,23 @@ public class TestModel {
 		else{
 			System.out.println("fail");
 		}
-		boolean delete=wps.deleteMa_Schicht(ss,b);
-		if(delete==true){
-			System.out.println("success delete maschicht");
-		}
-		else{
-			System.out.println("fail delete maschicht");
+		//boolean delete=wps.deleteMa_Schicht(ss,b);
+		//if(delete==true){
+			//System.out.println("success delete maschicht");
+		//}
+		//else{
+			//System.out.println("fail delete maschicht");
 			
-		}
-		int schichtnr22=10001;
-		boolean delete2=wps.deleteMa_SchichtWochenplan(schichtnr22);
-		if(delete2==true){
-			System.out.println("success delete maschicht");
-		}
-		else{
-			System.out.println("fail delete maschicht");
+		//}
+		//int schichtnr22=10001;
+		//boolean delete2=wps.deleteMa_SchichtWochenplan(schichtnr22);
+		//if(delete2==true){
+		//	System.out.println("success delete maschicht");
+		//}
+		//else{
+			//System.out.println("fail delete maschicht");
 			
-		}
+		//}
 		//Tauschanfrage test
 		int tauschnr=100000;
 		boolean testtauscha = wps.checkTauschanfrage(tauschnr);
@@ -188,11 +223,35 @@ public class TestModel {
 		for(Tauschanfrage tausch:tauschList){
 			
 			System.out.println( tausch.getTauschnr() + "  " + tausch.getSender()+ "  " + tausch.getEmpf‰nger());
+			
 			LinkedList<Mitarbeiter> masend=tausch.getLl_Sender();
+			
 			for(Mitarbeiter masender:masend){
 				
 				System.out.println( masender.getEmail() + "  " + masender.getPasswort()+ "   " + masender.getBenutzername()
 				+ "  " + masender.getJob()+ "  " + masender.getMaxstunden());
+			
+			}
+			LinkedList<Mitarbeiter> masempf=tausch.getLl_Empf‰nger();
+			
+			for(Mitarbeiter masender:masempf){
+				
+				System.out.println( masender.getEmail() + "  " + masender.getPasswort()+ "   " + masender.getBenutzername()
+				+ "  " + masender.getJob()+ "  " + masender.getMaxstunden());
+			
+			}
+			LinkedList<Schicht> schichtsend=tausch.getLl_Schichtsender();
+			
+			for(Schicht scht:schichtsend){
+				
+				System.out.println(scht.getAnfanguhrzeit() + "  " + scht.getEndeuhrzeit()+ "   " + scht.getSchichtnr());
+			
+			}
+			LinkedList<Schicht> schichtempf=tausch.getLl_Schichtempf‰nger();
+			
+			for(Schicht scht:schichtempf){
+				
+				System.out.println(scht.getAnfanguhrzeit() + "  " + scht.getEndeuhrzeit()+ "   " + scht.getSchichtnr());
 			
 			}
 		
@@ -240,12 +299,12 @@ public class TestModel {
 		System.out.println(tb2.getTblocknr()+" "+tb2.getTbez()+" "+tb2.getWpnr());
 		Tblock_Tag tb3=wps.getTblock_TagT(tbstr, tbnr3);
 		System.out.println(tb3.getTblocknr()+" "+tb3.getTbez()+" "+tb3.getWpnr());
-		//boolean deletetbt=wps.deleteTblock_Tag(tbnr2);
+		//boolean deletetbt=wps.deleteTblock_Tag(tbnr3);
 		//if(deletetbt==true){
-			//System.out.println("success delete tbt");
+		//	System.out.println("success delete tbt");
 		//}
 	    //else{
-			//System.out.println("fail delete Tbt");
+		//	System.out.println("fail delete Tbt");
 			
 		//}
 		//TerminBlockierung test

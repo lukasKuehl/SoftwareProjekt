@@ -184,12 +184,14 @@ class Datenbank_Tblock_Tag {
 			while (rs.next()) {
 				Tblock_Tag tbt = new Tblock_Tag(rs.getInt("Tblocknr"),rs.getString("Tbez"),rs.getInt("Wpnr"));
 
-
+				LinkedList<TerminBlockierung> tbtbt=new LinkedList<>();
 				for (TerminBlockierung tb : terminList) {
 					if (tb.getTblocknr() == tbt.getTblocknr()) {
-						tbt.setLinkedList_termine(tb);
+						tbtbt.add(tb);
 					}
 					}
+				tbt.setLinkedList_termine(tbtbt);
+				
 				tblock_tagList.add(tbt);
 			}
 
@@ -226,12 +228,15 @@ class Datenbank_Tblock_Tag {
 				rs.next();
 				Tblock_Tag tbt = new Tblock_Tag(rs.getInt("Tblocknr"), rs.getString("Tbez"),rs.getInt("Wpnr"));
 
-				
+
+				LinkedList<TerminBlockierung> tbtbt=new LinkedList<>();
 				for (TerminBlockierung tb : terminList) {
 					if (tb.getTblocknr() == tbt.getTblocknr()) {
-						tbt.setLinkedList_termine(tb);
+						tbtbt.add(tb);
 					}
 					}
+				tbt.setLinkedList_termine(tbtbt);
+				
 			rs.close();
 			stmt.close();
 
@@ -266,11 +271,14 @@ class Datenbank_Tblock_Tag {
 				rs.next();
 				Tblock_Tag tbt = new Tblock_Tag(rs.getInt("Tblocknr"), rs.getString("Tbez"),rs.getInt("Wpnr"));
 
+				LinkedList<TerminBlockierung> tbtbt=new LinkedList<>();
 				for (TerminBlockierung tb : terminList) {
 					if (tb.getTblocknr() == tbt.getTblocknr()) {
-						tbt.setLinkedList_termine(tb);
+						tbtbt.add(tb);
 					}
 					}
+				tbt.setLinkedList_termine(tbtbt);
+				
 			rs.close();
 			stmt.close();
 
@@ -289,19 +297,12 @@ class Datenbank_Tblock_Tag {
 	 * wird aus der Tabelle Tblock_Tag gelöscht. Löscht die zugehörigen TerminBlockierungen.
 	 */
 	protected boolean deleteTblock_Tag(int tblocknr,Connection con) {
-		Datenbank_TerminBlockierung terminblockierung = new Datenbank_TerminBlockierung();
-		LinkedList<TerminBlockierung> terminList = terminblockierung.getTerminBlockierungen(con);;
-		if (!checkTblock_TagTB(tblocknr,con)){
-			return false;
-		}
+
+
 		Statement stmt = null;
 		ResultSet rs = null;
-		String sqlQuery = "DELETE FROM Tblock_Tag WHERE Tblocknr = "+tblocknr;
-		for (TerminBlockierung tb : terminList) {
-			if (tb.getTblocknr() == tblocknr) {
-				terminblockierung.deleteTerminBlockierung(tblocknr,con);
-			}
-			}
+		String sqlQuery = "DELETE FROM Tblock_Tag WHERE tblocknr = "+tblocknr;
+	
 		try {
 			stmt = con.createStatement();
 			stmt.execute(sqlQuery);

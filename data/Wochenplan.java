@@ -18,7 +18,7 @@ public class Wochenplan {
 	private int minanzkasse=0;
 	private int mehrbesetzung=0;
 	
-	private LinkedList<Tag> ll_tag = new LinkedList<Tag>();
+	private LinkedList<Tag> ll_tag = null;
 	
 	/**
 	 * @author Anes Preljevic
@@ -174,7 +174,7 @@ public class Wochenplan {
 
 
 
-	public void setLinkedListTage(Tag ta) {
+	public void setLinkedListTage(LinkedList<Tag> ll_tag) {
 		
 		this.ll_tag= ll_tag;
 		

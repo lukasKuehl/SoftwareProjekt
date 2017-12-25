@@ -191,10 +191,12 @@ class Datenbank_TerminBlockierung {
 	 * welche die übergebene Tblocknr besitzt.
 	 */
 	protected boolean deleteTerminBlockierung(int tblocknr,Connection con) {
+		Datenbank_Tblock_Tag tblock_tag = new Datenbank_Tblock_Tag();
+		
 		Statement stmt = null;
 		ResultSet rs = null;
 		String sqlQuery = "DELETE FROM TerminBlockierung WHERE Tblocknr = "+tblocknr;
-
+		tblock_tag.deleteTblock_Tag(tblocknr,con);
 		try {
 			stmt = con.createStatement();
 			stmt.execute(sqlQuery);

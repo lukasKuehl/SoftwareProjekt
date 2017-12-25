@@ -7,8 +7,8 @@ public class Tag {
 	private String tbez=null;
 	private int wpnr=0;
 	private boolean feiertag=false;
-	private LinkedList<Schicht> ll_schicht = new LinkedList<Schicht>();
-	private LinkedList<Tblock_Tag> ll_tblocktag = new LinkedList<Tblock_Tag>();
+	private LinkedList<Schicht> ll_schicht = null;
+	private LinkedList<Tblock_Tag> ll_tblocktag = null;
 	
 	/**
 	 * @author Anes Preljevic
@@ -47,21 +47,21 @@ public class Tag {
 	public void setFeiertag(boolean feiertag) {
 		this.feiertag = feiertag;
 	}
-	public LinkedList<Schicht> getLl_schicht() {
+	public LinkedList<Schicht> getLl_Schicht() {
 		return ll_schicht;
 	}
 
-	public void setLinkedListSchichten(Schicht sch) {
+	public void setLinkedListSchichten(LinkedList<Schicht> ll_schicht) {
 		this.ll_schicht=ll_schicht;
 		
 	}
 
 
-	public LinkedList<Tblock_Tag> getLl_tblocktag() {
+	public LinkedList<Tblock_Tag> getLl_Tblocktag() {
 		return ll_tblocktag;
 	}
 
-	public void setLinkedListTblock_Tag(Tblock_Tag tbt) {
+	public void setLinkedListTblock_Tag(LinkedList<Tblock_Tag> ll_tblocktag) {
 		this.ll_tblocktag=ll_tblocktag;
 		
 	}

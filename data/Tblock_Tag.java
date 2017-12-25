@@ -6,7 +6,7 @@ public class Tblock_Tag {
 	private int tblocknr=0;
 	private String tbez=null;
 	private int wpnr=0;
-	private LinkedList<TerminBlockierung> ll_termin = new LinkedList<TerminBlockierung>();
+	private LinkedList<TerminBlockierung> ll_termin = null;
 	
 	/**
 	 * @author Anes Preljevic
@@ -23,7 +23,7 @@ public class Tblock_Tag {
 		return ll_termin;
 	}
 
-	public void setLinkedList_termine(TerminBlockierung terminblockierung) {
+	public void setLinkedList_termine(LinkedList<TerminBlockierung> ll_termin) {
 		this.ll_termin = ll_termin;
 	}
 

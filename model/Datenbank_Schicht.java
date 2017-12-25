@@ -162,13 +162,14 @@ class Datenbank_Schicht {
 				Schicht s = new Schicht(rs.getInt("Schichtnr"), rs.getString("Tbez"),
 						rs.getInt("Wpnr"), rs.getString("Anfanguhrzeit").toString(),
 						rs.getString("Endeuhrzeit").toString());
-
 				for (Ma_Schicht mas : maschichtList) {
+					
 					if (mas.getSchichtnr() == s.getSchichtnr()) {
-						s.setLinkedListMa_Schicht(mas);
+						LinkedList<Ma_Schicht> maschl= new LinkedList<>();
+						maschl.add(mas);
+						s.setLinkedListMa_Schicht(maschl);
 					}
 					}
-				
 				schichtList.add(s);
 			}
 
@@ -210,13 +211,16 @@ class Datenbank_Schicht {
 					rs.getInt("Wpnr"), rs.getString("Anfanguhrzeit").toString(),
 					rs.getString("Endeuhrzeit").toString());
 				
-				
+				LinkedList<Ma_Schicht> maschl= new LinkedList<>();
 				for (Ma_Schicht mas : maschichtList) {
+					
 					if (mas.getSchichtnr() == s.getSchichtnr()) {
-						s.setLinkedListMa_Schicht(mas);
+						
+						maschl.add(mas);
+						
 					}
 					}
-
+				s.setLinkedListMa_Schicht(maschl);
 			rs.close();
 			stmt.close();
 
