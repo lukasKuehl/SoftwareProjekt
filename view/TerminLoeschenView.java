@@ -76,8 +76,8 @@ public class TerminLoeschenView extends JFrame {
 		contentPane.add(lblTerminAuswaehlen);
 
 		btnBesttigen = new JButton("bestätigen");
-		btnBesttigen.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		btnBesttigen.setBounds(437, 465, 119, 26);
+		btnBesttigen.setFont(new Font("Verdana", Font.PLAIN, 15));
+		btnBesttigen.setBounds(500,500,110,25);
 		contentPane.add(btnBesttigen);
 
 		/**

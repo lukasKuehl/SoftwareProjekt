@@ -54,23 +54,31 @@ public class KrankmeldungLoeschenView extends JFrame {
 		lblKrankmeldungLoeschen.setBounds(95, 74, 362, 26);
 		contentPane.add(lblKrankmeldungLoeschen);
 
+		/**
+		 * @author Ramona Gerke
+		 * @info Liste der Krankmeldungen wird einem DefaultListModel hinzugefügt und
+		 *       dann in einer ComboBox ausgegeben.
+		 */
+
 		listKrankmeldung = new JList<Object>();
 		// String grund = "Krankheit";
-		// kl = myController.getAlleTermin(myView.getUsername(), grund);
+		// kl = myController.getAlleTermin(myView.getUsername()); // bei TerminStrg noch
+		// die TBez ändern
+		// if ( tb.getBbez() == "Krankheit"){
+
 		model = new DefaultListModel<Object>();
 		for (String m : kl) {
 			model.addElement(m);
 		}
 		listKrankmeldung.setModel(model);
 		listKrankmeldung.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		listKrankmeldung.setBounds(65, 145, 282, 355);
+		listKrankmeldung.setBounds(95, 126, 362, 399);
 		listKrankmeldung.getModel();
-		listKrankmeldung.setBounds(95, 126, 443, 437);
-		panelKrankmeldung.add(listKrankmeldung);
+		contentPane.add(listKrankmeldung);
 
-		btnBestaetigen = new JButton("Bestätigen");
-		btnBestaetigen.setFont(new Font("Verdana", Font.PLAIN, 18));
-		btnBestaetigen.setBounds(497, 445, 141, 35);
+		btnBestaetigen = new JButton("best\u00E4tigen");
+		btnBestaetigen.setFont(new Font("Verdana", Font.PLAIN, 15));
+		btnBestaetigen.setBounds(500, 500, 110, 25);
 		contentPane.add(btnBestaetigen);
 
 		lblBitteAuswaehlen = new JLabel("Bitte auswählen:");

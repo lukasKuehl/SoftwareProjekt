@@ -26,6 +26,7 @@ public class TauschanfrageLoeschenView extends JFrame {
 	private Einsatzplanview myView = null;
 	private EinsatzplanController myController = null;
 	private Einsatzplanmodel myModel = null;
+	private int tauschanfrageNr=0;
 
 	protected TauschanfrageLoeschenView(Einsatzplanview myView, Einsatzplanmodel myModel,
 			EinsatzplanController myController) {
@@ -62,7 +63,7 @@ public class TauschanfrageLoeschenView extends JFrame {
 		}
 		listTauschanfragen.setModel(modelTauschanfrage);
 		listTauschanfragen.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		listTauschanfragen.setBounds(71, 126, 340, 392);
+		listTauschanfragen.setBounds(95, 126, 362, 399);
 		panelTauschanfrage.add(listTauschanfragen);
 
 		btnBestaetigen = new JButton("Bestätigen");
@@ -109,24 +110,24 @@ public class TauschanfrageLoeschenView extends JFrame {
 							m.toString();
 							m.trim();
 							temp = m.split("-");
-							// tauschanfrageNrS = temp [0];
-							String senderVorname = temp[0];
-							String senderName = temp[1];
-							String senderSchichtnr = temp[2];
-							String senderWpNr = temp[3];
-							String senderTbez = temp[4];
-							String senderAnfangsuhrzeit = temp[5];
-							String senderEnduhrzeit = temp[6];
-							String empfaengerVorname = temp[7];
-							String empfaengerName = temp[8];
-							String empfaengerSchichtNr = temp[9];
-							String empfaengerWpBez = temp[10];
-							String empfaengerTagBez = temp[11];
-							String empfaengerAnfangsuhrzeit = temp[12];
-							String emfaengerEnduhrzeit = temp[13];
+							String  tauschanfrageNrS = temp [0].substring(10);
+							tauschanfrageNr =Integer.parseInt(tauschanfrageNrS);
+							String senderVorname = temp[1];
+							String senderName = temp[2];
+							String senderSchichtNr = temp[3];
+							String senderWpNr = temp[4];
+							String senderTbez = temp[5];
+							String senderAnfangsuhrzeit = temp[6];
+							String senderEnduhrzeit = temp[7];
+							String empfaengerVorname = temp[8];
+							String empfaengerName = temp[9];
+							String empfaengerSchichtNr = temp[10];
+							String empfaengerWpBez = temp[11];
+							String empfaengerTagBez = temp[12];
+							String empfaengerAnfangsuhrzeit = temp[13];
+							String emfaengerEnduhrzeit = temp[14];
 						}
-						// Integer.parseInt(tauschanfrageNrS);
-						int tauschanfrageNr = 0;
+					
 						myController.entferneTauschanfrage(tauschanfrageNr);
 						System.exit(0);
 					}

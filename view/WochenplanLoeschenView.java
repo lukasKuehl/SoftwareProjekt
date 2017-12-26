@@ -64,11 +64,12 @@ public class WochenplanLoeschenView extends JFrame {
 		listWochenplaene.setModel(model);
 		listWochenplaene.setBorder(new LineBorder(new Color(0, 0, 0)));
 		listWochenplaene.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		listWochenplaene.setBounds(51, 139, 323, 356);
+		listWochenplaene.setBounds(95, 126, 362, 399);
 		contentPane.add(listWochenplaene);
 
 		btnLschen = new JButton("löschen");
-		btnLschen.setBounds(426, 468, 131, 27);
+		btnLschen.setFont(new Font("Verdana", Font.PLAIN, 15));
+		btnLschen.setBounds(500,500,110,25);
 		contentPane.add(btnLschen);
 
 		lblBitteAuswhlen = new JLabel("Bitte auswählen");

@@ -101,7 +101,7 @@ public class KrankmeldungErstellenView extends JFrame {
 		txtGrund = new JTextField();
 		txtGrund.setHorizontalAlignment(SwingConstants.CENTER);
 		txtGrund.setFont(new Font("Verdana", Font.PLAIN, 14));
-		txtGrund.setBounds(61, 311, 277, 143);
+		txtGrund.setBounds(61, 317, 277, 208);
 		panelKrankmeldung.add(txtGrund);
 		txtGrund.setColumns(10);
 
@@ -117,7 +117,7 @@ public class KrankmeldungErstellenView extends JFrame {
 
 		lblNotizEintragen = new JLabel("Notiz eintragen");
 		lblNotizEintragen.setFont(new Font("Verdana", Font.PLAIN, 15));
-		lblNotizEintragen.setBounds(61, 285, 152, 14);
+		lblNotizEintragen.setBounds(61, 285, 152, 28);
 		panelKrankmeldung.add(lblNotizEintragen);
 
 		lblMitarbeiterAuswaehlen = new JLabel("Mitarbeiter");
@@ -132,7 +132,7 @@ public class KrankmeldungErstellenView extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 			}
 		});
-		buttonBestaetigen.setBounds(504, 428, 109, 23);
+		buttonBestaetigen.setBounds(500, 500, 110, 25);
 		panelKrankmeldung.add(buttonBestaetigen);
 
 		setVisible(true);
@@ -149,7 +149,7 @@ public class KrankmeldungErstellenView extends JFrame {
 					username = comboBoxMA.getSelectedItem().toString();
 					username.trim();
 					username.split("-");
-					 username.substring(0); 
+					username.substring(0);
 					String bez = "Krankheit";
 					String grund = txtGrund.getText().toString();
 					String wpbez = comboBoxWochenplaene.getSelectedItem().toString();

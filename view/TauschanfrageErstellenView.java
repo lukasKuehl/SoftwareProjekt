@@ -72,7 +72,7 @@ public class TauschanfrageErstellenView extends JFrame {
 
 		btnErstellen = new JButton("erstellen");
 		btnErstellen.setFont(new Font("Verdana", Font.PLAIN, 15));
-		btnErstellen.setBounds(532, 455, 136, 36);
+		btnErstellen.setBounds(500,500, 110, 25);
 		btnErstellen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 		}});
@@ -177,28 +177,28 @@ public class TauschanfrageErstellenView extends JFrame {
 		
 		comboBoxSchichtAndererMA = new JComboBox<String>();
 		
-			
 		ArrayList <String>al = myView.getTauschanfragen(myView.getUsername());
 		for (String m : al) {
 			m.toString();
 			m.trim();
 			temp = m.split("-");
-			// tauschanfrageNrS = temp [0];
-			String senderVorname = temp[0];
-			String senderName = temp[1];
-			String senderSchichtNr = temp[2];
-			senderSchichtnr =  Integer.parseInt(temp[2]);
-			String senderWpNr = temp[3];
-			String senderTbez = temp[4];
-			String senderAnfangsuhrzeit = temp[5];
-			String senderEnduhrzeit = temp[6];
-			String empfaengerVorname = temp[7];
-			String empfaengerName = temp[8];
-			String empfaengerSchichtNr = temp[9];
-			String empfaengerWpBez = temp[10];
-			String empfaengerTagBez = temp[11];
-			String empfaengerAnfangsuhrzeit = temp[12];
-			String emfaengerEnduhrzeit = temp[13];
+			String  tauschanfrageNrS = temp [0].substring(10);
+			int tauschanfrageNr =Integer.parseInt(tauschanfrageNrS);
+			String senderVorname = temp[1];
+			String senderName = temp[2];
+			String senderSchichtNr = temp[3];
+			senderSchichtnr =  Integer.parseInt(temp[3]);
+			String senderWpNr = temp[4];
+			String senderTbez = temp[5];
+			String senderAnfangsuhrzeit = temp[6];
+			String senderEnduhrzeit = temp[7];
+			String empfaengerVorname = temp[8];
+			String empfaengerName = temp[9];
+			String empfaengerSchichtNr = temp[10];
+			String empfaengerWpBez = temp[11];
+			String empfaengerTagBez = temp[12];
+			String empfaengerAnfangsuhrzeit = temp[13];
+			String emfaengerEnduhrzeit = temp[14];
 		}
 		
 		
@@ -220,6 +220,8 @@ public class TauschanfrageErstellenView extends JFrame {
  * @author Ramona Gerke
  * @Info Action Performed Methoden, die die Sichtbarkeit der ComboBoxen ändert.
  */
+		
+		
 		// ACTION PERFORMED METHODEN  
 		cmbBoxWP.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {

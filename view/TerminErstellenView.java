@@ -225,7 +225,7 @@ public class TerminErstellenView extends JFrame {
 
 		btnErstellen = new JButton("erstellen");
 		btnErstellen.setFont(new Font("Verdana", Font.PLAIN, 15));
-		btnErstellen.setBounds(453, 507, 110, 23);
+		btnErstellen.setBounds(500, 500, 110, 25);
 		btnErstellen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			}
