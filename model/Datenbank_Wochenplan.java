@@ -82,6 +82,14 @@ class Datenbank_Wochenplan {
 				pstmt.setInt(11, Mehrbesetzung);
 			
 				pstmt.execute();
+				
+				Datenbank_Tag dtag= new Datenbank_Tag();
+				dtag.addTag(new Tag ("Montag", wpnr, false), öffnungszeit, schließzeit, hauptzeitbeginn, hauptzeitende,con);
+				dtag.addTag(new Tag ("Dienstag", wpnr, false), öffnungszeit, schließzeit, hauptzeitbeginn, hauptzeitende,con);
+				dtag.addTag(new Tag ("Mittwoch", wpnr, false), öffnungszeit, schließzeit, hauptzeitbeginn, hauptzeitende,con);
+				dtag.addTag(new Tag ("Donnerstag", wpnr, false), öffnungszeit, schließzeit, hauptzeitbeginn, hauptzeitende,con);
+				dtag.addTag(new Tag ("Freitag", wpnr, false), öffnungszeit, schließzeit, hauptzeitbeginn, hauptzeitende,con);
+				dtag.addTag(new Tag ("Samstag", wpnr, false), öffnungszeit, schließzeit, hauptzeitbeginn, hauptzeitende,con);
 				con.commit();	
 				
 			}			
@@ -105,7 +113,7 @@ class Datenbank_Wochenplan {
 				con.rollback();
 				con.setAutoCommit(true);
 			} catch (SQLException sqlRollback) {
-				System.err.println("Methode addTerminBlockierung " + "- Rollback -  SQL-Fehler: " + sqlRollback.getMessage());
+				System.err.println("Methode addWochenplan " + "- Rollback -  SQL-Fehler: " + sqlRollback.getMessage());
 			}
 		} finally {
 			//Schließen der offen gebliebenen Statements & ResultSets
@@ -124,7 +132,7 @@ class Datenbank_Wochenplan {
 				}			
 				
 			} catch (SQLException e) {
-				System.err.println("Methode addTerminBlockierung(finally) SQL-Fehler: " + e.getMessage());
+				System.err.println("Methode addWochenplan(finally) SQL-Fehler: " + e.getMessage());
 			}
 		}
 		return success;

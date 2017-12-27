@@ -61,12 +61,12 @@ class Datenbank_Schicht {
 				pstmt.setString(5, endeuhrzeit);
 			
 				pstmt.execute();
-				con.commit();	
+					
 				
 			}			
 			
 			success = true;
-			con.setAutoCommit(true);
+		
 			
 			
 		} catch (SQLException sql) {

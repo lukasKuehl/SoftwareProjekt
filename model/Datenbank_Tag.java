@@ -22,10 +22,9 @@ class Datenbank_Tag {
 	 * @Thomas Friesen
 	 * @info Die Methode fügt einen Datensatz in die Tag Tabelle ein.
 	 */
-	protected boolean addTag(Tag tag,Connection con) {	
+	protected boolean addTag(Tag tag,String oeffnungszeit, String schließzeit, String hauptzeitbeginn, String hauptzeitende, Connection con) {	
+
 		boolean success = false;
-		
-		
 		String sqlStatement;
 		sqlStatement = "insert into Tag(tbez, wpnr, anzschicht, feiertag) values(?, ?, ?, ?)";
 		PreparedStatement pstmt = null;
@@ -33,7 +32,6 @@ class Datenbank_Tag {
 		ResultSet checkRS = null;
 		String tbez = null;
 		int wpnr = 0;
-		int anzschicht = 0;
 		boolean feiertag = false;
 		
 		
@@ -43,30 +41,30 @@ class Datenbank_Tag {
 			//Auslesen der als Parameter übergebenen Mitarbeiter-Schicht-Beziehung
 			tbez = tag.getTbez();
 			wpnr = tag.getWpnr();
-
 			
 			
 			con.setAutoCommit(false);
 
-			if (checkTag(tbez,wpnr, con)) {
+			if (checkTag(tbez,wpnr,con)) {
 				System.out.println("Dieser Tag existiert bereits in dem angegebenen Wochenplan!");
 			}
 			else{
 				//Es wurde sichergestellt, dass die PK- und FK-Check-Constraints nicht verletzt werden --> Der Datensatz kann erzeugt werden
-			
+				//Prepared Statement füllen
 				pstmt.setString(1, tbez);
 				pstmt.setInt(2, wpnr);
-				pstmt.setInt(3, anzschicht);
 				pstmt.setBoolean(4, feiertag);
 			
-				pstmt.execute();
-				con.commit();	
+				//Einfügen von Schichten in einen Tag
+				Datenbank_Schicht dschicht= new Datenbank_Schicht();
+				dschicht.addSchicht(new Schicht(dschicht.getNewSchichtnr(con),tbez, wpnr,oeffnungszeit, hauptzeitbeginn),con);
+				dschicht.addSchicht(new Schicht(dschicht.getNewSchichtnr(con),tbez, wpnr,hauptzeitbeginn, hauptzeitende),con);
+				dschicht.addSchicht(new Schicht(dschicht.getNewSchichtnr(con),tbez, wpnr,hauptzeitende, schließzeit),con);
 				
+				pstmt.execute();
+					
 			}			
-			
 			success = true;
-			con.setAutoCommit(true);
-			
 			
 		} catch (SQLException sql) {
 			//Die Ausgaben dienen zur Ursachensuche und sollten im späteren Programm entweder gar nicht oder vielleicht als Dialog(ausgelöst in der View weil der Rückgabewert false ist) angezeigt werden
@@ -80,7 +78,7 @@ class Datenbank_Tag {
 				con.rollback();
 				con.setAutoCommit(true);
 			} catch (SQLException sqlRollback) {
-				System.err.println("Methode addMa_Schicht " + "- Rollback -  SQL-Fehler: " + sqlRollback.getMessage());
+				System.err.println("Methode addTag " + "- Rollback -  SQL-Fehler: " + sqlRollback.getMessage());
 			}
 		} finally {
 			//Schließen der offen gebliebenen Statements & ResultSets
@@ -99,11 +97,12 @@ class Datenbank_Tag {
 				}			
 				
 			} catch (SQLException e) {
-				System.err.println("Methode addMa_Schicht(finally) SQL-Fehler: " + e.getMessage());
+				System.err.println("Methode addTag(finally) SQL-Fehler: " + e.getMessage());
 			}
 		}
 		return success;
 	}
+	
 	
 	/**
 	 * @Anes Preljevic

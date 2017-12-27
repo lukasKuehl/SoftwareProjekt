@@ -575,11 +575,11 @@ public class Einsatzplanmodel implements Observable {
 		return result;
 	}
 	
-	public void addTag(Tag tag){
+	public void addTag(Tag tag,String oeffnungszeit, String schlieﬂzeit, String hauptzeitbeginn, String hauptzeitende){
 		
 		
 		try{
-			this.dataTag.addTag(tag,con);
+			this.dataTag.addTag(tag,oeffnungszeit,schlieﬂzeit,hauptzeitbeginn, hauptzeitende,con);
 			
 		}catch(Exception e){
 			System.out.println("Fehler innerhalb des Modells:");
