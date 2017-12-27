@@ -1,5 +1,6 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.TreeMap;
 import javax.swing.JTable;
@@ -22,11 +23,15 @@ import java.sql.Connection;
 /**
  * @author Anes Preljevic
  * @info Allgemeines Model zum entgegennehmen der Anfragen aus der GUI und dem Controller und weiterleiten an die spezifischen Models.
+ * Informiert alle Observer über veränderungen
  */
-public class Einsatzplanmodel {
-
+public class Einsatzplanmodel implements Observable {
+	
+	
 	//Initialiserung der Instanzvariablen
+	private ArrayList<Observer> observers=null;
 	//private EinsatzplanController controller = null;
+	private Einsatzplanmodel myModel=null;
 	private Einsatzplanview view = null;
 	//private Observer view=null;
 	private Datenbank_Connection dataConnection = null;
@@ -44,8 +49,8 @@ public class Einsatzplanmodel {
 	private Datenbank_Wochenplan dataWochenplan=null;
 	
 	public Einsatzplanmodel(){
-		
-		
+		this.myModel=new Einsatzplanmodel();
+		this.observers=new ArrayList<Observer>();
 		this.dataConnection=new Datenbank_Connection();
 		this.con = dataConnection.createCon();
 		this.dataWochenplan= new Datenbank_Wochenplan();
@@ -62,14 +67,20 @@ public class Einsatzplanmodel {
 		
 		
 	}
-	//public void abbonnieren(Observer view) {
+	public void register(Observer newViewobserver, String benutzername, String passwort) {
+		observers.add(newViewobserver);
 		
-	//	this.view = view;
-	//}
-	//public void deabbonnieren(Observer view) {
-	//	this.view = view;
-	//}
-
+	}
+	public void removeObserver(Observer deleteViewobserver) {
+		int observerIndex= observers.indexOf(deleteViewobserver);
+		System.out.println("Observer"+ (observerIndex+1)+"deleted");
+		observers.remove(observerIndex);
+	}
+	public void notifyObservers() {
+		for(Observer observer: observers){
+		observer.update(myModel);
+		}
+	}
 
 	public LinkedList<Wochenplan> getWochenplaene(){
 		
@@ -111,7 +122,7 @@ public class Einsatzplanmodel {
 			System.out.println("Fehler beim Aufruf der Methode addWochenplan:");
 			e.printStackTrace();			
 		}
-		
+		notifyObservers();
 		
 		
 	}
@@ -126,6 +137,7 @@ public class Einsatzplanmodel {
 			System.out.println("Fehler beim Aufruf der Methode updateWochenplan:");
 			e.printStackTrace();			
 		}
+		notifyObservers();
 	}
 	public void oeffentlichStatustrue(int wpnr){
 		
@@ -138,6 +150,7 @@ public class Einsatzplanmodel {
 			System.out.println("Fehler beim Aufruf der Methode setzeöffentlichtrue:");
 			e.printStackTrace();			
 		}
+		notifyObservers();
 	}
 	public void oeffentlichStatusfalse(int wpnr){
 		
@@ -150,6 +163,7 @@ public class Einsatzplanmodel {
 			System.out.println("Fehler beim Aufruf der Methode setzeöffentlichfalse:");
 			e.printStackTrace();			
 		}
+		notifyObservers();
 	}
 	public boolean checkWochenplan(int wpnr) {
 		boolean result =false;
@@ -161,6 +175,7 @@ public class Einsatzplanmodel {
 			System.out.println("Fehler beim Aufruf der Methode checkWochenplan");
 			e.printStackTrace();			
 		}
+		
 		return result;
 	}
 	public boolean deleteWochenplan(int wpnr) {
@@ -173,6 +188,7 @@ public class Einsatzplanmodel {
 			System.out.println("Fehler beim Aufruf der Methode deleteWochenplan:");
 			e.printStackTrace();			
 		}
+		notifyObservers();
 		return result;
 	}
 	public  int getNewWpnr() {
@@ -241,7 +257,7 @@ public class Einsatzplanmodel {
 			e.printStackTrace();			
 		}
 		
-		
+		notifyObservers();
 		
 	}
 	
@@ -267,6 +283,7 @@ public class Einsatzplanmodel {
 			System.out.println("Fehler beim Aufruf der Methode deleteMa_Schicht:");
 			e.printStackTrace();			
 		}
+		notifyObservers();
 		return result;
 	}
 	public boolean deleteMa_SchichtWochenplan(int schichtnr) {
@@ -279,6 +296,7 @@ public class Einsatzplanmodel {
 			System.out.println("Fehler beim Aufruf der Methode deleteMa_SchichWochenplan:");
 			e.printStackTrace();			
 		}
+		notifyObservers();
 		return result;
 	}
 	public LinkedList<Mitarbeiter> getAlleMitarbeiter() {
@@ -357,6 +375,7 @@ public class Einsatzplanmodel {
 			System.out.println("Fehler beim Aufruf der Methode addSchicht:");
 			e.printStackTrace();			
 		}
+		notifyObservers();
 		
 		
 		
@@ -384,6 +403,7 @@ public class Einsatzplanmodel {
 			System.out.println("Fehler beim Aufruf der Methode deleteSchicht:");
 			e.printStackTrace();			
 		}
+		notifyObservers();
 		return result;
 	}
 	public  int getNewSchichtnr() {
@@ -421,6 +441,7 @@ public class Einsatzplanmodel {
 			System.out.println("Fehler beim Aufruf der Methode updateStandardeinstellungen:");
 			e.printStackTrace();			
 		}
+		notifyObservers();
 	}
 	public LinkedList<Tauschanfrage> getTauschanfragen(){
 		
@@ -462,7 +483,7 @@ public class Einsatzplanmodel {
 			e.printStackTrace();			
 		}
 		
-		
+		notifyObservers();
 		
 	}
 
@@ -488,6 +509,7 @@ public class Einsatzplanmodel {
 			System.out.println("Fehler beim Aufruf der Methode deleteTauschanfrage:");
 			e.printStackTrace();			
 		}
+		notifyObservers();
 		return result;
 	}
 	public void updateTauschanfrage(Tauschanfrage tauschanfrage){
@@ -501,6 +523,7 @@ public class Einsatzplanmodel {
 			System.out.println("Fehler beim Aufruf der Methode updateTauschanfrage:");
 			e.printStackTrace();			
 		}
+		notifyObservers();
 	}
 	public void bestätigeTauschanfrage(String empfänger,int tauschnr){
 		
@@ -513,6 +536,7 @@ public class Einsatzplanmodel {
 			System.out.println("Fehler beim Aufruf der Methode bestätigeTauschanfrage:");
 			e.printStackTrace();			
 		}
+		notifyObservers();
 	}
 	public  int getNewTauschnr() {
 		int result = 0;
@@ -563,7 +587,7 @@ public class Einsatzplanmodel {
 			e.printStackTrace();			
 		}
 		
-		
+		notifyObservers();
 		
 	}
 
@@ -589,6 +613,7 @@ public class Einsatzplanmodel {
 			System.out.println("Fehler beim Aufruf der Methode deleteTag:");
 			e.printStackTrace();			
 		}
+		notifyObservers();
 		return result;
 	}
 
@@ -603,6 +628,7 @@ public class Einsatzplanmodel {
 			System.out.println("Fehler beim Aufruf der Methode setzeFeiertagtrue:");
 			e.printStackTrace();			
 		}
+		notifyObservers();
 	}
 	public void setzeFeiertagfalse(String tbez, int wpnr){
 		
@@ -615,6 +641,7 @@ public class Einsatzplanmodel {
 			System.out.println("Fehler beim Aufruf der Methode setzeFeiertagfalse:");
 			e.printStackTrace();			
 		}
+		notifyObservers();
 	}
 	public LinkedList<Tblock_Tag> getAlleTblock_Tag() {	
 		LinkedList<Tblock_Tag> result = null;;
@@ -663,6 +690,7 @@ public class Einsatzplanmodel {
 			System.out.println("Fehler beim Aufruf der Methode addTblock_Tag:");
 			e.printStackTrace();			
 		}
+		notifyObservers();
 		
 		
 		
@@ -703,6 +731,7 @@ public class Einsatzplanmodel {
 			System.out.println("Fehler beim Aufruf der Methode deleteTblock_Tag:");
 			e.printStackTrace();			
 		}
+		notifyObservers();
 		return result;
 	}
 	public LinkedList<TerminBlockierung> getTerminBlockierungen(){
@@ -731,6 +760,7 @@ public class Einsatzplanmodel {
 			System.out.println("Fehler beim Aufruf der Methode addTerminBlockierung:");
 			e.printStackTrace();			
 		}
+		notifyObservers();
 		
 		
 		
@@ -758,6 +788,7 @@ public class Einsatzplanmodel {
 			System.out.println("Fehler beim Aufruf der Methode deleteTerminBlockierung:");
 			e.printStackTrace();			
 		}
+		notifyObservers();
 		return result;
 	}
 	public  int getNewTblocknr() {
@@ -795,7 +826,8 @@ public class Einsatzplanmodel {
 			System.out.println("Fehler innerhalb des Modells:");
 			System.out.println("Fehler beim Aufruf der Methode addWarenhaus:");
 			e.printStackTrace();			
-		}		
+		}	
+		notifyObservers();
 	}
 	public void wechselBenutzerrolle(String benutzername) {
 		try{
@@ -806,6 +838,7 @@ public class Einsatzplanmodel {
 			System.out.println("Fehler beim Aufruf der Methode wechselBenutzerrolle:");
 			e.printStackTrace();			
 		}
+		notifyObservers();
 	}
 	public Userrecht getUserrecht(String job) {
 		Userrecht result=null;
@@ -819,6 +852,7 @@ public class Einsatzplanmodel {
 		}
 		return result;
 	}
+
 	
 }
 
