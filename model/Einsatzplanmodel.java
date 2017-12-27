@@ -49,7 +49,7 @@ public class Einsatzplanmodel implements Observable {
 	private Datenbank_Wochenplan dataWochenplan=null;
 	
 	public Einsatzplanmodel(){
-		this.myModel=new Einsatzplanmodel();
+		
 		this.observers=new ArrayList<Observer>();
 		this.dataConnection=new Datenbank_Connection();
 		this.con = dataConnection.createCon();
