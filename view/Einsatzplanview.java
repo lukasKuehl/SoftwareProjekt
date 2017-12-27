@@ -1,5 +1,6 @@
 package view;
 
+import java.awt.EventQueue;
 import java.util.ArrayList;
 import java.util.Observer;
 import java.util.TreeMap;
@@ -14,17 +15,29 @@ public class Einsatzplanview {
 	private EinsatzplanController myController = null;
 	private Einsatzplanmodel myModel = null;
 	private String username = null;
+	private static Einsatzplanmodel epm = new Einsatzplanmodel();
 
 	/**
 	 * @author - Ramona Gerke
 	 * @info Der Konstruktor ruft die AnmeldungsView auf.
 	 */
 
-	
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					Einsatzplanview einsatzplanView = new Einsatzplanview(new EinsatzplanController(epm),
+							new Einsatzplanmodel());
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
 	public Einsatzplanview(EinsatzplanController einsatzplanController, Einsatzplanmodel model) {
 		this.myController = einsatzplanController;
 		this.myModel = model;		
-		AnmeldungView view = new AnmeldungView();
+		AnmeldungView anmeldungView = new AnmeldungView(einsatzplanController, model, this);
 	}
 	
 	protected String getUsername() {

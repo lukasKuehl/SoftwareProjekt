@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -18,27 +19,33 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
-public class MitarbeiterWochenView extends JFrame implements ActionListener{
+import controller.EinsatzplanController;
+import model.Einsatzplanmodel;
 
+public class MitarbeiterWochenView extends JFrame implements ActionListener {
 
-	private JPanel contentPane , pnlMenuBar;
-	private JTable table;
+	private JPanel contentPane, pnlMenuBar;
+	private JTable tbleWochenplan;
 	private JTextField txtBisTermin, txtVonTermin, textUhrzeitTerminV, textUhrzeitTerminB;
 	private JMenuBar menuBar;
 	private JMenu mnNewMenuIcon, mnWoche, mnTermin, mnTauschanfrage;
-	private JMenuItem mntmWocheAnzeigen,
-	mntmTerminErstellen, mntmTerminLoeschen, mntmTauschanfrageErstellen, mntmTauschanfrageLoeschen,
-	mntmTauschanfrageAnzeigen;
-	private JButton btnRechts,btnLinks;
-	
-	public JLabel lblKW1;
-	
+	private JMenuItem mntmWocheAnzeigen, mntmTerminErstellen, mntmTerminLoeschen, mntmTauschanfrageErstellen,
+			mntmTauschanfrageLoeschen, mntmTauschanfrageAnzeigen;
+	private JLabel lblKW1;
+	private JButton btnRechts, btnLinks;
+	private Einsatzplanmodel myModel = null;
+	private EinsatzplanController myController = null;
+	private Einsatzplanview myView = null;
+
+	private int currentKW = 0;
+
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					MitarbeiterWochenView window = new MitarbeiterWochenView();
-					//window.frame.setVisible(true);
+					MitarbeiterWochenView window = new MitarbeiterWochenView(new Einsatzplanmodel(), 
+							new EinsatzplanController(new Einsatzplanmodel()), null);
+					// window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -49,7 +56,11 @@ public class MitarbeiterWochenView extends JFrame implements ActionListener{
 	/**
 	 * Create the application.
 	 */
-	public MitarbeiterWochenView() {
+	public MitarbeiterWochenView(Einsatzplanmodel myModel, EinsatzplanController myController,
+			Einsatzplanview myView) {
+		this.myController = myController;
+		this.myModel = myModel;
+		this.myView = myView;
 		initialize();
 	}
 
@@ -61,100 +72,142 @@ public class MitarbeiterWochenView extends JFrame implements ActionListener{
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setResizable(false);
 		setLocationRelativeTo(null);
-		setBounds(100, 100, 1538,864);
-		
+		setBounds(100, 100, 1538, 864);
+
 		menuBar = new JMenuBar();
 		menuBar.setMargin(new Insets(62, 0, 0, 0));
 		menuBar.setFont(new Font("Verdana", Font.PLAIN, 26));
 		setJMenuBar(menuBar);
-		
-		/*mnNewMenuIcon = new JMenu("");
-		mnNewMenuIcon.setIcon(new ImageIcon("C:\\Users\\Ramona\\Desktop\\returns icon.png"));
-		mnNewMenuIcon.setFont(new Font("Segoe UI", Font.PLAIN, 5));
-		menuBar.add(mnNewMenuIcon);*/
-		
 
-		
 		mnTermin = new JMenu("Termin");
 		mnTermin.setFont(new Font("Dialog", Font.PLAIN, 26));
 		menuBar.add(mnTermin);
-		
+
 		mntmTerminErstellen = new JMenuItem("erstellen");
 		mntmTerminErstellen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new TerminErstellenView(null, null);
+				new TerminErstellenView(myView, myModel, myController);
 			}
 		});
 		mntmTerminErstellen.setHorizontalAlignment(SwingConstants.TRAILING);
 		mntmTerminErstellen.setFont(new Font("Verdana", Font.PLAIN, 21));
 		mnTermin.add(mntmTerminErstellen);
-		
+
 		mntmTerminLoeschen = new JMenuItem("löschen");
 		mntmTerminLoeschen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new TerminLoeschenView(null, null);
+				new TerminLoeschenView(myView, myModel, myController);
 			}
 		});
 		mntmTerminLoeschen.setHorizontalAlignment(SwingConstants.TRAILING);
 		mntmTerminLoeschen.setFont(new Font("Verdana", Font.PLAIN, 21));
 		mnTermin.add(mntmTerminLoeschen);
-		
+
 		mnTauschanfrage = new JMenu("Tauschanfrage");
 		mnTauschanfrage.setFont(new Font("Dialog", Font.PLAIN, 26));
 		menuBar.add(mnTauschanfrage);
-		
+
 		mntmTauschanfrageAnzeigen = new JMenuItem("anzeigen");
 		mntmTauschanfrageAnzeigen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//new TauschanfrageAnzeigenView();
+				// new TauschanfrageAnzeigenView();
 			}
 		});
 		mntmTauschanfrageAnzeigen.setHorizontalAlignment(SwingConstants.TRAILING);
 		mntmTauschanfrageAnzeigen.setFont(new Font("Verdana", Font.PLAIN, 21));
 		mnTauschanfrage.add(mntmTauschanfrageAnzeigen);
-		
+
 		mntmTauschanfrageErstellen = new JMenuItem("erstellen");
 		mntmTauschanfrageErstellen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new TauschanfrageErstellenView();
+				new TauschanfrageErstellenView(myModel, myView, myController);
 			}
 		});
 		mntmTauschanfrageErstellen.setHorizontalAlignment(SwingConstants.TRAILING);
 		mntmTauschanfrageErstellen.setFont(new Font("Verdana", Font.PLAIN, 21));
 		mnTauschanfrage.add(mntmTauschanfrageErstellen);
-		
+
 		mntmTauschanfrageLoeschen = new JMenuItem("löschen");
 		mntmTauschanfrageLoeschen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new TauschanfrageLoeschenView();
+				new TauschanfrageLoeschenView(myView, myModel, myController);
 			}
 		});
 		mntmTauschanfrageLoeschen.setHorizontalAlignment(SwingConstants.TRAILING);
 		mntmTauschanfrageLoeschen.setFont(new Font("Verdana", Font.PLAIN, 21));
 		mnTauschanfrage.add(mntmTauschanfrageLoeschen);
-		
+		getContentPane().setLayout(null);
+
 		lblKW1 = new JLabel("");
-		lblKW1.setFont(new Font("Tahoma", Font.BOLD, 13));
 		lblKW1.setBounds(109, 11, 136, 30);
+		ArrayList<String> wochenplaene = myController.getWochenplaene();
+		lblKW1.setText(wochenplaene.get(0).toString());
 		getContentPane().add(lblKW1);
-		
-		btnRechts = new JButton("");
-		btnRechts.setContentAreaFilled(false);
+
+		btnRechts = new JButton("New button");
 		btnRechts.setBorderPainted(false);
-		btnRechts.setOpaque(false);
-		btnRechts.setIcon(new ImageIcon("C:\\Users\\Admin\\git\\SoftwareProjekt\\view\\right.png"));
+		btnRechts.setContentAreaFilled(false);
 		btnRechts.setBounds(255, 11, 32, 23);
+		btnRechts.setIcon(new ImageIcon("view/right.png"));
+		btnRechts.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				currentKW++;
+				if (wochenplaene.size() <= currentKW) {
+					currentKW--;
+				} else {
+					lblKW1.setText(wochenplaene.get(currentKW).toString());
+
+					getContentPane().remove(tbleWochenplan);
+					tbleWochenplan = myController.generiereWochenplanView(wochenplaene.get(currentKW));
+					tbleWochenplan.setBounds(24, 81, 1439, 676);
+					getContentPane().add(tbleWochenplan);
+				}
+			}
+		});
 		getContentPane().add(btnRechts);
-		
+
 		btnLinks = new JButton("");
-		btnLinks.setBorderPainted(false);
 		btnLinks.setContentAreaFilled(false);
-		btnLinks.setIcon(new ImageIcon("C:\\Users\\Admin\\git\\SoftwareProjekt\\view\\left.png"));
+		btnLinks.setBorderPainted(false);
 		btnLinks.setBounds(49, 11, 50, 23);
+		btnLinks.setIcon(new ImageIcon("view/left.png"));
+		btnLinks.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				currentKW--;
+				if (currentKW < 0) {
+					currentKW++;
+				} else {
+					lblKW1.setText(wochenplaene.get(currentKW).toString());
+
+					getContentPane().remove(tbleWochenplan);
+					tbleWochenplan = myController.generiereWochenplanView(wochenplaene.get(currentKW));
+					tbleWochenplan.setBounds(24, 81, 1439, 676);
+					getContentPane().add(tbleWochenplan);
+				}
+
+			}
+		});
 		getContentPane().add(btnLinks);
+		tbleWochenplan = myController.generiereWochenplanView(wochenplaene.get(currentKW));
+		tbleWochenplan.setBounds(24, 81, 1439, 676);
 		
+		getContentPane().add(tbleWochenplan);
+
+
+
 		setVisible(true);
-		
+
 	}
 
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
 }

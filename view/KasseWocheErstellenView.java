@@ -31,10 +31,23 @@ public class KasseWocheErstellenView extends JFrame {
 	private JLabel lblWochenplanErstellen, lblKalenderwocheKw, lblOeffnungszeiten, doppelpunkt, lblBis, doppelpunkt_1,
 			lblHauptzeiten, doppelpunkt_2, lblBis_1, doppelpunkt_3, lblMindestbesetzung,
 			lblMindestbesetzungFrLebensmittel, lblMindestbesetzungFrLebensmittel_1, lblKassen,
-			lblAnzahlZustzlicherMitarbeiter, lblUhr, lblUhr_1, lblUhr_2, lblUhr_3;
+			lblAnzahlZustzlicherMitarbeiter, lblUhr, lblUhr_1, lblUhr_2, lblUhr_3, lblFehlermeldung;
 	private EinsatzplanController myController = null;
 	private Einsatzplanmodel myModel = null;
 	private Einsatzplanview myView = null;
+
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					KasseWocheErstellenView kasseWocheErstellenView = new KasseWocheErstellenView(
+							new Einsatzplanmodel(), null, null);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
 
 	public KasseWocheErstellenView(Einsatzplanmodel myModel, Einsatzplanview myView,
 			EinsatzplanController myController) {
@@ -276,6 +289,11 @@ public class KasseWocheErstellenView extends JFrame {
 		lblKassen.setBounds(487, 626, 509, 16);
 		getContentPane().add(lblKassen);
 
+		lblFehlermeldung = new JLabel("");
+		lblFehlermeldung.setFont(new Font("Tahoma", Font.BOLD, 15));
+		lblFehlermeldung.setBounds(487, 626, 509, 16);
+		getContentPane().add(lblFehlermeldung);
+		// Farbe rot ändern, Position anpassen
 		cbExtraKassen = new JComboBox();
 		cbExtraKassen.setBounds(1040, 624, 50, 22);
 		getContentPane().add(cbExtraKassen);
@@ -289,21 +307,15 @@ public class KasseWocheErstellenView extends JFrame {
 						JOptionPane.YES_NO_OPTION);
 
 				if (confirmed == JOptionPane.YES_OPTION) {
-					myController.erstelleWochenplanCustom(username(), gibWochenplanbezeichnung(), gibOeffnungszeiten(),
-							gibBesetzung());
+					if (myController.erstelleWochenplanCustom(myView.getUsername(), gibWochenplanbezeichnung(),
+							gibOeffnungszeiten(), gibBesetzung())) {
+						dispose();
+					} else {
+						lblFehlermeldung
+								.setText("Fehler beim Erstellen des Wochenplans. Bitte überprüfen Sie Ihre Eingaben.");
 
-					// String wpbez = gibWochenplanbezeichnung();
+					}
 
-					// TreeMap<String, String> eingabeOeffnungszeiten =
-					// gibOeffnungszeiten();
-					// TreeMap<String, Integer> eingabeBesetzung =
-					// gibBesetzung();
-
-					dispose(); // // auch hier muss natürlich es noch bei JA es
-								// angepasst werden
-					// Controller.wocheErstellen(a,b,c,d)
-					// dispose wenn keine Fehlermeldung kommt und öffne
-					// KasseWocheErstellenPlanView
 				}
 			}
 		});
@@ -328,6 +340,10 @@ public class KasseWocheErstellenView extends JFrame {
 				txtHauptAnfangB.setEnabled(true);
 				txtHauptEndeA.setEnabled(true);
 				txtHauptEndeB.setEnabled(true);
+				cbMinTechInfo.setEnabled(true);
+				cbMinHausInfo.setEnabled(true);
+				cbMinHausKasse.setEnabled(true);
+				cbExtraKassen.setEnabled(true);
 			}
 		});
 		rdbtnBenutzerdefiniert.setBounds(211, 399, 127, 25);

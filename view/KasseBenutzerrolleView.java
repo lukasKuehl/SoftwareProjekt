@@ -18,9 +18,9 @@ import model.Einsatzplanmodel;
 import controller.EinsatzplanController;
 
 class KasseBenutzerrolleView extends JFrame {
-	private JComboBox cbBerechtigung, cbMitarbeiter;
+	private JComboBox cbMitarbeiter;
 	private JButton btnBestaetigen;
-	private JLabel lblBenutzerZuweisen, lblMitarbeiterAuswaehlen, lblBerechtigung;
+	private JLabel lblBenutzerZuweisen, lblMitarbeiterAuswaehlen;
 	private Einsatzplanmodel myModel = null;
 	private Einsatzplanview myView = null;
 	private EinsatzplanController myController=null;
@@ -29,8 +29,19 @@ class KasseBenutzerrolleView extends JFrame {
 
 	/**
 	 * Launch the application.
+	 * 
 	 */
-
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					KasseBenutzerrolleView kasseBenutzerrolleView = new KasseBenutzerrolleView(new Einsatzplanmodel(),
+							null);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});}
 	/**
 	 * Create the application.
 	 */
@@ -65,25 +76,11 @@ class KasseBenutzerrolleView extends JFrame {
 
 		cbMitarbeiter = new JComboBox();
 		cbMitarbeiter.setBounds(381, 274, 128, 20);
-		// LinkedList<Mitarbeiter>
-		// alleMitarbeiter=this.myModel.getAlleMitarbeiter();
-		/*
-		 * Datenbank_Mitarbeiter dbhandler = new Datenbank_Mitarbeiter();
-		 * LinkedList alleMitarbeiter = dbhandler.getMitarbeiter();
-		 * alleMitarbeiter.forEach((temp) -> { cbMitarbeiter.addItem(temp); });
-		 */
+		LinkedList<Mitarbeiter> alleMitarbeiter = this.myModel.getAlleMitarbeiter();
+		alleMitarbeiter.forEach((temp) -> { 
+			cbMitarbeiter.addItem(temp.getBenutzername()); 
+			});
 		getContentPane().add(cbMitarbeiter);
-
-		lblBerechtigung = new JLabel("Berechtigung ausw\u00E4hlen:");
-		lblBerechtigung.setFont(new Font("Tahoma", Font.BOLD, 18));
-		lblBerechtigung.setBounds(83, 325, 233, 20);
-		getContentPane().add(lblBerechtigung);
-
-		cbBerechtigung = new JComboBox();
-		cbBerechtigung.setBounds(381, 328, 128, 20);
-		cbBerechtigung.addItem("Kassenbüro");
-		cbBerechtigung.addItem("Mitarbeiter");
-		getContentPane().add(cbBerechtigung);
 
 		btnBestaetigen = new JButton("Best\u00E4tigen");
 		btnBestaetigen.addActionListener(new ActionListener() {
@@ -92,7 +89,7 @@ class KasseBenutzerrolleView extends JFrame {
 						JOptionPane.YES_NO_OPTION);
 
 				if (confirmed == JOptionPane.YES_OPTION) {
-				myController.benutzerRechteWechsel(gibAusgewaehltenMitarbeiter(), gibAusgewaehlteBenutzerrolle());
+				myController.benutzerRechteWechsel(gibAusgewaehltenMitarbeiter());
 				dispose();
 				}
 			}
@@ -107,12 +104,10 @@ class KasseBenutzerrolleView extends JFrame {
 		 */
 	}
 
-	protected String gibAusgewaehlteBenutzerrolle() {
-		return cbBerechtigung.getSelectedItem().toString();
-	}
 	protected String gibAusgewaehltenMitarbeiter(){
 		return cbMitarbeiter.getSelectedItem().toString();
 	}
-	}
-
+	
 }
+
+

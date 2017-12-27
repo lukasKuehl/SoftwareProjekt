@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.TreeMap;
 import java.util.Calendar;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -44,12 +45,13 @@ public class KasseWochenView extends JFrame implements ActionListener {
 			mntmTerminErstellen, mntmTerminLoeschen, mntmKrankErstellen, mntmKrankLoeschen, mntmBenutzerZuweisen;
 	public JLabel lblKW1;
 	private String username;
-
-	private JFrame frame;
+	private int currentKW = 0;
+	
 	private JButton btnRechts, btnLinks;
 	private Einsatzplanmodel myModel = null;
 	private EinsatzplanController myController = null;
 	private Einsatzplanview myView = null;
+	private JTable tbleWochenplan;
 
 	/**
 	 * Launch the application.
@@ -59,7 +61,8 @@ public class KasseWochenView extends JFrame implements ActionListener {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					KasseWochenView window = new KasseWochenView(null, null, null);
+					KasseWochenView window = new KasseWochenView(new Einsatzplanmodel(), 
+							new EinsatzplanController(new Einsatzplanmodel()), null);
 					// window.frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -120,10 +123,7 @@ public class KasseWochenView extends JFrame implements ActionListener {
 		mntmWocheLoeschen = new JMenuItem("löschen");
 		mntmWocheLoeschen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new WochenplanLoeschenView();
-				// WochenplanLoeschenView frame = new WochenplanLoeschenView();
-				// frame.setVisible(true); Muss im Konstruktor auf visible
-				// gestellt werden
+				new WochenplanLoeschenView(myView, myModel, myController);
 			}
 		});
 		mntmWocheLoeschen.setHorizontalAlignment(SwingConstants.TRAILING);
@@ -133,7 +133,7 @@ public class KasseWochenView extends JFrame implements ActionListener {
 		mntmWocheVerschicken = new JMenuItem("verschicken");
 		mntmWocheVerschicken.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new KasseWocheSendenView();
+				new KasseWocheSendenView(myModel, myView, myController);
 			}
 		});
 		mntmWocheVerschicken.setHorizontalAlignment(SwingConstants.TRAILING);
@@ -147,7 +147,7 @@ public class KasseWochenView extends JFrame implements ActionListener {
 		mntmSchichtBearbeiten = new JMenuItem("Schicht bearbeiten");
 		mntmSchichtBearbeiten.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new KasseSchichtView();
+				new KasseSchichtView(myModel, myView, myController);
 			}
 		});
 		mntmSchichtBearbeiten.setHorizontalAlignment(SwingConstants.TRAILING);
@@ -161,7 +161,7 @@ public class KasseWochenView extends JFrame implements ActionListener {
 		mntmTerminErstellen = new JMenuItem("erstellen");
 		mntmTerminErstellen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new TerminErstellenView(myModel, myController);
+				new TerminErstellenView(myView, myModel, myController);
 			}
 		});
 		mntmTerminErstellen.setHorizontalAlignment(SwingConstants.TRAILING);
@@ -171,7 +171,7 @@ public class KasseWochenView extends JFrame implements ActionListener {
 		mntmTerminLoeschen = new JMenuItem("löschen");
 		mntmTerminLoeschen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new TerminLoeschenView(myModel, myController);
+				new TerminLoeschenView(myView, myModel, myController);
 			}
 		});
 		mntmTerminLoeschen.setHorizontalAlignment(SwingConstants.TRAILING);
@@ -185,7 +185,7 @@ public class KasseWochenView extends JFrame implements ActionListener {
 		mntmKrankErstellen = new JMenuItem("erstellen");
 		mntmKrankErstellen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new KrankmeldungErstellenView(myView, myModel);
+				new KrankmeldungErstellenView(myView, myModel, myController);
 			}
 		});
 		mntmKrankErstellen.setHorizontalAlignment(SwingConstants.TRAILING);
@@ -195,7 +195,7 @@ public class KasseWochenView extends JFrame implements ActionListener {
 		mntmKrankLoeschen = new JMenuItem("löschen");
 		mntmKrankLoeschen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new KrankmeldungLoeschenView();
+				new KrankmeldungLoeschenView(myView, myModel, myController);
 			}
 		});
 		mntmKrankLoeschen.setHorizontalAlignment(SwingConstants.TRAILING);
@@ -218,25 +218,10 @@ public class KasseWochenView extends JFrame implements ActionListener {
 		getContentPane().setLayout(null);
 
 		lblKW1 = new JLabel("");
-		//myController.getWochenplaene();
-		//ArrayList<String> WochenPlaene = myController.getWochenplaene();
-		//TreeMap<Integer, String> WochenMap = new TreeMap<Integer, String>();
-		//for (int i = 0; i < WochenPlaene.size(); i++){
-			
-		//}
-		//Calendar calendar = Calendar.getInstance();
-				//int kw = calendar.get(Calendar.WEEK_OF_YEAR);
-				//for(Map.Entry<Integer, String> entry : WochenMap.entrySet()) {
-				//	  int key = entry.getKey();
-				//	  String value = entry.getValue();
-		
-					//  System.out.println(key + " => " + value);
-					//}
-				//lblKW1.setText(WochenMap.firstEntry().getValue());
-			// Map füllen, Jlabel variable setzen um diese zu erneuern
-
-			lblKW1.setFont(new Font("Tahoma", Font.BOLD, 13));
+		lblKW1.setFont(new Font("Tahoma", Font.BOLD, 13));
 		lblKW1.setBounds(109, 11, 136, 30);
+		ArrayList<String> wochenplaene = myController.getWochenplaene();
+		lblKW1.setText(wochenplaene.get(0).toString());
 		getContentPane().add(lblKW1);
 
 		btnRechts = new JButton("");
@@ -245,6 +230,24 @@ public class KasseWochenView extends JFrame implements ActionListener {
 		btnRechts.setOpaque(false);
 		btnRechts.setIcon(new ImageIcon("view/right.png"));
 		btnRechts.setBounds(255, 11, 32, 23);
+		btnRechts.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				currentKW++;
+				if(wochenplaene.size() <= currentKW){
+					currentKW--;
+				}else{
+					lblKW1.setText(wochenplaene.get(currentKW).toString());
+					
+					getContentPane().remove(tbleWochenplan);
+					tbleWochenplan = myController.generiereWochenplanView(wochenplaene.get(currentKW));
+					tbleWochenplan.setBounds(24, 81, 1439, 676);
+					getContentPane().add(tbleWochenplan);
+				}
+			}
+		});
 		getContentPane().add(btnRechts);
 
 		btnLinks = new JButton("");
@@ -252,8 +255,40 @@ public class KasseWochenView extends JFrame implements ActionListener {
 		btnLinks.setContentAreaFilled(false);
 		btnLinks.setIcon(new ImageIcon("view/left.png"));
 		btnLinks.setBounds(49, 11, 50, 23);
+		btnLinks.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				currentKW--;
+				if(currentKW < 0){
+					currentKW++;
+				}else{
+					lblKW1.setText(wochenplaene.get(currentKW).toString());
+					
+					getContentPane().remove(tbleWochenplan);
+					tbleWochenplan = myController.generiereWochenplanView(wochenplaene.get(currentKW));
+					tbleWochenplan.setBounds(24, 81, 1439, 676);
+					getContentPane().add(tbleWochenplan);
+				}
+					
+			}
+		});
+		
 		getContentPane().add(btnLinks);
+		
+		tbleWochenplan = myController.generiereWochenplanView(wochenplaene.get(currentKW));
+		tbleWochenplan.setBounds(24, 81, 1439, 676);
+		
+		getContentPane().add(tbleWochenplan);
+
 
 		setVisible(true);
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
+		// TODO Auto-generated method stub
+		
 	}
 }
