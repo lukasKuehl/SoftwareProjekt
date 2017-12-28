@@ -146,7 +146,7 @@ public class TerminErstellenView extends JFrame {
 		panelTermin.add(lblDoppelpunkt2);
 
 		comboBoxWochenplaene = new JComboBox<String>();
-		wp = myView.getWochenplaene();
+		wp = myController.getWochenplaene();
 		for (String m : wp) {
 			comboBoxWochenplaene.addItem(m);
 		}
@@ -232,7 +232,7 @@ public class TerminErstellenView extends JFrame {
 		});
 		panelTermin.add(btnErstellen);
 
-		setVisible(true);
+		panelTermin.setVisible(true);
 	}
 
 	// KONTROLLE DER MINUTEN UND STUNDEN FÜR DIE UHRZEITEINGABE
