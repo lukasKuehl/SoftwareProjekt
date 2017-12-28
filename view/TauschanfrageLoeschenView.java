@@ -56,11 +56,11 @@ public class TauschanfrageLoeschenView extends JFrame {
 		panelTauschanfrage.add(lblTauschanfrageLoeschen);
 
 		listTauschanfragen = new JList<Object>();
-		tl = myController.getTauschanfragen(myView.getUsername());
+//		tl = myController.getTauschanfragen(myView.getUsername());
 		modelTauschanfrage = new DefaultListModel<Object>();
-		for (String m : tl) {
-			modelTauschanfrage.addElement(m);
-		}
+//		for (String m : tl) {
+//			modelTauschanfrage.addElement(m);
+//		}
 		listTauschanfragen.setModel(modelTauschanfrage);
 		listTauschanfragen.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		listTauschanfragen.setBounds(95, 126, 362, 399);

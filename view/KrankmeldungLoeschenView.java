@@ -61,28 +61,27 @@ public class KrankmeldungLoeschenView extends JFrame {
 		 */
 
 		listKrankmeldung = new JList<Object>();
-		// String grund = "Krankheit";
-		// kl = myController.getAlleTermin(myView.getUsername()); // bei TerminStrg noch
-		// die TBez ändern
-		// if ( tb.getBbez() == "Krankheit"){
+		 String grund = "Krankheit";
+//		 kl = myController.getAlleTermine(myView.getUsername());  
+//		 if ( tb.getBbez() == "Krankheit"){
 
 		model = new DefaultListModel<Object>();
-		for (String m : kl) {
-			model.addElement(m);
-		}
+//		for (String m : kl) {
+//			model.addElement(m);
+//		}
 		listKrankmeldung.setModel(model);
 		listKrankmeldung.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		listKrankmeldung.setBounds(95, 126, 362, 399);
 		listKrankmeldung.getModel();
 		contentPane.add(listKrankmeldung);
 
-		btnBestaetigen = new JButton("best\u00E4tigen");
+		btnBestaetigen = new JButton("bestätigen");
 		btnBestaetigen.setFont(new Font("Verdana", Font.PLAIN, 15));
-		btnBestaetigen.setBounds(500, 500, 110, 25);
+		btnBestaetigen.setBounds(500, 500, 121, 25);
 		contentPane.add(btnBestaetigen);
 
 		lblBitteAuswaehlen = new JLabel("Bitte auswählen:");
-		lblBitteAuswaehlen.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblBitteAuswaehlen.setFont(new Font("Verdana", Font.PLAIN, 14));
 		lblBitteAuswaehlen.setBounds(95, 128, 113, 14);
 		contentPane.add(lblBitteAuswaehlen);
 
