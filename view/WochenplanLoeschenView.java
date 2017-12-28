@@ -52,7 +52,7 @@ public class WochenplanLoeschenView extends JFrame {
 
 		lblWochenplanLschen = new JLabel("Wochenplan l\u00F6schen");
 		lblWochenplanLschen.setFont(new Font("Verdana", Font.PLAIN, 21));
-		lblWochenplanLschen.setBounds(51, 61, 243, 27);
+		lblWochenplanLschen.setBounds(51, 40, 243, 27);
 		contentPane.add(lblWochenplanLschen);
 
 		listWochenplaene = new JList<Object>();
@@ -64,7 +64,7 @@ public class WochenplanLoeschenView extends JFrame {
 		listWochenplaene.setModel(model);
 		listWochenplaene.setBorder(new LineBorder(new Color(0, 0, 0)));
 		listWochenplaene.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		listWochenplaene.setBounds(95, 126, 362, 399);
+		listWochenplaene.setBounds(51, 126, 362, 399);
 		contentPane.add(listWochenplaene);
 
 		btnLschen = new JButton("löschen");
@@ -74,7 +74,7 @@ public class WochenplanLoeschenView extends JFrame {
 
 		lblBitteAuswhlen = new JLabel("Bitte auswählen");
 		lblBitteAuswhlen.setFont(new Font("Verdana", Font.PLAIN, 15));
-		lblBitteAuswhlen.setBounds(51, 109, 143, 26);
+		lblBitteAuswhlen.setBounds(51, 90, 143, 26);
 		contentPane.add(lblBitteAuswhlen);
 
 		btnLschen.addActionListener(new ActionListener() {
@@ -96,14 +96,15 @@ public class WochenplanLoeschenView extends JFrame {
 									m.toString();
 									m.trim();
 									temp = m.split("-");
-									wpbez = Integer.parseInt(temp[0].substring(2));
+									wpbez = Integer.parseInt(temp[0].substring(2));  // CODE MUSS EVTL noch in String gewandelt
 									String oeffnungszeitenAnfang = temp[1];
 									String oeffnungszeitenEnd = temp[2];
 									String hauptzeitAnfang = temp[3];
 									String hauptzeitEnd = temp[4];
 
 //									// Methode entferne Wochenplan WpBez bereits in Int gewandelt
-//									myController.entferneWochenplan(myView.getUsername(), wpbez);
+									
+//									myView.entferneWochenplan(myView.getUsername().toString(), wpbez);
 									System.exit(0);
 								}
 							}
