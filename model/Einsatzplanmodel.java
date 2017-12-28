@@ -366,7 +366,7 @@ public class Einsatzplanmodel implements Observable {
 		
 		return result;
 	}
-	public void addSchicht(Schicht schicht){
+	public boolean addSchicht(Schicht schicht){
 		
 		
 		try{
@@ -375,10 +375,12 @@ public class Einsatzplanmodel implements Observable {
 		}catch(Exception e){
 			System.out.println("Fehler innerhalb des Modells:");
 			System.out.println("Fehler beim Aufruf der Methode addSchicht:");
-			e.printStackTrace();			
+			e.printStackTrace();
+			return false;
 		}
-		notifyObservers();
 		
+		notifyObservers();
+		return true;
 		
 		
 	}
@@ -473,7 +475,7 @@ public class Einsatzplanmodel implements Observable {
 	}	
 		
 	
-	public void addTauschanfrage(int tauschNr, String senderName, int senderSchichtNr, String empfaengerName, int empfaengerSchichtNr){
+	public boolean addTauschanfrage(int tauschNr, String senderName, int senderSchichtNr, String empfaengerName, int empfaengerSchichtNr){
 		
 		
 		try{
@@ -482,10 +484,12 @@ public class Einsatzplanmodel implements Observable {
 		}catch(Exception e){
 			System.out.println("Fehler innerhalb des Modells:");
 			System.out.println("Fehler beim Aufruf der Methode addTauschanfrage:");
-			e.printStackTrace();			
+			e.printStackTrace();	
+			return false;
 		}
 		
 		notifyObservers();
+		return true;
 		
 	}
 
@@ -577,7 +581,7 @@ public class Einsatzplanmodel implements Observable {
 		return result;
 	}
 	
-	public void addTag(Tag tag,String oeffnungszeit, String schlieﬂzeit, String hauptzeitbeginn, String hauptzeitende){
+	public boolean addTag(Tag tag,String oeffnungszeit, String schlieﬂzeit, String hauptzeitbeginn, String hauptzeitende){
 		
 		
 		try{
@@ -586,11 +590,12 @@ public class Einsatzplanmodel implements Observable {
 		}catch(Exception e){
 			System.out.println("Fehler innerhalb des Modells:");
 			System.out.println("Fehler beim Aufruf der Methode addTag:");
-			e.printStackTrace();			
+			e.printStackTrace();
+			return false;
 		}
 		
 		notifyObservers();
-		
+		return true;
 	}
 
 	public boolean checkTag(String tbez, int wpnr) {

@@ -26,7 +26,7 @@ class Datenbank_Tag {
 
 		boolean success = false;
 		String sqlStatement;
-		sqlStatement = "insert into Tag(tbez, wpnr, anzschicht, feiertag) values(?, ?, ?, ?)";
+		sqlStatement = "insert into Tag(tbez, wpnr, feiertag) values(?, ?, ?)";
 		PreparedStatement pstmt = null;
 		Statement checkInput = null;
 		ResultSet checkRS = null;
@@ -53,7 +53,7 @@ class Datenbank_Tag {
 				//Prepared Statement füllen
 				pstmt.setString(1, tbez);
 				pstmt.setInt(2, wpnr);
-				pstmt.setBoolean(4, feiertag);
+				pstmt.setBoolean(3, feiertag);
 			
 				//Einfügen von Schichten in einen Tag
 				Datenbank_Schicht dschicht= new Datenbank_Schicht();
