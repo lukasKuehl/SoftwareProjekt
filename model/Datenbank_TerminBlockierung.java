@@ -163,14 +163,14 @@ class Datenbank_TerminBlockierung {
 			rs = stmt.executeQuery(sqlStatement);
 
 			LinkedList<TerminBlockierung> terminBlockierungList = new LinkedList<>();
-			DateFormat df = new SimpleDateFormat("DD-MM-YYYY");
+			//DateFormat df = new SimpleDateFormat("DD-MM-YYYY");
 			while (rs.next()) {
-				Date anfangzeitraumsql = rs.getDate("Anfangzeitraum"); 
-				Date endezeitraumsql = rs.getDate("Endezeitraum"); 
-				String anfangzeitraum = df.format(anfangzeitraumsql);
-				String endezeitraum = df.format(endezeitraumsql);
+				//Date anfangzeitraumsql = rs.getDate("Anfangzeitraum"); 
+				//Date endezeitraumsql = rs.getDate("Endezeitraum"); 
+				//String anfangzeitraum = df.format(anfangzeitraumsql);
+				//String endezeitraum = df.format(endezeitraumsql);
 				TerminBlockierung tb = new TerminBlockierung(rs.getInt("Tblocknr"),rs.getString("Benutzername"), rs.getString("Bbez"),
-						anfangzeitraum, endezeitraum, rs.getTime("Anfanguhrzeit").toString(),rs.getTime("Endeuhrzeit").toString(),rs.getString("Grund") );
+						rs.getString("Anfangzeitraum"), rs.getString("Endezeitraum"), rs.getTime("Anfanguhrzeit").toString(),rs.getTime("Endeuhrzeit").toString(),rs.getString("Grund") );
 
 				terminBlockierungList.add(tb);
 			}
