@@ -181,7 +181,9 @@ public class TauschanfrageErstellenView extends JFrame {
 		ArrayList<String> al = myController.getTauschanfragen(myView.getUsername());
 		
 
-//		SchichtAndererMa = myController.getSchichten(cmbBoxWP.getSelectedItem().toString(), cmbBoxTag.getSelectedItem().toString());
+//		ComboBox mit den gesamten Schichten 
+		
+//		SchichtAndererMa = myController.getSchichten(cmbBoxWP.getSelectedItem().toString(), cmbBoxTag.getSelectedItem().toString()); // Methode Get Schichten noch in den EinsatzplanController integrieren
 		for (String c : SchichtAndererMa) {
 			comboBoxSchichtAndererMA.addItem(c);
 		}
@@ -199,7 +201,9 @@ public class TauschanfrageErstellenView extends JFrame {
 		lblMitarbeiter.setBounds(62, 452, 124, 26);
 		contentPane.add(lblMitarbeiter);
 		
-//		empfaenger = myController.getVerfügbareMitarbeiterSchicht();
+		// ComboBox mit den Mitarbeitern für die Schichten
+				
+//		empfaenger = myController.getVerfügbareMitarbeiterSchicht(); // Mitarbeiter erhalten die für die ausgewählte Schicht eingeteilt sind
 //		comboBoxEmpfaengerName = new JComboBox();
 //		for (String c : empfaenger) {
 //			comboBoxEmpfaengerName.addItem(c);

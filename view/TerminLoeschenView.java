@@ -82,7 +82,7 @@ public class TerminLoeschenView extends JFrame {
 
 		/**
 		 * @author Ramona Gerke
-		 * @Info Action Performed Methode
+		 * @Info Action Performed Methode die nach dem bestätigen des Buttons "bestätigen", das ausgewählte Element anhand der Tauschanfrage Nr löscht.
 		 */
 		// ACTION PERFROMED Methode	
 		btnBesttigen.addActionListener(new ActionListener() {

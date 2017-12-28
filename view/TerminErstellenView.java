@@ -17,6 +17,9 @@ import model.Einsatzplanmodel;
 
 public class TerminErstellenView extends JFrame {
 
+	/** @ author Ramona Gerke
+	 * @Info Konstruktor der View Termin erstellen
+	 */
 	// Initialisierung der Instanzvariablen
 	private JPanel contentPane = null;
 	private JTable table = null;
@@ -127,11 +130,12 @@ public class TerminErstellenView extends JFrame {
 		lblVon.setBounds(64, 267, 46, 14);
 		panelTermin.add(lblVon);
 
+		// try und catch Block der bei einer Umwandlung der Daten eintrifft
 		try {
 			txtFldUhrzeitBisA = new JFormattedTextField(new MaskFormatter("##"));
 		} catch (ParseException eUhrzeitBisB) {
 			JOptionPane.showConfirmDialog(null,
-					"Die Eingabe konnte nicht gewandelt werden. BItte überprüfen Sie die Eingaben!! - TerminErstellen - txtFldUhrzeitBisA"
+					"Die Eingabe konnte nicht gewandelt werden. Bitte überprüfen Sie die Eingaben!! - TerminErstellen - txtFldUhrzeitBisA"
 							+ eUhrzeitBisB);
 		}
 		txtFldUhrzeitBisA.setFont(new Font("Verdana", Font.PLAIN, 14));

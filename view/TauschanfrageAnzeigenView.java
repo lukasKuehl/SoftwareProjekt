@@ -23,6 +23,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import java.awt.Color;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.TreeMap;
 import java.awt.event.ActionEvent;
@@ -43,9 +44,9 @@ public class TauschanfrageAnzeigenView extends JFrame {
 
 	/**
 	 * @author Ramona Gerke
-	 * @info Konstruktor der View Tauschanfrage anzeigen
+	 * @info Konstruktor der View Tauschanfrage anzeigen.
 	 */
-	
+
 	protected TauschanfrageAnzeigenView(Einsatzplanview myView, Einsatzplanmodel myModel,
 			EinsatzplanController myController) {
 		this.myView = myView;
@@ -63,13 +64,9 @@ public class TauschanfrageAnzeigenView extends JFrame {
 		contentPane.setLayout(null);
 
 		listTauschanfragen = new JList<Object>();
-		tl = myController.getTauschanfragen(myView.getUsername());
+		// tl = myController.getTauschanfragen(myView.getUsername());
 		modelTauschanfrage = new DefaultListModel<Object>();
-		for (String m : tl) {
-			modelTauschanfrage.addElement(m);
-		}
-		listTauschanfragen.setBorder(new LineBorder(new Color(0, 0, 0)));
-		listTauschanfragen.setBounds(95, 144, 315, 336);
+		listTauschanfragen.setBounds(72, 140, 315, 336);
 		contentPane.add(listTauschanfragen);
 
 		lblTauschanfrageAnzeigen = new JLabel("Tauschanfragen");
@@ -79,25 +76,29 @@ public class TauschanfrageAnzeigenView extends JFrame {
 
 		btnAnnehmen = new JButton("annehmen");
 		btnAnnehmen.setFont(new Font("Verdana", Font.PLAIN, 15));
-		btnAnnehmen.setBounds(500, 500, 110, 25);
+		btnAnnehmen.setBounds(500, 500, 127, 25);
 		contentPane.add(btnAnnehmen);
-	
+
 		setVisible(true);
-		
+
 		/**
 		 * @author Ramona Gerke
-		 * @info Action Performed Methode, die nach dem bestätigen des Buttons "annehmen" ausgeführt wird.
+		 * @info Action Performed Methode, die nach dem bestätigen des Buttons
+		 *       "annehmen" ausgeführt wird,
+		 * @info Sie übergibt die TauschanfrageNr. der ausgwählten Tauschanfrage an den
+		 *       Controller. .
 		 * 
 		 */
-		
-		//Action Perfomed Methoden
-		
+
+		// Action Perfomed Methode
+
 		btnAnnehmen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (e.getSource() == btnAnnehmen) {
 					int eingabe = JOptionPane.showConfirmDialog(null, "Wollen Sie die Tauschanfrage annehmen?", null,
 							JOptionPane.YES_NO_CANCEL_OPTION);
 					if (eingabe == 0) {
+
 						if (tl.isEmpty()) {
 							JOptionPane.showMessageDialog(null,
 									"Es wurde keine Tauschanfrage ausgewählt. Bitte wählen Sie eine Tauschanfrage aus.",
@@ -111,8 +112,8 @@ public class TauschanfrageAnzeigenView extends JFrame {
 								m.toString();
 								m.trim();
 								temp = m.split("-");
-								String  tauschanfrageNrS = temp [0].substring(10);
-								tauschanfrageNr =Integer.parseInt(tauschanfrageNrS);
+								String tauschanfrageNrS = temp[0].substring(10);
+								tauschanfrageNr = Integer.parseInt(tauschanfrageNrS);
 								String senderVorname = temp[1];
 								String senderName = temp[2];
 								String senderSchichtNr = temp[3];
@@ -130,11 +131,13 @@ public class TauschanfrageAnzeigenView extends JFrame {
 							}
 							myView.akzeptiereTauschanfrage(empfaengerName, tauschanfrageNr);
 						}
+
 					}
+
 				}
 			}
-		});
-	
 
-		}
+		});
+
+	}
 }
