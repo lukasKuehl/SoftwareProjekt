@@ -309,7 +309,7 @@ class Datenbank_Tag {
 
 					
 					for (Schicht sch : schichtList) {
-						if (sch.getWpnr() == t.getWpnr()&& sch.getTbez() == t.getTbez()) {
+						if (sch.getWpnr() == t.getWpnr()&& sch.getTbez().equals(t.getTbez())) {
 							LinkedList<Schicht> schichttagList = new LinkedList<>();	
 							schichttagList.add(sch);
 							t.setLinkedListSchichten(schichttagList);
