@@ -225,7 +225,7 @@ class Datenbank_Mitarbeiter {
 			try {
 				stmt = con.createStatement();
 				con.setAutoCommit(false);
-				if(m.getJob()=="Kassierer" || m.getJob()=="Information"){
+				if(m.getJob().equalsIgnoreCase("Kassierer")|| m.getJob().equalsIgnoreCase("Information")){
 					sqlStatement1 = "UPDATE Mitarbeiter SET Job = 'Kassenbüro' WHERE benutzername='"+benutzername+"'";
 				stmt.execute(sqlStatement1);
 				}
