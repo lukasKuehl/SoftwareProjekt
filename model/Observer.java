@@ -1,7 +1,9 @@
 package model;
 
+import data.Wochenplan;
+
 public interface Observer {
-	public void update(Einsatzplanmodel mymodel);
+	public void update(Wochenplan wochenplan);
 		
 
 }

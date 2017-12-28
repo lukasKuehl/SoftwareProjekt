@@ -47,6 +47,7 @@ public class Einsatzplanmodel implements Observable {
 	private Datenbank_Userrecht dataUserrecht = null;
 	private Datenbank_Warenhaus dataWarenhaus = null;
 	private Datenbank_Wochenplan dataWochenplan=null;
+	private Wochenplan wochenplan=null;
 	
 	public Einsatzplanmodel(){
 		
@@ -78,7 +79,8 @@ public class Einsatzplanmodel implements Observable {
 	}
 	public void notifyObservers() {
 		for(Observer observer: observers){
-		observer.update(myModel);
+		
+			observer.update(wochenplan);//provisorisch bis update methode bekannt ist aus der view
 		}
 	}
 
