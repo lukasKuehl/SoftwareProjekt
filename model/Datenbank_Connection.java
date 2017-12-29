@@ -1,7 +1,7 @@
 package model;
 import java.sql.*;
 
-
+//Klassenbeschreibung fehlt --> Erläuterung warum wir dafür eine eigene Klasse brauchen
 /**
  * @author Anes Preljevic
  * @info 
@@ -10,13 +10,14 @@ public class Datenbank_Connection{
 
 	private Connection con = null;	
 
+	//Leerer Konstruktor kann einfach weg --> selber Effekt
 	public Datenbank_Connection(){
 		
 	}
 	protected  Connection createCon() {
 		
 		try{
-			
+			//Das sind die spezifischen Settings mit denen alle anderen direkt eine Fehlermeldung bekommen, bitte einfach frei lassen, sodass die erst jeder ausfüllen muss. Dann aber anschließend diese Klasse nicht mehr committen
 			return  DriverManager.getConnection("jdbc:mysql://localhost:3306/sys?autoReconnect=true&useSSL=false", "root", "famasb0b12");
 
 		}catch(SQLException sqle){
@@ -26,6 +27,7 @@ public class Datenbank_Connection{
 			sqle.printStackTrace();
 			return null;
 		}finally{
+			//Aufruf der Methode closeDBCon hätte den selben Effekt --> Vermeidung von doppeltem Code
 			try{
 				if(con != null)
 					con.close();

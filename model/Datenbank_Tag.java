@@ -15,6 +15,11 @@ import data.Tblock_Tag;
 import data.Mitarbeiter;
 import data.Schicht;
 
+//Klassenbeschreibung fehlt!
+
+//Kommentare innerhalb der Methoden fehlen!
+
+//Finally Blöcke fehlen bei ein paar Methoden!
 
 class Datenbank_Tag {
 
@@ -50,12 +55,18 @@ class Datenbank_Tag {
 			}
 			else{
 				//Es wurde sichergestellt, dass die PK- und FK-Check-Constraints nicht verletzt werden --> Der Datensatz kann erzeugt werden
+				
+				//Nein, siehe vorherige Klassen
+				
 				//Prepared Statement füllen
 				pstmt.setString(1, tbez);
 				pstmt.setInt(2, wpnr);
 				pstmt.setBoolean(3, feiertag);
 			
+				
 				//Einfügen von Schichten in einen Tag
+				
+				//Funktioniert nur bei einer vorhandenen Haupt- und Normalzeit, sollte aber eigentlich kein Problem sein
 				Datenbank_Schicht dschicht= new Datenbank_Schicht();
 				dschicht.addSchicht(new Schicht(dschicht.getNewSchichtnr(con),tbez, wpnr,oeffnungszeit, hauptzeitbeginn),con);
 				dschicht.addSchicht(new Schicht(dschicht.getNewSchichtnr(con),tbez, wpnr,hauptzeitbeginn, hauptzeitende),con);
@@ -84,6 +95,7 @@ class Datenbank_Tag {
 			//Schließen der offen gebliebenen Statements & ResultSets
 			try {
 				
+				//siehe vorherige Klassen
 				if(checkRS != null){
 					checkRS.close();
 				}				
@@ -111,6 +123,8 @@ class Datenbank_Tag {
 	protected boolean checkTag(String tbez, int wpnr, Connection con) {
 		Statement stmt = null;
 		ResultSet rs = null;
+		
+		//Eine wpnr ist kein Integer --> Anführungszeichen müssen weg!
 		String sqlQuery = "select tbez,wpnr from tag where tbez = '"+tbez+"' and wpnr= '"+wpnr+"'";
 
 		try {
@@ -147,6 +161,9 @@ class Datenbank_Tag {
 		
 		
 		try {	
+		
+			//Keine Überprüfung ob es den Tag überhaupt gibt --> Fehlermeldung!
+			
 			
 			stmt = con.createStatement();
 			con.setAutoCommit(false);
@@ -189,6 +206,8 @@ class Datenbank_Tag {
 		
 		try {	
 			
+			//Siehe setzeFeiertagtrue
+			
 			stmt = con.createStatement();
 			con.setAutoCommit(false);
 			stmt.executeUpdate(sqlStatement);
@@ -217,6 +236,9 @@ class Datenbank_Tag {
 			}
 		}
 	}	
+	
+	//Sehe den Sinn für den Controller oder die View nicht, falls das eine Hilfsmethode von dir ist, kann die trotzdem drin bleiben
+	
 	/**
 	 * @author Anes Preljevic
 	 * @info Auslesen aller Tage aus der Datenbank und erzeugen von Tag Objekten.
@@ -235,9 +257,12 @@ class Datenbank_Tag {
 			
 			Statement stmt = null;
 			ResultSet rs = null;
+			
+			//Kommt da eine Fehlermeldung, wenn eine Woche keinen Sonntag hat? Bitte teste das mal
 			String sqlStatement = "SELECT tbez, wpnr, Feiertag FROM Tag ORDER BY wpnr , FIELD(tbez, 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag','Freitag','Samstag','Sonntag')";
 
 			try {
+				//siehe vorherige Klassen
 				stmt = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
 				rs = stmt.executeQuery(sqlStatement);
 
@@ -256,6 +281,9 @@ class Datenbank_Tag {
 				
 				LinkedList<Tblock_Tag> tblocktagtList = new LinkedList<>();
 				
+				//Auskommentierte Befehle können gelöscht werden
+				
+				//Die Schleife wird kein einziges Mal durchlaufen, da die LinkedList leer ist --> Meintest du vielleicht Einsatzplanmodel.getTblock()
 				for (Tblock_Tag tbt : tblocktagList) {
 					// && tbt.getTbez().equals(t.getTbez())
 						if (tbt.getWpnr() == t.getWpnr()&& tbt.getTbez().equals(t.getTbez())) {
@@ -278,6 +306,8 @@ class Datenbank_Tag {
 				System.err.println("Methode getTage SQL-Fehler: " + sql.getMessage());
 				return null;
 			}
+			
+			//finally Block fehlt!
 		}
 	
 	/**
@@ -296,9 +326,13 @@ class Datenbank_Tag {
 			
 			Statement stmt = null;
 			ResultSet rs = null;
+			
+			//Wpnr ist kein String!
+			//Siehe vorherige Methode(Fehlermeldung falls es keinen Sonntag gibt)
 			String sqlStatement = "SELECT tbez, wpnr, feiertag FROM Tag where wpnr='"+wpnr+"' ORDER BY FIELD(tbez, 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag','Freitag','Samstag','Sonntag')";
 
 			try {
+				//siehe vorherige Klassen
 				stmt = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
 				rs = stmt.executeQuery(sqlStatement);
 
@@ -339,6 +373,8 @@ class Datenbank_Tag {
 				System.err.println("Methode getTage SQL-Fehler: " + sql.getMessage());
 				return null;
 			}
+			
+			//Finally-Block fehlt!
 		}
 	
 	/**
@@ -357,6 +393,8 @@ class Datenbank_Tag {
 		
 		Statement stmt = null;
 		ResultSet rs = null;
+		
+		//Einfaches wpnr reicht aus, dann ist es überall einheitlich
 		String sqlQuery = "DELETE FROM tag WHERE tag.wpnr= "+wpnr;
 
 		for (Tblock_Tag tbt : tblocktagList) {
@@ -367,6 +405,10 @@ class Datenbank_Tag {
 			
 
 		schicht.deleteSchicht(wpnr,con);;
+		
+		
+		//Die Tblock-Einträge müssen auch gelöscht werden!
+	
 		
 	
 	

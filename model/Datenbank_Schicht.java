@@ -13,6 +13,12 @@ import data.Tag;
 import data.Tauschanfrage;
 import data.TerminBlockierung;
 
+//Klassenbeschreibung fehlt!
+
+//Kommentare innerhalb der Methoden fehlen!
+
+//Bei vielen Methoden fehlen die Finally-Blöcke!
+
 class Datenbank_Schicht {
 
 
@@ -27,8 +33,11 @@ class Datenbank_Schicht {
 		String sqlStatement;
 		sqlStatement = "insert into Schicht(schichtnr, tbez, wpnr, anfanguhrzeit, endeuhrzeit) values(?, ?, ?, ?, ?)";
 		PreparedStatement pstmt = null;
+		
+		//siehe obere Klassen!
 		Statement checkInput = null;
 		ResultSet checkRS = null;
+		
 		int schichtnr = 0;
 		String tbez = null;
 		int wpnr = 0;
@@ -45,15 +54,19 @@ class Datenbank_Schicht {
 			wpnr = schicht.getWpnr();
 			anfanguhrzeit = schicht.getAnfanguhrzeit();
 			endeuhrzeit = schicht.getEndeuhrzeit();
-			
+		
+			//siehe obere Klassen!
 			con.setAutoCommit(false);
 
+			//Siehe obere Klassen!
 			if (checkSchicht(schichtnr,con)) {
 				System.out.println("Diese schichtnr existiert bereits in der Tabelle Schicht!");
 			}
 			else{
 				//Es wurde sichergestellt, dass die PK- und FK-Check-Constraints nicht verletzt werden --> Der Datensatz kann erzeugt werden
 			
+				//Nein, siehe obere Klassen!
+				
 				pstmt.setInt(1, schichtnr);
 				pstmt.setString(2, tbez);
 				pstmt.setInt(3, wpnr);
@@ -87,6 +100,7 @@ class Datenbank_Schicht {
 			//Schließen der offen gebliebenen Statements & ResultSets
 			try {
 				
+				//Siehe obere Klassen!
 				if(checkRS != null){
 					checkRS.close();
 				}				
@@ -140,12 +154,14 @@ class Datenbank_Schicht {
 
 	/**
 	 * @author Anes Preljevic
-	 * @info Auslesen aller Schichten aus der Datenbank und erzeugen von Schicht Objekten.
-	 * Diese werden in eine LinkedList abgelegt und ausgegeben.
-	 * Die zugehörigen Mitarbeiter und Schicht Beziehungen werden als LinkedList in den Schichten gespeichert.
+	 * @info Auslesen aller Schichten aus der Datenbank und Erzeugen von Schicht-Objekten.
+	 * Diese werden in einer LinkedList abgelegt und ausgegeben.
+	 * Die zugehörigen Mitarbeiter- und Schicht-Beziehungen werden als LinkedList in den Schichten gespeichert.
 	 */
 	protected LinkedList<Schicht> getSchichten(Connection con) {
 		Datenbank_Ma_Schicht ma_schicht = new Datenbank_Ma_Schicht();
+		
+		//Eine LinkedList<Mitarbeiter> ist sinnvoller, die Benutzernamen an sich reichen für die meisten Sachen nicht aus!
 		LinkedList<Ma_Schicht> maschichtList = ma_schicht.getMa_Schicht(con);;
 		Statement stmt = null;
 		ResultSet rs = null;
@@ -162,6 +178,8 @@ class Datenbank_Schicht {
 				Schicht s = new Schicht(rs.getInt("Schichtnr"), rs.getString("Tbez"),
 						rs.getInt("Wpnr"), rs.getString("Anfanguhrzeit").toString(),
 						rs.getString("Endeuhrzeit").toString());
+				
+				//Siehe Kommentar am Anfang der Methode
 				for (Ma_Schicht mas : maschichtList) {
 					
 					if (mas.getSchichtnr() == s.getSchichtnr()) {
@@ -182,6 +200,8 @@ class Datenbank_Schicht {
 			System.err.println("Methode getSchicht SQL-Fehler: " + sql.getMessage());
 			return null;
 		}
+		//Finally-Block fehlt!
+		
 	}
 	
 	/**
@@ -201,9 +221,12 @@ class Datenbank_Schicht {
 		Statement stmt = null;
 		ResultSet rs = null;
 
+		//select * --> übersichtlicher
 		String sqlStatement = "select Schichtnr,Tbez,Wpnr, Anfanguhrzeit, Endeuhrzeit from Schicht Where Schichtnr ="+schichtnr;
 
 		try {
+			
+			//siehe vorherige Klassen!
 			stmt = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
 			rs = stmt.executeQuery(sqlStatement);
 			rs.next();
@@ -230,9 +253,11 @@ class Datenbank_Schicht {
 			System.err.println("Methode getSchicht SQL-Fehler: " + sql.getMessage());
 			return null;
 		}
+		//finally-Block fehlt!
 		}
 	}
 
+	//MethodenName ist verwirrend die Methode löscht doch alle Schichten eines Wochenplanes --> deleteSchichten(wpnr, con)
 	/**
 	 * @author Anes Preljevic
 	 * @info Löschen einer Schicht mit zugehörigen Ma_Schicht (Mitarbeitern in Schichten)aus den Datenbank Tabellen 
@@ -249,6 +274,9 @@ class Datenbank_Schicht {
 		Statement stmt = null;
 		ResultSet rs = null;
 		String sqlStatement = "DELETE FROM Schicht WHERE wpnr= "+wpnr;
+		
+		//Ohne Kommentare und Einrückungen komplett unübersichtlich!!!		
+		
 		for (Schicht sch : schichtList) {
 			if (sch.getWpnr() == wpnr) {
 				
@@ -307,5 +335,6 @@ class Datenbank_Schicht {
 					+ sql.getMessage());
 			return -1;
 		}
+		//finally-Block fehlt!
 	}
 }

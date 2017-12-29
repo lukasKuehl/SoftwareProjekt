@@ -9,6 +9,12 @@ import java.util.LinkedList;
 
 import data.Mitarbeiter;
 
+//Klassenbeschreibung fehlt!
+
+//Bei fast allen Methoden fehlen Kommentare zu den einzelnen Anweisungen
+
+//Bei vielen Mehtoden von Anes fehlen die finally-Blöcke
+
 class Datenbank_Mitarbeiter {
 
 	
@@ -19,11 +25,16 @@ class Datenbank_Mitarbeiter {
 	public boolean addMitarbeiter(Mitarbeiter ma, Connection con) {
 		boolean success = false;
 	
+		//Eine Anweisung
 		String sqlStatement;
 		sqlStatement = "insert into Mitarbeiter (benutzername, passwort, job, vorname, name, maxstunden, whname,email) values(?, ?, ?, ?, ?, ?, ?,?)";
+		
 		PreparedStatement pstmt = null;
+		
+		//Checks werden nicht benutzt! siehe DatenbankMa_Schicht
 		Statement checkInput = null;
 		ResultSet checkRS = null;
+		
 		String benutzername = null;
 		String passwort = null;
 		String job = null;
@@ -48,13 +59,16 @@ class Datenbank_Mitarbeiter {
 			
 			// Verhindert das Commit nach jeder Anweisung. Nicht zwangsläufig notwendig bei einem einzelnen SQL-Befehl
 			con.setAutoCommit(false);
-
+			
+			
 			if (checkMitarbeiter(benutzername,con)) {
 				System.out.println("Der Mitarbeiter wurde bereits in die Schicht eingeteilt!");
 			}
 			else{
 				//Es wurde sichergestellt, dass die PK- und FK-Check-Constraints nicht verletzt werden --> Der Datensatz kann erzeugt werden
 			
+				//Wieder nur PK_Check-Überprüfung! --> FK-Warenhaus, FK-Benuzerrolle/Job fehlt!
+				
 				pstmt.setString(1, benutzername);
 				pstmt.setString(2, passwort);
 				pstmt.setString(3, job);
@@ -91,6 +105,7 @@ class Datenbank_Mitarbeiter {
 			//Schließen der offen gebliebenen Statements & ResultSets
 			try {
 				
+				//Beide checks wurden nicht benutzt und brauchen nicht geschlossen werden!
 				if(checkRS != null){
 					checkRS.close();
 				}				
@@ -122,15 +137,19 @@ class Datenbank_Mitarbeiter {
 		Statement stmt = null;
 		ResultSet rs = null;
 
+		//Select * hat den selben Effekt --> übersichtlicher
 		String sqlStatement = "select Benutzername, Passwort, Job, Vorname, Name, Maxstunden, Whname, Email  from Mitarbeiter";
 
 		try {
+			//zusätzliche Anweisungen für das Statement werden nie verwendet!
 			stmt = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
 			rs = stmt.executeQuery(sqlStatement);
 
 			LinkedList<Mitarbeiter> mitarbeiterList = new LinkedList<>();
 
 			while (rs.next()) {
+				
+				//Erzeugen eines neuen Mitarbeiter-Objektes überflüssig --> getMitarbeiter(benutzername, con) hat den selben Effekt und ist kürzer
 				Mitarbeiter m = new Mitarbeiter(rs.getString("Benutzername"), rs.getString("Passwort"),
 						rs.getString("Job"), rs.getString("Vorname"), rs.getString("Name"),
 						rs.getInt("Maxstunden"),rs.getString("Whname"),rs.getString("Email"));
@@ -147,6 +166,8 @@ class Datenbank_Mitarbeiter {
 			System.err.println("Methode getAlleMitarbeiter SQL-Fehler: " + sql.getMessage());
 			return null;
 		}
+		
+		//Finally-Block fehlt!
 	}
 	/**
 	 * @author Anes Preljevic
@@ -194,6 +215,7 @@ class Datenbank_Mitarbeiter {
 		String sqlStatement = "select Benutzername, Passwort, Job, Vorname, Name, Maxstunden, Whname,Email  from Mitarbeiter where benutzername='"+benutzername+"'";
 
 		try {
+			//siehe oben
 			stmt = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
 			rs = stmt.executeQuery(sqlStatement);
 
@@ -215,7 +237,9 @@ class Datenbank_Mitarbeiter {
 			System.err.println("Methode getMitarbeiter SQL-Fehler: " + sql.getMessage());
 			return null;
 		}
-		}}
+		//Finally-Block fehlt!
+	}
+	}
 		protected void wechselBenutzerrolle(String benutzername, Connection con) {
 
 			Datenbank_Mitarbeiter ma = new Datenbank_Mitarbeiter();
@@ -227,7 +251,11 @@ class Datenbank_Mitarbeiter {
 
 			try {
 				stmt = con.createStatement();
+				
+				//siehe oben!
 				con.setAutoCommit(false);
+				
+				//m könnte auch null sein --> Überprüfung notwendig!
 				if(m.getJob().equalsIgnoreCase("Kassierer")|| m.getJob().equalsIgnoreCase("Information")){
 					sqlStatement1 = "UPDATE Mitarbeiter SET Job = 'Kassenbüro' WHERE benutzername='"+benutzername+"'";
 				stmt.execute(sqlStatement1);
@@ -268,6 +296,7 @@ class Datenbank_Mitarbeiter {
 		protected boolean deleteMitarbeiter(String benutzername,Connection con) {
 
 			if (!checkMitarbeiter(benutzername, con)){
+				//wenn es den Mitarbeiter gar nicht gibt ist doch auch alles ok --> Rückgabewert sollte true sein. False nur wenn er/sie da ist und nicht gelöscht werden kann!
 				return false;
 			}
 			else{
@@ -276,11 +305,13 @@ class Datenbank_Mitarbeiter {
 			String sqlStatement = "DELETE FROM Mitarbeiter WHERE benutzername = " + benutzername;
 	
 			
-			try {
+			try {	
+				
 				stmt = con.createStatement();
 				stmt.execute(sqlStatement);
 				con.commit();
 
+				//AutoCommit ist schon true --> Anweisung überflüssig
 				con.setAutoCommit(true);
 				return true;
 				}

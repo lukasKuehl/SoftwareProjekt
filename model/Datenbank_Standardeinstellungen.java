@@ -16,6 +16,13 @@ import javax.swing.JFileChooser;
 
 import data.Standardeinstellungen;
 
+//Klassenbeschreibung fehlt!
+
+//Finally-Block bei getStandardeinstellungen fehlt!
+
+//Kommentare innerhalb der Methoden fehlen!
+
+//Klassenname Einstellungen wäre sinnvoller, die kann man ja vielleicht später mal ändern. Die Methode Eistellungen getStandardeinstellungen() ist ja aussagekräftig genug.
 class Datenbank_Standardeinstellungen {
 
 
@@ -28,6 +35,7 @@ class Datenbank_Standardeinstellungen {
 
 		Statement stmt = null;
 		ResultSet rs = null;
+		//siehe vorherige Klassen!
 		String sqlStatement = "select Öffnungszeit, Schließzeit, Hauptzeitbeginn,"
 				+ " Hauptzeitende, Mehrbesetzung,"
 				+ "Minanzinfot, Minanzinfow, Minanzkasse from Standardeinstellung";
@@ -56,6 +64,7 @@ class Datenbank_Standardeinstellungen {
 			System.err.println("Methode getStandardeinstellungen SQL-Fehler: " + sql.getMessage());
 			return null;
 		}
+		//finally-Block fehlt!
 	}
 
 	/**
@@ -85,7 +94,9 @@ class Datenbank_Standardeinstellungen {
 
 			pstmt = con.prepareStatement(sqlStatement);
 
+			//siehe vorherige Klassen
 			con.setAutoCommit(false);
+			
 			pstmt.setString(1, öffnungszeit);
 			pstmt.setString(2,schließzeit );
 			pstmt.setString(3, hauptzeitbeginn);

@@ -9,6 +9,12 @@ import java.util.LinkedList;
 
 import data.Ma_Schicht;
 
+//Klassenbeschreibung fehlt!
+
+//Innerhalb fast aller Methoden ist kein einziger Kommentar zur Erklärung was ihr mit den einzelnen Anweisungen macht!
+ 
+//Bei vielen Methoden von Anes fehlen die finally-Blöcke
+
  class Datenbank_Ma_Schicht {
 
 
@@ -19,11 +25,16 @@ import data.Ma_Schicht;
 	protected boolean addMa_Schicht(Ma_Schicht ma_schicht,Connection con) {
 		boolean success = false;
 	
+		//Wertzuweisung in eine Zeile --> übersichtlicher
 		String sqlStatement;
 		sqlStatement = "insert into Ma_Schicht (Schichtnr,Benutzername) values(?, ?)";
+		
 		PreparedStatement pstmt = null;
+		
+		//checkInput und checkRS sind beide überflüssig, da Sie noch nirgendwo verwendet werden, die sind zum Überprüfen der FK-Constraints!
 		Statement checkInput = null;
-		ResultSet checkRS = null;
+		ResultSet checkRS = null;		
+		
 		int schichtnr = 0;
 		String benutzername = null;
 		
@@ -35,14 +46,18 @@ import data.Ma_Schicht;
 			schichtnr = ma_schicht.getSchichtnr();
 			benutzername = ma_schicht.getBenutzername();		
 			
+			//Nicht notwendig, es wird ja nur ein Datensatz eingefügt
 			con.setAutoCommit(false);
 
 			if (checkMa_Schicht(schichtnr, benutzername,con)) {
 				System.out.println("Der Mitarbeiter wurde bereits in die Schicht eingeteilt!");
 			}
 			else{
+								
 				//Es wurde sichergestellt, dass die PK- und FK-Check-Constraints nicht verletzt werden --> Der Datensatz kann erzeugt werden
-			
+				
+				//Nein, du hast nur überprüft, ob es den Mitarbeiter-Schicht Datensatz schon gibt(Das ist der PK-Check), die FK-Checks(Mitarbeiter/Schicht existiert) fehlen!
+				
 				pstmt.setInt(1, schichtnr);
 				pstmt.setString(2, benutzername);
 			
@@ -52,6 +67,7 @@ import data.Ma_Schicht;
 			}			
 			
 			success = true;
+			//siehe oben
 			con.setAutoCommit(true);
 			
 			
@@ -72,7 +88,7 @@ import data.Ma_Schicht;
 		} finally {
 			//Schließen der offen gebliebenen Statements & ResultSets
 			try {
-				
+				//siehe oben
 				if(checkRS != null){
 					checkRS.close();
 				}				
@@ -99,6 +115,8 @@ import data.Ma_Schicht;
 	protected boolean checkMa_Schicht(int schichtnr, String benutzername,Connection con) {
 		Statement stmt = null;
 		ResultSet rs = null;
+		
+		//Ein Integer darf nicht in Anführungszeichen stehen, sonst wird er als String erkannt!
 		String sqlQuery = "select schichtnr, benutzername from Ma_Schicht where schichtnr = '"+schichtnr+"' and benutzername= '"+benutzername+"'";
 
 		try {
@@ -121,7 +139,7 @@ import data.Ma_Schicht;
 		}
 	}
 
-
+	
 	/**
 	 * @author Anes Preljevic
 	 * @info Auslesen der Mitarbeiter mit den zugehörigen Schichten aus der Datenbank und hinzufügen in eine Liste, welche den Ausgabewert darstellt 
@@ -134,6 +152,7 @@ import data.Ma_Schicht;
 		String sqlStatement = "SELECT Benutzername, Schichtnr FROM Ma_Schicht";
 
 		try {
+			//Die zusätzlichen Anweisungen sind zwar nicht verkehrt, du nutzt die zusätzlichen Möglichkeiten aber nicht, also können die auch weg --> ist verwirrend
 			stmt = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
 			rs = stmt.executeQuery(sqlStatement);
 			
@@ -155,8 +174,13 @@ import data.Ma_Schicht;
 			System.err.println("Methode getMa_Schicht SQL-Fehler: " + sql.getMessage());
 			return null;
 		}
+		//Finally-Block fehlt!
 	}
 
+	
+	//Finde die beiden unteren Methoden an sich nicht unbedingt sinnvoll, besser wäre LinkedList<Mitarbeiter> getMitarbeiterausderSchicht und LinkedList<Schicht> getSchichtenEinesMitarbeiters --> Im Moment kommt man mit getAlleMa_Schicht und zwei for-Schleifen direkt zu LinkedList<Mitarbeiter>/LinkedList<Schicht> und mit der Schicht-Beziehung brauche ich trotzdem eine for-Schleife um an die Mitarbeiter/Schichten zu kommen.
+	
+	
 	/**
 	* @author Anes Preljevic
 	* @info Auslesen der Mitarbeiter die in eine Schicht gehören mit der übergebenen Schichtnr aus der Datenbank,
@@ -171,6 +195,7 @@ import data.Ma_Schicht;
 		String sqlStatement = "SELECT Benutzername, Schichtnr from Ma_Schicht WHERE schichtnr="+schichtnr;
 
 		try {
+			//siehe vorherige Methode
 			stmt = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
 			rs = stmt.executeQuery(sqlStatement);
 
@@ -191,7 +216,10 @@ import data.Ma_Schicht;
 			System.err.println("Methode getMitarbeiterausderSchicht SQL-Fehler: " + sql.getMessage());
 			return null;
 		}
+		//Finally-Block fehlt!
 	}
+	
+	
 	/**
 	* @author Anes Preljevic
 	* @info Auslesen der Mitarbeiter die in eine Schicht gehören mit der übergebenen Schichtnr aus der Datenbank,
@@ -206,6 +234,7 @@ import data.Ma_Schicht;
 		String sqlStatement = "SELECT Benutzername, Schichtnr from Ma_Schicht WHERE benutzername='"+benutzername+"'";
 
 		try {
+			//siehe vorherige Methode
 			stmt = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
 			rs = stmt.executeQuery(sqlStatement);
 
@@ -219,7 +248,7 @@ import data.Ma_Schicht;
 			}
 
 			rs.close();
-			stmt.close();
+			stmt.close(); 
 
 			return ma_schichtList;
 
@@ -227,6 +256,7 @@ import data.Ma_Schicht;
 			System.err.println("Methode getSchichteneinesMitarbeiters SQL-Fehler: " + sql.getMessage());
 			return null;
 		}
+		//Finally-Block fehlt!
 	}
 	/**
 	 * @author Anes Preljevic
@@ -239,9 +269,12 @@ import data.Ma_Schicht;
 		else{
 		Statement stmt = null;
 		ResultSet rs = null;
+		
+		//siehe oben, eine SchichtNr ist ein Integer!
 		String sqlStatement = "DELETE from Ma_Schicht where schichtnr = '"+schichtnr+"' and benutzername= '"+benutzername+"'";
 		
 		try {
+			//Das AutoCommit kann aktiviert bleiben, es ist nur eine DML-Anweisung!
 			con.setAutoCommit(false);
 			stmt = con.createStatement();
 			stmt.execute(sqlStatement);
@@ -283,6 +316,7 @@ import data.Ma_Schicht;
 		String sqlStatement = "DELETE FROM Ma_Schicht WHERE Schichtnr = "+schichtnr;
 
 		try {
+			//siehe obere Methode!
 			con.setAutoCommit(false);
 			stmt = con.createStatement();
 			stmt.execute(sqlStatement);
