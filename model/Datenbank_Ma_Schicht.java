@@ -46,7 +46,7 @@ import data.Ma_Schicht;
 			schichtnr = ma_schicht.getSchichtnr();
 			benutzername = ma_schicht.getBenutzername();		
 			
-			//Nicht notwendig, es wird ja nur ein Datensatz eingefügt
+			//Nicht notwendig, es wird ja nur ein Datensatz eingefügt. Falls diese Methode in einer for-Schleife innerhalb einer anderen Methode aufgerufen wird, ändert ihr damit auch die AutoCommit-Einstellung der übergeordneten Methode(Alles über eine Connection).
 			con.setAutoCommit(false);
 
 			if (checkMa_Schicht(schichtnr, benutzername,con)) {

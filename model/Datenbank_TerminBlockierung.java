@@ -12,6 +12,13 @@ import java.util.LinkedList;
 
 import data.TerminBlockierung;
 
+//Klassenbeschreibung fehlt!
+
+//Kommentare innerhalb der Methoden fehlen!
+
+//Finally Blöcke fehlen oft!
+
+
 class Datenbank_TerminBlockierung {
 
 	/**
@@ -25,8 +32,11 @@ class Datenbank_TerminBlockierung {
 		String sqlStatement;
 		sqlStatement = "insert into Terminblockierung (tblocknr, benutzername, bbez, anfangzeitraum, endezeitraum, anfanguhrzeit, endeuhrzeit, grund) values(?, ?, ?, ?, ?, ?, ?, ?)";
 		PreparedStatement pstmt = null;
+		
+		//Siehe vorherige Klassen
 		Statement checkInput = null;
 		ResultSet checkRS = null;
+		
 		int tBlockNr = 0;
 		String benutzername = null;
 		String bbez = null;
@@ -50,6 +60,7 @@ class Datenbank_TerminBlockierung {
 			endeuhrzeit = terminBlockierung.getEndeuhrzeit();
 			grund = terminBlockierung.getGrund();
 			
+			//Siehe vorherige Klassen!
 			con.setAutoCommit(false);
 
 			if (checkTerminBlockierung(tBlockNr,con)) {
@@ -58,6 +69,8 @@ class Datenbank_TerminBlockierung {
 			else{
 				//Es wurde sichergestellt, dass die PK- und FK-Check-Constraints nicht verletzt werden --> Der Datensatz kann erzeugt werden
 			
+				//Nein, siehe vorherige Klassen!
+				
 				pstmt.setInt(1, tBlockNr);
 				pstmt.setString(2, benutzername);
 				pstmt.setString(3, bbez);
@@ -96,6 +109,7 @@ class Datenbank_TerminBlockierung {
 			//Schließen der offen gebliebenen Statements & ResultSets
 			try {
 				
+				//Siehe vorherige Klassen!
 				if(checkRS != null){
 					checkRS.close();
 				}				
@@ -162,7 +176,11 @@ class Datenbank_TerminBlockierung {
 			stmt = con.createStatement();
 			rs = stmt.executeQuery(sqlStatement);
 
+			//LinkedList<TerminBlockierung>()!
 			LinkedList<TerminBlockierung> terminBlockierungList = new LinkedList<>();
+			
+			//Eine Information über das Datum des Termins ist überflüssig, da wir das mit keiner anderen Sache abgleichen können, der Abgleich über Woche + Tag reicht
+			
 			//DateFormat df = new SimpleDateFormat("DD-MM-YYYY");
 			while (rs.next()) {
 				//Date anfangzeitraumsql = rs.getDate("Anfangzeitraum"); 
@@ -184,6 +202,8 @@ class Datenbank_TerminBlockierung {
 			System.err.println("Methode getTerminBlockierungen SQL-Fehler: " + sql.getMessage());
 			return null;
 		}
+		
+		//Finally-Block fehlt!
 	}
 	/**
 	 * @author Anes Preljevic
@@ -197,6 +217,7 @@ class Datenbank_TerminBlockierung {
 		ResultSet rs = null;
 		String sqlQuery = "DELETE FROM TerminBlockierung WHERE Tblocknr = "+tblocknr;
 		tblock_tag.deleteTblock_Tag(tblocknr,con);
+			
 		try {
 			stmt = con.createStatement();
 			stmt.execute(sqlQuery);
@@ -238,5 +259,7 @@ class Datenbank_TerminBlockierung {
 					+ sql.getMessage());
 			return -1;
 		}
+		
+		//finally Block fehlt!
 	}
 }

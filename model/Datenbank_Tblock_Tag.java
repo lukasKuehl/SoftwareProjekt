@@ -11,6 +11,12 @@ import data.Tag;
 import data.TerminBlockierung;
 import data.Tblock_Tag;
 
+//Klassenbeschreibung fehlt!
+
+//Kommentare innerhalb der Methoden fehlen!
+
+//Finally Blöcke fehlen oft!
+
 class Datenbank_Tblock_Tag {
 
 	
@@ -25,8 +31,11 @@ class Datenbank_Tblock_Tag {
 		String sqlStatement;
 		sqlStatement = "insert into Tblock_Tag (tblocknr, tbez, wpnr) values(?, ?, ?)";
 		PreparedStatement pstmt = null;
+		
+		//Siehe vorherige Klassen!
 		Statement checkInput = null;
 		ResultSet checkRS = null;
+		
 		int tBlockNr = 0;
 		String tbez = null;
 		int wpnr = 0;
@@ -39,9 +48,12 @@ class Datenbank_Tblock_Tag {
 			tBlockNr = tblock_tag.getTblocknr();
 			tbez = tblock_tag.getTbez();
 			wpnr = tblock_tag.getTblocknr();
-			
+
+			//Siehe vorherige Klassen
 			con.setAutoCommit(false);
 
+			//Die beiden Check-Methoden können auch in eins gemacht werden oder sollten zumindestens eindeutiger benannt werden --> Abfrage der selben Tabelle
+			
 			if (checkTblock_TagTB(tBlockNr,con)) {
 				System.out.println("Keine Beziehung von Terminblockierung zu Tagen!");
 			}
@@ -51,6 +63,8 @@ class Datenbank_Tblock_Tag {
 			else{
 				//Es wurde sichergestellt, dass die PK- und FK-Check-Constraints nicht verletzt werden --> Der Datensatz kann erzeugt werden
 			
+				//Nein, siehe vorherige Klassen!
+				
 				pstmt.setInt(1, tBlockNr);
 				pstmt.setString(2, tbez);
 				pstmt.setInt(3, wpnr);
@@ -82,6 +96,7 @@ class Datenbank_Tblock_Tag {
 			//Schließen der offen gebliebenen Statements & ResultSets
 			try {
 				
+				//Siehe vorherige Klassen!
 				if(checkRS != null){
 					checkRS.close();
 				}				
@@ -173,6 +188,7 @@ class Datenbank_Tblock_Tag {
 		Statement stmt = null;
 		ResultSet rs = null;
 
+		//Siehe vorherige Klassen
 		String sqlStatement = "select Tblocknr, Tbez, Wpnr from Tblock_Tag";
 
 		try {
@@ -184,7 +200,9 @@ class Datenbank_Tblock_Tag {
 			while (rs.next()) {
 				Tblock_Tag tbt = new Tblock_Tag(rs.getInt("Tblocknr"),rs.getString("Tbez"),rs.getInt("Wpnr"));
 
+				//Anweisung, dass sich in der LinkedList nur TerminBlockierungen befinden dürfen fehlt!
 				LinkedList<TerminBlockierung> tbtbt=new LinkedList<>();
+				
 				for (TerminBlockierung tb : terminList) {
 					if (tb.getTblocknr() == tbt.getTblocknr()) {
 						tbtbt.add(tb);
@@ -204,6 +222,9 @@ class Datenbank_Tblock_Tag {
 			System.err.println("Methode getAlleTblock_Tag SQL-Fehler: " + sql.getMessage());
 			return null;
 		}
+		
+		//finally Block fehlt!
+		
 	}
 	/**
 	 * @author Anes Preljevic
@@ -229,7 +250,9 @@ class Datenbank_Tblock_Tag {
 				Tblock_Tag tbt = new Tblock_Tag(rs.getInt("Tblocknr"), rs.getString("Tbez"),rs.getInt("Wpnr"));
 
 
+				//Selber Fehler wie in der vorherigen Methode
 				LinkedList<TerminBlockierung> tbtbt=new LinkedList<>();
+
 				for (TerminBlockierung tb : terminList) {
 					if (tb.getTblocknr() == tbt.getTblocknr()) {
 						tbtbt.add(tb);
@@ -246,6 +269,8 @@ class Datenbank_Tblock_Tag {
 			System.err.println("Methode getTblock_TagTB SQL-Fehler: " + sql.getMessage());
 			return null;
 		}
+			//Finally-Block fehlt!
+			
 		}
 	}
 	/**
@@ -271,6 +296,7 @@ class Datenbank_Tblock_Tag {
 				rs.next();
 				Tblock_Tag tbt = new Tblock_Tag(rs.getInt("Tblocknr"), rs.getString("Tbez"),rs.getInt("Wpnr"));
 
+				//siehe oben
 				LinkedList<TerminBlockierung> tbtbt=new LinkedList<>();
 				for (TerminBlockierung tb : terminList) {
 					if (tb.getTblocknr() == tbt.getTblocknr()) {
@@ -288,6 +314,8 @@ class Datenbank_Tblock_Tag {
 			System.err.println("Methode getTblock_TagT SQL-Fehler: " + sql.getMessage());
 			return null;
 		}
+		//finally Block fehlt
+		
 		}
 	}
 

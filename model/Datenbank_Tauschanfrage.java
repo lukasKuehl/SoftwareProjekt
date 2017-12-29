@@ -12,6 +12,12 @@ import data.Schicht;
 import data.Tauschanfrage;
 import data.Tblock_Tag;
 
+//Klassenbeschreibung fehlt!
+
+//Kommentare innerhalb der Methoden fehlen!
+
+//Finally_Blöcke fehlen oft!
+
 class Datenbank_Tauschanfrage {
 
 
@@ -28,14 +34,17 @@ class Datenbank_Tauschanfrage {
 		String sqlStatement;
 		sqlStatement = "insert into Tauschanfrage(empfänger, sender, bestätigungsstatus,schichtnrsender, schichtnrempfänger, tauschnr) values(?, ?, ?, ?, ?, ?)";
 		PreparedStatement pstmt = null;
+		
+		//Siehe vorherige Klassen!
 		Statement checkInput = null;
 		ResultSet checkRS = null;
+		
 		boolean bestaetigestatus = false;
-		
-		
+				
 		try {
 			pstmt = con.prepareStatement(sqlStatement);
 			
+			//Siehe vorherige Klassen
 			con.setAutoCommit(false);
 
 			if (checkTauschanfrage(tauschNr, con)) {
@@ -44,6 +53,8 @@ class Datenbank_Tauschanfrage {
 			else{
 				//Es wurde sichergestellt, dass die PK- und FK-Check-Constraints nicht verletzt werden --> Der Datensatz kann erzeugt werden
 			
+				//Nein, siehe vorherige Klassen!
+				
 				pstmt.setString(1, empfaengerName);
 				pstmt.setString(2, senderName);
 				pstmt.setBoolean(3,bestaetigestatus);
@@ -78,6 +89,7 @@ class Datenbank_Tauschanfrage {
 			//Schließen der offen gebliebenen Statements & ResultSets
 			try {
 				
+				//Siehe vorherige Klassen
 				if(checkRS != null){
 					checkRS.close();
 				}				
@@ -144,6 +156,7 @@ class Datenbank_Tauschanfrage {
 
 			pstmt = con.prepareStatement(sqlStatement);
 
+			//Siehe vorherige Klassen
 			con.setAutoCommit(false);
 			pstmt.setBoolean(1, bestätigungsstatus);
 			pstmt.executeUpdate();
@@ -154,7 +167,7 @@ class Datenbank_Tauschanfrage {
 		} catch (SQLException sql) {
 			System.err.println("Methode updateTauschanfrage SQL-Fehler: " + sql.getMessage());
 			try {
-				con.rollback();
+				con.rollback();			
 				con.setAutoCommit(true);
 			} catch (SQLException sqlRollback) {
 				System.err.println("Methode updateTauschanfrage " + "- Rollback -  SQL-Fehler: " + sqlRollback.getMessage());
@@ -182,7 +195,10 @@ class Datenbank_Tauschanfrage {
 		try {
 
 			stmt = con.createStatement();
+			
+			//Siehe vorherige Klassen			
 			con.setAutoCommit(false);
+			
 			stmt.executeUpdate(sqlStatement);
 			con.commit();
 
@@ -216,12 +232,11 @@ class Datenbank_Tauschanfrage {
 		LinkedList<Schicht> schichtList = schicht.getSchichten(con);
 		Datenbank_Mitarbeiter mitarbeiter = new Datenbank_Mitarbeiter();
 		LinkedList<Mitarbeiter> mitarbeiterList = mitarbeiter.getAlleMitarbeiter(con);
-		
-		
-		
+			
 		Statement stmt = null;
 		ResultSet rs = null;
 
+		//Siehe vorherige Klassen
 		String sqlStatement = "select Empfänger, Sender, Bestätigungsstatus,"
 				+ " Schichtnrsender, Schichtnrempfänger, Tauschnr from Tauschanfrage";
 
@@ -234,7 +249,10 @@ class Datenbank_Tauschanfrage {
 			while (rs.next()) {
 				Tauschanfrage tanf = new Tauschanfrage(rs.getString("Empfänger"),rs.getString("Sender"), rs.getBoolean("Bestätigungsstatus")
 						,rs.getInt("Schichtnrsender"), rs.getInt("Schichtnrempfänger"), rs.getInt("Tauschnr"));
-				LinkedList<Mitarbeiter> senderList = new LinkedList<>();
+				
+				//Es kann doch nur einen Mitarbeiter als Sender geben, weil nach dem PK gesucht wird --> Liste hat nur einen Eintrag --> Variable?
+				LinkedList<Mitarbeiter> senderList = new LinkedList<>();			
+				
 				for (Mitarbeiter ma : mitarbeiterList) {
 					if (ma.getBenutzername().equals(tanf.getSender())) {
 						senderList.add(ma);	
@@ -242,6 +260,7 @@ class Datenbank_Tauschanfrage {
 				}
 				tanf.setLinkedListSender(senderList);
 				
+				//Siehe oben
 				LinkedList<Mitarbeiter> empfängerList = new LinkedList<>();
 				for (Mitarbeiter ma : mitarbeiterList) {
 					if (ma.getBenutzername().equals(tanf.getEmpfänger())) {
@@ -250,6 +269,8 @@ class Datenbank_Tauschanfrage {
 				}
 				tanf.setLinkedListEmpfänger(empfängerList);
 				
+				//Siehe oben
+				
 				LinkedList<Schicht> schichtnrSenderList = new LinkedList<>();
 				for (Schicht sch : schichtList) {
 					if (sch.getSchichtnr()==tanf.getSchichtnrsender()) {
@@ -257,6 +278,8 @@ class Datenbank_Tauschanfrage {
 					}
 				}
 				tanf.setLinkedListSchichtensender(schichtnrSenderList);
+				
+				//Siehe oben
 				
 				LinkedList<Schicht> schichtnrEmpfängerList = new LinkedList<>();
 				for (Schicht sch : schichtList) {
@@ -295,6 +318,7 @@ class Datenbank_Tauschanfrage {
 		Statement stmt = null;
 		ResultSet rs = null;
 
+		//siehe vorherige Klassen
 		String sqlStatement = "select Empfänger, Sender, Bestätigungsstatus,"
 				+ " Schichtnrsender, Schichtnrempfänger, Tauschnr from Tauschanfrage WHERE tauschnr="+tauschnr;
 
@@ -308,6 +332,7 @@ class Datenbank_Tauschanfrage {
 				Tauschanfrage tanf = new Tauschanfrage(rs.getString("Empfänger"),rs.getString("Sender"), rs.getBoolean("Bestätigungsstatus")
 						,rs.getInt("Schichtnrsender"), rs.getInt("Schichtnrempfänger"), rs.getInt("Tauschnr"));
 
+				//Ohne Kommentare nicht wirklich nachvollziehbar, keine Überprüfung nach doppelten Einträgen, auskommentierte Befehle entfernen
 				for (Mitarbeiter ma : mitarbeiterList) {
 					
 					if (ma.getBenutzername().equals(tanf.getSender())) {
@@ -318,6 +343,8 @@ class Datenbank_Tauschanfrage {
 						
 					}
 				}
+				
+				//siehe oben
 				for (Mitarbeiter ma : mitarbeiterList) {
 					if (ma.getBenutzername().equals(tanf.getEmpfänger())) {
 						
@@ -326,7 +353,10 @@ class Datenbank_Tauschanfrage {
 						tanf.setLinkedListEmpfänger(empfängerList);
 					}
 				}
-				
+		
+				//Der Bezug geht mittlerweile komplett verloren, jede For-Schleife sollte am besten einen Kommentar haben, warum du das machst, verstehe bei der unteren hier zum Beispiel absolut nicht, wozu die gut sein soll. 
+				//Kann gut sein, dass man dadurch nützliche Informationen bekommt, so ist es nur komplett unübersichtlich.
+								
 				for (Schicht sch : schichtList) {
 					LinkedList<Schicht> schichtnrSenderList = new LinkedList<>();
 					if (sch.getSchichtnr() == tanf.getSchichtnrsender()) {
@@ -350,6 +380,8 @@ class Datenbank_Tauschanfrage {
 			System.err.println("Methode getTauschanfrage SQL-Fehler: " + sql.getMessage());
 			return null;
 		}
+		
+		//Finally Block fehlt
 	}
 	/**
 	 * @Anes Preljevic
@@ -357,6 +389,8 @@ class Datenbank_Tauschanfrage {
 	 */
 	protected boolean deleteTauschanfrage(int tauschnr, Connection con) {
 	if (checkTauschanfrage(tauschnr,con)==false){
+		//Siehe vorherige Klassen, keine Tauschanfrage da --> return true
+		//Tauschanfrage kann nicht gelöscht werden --> return false
 		System.out.println("Tauschanfrage kann nicht gelöscht werden, da nicht vorhanden");	
 		return false;
 		
@@ -367,7 +401,9 @@ class Datenbank_Tauschanfrage {
 		String sqlStatement = "DELETE FROM Tauschanfrage WHERE Tauschnr= "+tauschnr;
 
 		try {
+			//Siehe vorherige Klassen
 			con.setAutoCommit(false);
+			
 			stmt = con.createStatement();
 			stmt.execute(sqlStatement);
 			
@@ -425,5 +461,7 @@ class Datenbank_Tauschanfrage {
 					+ sql.getMessage());
 			return -1;
 		}
+		
+		//Finally-Block fehlt
 	}
 }
