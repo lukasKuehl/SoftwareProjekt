@@ -82,8 +82,8 @@ class SchichtStrg {
 	 * @author Lukas Kühl
 	 * @info Methode zur Ermittlung aller verfügbaren Mitarbeiter für eine Schicht des Wochenplanes.
 	 */
-	protected LinkedList<String> getVerfügbareMitarbeiter(int schichtNr){
-		LinkedList<String> verfuegbareMitarbeiter = new LinkedList<String>();
+	protected ArrayList<String> getVerfügbareMitarbeiter(int schichtNr){
+		ArrayList<String> verfuegbareMitarbeiter = new ArrayList<String>();
 		
 		LinkedList<Mitarbeiter> alleMitarbeiter = this.myModel.getAlleMitarbeiter();
 				
@@ -209,11 +209,7 @@ class SchichtStrg {
 		}	
 		
 		return getSchichteinteilungView(mitarbeiterTagesSchichten);	
-	}
-	
-	
-	
-	
+	}	
 	
 	protected ArrayList<String> getAndereMitarbeiterSchichten(String wpbez, String username, int schichtNr){
 		LinkedList<Schicht> uebergabe = new LinkedList<Schicht>();

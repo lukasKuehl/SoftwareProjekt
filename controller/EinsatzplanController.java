@@ -364,6 +364,21 @@ public class EinsatzplanController {
 		return rueckgabe;
 	}
 	
+	public ArrayList<String> getVerfuegbareMitarbeiter(int schichtNr){
+		ArrayList<String> rueckgabe = null;
+		
+		try{
+			rueckgabe = this.schichtSteuerung.getVerfügbareMitarbeiter(schichtNr);
+		}catch(Exception e){
+			System.out.println("Fehler innerhalb des Controllers:");
+			System.out.println("Fehler beim Aufruf der Methode getTauschanfragen:");
+			e.printStackTrace();			
+		}	
+		
+		return rueckgabe;
+	}
+	
+	
 	protected Einsatzplanview getView(){
 		return this.view;		
 	}	
