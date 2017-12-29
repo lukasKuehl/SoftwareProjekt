@@ -59,11 +59,11 @@ public class TerminLoeschenView extends JFrame {
 		contentPane.add(lblTerninLoeschen);
 
 		listTermin = new JList<Object>();
-		tl = myView.getMitarbeiterTermine(myView.getUsername());
+//		tl = myController.getMitarbeiterTermine(myView.getUsername());
 		model = new DefaultListModel<Object>();
-		for (String m : tl) {
-			model.addElement(m);
-		}
+//		for (String m : tl) {
+//			model.addElement(m);
+//		}
 		listTermin.setModel(model);
 		listTermin.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		listTermin.setBounds(65, 145, 282, 355);
@@ -82,7 +82,7 @@ public class TerminLoeschenView extends JFrame {
 
 		/**
 		 * @author Ramona Gerke
-		 * @Info Action Performed Methode
+		 * @Info Action Performed Methode die nach dem bestätigen des Buttons "bestätigen", das ausgewählte Element anhand der Tauschanfrage Nr löscht.
 		 */
 		// ACTION PERFROMED Methode	
 		btnBesttigen.addActionListener(new ActionListener() {

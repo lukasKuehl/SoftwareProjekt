@@ -34,9 +34,9 @@ import model.Einsatzplanmodel;
 public class TauschanfrageErstellenView extends JFrame {
 	private JPanel contentPane = null;
 	private JLabel lblTauschanfrageStellen, labelTagAndererMA, lblWochenplanAuswhlen, lblMitWemWollen,
-			lblSchichtAuswhlen, lblTagAuswhlen, labelSchichtAndererMA = null;
-	private JComboBox<String> cmbBoxWP, cmbBoxTag, cmbBoxSchicht, comboBoxTagAndererMA, comboBoxSchichtAndererMA = null;
-	private ArrayList<String> wp, tagMa, SchichtAndererMa, TagAndererMa, SchichtMa = null;
+			lblSchichtAuswhlen, lblTagAuswhlen, labelSchichtAndererMA , lblMitarbeiter= null;
+	private JComboBox<String> cmbBoxWP, cmbBoxTag, cmbBoxSchicht, comboBoxTagAndererMA, comboBoxSchichtAndererMA, comboBoxEmpfaengerName= null;
+	private ArrayList<String> wp, tagMa, SchichtAndererMa, TagAndererMa, SchichtMa, empfaenger = null;
 	private JButton btnErstellen = null;
 	private EinsatzplanController myController = null;
 	private Einsatzplanview myView = null;
@@ -44,16 +44,19 @@ public class TauschanfrageErstellenView extends JFrame {
 	private Schicht mySchicht = null;
 	private int senderSchichtnr = 0;
 	String temp[] = new String[14];
-	
+	private JComboBox comboBox;
+
 	/**
-	 * @author Ramona Gerke	
-	 * @Info Konstruktor der  View TauschanfrageErstellenView. Beinhaltet die gesamten Swing Komponenten. 
+	 * @author Ramona Gerke
+	 * @Info Konstruktor der View TauschanfrageErstellenView. Beinhaltet die
+	 *       gesamten Swing Komponenten.
 	 */
-	
-	protected TauschanfrageErstellenView(Einsatzplanmodel myModel, Einsatzplanview myView, EinsatzplanController myController) {
-		 this.myView = myView;
-		 this.myController = myController;
-		 this.myModel = myModel;
+
+	protected TauschanfrageErstellenView(Einsatzplanmodel myModel, Einsatzplanview myView,
+			EinsatzplanController myController) {
+		this.myView = myView;
+		this.myController = myController;
+		this.myModel = myModel;
 		setTitle("Tauschanfrage erstellen");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -72,14 +75,15 @@ public class TauschanfrageErstellenView extends JFrame {
 
 		btnErstellen = new JButton("erstellen");
 		btnErstellen.setFont(new Font("Verdana", Font.PLAIN, 15));
-		btnErstellen.setBounds(500,500, 110, 25);
+		btnErstellen.setBounds(500, 500, 110, 25);
 		btnErstellen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-		}});
+			}
+		});
 		contentPane.add(btnErstellen);
 
 		cmbBoxWP = new JComboBox<String>();
-		 wp = myView.getWochenplaene();
+		wp = myController.getWochenplaene();
 		for (String m : wp) {
 			cmbBoxWP.addItem(m);
 		}
@@ -89,11 +93,11 @@ public class TauschanfrageErstellenView extends JFrame {
 			}
 		});
 		contentPane.add(cmbBoxWP);
-		
+
 		cmbBoxTag = new JComboBox<String>();
-		tagMa = myView.getTage(cmbBoxWP.getSelectedItem().toString());
+		tagMa = myController.getTage(cmbBoxWP.getSelectedItem().toString());
 		for (String s : tagMa) {
-		cmbBoxTag.addItem(s);
+			cmbBoxTag.addItem(s);
 		}
 		cmbBoxTag.setEnabled(false);
 		cmbBoxTag.setFont(new Font("Verdana", Font.PLAIN, 15));
@@ -105,10 +109,10 @@ public class TauschanfrageErstellenView extends JFrame {
 		contentPane.add(cmbBoxTag);
 
 		cmbBoxSchicht = new JComboBox<String>();
-		SchichtMa = myView.getMitarbeiterSchichten(cmbBoxWP.getSelectedItem().toString(), cmbBoxTag.getSelectedItem().toString(), myView.getUsername());
-		for (String v : SchichtMa) {
-		cmbBoxSchicht.addItem(v);
-		}
+		 SchichtMa =myController.getMitarbeiterSchichten(cmbBoxWP.getSelectedItem().toString(),cmbBoxTag.getSelectedItem().toString(), myView.getUsername());
+		 for (String v : SchichtMa) {
+		 cmbBoxSchicht.addItem(v);
+		 }
 		cmbBoxSchicht.setEnabled(false);
 		cmbBoxSchicht.setFont(new Font("Verdana", Font.PLAIN, 15));
 		cmbBoxSchicht.addActionListener(new ActionListener() {
@@ -117,7 +121,7 @@ public class TauschanfrageErstellenView extends JFrame {
 		});
 		cmbBoxSchicht.setBounds(249, 248, 136, 26);
 		contentPane.add(cmbBoxSchicht);
-		
+
 		lblWochenplanAuswhlen = new JLabel("Wochenplan auswählen");
 		lblWochenplanAuswhlen.setVerticalAlignment(SwingConstants.BOTTOM);
 		lblWochenplanAuswhlen.setFont(new Font("Verdana", Font.PLAIN, 15));
@@ -138,7 +142,7 @@ public class TauschanfrageErstellenView extends JFrame {
 		lblSchichtAuswhlen.setFont(new Font("Verdana", Font.PLAIN, 15));
 		lblSchichtAuswhlen.setBounds(62, 248, 136, 26);
 		contentPane.add(lblSchichtAuswhlen);
-		
+
 		lblMitWemWollen = new JLabel("Tauschdaten");
 		lblMitWemWollen.setFont(new Font("Verdana", Font.BOLD, 15));
 		lblMitWemWollen.setBounds(62, 347, 222, 14);
@@ -153,9 +157,9 @@ public class TauschanfrageErstellenView extends JFrame {
 		contentPane.add(labelTagAndererMA);
 
 		comboBoxTagAndererMA = new JComboBox<String>();
-		TagAndererMa = myView.getTage(cmbBoxWP.getSelectedItem().toString());
+		TagAndererMa = myController.getTage(cmbBoxWP.getSelectedItem().toString());
 		for (String n : TagAndererMa) {
-		comboBoxTagAndererMA.addItem(n);
+			comboBoxTagAndererMA.addItem(n);
 		}
 		comboBoxTagAndererMA.setEnabled(false);
 		comboBoxTagAndererMA.setFont(new Font("Verdana", Font.PLAIN, 15));
@@ -173,56 +177,50 @@ public class TauschanfrageErstellenView extends JFrame {
 		labelSchichtAndererMA.setBounds(62, 409, 136, 26);
 		contentPane.add(labelSchichtAndererMA);
 
-		
-		
 		comboBoxSchichtAndererMA = new JComboBox<String>();
+		ArrayList<String> al = myController.getTauschanfragen(myView.getUsername());
 		
-		ArrayList <String>al = myView.getTauschanfragen(myView.getUsername());
-		for (String m : al) {
-			m.toString();
-			m.trim();
-			temp = m.split("-");
-			String  tauschanfrageNrS = temp [0].substring(10);
-			int tauschanfrageNr =Integer.parseInt(tauschanfrageNrS);
-			String senderVorname = temp[1];
-			String senderName = temp[2];
-			String senderSchichtNr = temp[3];
-			senderSchichtnr =  Integer.parseInt(temp[3]);
-			String senderWpNr = temp[4];
-			String senderTbez = temp[5];
-			String senderAnfangsuhrzeit = temp[6];
-			String senderEnduhrzeit = temp[7];
-			String empfaengerVorname = temp[8];
-			String empfaengerName = temp[9];
-			String empfaengerSchichtNr = temp[10];
-			String empfaengerWpBez = temp[11];
-			String empfaengerTagBez = temp[12];
-			String empfaengerAnfangsuhrzeit = temp[13];
-			String emfaengerEnduhrzeit = temp[14];
-		}
+
+//		ComboBox mit den gesamten Schichten 
 		
-		
-		 myView.getAndereMitarbeiterSchichten(cmbBoxWP.getSelectedItem().toString(), cmbBoxTag.getSelectedItem().toString(), myView.getUsername(), senderSchichtnr);
-				for (String c : SchichtAndererMa) {
-					comboBoxSchichtAndererMA.addItem(c);
+//		SchichtAndererMa = myController.getSchichten(cmbBoxWP.getSelectedItem().toString(), cmbBoxTag.getSelectedItem().toString()); // Methode Get Schichten noch in den EinsatzplanController integrieren
+		for (String c : SchichtAndererMa) {
+			comboBoxSchichtAndererMA.addItem(c);
 		}
 		comboBoxSchichtAndererMA.setEnabled(false);
 		comboBoxSchichtAndererMA.setFont(new Font("Verdana", Font.PLAIN, 15));
 		comboBoxSchichtAndererMA.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-
 			}
 		});
 		comboBoxSchichtAndererMA.setBounds(249, 409, 136, 26);
 		contentPane.add(comboBoxSchichtAndererMA);
+		
+		lblMitarbeiter = new JLabel("Mitarbeiter ");
+		lblMitarbeiter.setFont(new Font("Verdana", Font.PLAIN, 15));
+		lblMitarbeiter.setBounds(62, 452, 124, 26);
+		contentPane.add(lblMitarbeiter);
+		
+		// ComboBox mit den Mitarbeitern für die Schichten
+				
+//		empfaenger = myController.getVerfügbareMitarbeiterSchicht(); // Mitarbeiter erhalten die für die ausgewählte Schicht eingeteilt sind
+//		comboBoxEmpfaengerName = new JComboBox();
+//		for (String c : empfaenger) {
+//			comboBoxEmpfaengerName.addItem(c);
+//		}
+		comboBoxEmpfaengerName.setBounds(249, 450, 136, 26);
+		comboBoxEmpfaengerName.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		contentPane.add(comboBoxEmpfaengerName);
 
-/**
- * @author Ramona Gerke
- * @Info Action Performed Methoden, die die Sichtbarkeit der ComboBoxen ändert.
- */
-		
-		
-		// ACTION PERFORMED METHODEN  
+		/**
+		 * @author Ramona Gerke
+		 * @Info Action Performed Methoden, die die Sichtbarkeit der ComboBoxen ändert.
+		 */
+
+		// ACTION PERFORMED METHODEN
 		cmbBoxWP.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (e.getSource() == cmbBoxWP) {
@@ -231,7 +229,7 @@ public class TauschanfrageErstellenView extends JFrame {
 				}
 			}
 		});
-		
+
 		cmbBoxTag.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (e.getSource() == cmbBoxTag) {
@@ -260,24 +258,34 @@ public class TauschanfrageErstellenView extends JFrame {
 			}
 		});
 		
-		btnErstellen.addActionListener(new ActionListener() {
-		public void actionPerformed(ActionEvent e) {
-			if (e.getSource() == btnErstellen) {
-				
-				String senderName = myView.getUsername();
-				int senderSchichtnr = Integer.parseInt(temp [2]);
-				String empfaengerName= temp [8];
-				int empfaengerSchichtNr= Integer.parseInt(temp [9]);
-				myView.erstelleTauschanfrage(senderName, senderSchichtnr, empfaengerName, empfaengerSchichtNr );
-				
+		comboBoxSchichtAndererMA.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (e.getSource() == comboBoxSchichtAndererMA) {
+					comboBoxEmpfaengerName.setEnabled(true);
+					lblMitarbeiter.setEnabled(true);
+
+				}
 			}
-		}});
-				
+		});
+
+		btnErstellen.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (e.getSource() == btnErstellen) {
+
+					String senderName = myView.getUsername();
+					int senderSchichtnr = Integer.parseInt(temp[2]);
+					String empfaengerName = comboBoxEmpfaengerName.getSelectedItem().toString();
+					String empfaengerSchichtNrString = comboBoxSchichtAndererMA.getSelectedItem().toString();
+					int empfaengerSchichtNr = Integer.parseInt(empfaengerSchichtNrString);
+							
+					myController.erstelleTauschanfrage(senderName, senderSchichtnr, empfaengerName,
+							empfaengerSchichtNr);
+
+				}
+			}
+		});
+
 		setVisible(true);
 
 	}
-	
-	
-	
 }
-

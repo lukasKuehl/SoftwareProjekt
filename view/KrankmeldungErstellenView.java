@@ -94,10 +94,11 @@ public class KrankmeldungErstellenView extends JFrame {
 		comboBoxMA = new JComboBox<String>();
 		ma = myModel.getAlleMitarbeiter();
 		for (Mitarbeiter m : ma) {
-			comboBoxWochenplaene.addItem(m.getBenutzername() + m.getVorname() + " " + m.getName());
+			comboBoxMA.addItem(m.getBenutzername() + m.getVorname() + " " + m.getName());
 		}
 		comboBoxMA.setBounds(150, 229, 180, 20);
 		panelKrankmeldung.add(comboBoxMA);
+		
 		txtGrund = new JTextField();
 		txtGrund.setHorizontalAlignment(SwingConstants.CENTER);
 		txtGrund.setFont(new Font("Verdana", Font.PLAIN, 14));
@@ -132,7 +133,7 @@ public class KrankmeldungErstellenView extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 			}
 		});
-		buttonBestaetigen.setBounds(500, 500, 110, 25);
+		buttonBestaetigen.setBounds(500, 500, 118, 25);
 		panelKrankmeldung.add(buttonBestaetigen);
 
 		setVisible(true);
@@ -158,7 +159,7 @@ public class KrankmeldungErstellenView extends JFrame {
 							+ comboBoxEnd.getSelectedItem().toString();
 					zeitraum.put(wpbez, zeitr);
 
-					myView.erstelleTermin(username, bez, zeitraum, grund);
+					myController.erstelleTermin(username, bez, zeitraum, grund);
 					System.exit(0);
 				}
 
