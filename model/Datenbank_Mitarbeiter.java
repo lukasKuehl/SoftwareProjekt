@@ -20,7 +20,7 @@ class Datenbank_Mitarbeiter {
 		boolean success = false;
 	
 		String sqlStatement;
-		sqlStatement = "insert into Mitarbeiter (benutzername, passwort, job, vorname, name, maxstunden, whname) values(?, ?, ?, ?, ?, ?, ?)";
+		sqlStatement = "insert into Mitarbeiter (benutzername, passwort, job, vorname, name, maxstunden, whname,email) values(?, ?, ?, ?, ?, ?, ?,?)";
 		PreparedStatement pstmt = null;
 		Statement checkInput = null;
 		ResultSet checkRS = null;
@@ -31,6 +31,7 @@ class Datenbank_Mitarbeiter {
 		String name = null;
 		int maxstunden = 0;
 		String whname = null;
+		String email = null;
 		
 		try {
 			pstmt = con.prepareStatement(sqlStatement);
@@ -43,6 +44,7 @@ class Datenbank_Mitarbeiter {
 			name = ma.getName();
 			maxstunden = ma.getMaxstunden();
 			whname = ma.getWhname();
+			email = ma.getEmail();
 			
 			// Verhindert das Commit nach jeder Anweisung. Nicht zwangsläufig notwendig bei einem einzelnen SQL-Befehl
 			con.setAutoCommit(false);
@@ -60,6 +62,7 @@ class Datenbank_Mitarbeiter {
 				pstmt.setString(5, name);
 				pstmt.setInt(6, maxstunden);
 				pstmt.setString(7, whname);
+				pstmt.setString(8, email);
 			
 				pstmt.execute();
 				con.commit();	

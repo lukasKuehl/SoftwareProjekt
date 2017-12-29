@@ -836,6 +836,24 @@ public class Einsatzplanmodel implements Observable {
 		}	
 		notifyObservers();
 	}
+public boolean addMitarbeiter(Mitarbeiter mitarbeiter){
+		
+		boolean sucess = false;
+		try{
+			this.dataMitarbeiter.addMitarbeiter(mitarbeiter,con);
+			
+			sucess = true;
+			
+		}catch(Exception e){
+			System.out.println("Fehler innerhalb des Modells:");
+			System.out.println("Fehler beim Aufruf der Methode addMitarbeiter:");
+			e.printStackTrace();	
+			sucess = false;
+		}	
+		notifyObservers();
+		return sucess;
+		
+	}
 	public void wechselBenutzerrolle(String benutzername) {
 		try{
 			this.dataMitarbeiter.wechselBenutzerrolle(benutzername,con);

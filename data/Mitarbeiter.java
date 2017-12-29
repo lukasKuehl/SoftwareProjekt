@@ -7,7 +7,7 @@ public class Mitarbeiter {
 	private String vorname=null;
 	private String name=null;
 	private int maxstunden=0;
-	private String whname=null;
+	private String whname = null;
 	private String email=null;
 	
 	/**
@@ -15,14 +15,14 @@ public class Mitarbeiter {
 	 * @info Erzeugen eines Objektes vom Typ Mitarbeiter und 
 	 * Wertzuweisung der Instanzvariablen. Getter/Setter für alle Variablen.
 	 */
-	public Mitarbeiter(String benutzername, String passwort, String job, String vorname, String name, int maxstunden, String Whname, String email){
+	public Mitarbeiter(String benutzername, String passwort, String job, String vorname, String name, int maxstunden, String whname, String email){
 		this.benutzername = benutzername;
 		this.passwort = passwort;
 		this.job = job;
 		this.vorname = vorname;
 		this.name= name;
 		this.maxstunden=maxstunden;
-		this.whname= whname;
+		this.whname = whname;
 		this.email=email;
 	}
 
