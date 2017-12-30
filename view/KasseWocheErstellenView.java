@@ -312,7 +312,7 @@ public class KasseWocheErstellenView extends JFrame {
 		getContentPane().add(lblFehlermeldung);
 		
 		// Farbe rot ändern, Position anpassen
-		//Geht über HTML(JLabel.setText("<html> "Fehlermeldungstext" : <font color='red'>red</font></html>"))
+		//Geht über HTML(JLabel.setText("<html> Fehlermeldung: <font color='red'>Hier den Fehlermeldungstext rein</font></html>"))
 				
 		//siehe vorherige Klassen!
 		cbExtraKassen = new JComboBox();

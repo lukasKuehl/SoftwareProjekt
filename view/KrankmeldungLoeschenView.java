@@ -117,6 +117,9 @@ public class KrankmeldungLoeschenView extends JFrame {
 									JOptionPane.ERROR_MESSAGE);
 						} else {
 							try {
+								
+								//siehe TauschanfrageLoeschenView() IndexOutOfBound!
+								
 								int tblocknr = 0;
 								String temp[] = new String[5];
 								kl = myController.getAlleTermine(myView.getUsername());

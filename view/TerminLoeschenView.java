@@ -25,17 +25,26 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 
+//Klassenbeschreibung fehlt!
+
+
+//Hilfsklassen sind nicht public!
 public class TerminLoeschenView extends JFrame {
 
 	private JPanel contentPane, panelTermin = null;
 	private JLabel lblTerninLoeschen, lblTerminAuswaehlen = null;
+	
+	//Siehe vorherige Klassen!
 	private JList<Object> listTermin = null;
+	
 	private String username = null;
 	private DefaultListModel<Object> model = null;
 	private ArrayList<String> tl = null;
 	private Einsatzplanmodel myModel = null;
 	private Einsatzplanview myView = null;
 	private EinsatzplanController myController = null;
+	
+	//Umlaut fehlt!
 	private JButton btnBesttigen = null;
 
 	protected TerminLoeschenView(Einsatzplanview myView, Einsatzplanmodel myModel, EinsatzplanController myController) {
@@ -58,6 +67,7 @@ public class TerminLoeschenView extends JFrame {
 		lblTerninLoeschen.setBounds(60, 83, 199, 26);
 		contentPane.add(lblTerninLoeschen);
 
+		//Siehe oben, dann sollte die Zuweisung auch klappen
 		listTermin = new JList<Object>();
 //		tl = myController.getMitarbeiterTermine(myView.getUsername());
 		model = new DefaultListModel<Object>();
@@ -75,7 +85,7 @@ public class TerminLoeschenView extends JFrame {
 		lblTerminAuswaehlen.setBounds(62, 120, 152, 14);
 		contentPane.add(lblTerminAuswaehlen);
 
-		btnBesttigen = new JButton("best‰tigen");
+		btnBesttigen = new JButton("Best‰tigen");
 		btnBesttigen.setFont(new Font("Verdana", Font.PLAIN, 15));
 		btnBesttigen.setBounds(500,500,110,25);
 		contentPane.add(btnBesttigen);
@@ -114,6 +124,9 @@ public class TerminLoeschenView extends JFrame {
 						}
 					}
 				} else {
+					//Andere Termine lˆschen? --> Fenster nicht schlieﬂen
+					
+					//Siehe vorherige Klassen!
 					System.exit(0);
 				}
 			}

@@ -15,6 +15,15 @@ import java.text.*;
 import java.util.*;
 import model.Einsatzplanmodel;
 
+//Klassenbeschreibung fehlt!
+
+//Die actionPerformed Methode vom btnErstellen stimmt nicht mit den Controller-Anforderungen überein!
+
+//Kommentare innerhalb der Methoden fehlen!
+
+//Autoren der einzelnen Methoden fehlen!
+
+//Hilfsklassen sind nicht public!
 public class TerminErstellenView extends JFrame {
 
 	/** @ author Ramona Gerke
@@ -64,6 +73,7 @@ public class TerminErstellenView extends JFrame {
 		labelTerminErstellen.setFont(new Font("Verdana", Font.PLAIN, 22));
 		panelTermin.add(labelTerminErstellen);
 
+		//Solltest du erklären können, falls dich jemand danach fragt!
 		try {
 			txtFldUhrzeitTerminV = new JFormattedTextField(new MaskFormatter("##"));
 		} catch (ParseException eUhrzeitTerminV) {
@@ -77,6 +87,7 @@ public class TerminErstellenView extends JFrame {
 		txtFldUhrzeitTerminV.setColumns(10);
 		panelTermin.add(txtFldUhrzeitTerminV);
 
+		//siehe oben!
 		try {
 			txtFldUhrzeitTerminB = new JFormattedTextField(new MaskFormatter("##"));
 		} catch (ParseException eUhrzeitTerminB) {
@@ -94,8 +105,7 @@ public class TerminErstellenView extends JFrame {
 		comboBoxTerminGrund.setBackground(Color.WHITE);
 		comboBoxTerminGrund.setBounds(255, 264, 157, 20);
 		comboBoxTerminGrund.setFont(new Font("Verdana", Font.PLAIN, 14));
-		comboBoxTerminGrund
-				.setModel(new DefaultComboBoxModel<String>(new String[] { "privater Termin", "Krankheit", "Urlaub" }));
+		comboBoxTerminGrund.setModel(new DefaultComboBoxModel<String>(new String[] { "privater Termin", "Krankheit", "Urlaub" }));
 		panelTermin.add(comboBoxTerminGrund);
 
 		lblGrund = new JLabel("Bitte tragen Sie hier den Grund ein:");
@@ -130,12 +140,12 @@ public class TerminErstellenView extends JFrame {
 		lblVon.setBounds(64, 267, 46, 14);
 		panelTermin.add(lblVon);
 
-		// try und catch Block der bei einer Umwandlung der Daten eintrifft
+		// try und catch Block, falls bei der Umwandlung der Eingaben ein Fehler auftritt
 		try {
 			txtFldUhrzeitBisA = new JFormattedTextField(new MaskFormatter("##"));
 		} catch (ParseException eUhrzeitBisB) {
 			JOptionPane.showConfirmDialog(null,
-					"Die Eingabe konnte nicht gewandelt werden. Bitte überprüfen Sie die Eingaben!! - TerminErstellen - txtFldUhrzeitBisA"
+					"Die Eingabe konnte nicht umgewandelt werden. Bitte überprüfen Sie die Eingaben!! - TerminErstellen - txtFldUhrzeitBisA"
 							+ eUhrzeitBisB);
 		}
 		txtFldUhrzeitBisA.setFont(new Font("Verdana", Font.PLAIN, 14));
@@ -227,11 +237,13 @@ public class TerminErstellenView extends JFrame {
 		chckbxGanztig.setSelected(false);
 		panelTermin.add(chckbxGanztig);
 
-		btnErstellen = new JButton("erstellen");
+		btnErstellen = new JButton("Erstellen");
 		btnErstellen.setFont(new Font("Verdana", Font.PLAIN, 15));
 		btnErstellen.setBounds(500, 500, 110, 25);
 		btnErstellen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				//Siehe vorherige Klassen (leerer ActionListener)
+				
 			}
 		});
 		panelTermin.add(btnErstellen);
@@ -241,9 +253,14 @@ public class TerminErstellenView extends JFrame {
 		// ACTION PERFORMED METHODE
 		btnErstellen.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-			if (e.getSource() == btnErstellen) {
+			
+					
+				//If-Abfrage unnötig, wenn der Erstellen Button einen speziellen Listener hat, ist immer der Erstellen-Button die Quelle	
+				if (e.getSource() == btnErstellen) {
 				int eingabe = JOptionPane.showConfirmDialog(null, "Wollen Sie die Daten bestätigen?", null,
 						JOptionPane.YES_NO_CANCEL_OPTION);
+				
+				//Siehe vorherige Klassen(JOptionPane.YES_OPTION)
 				if (eingabe == 0) {
 					try {
 						kontrolleStunden(txtFldUhrzeitBisA);
@@ -258,6 +275,10 @@ public class TerminErstellenView extends JFrame {
 					try {
 						username = myView.getUsername();
 						int terminnr = myModel.getNewTblocknr();
+						
+						//In der Map steht nur ein Zeitraum, mit dem Wochenplan als Key
+						//Die TerminStrg arbeitet mit den Werten so wie Sie in der Datenbank stehen
+						//Werte passend in die TreeMap mit dem richtigen Key ablegen(siehe erstelleTermin im Controller-Package)!
 						
 						String bez = comboBoxTerminGrund.getSelectedItem().toString();
 						String grund = txtFldGrund.getText().toString();
@@ -275,6 +296,8 @@ public class TerminErstellenView extends JFrame {
 										+ " Fehler: TerminErstellenView Zeile Button Bestätigen ActionPerformed","Error", JOptionPane.ERROR_MESSAGE);
 					}
 				} else {
+					
+					//Siehe vorherige Klassen!
 					System.exit(0);
 				}
 			}
@@ -287,6 +310,8 @@ public class TerminErstellenView extends JFrame {
 	public void kontrolleStunden(JFormattedTextField txtFldUhrzeitBisA) {
 		this.txtFldUhrzeitBisA = txtFldUhrzeitBisA;
 		int i;
+		//Initialisierung der Variable i in einer Anweisung!
+		//Da wird eine Fehlermeldung kommen, wenn da Buchstaben eingegeben wurden, dass muss überprüft werden!
 		i = Integer.parseInt(txtFldUhrzeitBisA.getText().toString());
 		if (i >= 24) {
 			JOptionPane.showMessageDialog(null,
@@ -298,6 +323,7 @@ public class TerminErstellenView extends JFrame {
 	public void kontrolleMinuten(JFormattedTextField txtFldUhrzeitBisB) {
 		this.txtFldUhrzeitBisB = txtFldUhrzeitBisB;
 		int i;
+		//siehe oben!
 		i = Integer.parseInt(txtFldUhrzeitBisB.getText().toString());
 		if (i >= 60) {
 			JOptionPane.showMessageDialog(null,

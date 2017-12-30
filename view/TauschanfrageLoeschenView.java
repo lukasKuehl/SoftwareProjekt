@@ -15,11 +15,19 @@ import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.DefaultListModel;
 
+//Klassenbeschreibung fehlt!
+
+//Kommentare innerhalb der Methoden fehlen!
+
+//Hilfsklassen sind nicht public!
 public class TauschanfrageLoeschenView extends JFrame {
 
 	private JPanel contentPane, panelTauschanfrage = null;
 	private JLabel lblTauschanfrageLoeschen = null;
+	
+	//Siehe vorherige Klassen!
 	private JList<Object> listTauschanfragen = null;
+	
 	private JButton btnBestaetigen = null;
 	private ArrayList<String> tl, al = null;
 	private DefaultListModel<Object> modelTauschanfrage = null;
@@ -28,8 +36,7 @@ public class TauschanfrageLoeschenView extends JFrame {
 	private Einsatzplanmodel myModel = null;
 	private int tauschanfrageNr=0;
 
-	protected TauschanfrageLoeschenView(Einsatzplanview myView, Einsatzplanmodel myModel,
-			EinsatzplanController myController) {
+	protected TauschanfrageLoeschenView(Einsatzplanview myView, Einsatzplanmodel myModel, EinsatzplanController myController) {
 		this.myView = myView;
 		this.myController = myController;
 		this.myModel = myModel;
@@ -69,6 +76,8 @@ public class TauschanfrageLoeschenView extends JFrame {
 		btnBestaetigen = new JButton("Bestätigen");
 		btnBestaetigen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
+				//Wird später gefüllt --> Dieses Kommando kann weg!
 			}
 		});
 		btnBestaetigen.setBounds(519, 483, 141, 35);
@@ -104,6 +113,8 @@ public class TauschanfrageLoeschenView extends JFrame {
 								"Error", JOptionPane.ERROR_MESSAGE);
 
 					} else {
+						
+						//Ein String Array mit einer Länge von 14 geht von 0 bis 13 --> IndexOutOfBoundsException --> entweder das Array länger machen oder nochmal die Werte prüfen
 						String temp[] = new String[14];
 						al = myView.getTauschanfragen(myView.getUsername());
 						for (String m : al) {
@@ -129,7 +140,10 @@ public class TauschanfrageLoeschenView extends JFrame {
 						}
 					
 						myController.entferneTauschanfrage(tauschanfrageNr);
+					
+						//Siehe vorherige Klassen!
 						System.exit(0);
+					
 					}
 				} catch (Exception ex) {
 					ex.getStackTrace();
@@ -137,7 +151,10 @@ public class TauschanfrageLoeschenView extends JFrame {
 							"Fehler in der Eingabe der Daten - ActionPerformed Button Bestätigen und Klasse TauschanfrageLoeschen");
 				}
 			}
-		} else {
+		} else {		
+			//Wenn abbruch = Keine Tauschanfragen sollen gelöscht werden, dann passt das, ansonsten kann der else Teil komplett weg.
+			
+			//Siehe vorherige Klassen!
 			System.exit(0);
 		}
 

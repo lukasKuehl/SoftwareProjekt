@@ -31,7 +31,14 @@ import java.awt.event.ActionEvent;
 import controller.EinsatzplanController;
 import model.Einsatzplanmodel;
 
+//Klassenbeschreibung fehlt!
+
+//Etwas wenig Kommentare innerhalb der Methoden
+
+
+//Hilfsklassen sind nicht public!
 public class TauschanfrageErstellenView extends JFrame {
+	
 	private JPanel contentPane = null;
 	private JLabel lblTauschanfrageStellen, labelTagAndererMA, lblWochenplanAuswhlen, lblMitWemWollen,
 			lblSchichtAuswhlen, lblTagAuswhlen, labelSchichtAndererMA , lblMitarbeiter= null;
@@ -44,6 +51,8 @@ public class TauschanfrageErstellenView extends JFrame {
 	private Schicht mySchicht = null;
 	private int senderSchichtnr = 0;
 	String temp[] = new String[14];
+	
+	//JComboBox Inhalt festlegen!
 	private JComboBox comboBox;
 
 	/**
@@ -52,8 +61,7 @@ public class TauschanfrageErstellenView extends JFrame {
 	 *       gesamten Swing Komponenten.
 	 */
 
-	protected TauschanfrageErstellenView(Einsatzplanmodel myModel, Einsatzplanview myView,
-			EinsatzplanController myController) {
+	protected TauschanfrageErstellenView(Einsatzplanmodel myModel, Einsatzplanview myView, EinsatzplanController myController) {
 		this.myView = myView;
 		this.myController = myController;
 		this.myModel = myModel;
@@ -73,11 +81,13 @@ public class TauschanfrageErstellenView extends JFrame {
 		lblTauschanfrageStellen.setBounds(62, 91, 385, 26);
 		contentPane.add(lblTauschanfrageStellen);
 
-		btnErstellen = new JButton("erstellen");
+		btnErstellen = new JButton("Erstellen");
 		btnErstellen.setFont(new Font("Verdana", Font.PLAIN, 15));
 		btnErstellen.setBounds(500, 500, 110, 25);
 		btnErstellen.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e) {				
+				
+				//ActionListener wird unten gesetzt, dieser Befehl kann weg!				
 			}
 		});
 		contentPane.add(btnErstellen);
@@ -90,6 +100,8 @@ public class TauschanfrageErstellenView extends JFrame {
 		cmbBoxWP.setBounds(249, 174, 136, 26);
 		cmbBoxWP.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
+				//ActionListener wird unten gesetzt, dieser Befehl kann weg!
 			}
 		});
 		contentPane.add(cmbBoxWP);
@@ -103,6 +115,8 @@ public class TauschanfrageErstellenView extends JFrame {
 		cmbBoxTag.setFont(new Font("Verdana", Font.PLAIN, 15));
 		cmbBoxTag.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
+				//ActionListener kann weg, wenn er nicht gebraucht wird. Bei den ActionListenern unten steht der nicht mit bei.
 			}
 		});
 		cmbBoxTag.setBounds(249, 211, 136, 26);
@@ -117,6 +131,8 @@ public class TauschanfrageErstellenView extends JFrame {
 		cmbBoxSchicht.setFont(new Font("Verdana", Font.PLAIN, 15));
 		cmbBoxSchicht.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+			
+				//ActionListener wird unten gesetzt, dieser Befehl kann weg!
 			}
 		});
 		cmbBoxSchicht.setBounds(249, 248, 136, 26);
@@ -165,6 +181,9 @@ public class TauschanfrageErstellenView extends JFrame {
 		comboBoxTagAndererMA.setFont(new Font("Verdana", Font.PLAIN, 15));
 		comboBoxTagAndererMA.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+			
+				//Siehe oben!
+			
 			}
 		});
 		comboBoxTagAndererMA.setBounds(249, 372, 136, 26);
@@ -191,6 +210,8 @@ public class TauschanfrageErstellenView extends JFrame {
 		comboBoxSchichtAndererMA.setFont(new Font("Verdana", Font.PLAIN, 15));
 		comboBoxSchichtAndererMA.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+			
+				//Siehe oben!
 			}
 		});
 		comboBoxSchichtAndererMA.setBounds(249, 409, 136, 26);
@@ -201,6 +222,9 @@ public class TauschanfrageErstellenView extends JFrame {
 		lblMitarbeiter.setBounds(62, 452, 124, 26);
 		contentPane.add(lblMitarbeiter);
 		
+		//Auskommentierte Zeilen können weg!
+		
+		
 		// ComboBox mit den Mitarbeitern für die Schichten
 				
 //		empfaenger = myController.getVerfügbareMitarbeiterSchicht(); // Mitarbeiter erhalten die für die ausgewählte Schicht eingeteilt sind
@@ -208,9 +232,14 @@ public class TauschanfrageErstellenView extends JFrame {
 //		for (String c : empfaenger) {
 //			comboBoxEmpfaengerName.addItem(c);
 //		}
+		
+		
+		
 		comboBoxEmpfaengerName.setBounds(249, 450, 136, 26);
 		comboBoxEmpfaengerName.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
+				//Siehe oben!
 			}
 		});
 		contentPane.add(comboBoxEmpfaengerName);
@@ -221,6 +250,7 @@ public class TauschanfrageErstellenView extends JFrame {
 		 */
 
 		// ACTION PERFORMED METHODEN
+				
 		cmbBoxWP.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (e.getSource() == cmbBoxWP) {

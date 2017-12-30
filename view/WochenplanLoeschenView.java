@@ -34,8 +34,7 @@ public class WochenplanLoeschenView extends JFrame {
 	 * @author Ramona Gerke
 	 * @Info Konstruktor der die View Krankmeldung löschen erstellt.
 	 */
-	public WochenplanLoeschenView(Einsatzplanview myView, Einsatzplanmodel myModel,
-			EinsatzplanController myController) {
+	public WochenplanLoeschenView(Einsatzplanview myView, Einsatzplanmodel myModel, EinsatzplanController myController) {
 		this.myView = myView;
 		this.myController = myController;
 		this.myModel = myModel;
@@ -49,7 +48,8 @@ public class WochenplanLoeschenView extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-
+		
+		//Umlaut fehlt
 		lblWochenplanLschen = new JLabel("Wochenplan l\u00F6schen");
 		lblWochenplanLschen.setFont(new Font("Verdana", Font.PLAIN, 21));
 		lblWochenplanLschen.setBounds(51, 40, 243, 27);
@@ -67,6 +67,7 @@ public class WochenplanLoeschenView extends JFrame {
 		listWochenplaene.setBounds(51, 126, 362, 399);
 		contentPane.add(listWochenplaene);
 
+		//Umlaut fehlt
 		btnLschen = new JButton("löschen");
 		btnLschen.setFont(new Font("Verdana", Font.PLAIN, 15));
 		btnLschen.setBounds(500,500,110,25);
@@ -75,10 +76,14 @@ public class WochenplanLoeschenView extends JFrame {
 		lblBitteAuswhlen = new JLabel("Bitte auswählen");
 		lblBitteAuswhlen.setFont(new Font("Verdana", Font.PLAIN, 15));
 		lblBitteAuswhlen.setBounds(51, 90, 143, 26);
+		
+		//Umlaut fehlt!
 		contentPane.add(lblBitteAuswhlen);
 
 		btnLschen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				//Siehe vorherige Klassen,(ActionEvent muss vom button kommen)
+				
 				if (e.getSource() == btnLschen) {
 					int eingabe = JOptionPane.showConfirmDialog(null, "Wollen Sie die den Wochenplan wirklich löschen?",
 							null, JOptionPane.YES_NO_CANCEL_OPTION);
@@ -88,6 +93,7 @@ public class WochenplanLoeschenView extends JFrame {
 								JOptionPane.ERROR_MESSAGE);
 					} else {
 						try {
+							//Siehe vorherige Klassen!
 							if (eingabe == 0) {
 								int wpbez = 0;
 								String temp[] = new String[4];
@@ -96,6 +102,8 @@ public class WochenplanLoeschenView extends JFrame {
 									m.toString();
 									m.trim();
 									temp = m.split("-");
+									
+									//Siehe vorherige Klassen!
 									wpbez = Integer.parseInt(temp[0].substring(2));  // CODE MUSS EVTL noch in String gewandelt
 									String oeffnungszeitenAnfang = temp[1];
 									String oeffnungszeitenEnd = temp[2];
@@ -115,6 +123,7 @@ public class WochenplanLoeschenView extends JFrame {
 						}
 					}
 				} else {
+					//Siehe vorherige Klassen!
 					System.exit(0);
 				}
 			}
