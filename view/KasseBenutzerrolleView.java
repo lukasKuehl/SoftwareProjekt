@@ -17,6 +17,12 @@ import data.Mitarbeiter;
 import model.Einsatzplanmodel;
 import controller.EinsatzplanController;
 
+//Klassendokumentation fehlt!
+
+//Kommentare innerhalb der Methoden fehlen!
+
+//Autoren der einzelnen Methoden fehlen!
+
 class KasseBenutzerrolleView extends JFrame {
 	private JComboBox cbMitarbeiter;
 	private JButton btnBestaetigen;
@@ -25,12 +31,17 @@ class KasseBenutzerrolleView extends JFrame {
 	private Einsatzplanview myView = null;
 	private EinsatzplanController myController=null;
 
+	//Löschen der WindowBuilder Kommentare oder ändern in persönliche
+	
 	// private JFrame frame;
 
 	/**
 	 * Launch the application.
 	 * 
 	 */
+	
+	//Siehe AnmeldungView!
+	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -45,6 +56,8 @@ class KasseBenutzerrolleView extends JFrame {
 	/**
 	 * Create the application.
 	 */
+	
+	//Parameter myController fehlt --> in dem Fall bleibt der einfach null
 	public KasseBenutzerrolleView(Einsatzplanmodel myModel, Einsatzplanview myView) {
 		this.myView = myView;
 		this.myModel = myModel;
@@ -74,9 +87,13 @@ class KasseBenutzerrolleView extends JFrame {
 		lblMitarbeiterAuswaehlen.setBounds(83, 262, 217, 39);
 		getContentPane().add(lblMitarbeiterAuswaehlen);
 
+		//ComboBox sollte Informationen darüber bekommen, welche Werte eingetragen werden können (z.B. JComboBox<String>)
 		cbMitarbeiter = new JComboBox();
+		
 		cbMitarbeiter.setBounds(381, 274, 128, 20);
 		LinkedList<Mitarbeiter> alleMitarbeiter = this.myModel.getAlleMitarbeiter();
+		
+		// Warum eine spezifische foreach Schleife und keine Standard foreach-Schleife?
 		alleMitarbeiter.forEach((temp) -> { 
 			cbMitarbeiter.addItem(temp.getBenutzername()); 
 			});
@@ -89,7 +106,10 @@ class KasseBenutzerrolleView extends JFrame {
 						JOptionPane.YES_NO_OPTION);
 
 				if (confirmed == JOptionPane.YES_OPTION) {
+					
+				//Abfrage, ob der Prozess erfolgreich war fehlt --> Bei Misserfolg sollte man ja die Werte nochmal ändern und erneut probieren können
 				myController.benutzerRechteWechsel(gibAusgewaehltenMitarbeiter());
+				
 				dispose();
 				}
 			}
@@ -98,6 +118,7 @@ class KasseBenutzerrolleView extends JFrame {
 		getContentPane().add(btnBestaetigen);
 		setVisible(true);
 
+		//Löschen falls nicht mehr benötigt!
 		/*
 		 * frame = new JFrame(); frame.setBounds(100, 100, 1538,864);
 		 * frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -106,8 +127,5 @@ class KasseBenutzerrolleView extends JFrame {
 
 	protected String gibAusgewaehltenMitarbeiter(){
 		return cbMitarbeiter.getSelectedItem().toString();
-	}
-	
+	}	
 }
-
-

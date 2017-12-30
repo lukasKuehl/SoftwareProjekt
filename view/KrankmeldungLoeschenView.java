@@ -13,19 +13,25 @@ import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.TreeMap;
 
+//Klassenbeschreibung fehlt!
+
+//Hilfsklassen sind nicht public!
 public class KrankmeldungLoeschenView extends JFrame {
 
 	// Initialisierung der Instanzvariablen
 	private JPanel contentPane, panelKrankmeldung = null;
 	private JLabel lblKrankmeldungLoeschen = null;
+	
+	//Der Typ sollte definiert sein, entweder String oder TerminBlockierung
 	private JList<Object> listKrankmeldung = null;
+	
 	private JButton btnBestaetigen = null;
 	private String username = null;
 	private JLabel lblBitteAuswaehlen = null;
 	private Einsatzplanview myView = null;
 	private Einsatzplanmodel myModel = null;
 	private EinsatzplanController myController = null;
-	private ArrayList<String> kl = null;
+	private ArrayList<String> kl = null;	
 	private DefaultListModel<Object> model = null;
 
 	/**
@@ -33,8 +39,7 @@ public class KrankmeldungLoeschenView extends JFrame {
 	 * @Info Konstruktor der View Krankmeldung löschen.
 	 */
 
-	protected KrankmeldungLoeschenView(Einsatzplanview myView, Einsatzplanmodel myModel,
-			EinsatzplanController myController) {
+	protected KrankmeldungLoeschenView(Einsatzplanview myView, Einsatzplanmodel myModel, EinsatzplanController myController) {
 		this.myView = myView;
 		this.myController = myController;
 		this.myModel = myModel;
@@ -62,6 +67,9 @@ public class KrankmeldungLoeschenView extends JFrame {
 
 		listKrankmeldung = new JList<Object>();
 		 String grund = "Krankheit";
+		 
+		 //Auskommentierte Anweisungen können raus!
+		 
 //		 kl = myController.getAlleTermine(myView.getUsername());  
 //		 if ( tb.getBbez() == "Krankheit"){
 
@@ -100,6 +108,9 @@ public class KrankmeldungLoeschenView extends JFrame {
 					int eingabe = JOptionPane.showConfirmDialog(null,
 							"Wollen Sie die die Krankmeldung wirklich löschen?", null,
 							JOptionPane.YES_NO_CANCEL_OPTION);
+					
+					// siehe vorherige Klasse!
+					
 					if (eingabe == 0) {
 						if (listKrankmeldung.isSelectionEmpty()) {
 							JOptionPane.showMessageDialog(null, "Es wurde keine Eingabe getätigt", "Error",
@@ -122,6 +133,8 @@ public class KrankmeldungLoeschenView extends JFrame {
 									String enduhrzeit = temp[5];
 
 									myController.entferneTermin(tblocknr, grund);
+									
+									//Siehe vorherige Klasse!
 									System.exit(0);
 								}
 							} catch (Exception a) {
@@ -131,6 +144,8 @@ public class KrankmeldungLoeschenView extends JFrame {
 							}
 						}
 					} else {
+						
+						//siehe vorherige Klasse!
 						System.exit(0);
 					}
 				}

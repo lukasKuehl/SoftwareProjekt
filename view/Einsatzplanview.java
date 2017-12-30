@@ -10,6 +10,12 @@ import javax.swing.JOptionPane;
 import controller.EinsatzplanController;
 import model.Einsatzplanmodel;
 
+//Klassenbeschreibung fehlt!
+
+//Kommentare innerhalb der Methoden fehlen!
+
+//Update-Methode wurde noch nicht ausgefüllt!(siehe Beschreibung in der Methode)
+
 public class Einsatzplanview {
 
 	private EinsatzplanController myController = null;
@@ -17,6 +23,9 @@ public class Einsatzplanview {
 	private String username = null;
 	private static Einsatzplanmodel epm = new Einsatzplanmodel();
 
+	
+	//Die main Methode muss raus --> Nur eine main-Methode im gesamten Programm möglich und Einsatzplanview kann erst nach dem Model erzeugt werden
+	
 	/**
 	 * @author - Ramona Gerke
 	 * @info Der Konstruktor ruft die AnmeldungsView auf.
@@ -34,6 +43,7 @@ public class Einsatzplanview {
 			}
 		});
 	}
+	
 	public Einsatzplanview(EinsatzplanController einsatzplanController, Einsatzplanmodel model) {
 		this.myController = einsatzplanController;
 		this.myModel = model;		
@@ -43,10 +53,10 @@ public class Einsatzplanview {
 	protected String getUsername() {
 		return username;
 	}
-
+	
 	protected void setUsername(String username) {
 		this.username = username;
-	}
+	}	
 	
 	/**
 	 * @author - Ramona Gerke
@@ -63,6 +73,7 @@ public class Einsatzplanview {
 			JOptionPane.showConfirmDialog(null, "Termin erfolgreich erstellt");
 		} catch (Exception e) {
 
+			//Exception-Handling fehlt!
 		}
 		if (erfolg == false) {
 			JOptionPane.showMessageDialog(null, "Der Termin konnte erstellt werden. Bitte die Eingaben prüfen");
@@ -79,7 +90,8 @@ public class Einsatzplanview {
 				erfolg = this.myController.entferneTermin(terminnr, username);
 				JOptionPane.showConfirmDialog(null, "Termin erfolgreich gelöscht");
 			} catch (Exception e) {
-
+				//Exception-Handling fehlt!
+				
 			}
 			if (erfolg == false) {
 				JOptionPane.showMessageDialog(null,
@@ -101,8 +113,7 @@ public class Einsatzplanview {
 		return rueckgabe;
 	}
 
-	protected boolean erstelleTauschanfrage(String senderName, int senderSchichtNr, String empfaengerName,
-			int empfaengerSchichtNr) {
+	protected boolean erstelleTauschanfrage(String senderName, int senderSchichtNr, String empfaengerName, int empfaengerSchichtNr) {
 		boolean erfolg = false;
 
 		try {
@@ -111,7 +122,8 @@ public class Einsatzplanview {
 			JOptionPane.showConfirmDialog(null, "Tauschanfrage erfolgreich erstellt");
 
 		} catch (Exception e) {
-
+			//Exception-Handling fehlt!
+			
 		}
 		if (erfolg == false) {
 			JOptionPane.showMessageDialog(null,
@@ -129,6 +141,8 @@ public class Einsatzplanview {
 			JOptionPane.showConfirmDialog(null, "Tauschanfrage wurde gelöscht");
 		} catch (Exception e) {
 
+			//Exception-Handling fehlt!
+			
 		}
 		if (erfolg == false) {
 			JOptionPane.showMessageDialog(null,
@@ -144,6 +158,8 @@ public class Einsatzplanview {
 		try {
 			erfolg = this.myController.akzeptiereTauschanfrage(empfaengerName, tauschanfrageNr);
 
+			//Erfolgsmeldung fehlt!
+			
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null,
 					"Die Tauschanfrage konnte nicht angenommen werden. Bitte die Eingaben prüfen!", "Error", JOptionPane.ERROR_MESSAGE);
@@ -159,9 +175,15 @@ public class Einsatzplanview {
 			try {
 				erfolg = this.myController.entferneWochenplan(username, wpbez);
 
+				//Erfolgs-Meldung fehlt!
+				
 			} catch (Exception e) {
 
+				//Exception-Handling fehlt!
+				
 			}
+			//Falsche Error-Meldung!
+			
 			if (erfolg == false) {
 				JOptionPane.showMessageDialog(null,
 						"Der Termin konnte nicht erstellt werden. Bitte die Eingaben prüfen!", "Error", JOptionPane.ERROR_MESSAGE);
@@ -209,6 +231,8 @@ public class Einsatzplanview {
 		try {
 			rueckgabe = this.myController.getAndereMitarbeiterSchichten(wpbez, tagbez, username, schichtNr);
 		} catch (Exception e) {
+			
+			//Falsche Errormeldung!
 			JOptionPane.showConfirmDialog(null,
 					"Die Schichten des Mitarbeiters konnten nicht ausgegeben werden. Bitte Eingaben prüfen!", "Error", JOptionPane.ERROR_MESSAGE);
 		}
@@ -232,6 +256,8 @@ public class Einsatzplanview {
 		try{
 			rueckgabe = this.myController.getTauschanfragen(username);
 		}catch(Exception e){
+			//Falsche Errormeldung!
+			
 			JOptionPane.showMessageDialog(null,
 					"Die Wochenpläne konnten nicht ausgegeben werden. Bitte Eingaben prüfen!", "Error", JOptionPane.ERROR_MESSAGE);
 		}
@@ -245,6 +271,9 @@ public class Einsatzplanview {
 	 */
 	public void update() {
 
+		//Muss noch ausgefüllt werden --> zu Programmstart die erste Woche in der Wochenliste, andernfalls die aktuelle die in dem Label in der jeweiligen Wochenview liegt
+		
+		
 		// suche aktuelle Woche und dann generie den aktuellenWochenplan
 		// ALLE EINGABEN FÜR DIE ÄNDERUNG IN DER DATENBANK HINTERLEGEN - Welche Daten
 	

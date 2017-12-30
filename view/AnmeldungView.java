@@ -20,6 +20,14 @@ import javax.swing.JButton;
 import javax.swing.ImageIcon;
 import java.awt.Color;
 
+//Klassenbeschreibung fehlt!
+
+//Kommentare innerhalb der Methoden fehlen!
+
+//Autoren der einzelnen Methoden fehlen!
+
+//Die Klasse muss nicht den ActionListener implementieren wenn in der ActionPerformed Methode nix drin steht
+//Die Hilfsklasse soll nicht public sein --> Entwurfsschema
 public class AnmeldungView extends JFrame implements ActionListener {
 
 	private JPanel cpAnmeldung;
@@ -31,6 +39,8 @@ public class AnmeldungView extends JFrame implements ActionListener {
 	private Einsatzplanmodel myModel = null;
 	private Einsatzplanview myView = null;
 
+	//WindowBuilder Kommentare entfernen oder durch persönliche Anmerkungen ersetzen
+	
 	/**
 	 * Launch the application.
 	 */
@@ -88,13 +98,21 @@ public class AnmeldungView extends JFrame implements ActionListener {
 		btnLogin.setContentAreaFilled(false);
 		btnLogin.setOpaque(false);
 		btnLogin.setBorderPainted(false);
+		
+		//Zuweisung mit persönlichen Pfaden können von anderen nicht bearbeitet werden, entweder in Projekt einfügen und mit dem relativen Pfad arbeiten oder komplett entfernen
 		btnLogin.setIcon(new ImageIcon("D:\\workspace\\EinsatzplanSoftwaretechnik\\src\\GUI\\loginsmall.png"));
+				
 		btnLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
+				//Kann entfernt werden
 				/*
 				 * MitarbeiterView nw = new MitarbeiterView(); nw.NewScreen();
-				 */
+				 */				
+				
 				String pw = passwordField.getPassword().toString();
+				
+				//Die Anweisung toString ist überflüssig, das ist schon ein String der da zurückkommt
 				String username = textField.getText().toString();
 				
 				if (myController.benutzerAnmelden(username, pw)) {
@@ -105,14 +123,18 @@ public class AnmeldungView extends JFrame implements ActionListener {
 						// falls Benutzer Admin ist
 						new KasseWochenView(myModel, myController, myView);
 
-					} else {
-						
+					} else {						
 						// falls Benutzer normaler Mitarbeiter ist
+						
+						//Übergabeparameter fehlen (Model, Controller, View)
+						
 						new MitarbeiterWochenView();
 						
 					}
 					
 				}else {
+					//Das ist doch eigentlich gar kein Fehler(Benutzer hat vielleicht nur sein pw falsch eingegeben)
+					
 					lblFehlermeldung.setText("Fehler beim Anmelden des Users " + username + "!");
 				}
 			}
@@ -126,6 +148,8 @@ public class AnmeldungView extends JFrame implements ActionListener {
 		setVisible(true);
 	}
 
+	//Die actionPerformed Methode ist überflüssig, wenn sie nicht gefüllt ist
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub

@@ -22,6 +22,14 @@ import javax.swing.SwingConstants;
 import controller.EinsatzplanController;
 import model.Einsatzplanmodel;
 
+//Klassendokumentation fehlt!
+
+//Kommentare innerhalb der Methoden fehlen!
+
+//Autoren der einzelnen Methoden fehlen!
+
+//Klasse braucht das implements ActionListener nicht --> kann weg
+//Hilfsklassen sind nicht public!
 public class MitarbeiterWochenView extends JFrame implements ActionListener {
 
 	private JPanel contentPane, pnlMenuBar;
@@ -39,6 +47,8 @@ public class MitarbeiterWochenView extends JFrame implements ActionListener {
 
 	private int currentKW = 0;
 
+	//Siehe AnmeldungView
+	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -52,12 +62,12 @@ public class MitarbeiterWochenView extends JFrame implements ActionListener {
 			}
 		});
 	}
-
+	//
+	
 	/**
 	 * Create the application.
 	 */
-	public MitarbeiterWochenView(Einsatzplanmodel myModel, EinsatzplanController myController,
-			Einsatzplanview myView) {
+	public MitarbeiterWochenView(Einsatzplanmodel myModel, EinsatzplanController myController, Einsatzplanview myView) {
 		this.myController = myController;
 		this.myModel = myModel;
 		this.myView = myView;
@@ -83,7 +93,7 @@ public class MitarbeiterWochenView extends JFrame implements ActionListener {
 		mnTermin.setFont(new Font("Dialog", Font.PLAIN, 26));
 		menuBar.add(mnTermin);
 
-		mntmTerminErstellen = new JMenuItem("erstellen");
+		mntmTerminErstellen = new JMenuItem("Erstellen");
 		mntmTerminErstellen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				new TerminErstellenView(myView, myModel, myController);
@@ -93,7 +103,7 @@ public class MitarbeiterWochenView extends JFrame implements ActionListener {
 		mntmTerminErstellen.setFont(new Font("Verdana", Font.PLAIN, 21));
 		mnTermin.add(mntmTerminErstellen);
 
-		mntmTerminLoeschen = new JMenuItem("löschen");
+		mntmTerminLoeschen = new JMenuItem("Löschen");
 		mntmTerminLoeschen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				new TerminLoeschenView(myView, myModel, myController);
@@ -107,9 +117,12 @@ public class MitarbeiterWochenView extends JFrame implements ActionListener {
 		mnTauschanfrage.setFont(new Font("Dialog", Font.PLAIN, 26));
 		menuBar.add(mnTauschanfrage);
 
-		mntmTauschanfrageAnzeigen = new JMenuItem("anzeigen");
+		mntmTauschanfrageAnzeigen = new JMenuItem("Anzeigen");
 		mntmTauschanfrageAnzeigen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
+				//ActionPerformed Methode unvollständig --> Konstruktoraufruf
+				
 				// new TauschanfrageAnzeigenView();
 			}
 		});
@@ -117,7 +130,7 @@ public class MitarbeiterWochenView extends JFrame implements ActionListener {
 		mntmTauschanfrageAnzeigen.setFont(new Font("Verdana", Font.PLAIN, 21));
 		mnTauschanfrage.add(mntmTauschanfrageAnzeigen);
 
-		mntmTauschanfrageErstellen = new JMenuItem("erstellen");
+		mntmTauschanfrageErstellen = new JMenuItem("Erstellen");
 		mntmTauschanfrageErstellen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				new TauschanfrageErstellenView(myModel, myView, myController);
@@ -127,7 +140,7 @@ public class MitarbeiterWochenView extends JFrame implements ActionListener {
 		mntmTauschanfrageErstellen.setFont(new Font("Verdana", Font.PLAIN, 21));
 		mnTauschanfrage.add(mntmTauschanfrageErstellen);
 
-		mntmTauschanfrageLoeschen = new JMenuItem("löschen");
+		mntmTauschanfrageLoeschen = new JMenuItem("Löschen");
 		mntmTauschanfrageLoeschen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				new TauschanfrageLoeschenView(myView, myModel, myController);
@@ -144,6 +157,8 @@ public class MitarbeiterWochenView extends JFrame implements ActionListener {
 		lblKW1.setText(wochenplaene.get(0).toString());
 		getContentPane().add(lblKW1);
 
+		// Die Anmerkungen aus der Klasse KasseWochenView gelten auch für den Rest dieser Klasse!!
+		
 		btnRechts = new JButton("New button");
 		btnRechts.setBorderPainted(false);
 		btnRechts.setContentAreaFilled(false);
@@ -152,8 +167,7 @@ public class MitarbeiterWochenView extends JFrame implements ActionListener {
 		btnRechts.addActionListener(new ActionListener() {
 
 			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
+			public void actionPerformed(ActionEvent e) {				
 				currentKW++;
 				if (wochenplaene.size() <= currentKW) {
 					currentKW--;
@@ -177,8 +191,7 @@ public class MitarbeiterWochenView extends JFrame implements ActionListener {
 		btnLinks.addActionListener(new ActionListener() {
 
 			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
+			public void actionPerformed(ActionEvent e) {			
 				currentKW--;
 				if (currentKW < 0) {
 					currentKW++;
@@ -205,6 +218,7 @@ public class MitarbeiterWochenView extends JFrame implements ActionListener {
 
 	}
 
+	//Unnötig, kann gelöscht werden!
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub

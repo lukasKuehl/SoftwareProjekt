@@ -18,6 +18,13 @@ import controller.EinsatzplanController;
 import data.Mitarbeiter;
 import model.Einsatzplanmodel;
 
+//Klassenbeschreibung fehlt!
+
+//Autoren der einzelnen Methoden fehlen!
+
+//Kommentare innerhalb der Methoden fehlen!
+
+//Hilfsklassen sind nicht public!
 public class KrankmeldungErstellenView extends JFrame {
 
 	// Initialisierung der Instanzvariablen
@@ -36,8 +43,7 @@ public class KrankmeldungErstellenView extends JFrame {
 	private ArrayList<String> wp = null;
 	private LinkedList<Mitarbeiter> ma = null;
 
-	protected KrankmeldungErstellenView(Einsatzplanview myView, Einsatzplanmodel myModel,
-			EinsatzplanController myController) {
+	protected KrankmeldungErstellenView(Einsatzplanview myView, Einsatzplanmodel myModel, EinsatzplanController myController) {
 		this.myView = myView;
 		this.myController = myController;
 		this.myModel = myModel;
@@ -126,7 +132,7 @@ public class KrankmeldungErstellenView extends JFrame {
 		lblMitarbeiterAuswaehlen.setBounds(61, 230, 165, 14);
 		panelKrankmeldung.add(lblMitarbeiterAuswaehlen);
 
-		buttonBestaetigen = new JButton("bestätigen");
+		buttonBestaetigen = new JButton("Bestätigen");
 		buttonBestaetigen.setHorizontalAlignment(SwingConstants.LEFT);
 		buttonBestaetigen.setFont(new Font("Verdana", Font.PLAIN, 15));
 		buttonBestaetigen.addActionListener(new ActionListener() {
@@ -144,6 +150,8 @@ public class KrankmeldungErstellenView extends JFrame {
 			int eingabe = JOptionPane.showConfirmDialog(null, "Wollen Sie die Daten bestätigen?", null,
 					JOptionPane.YES_NO_CANCEL_OPTION);
 
+			//0 funktioniert zwar, besser ist aber JOptionPane.YES_OPTION
+						
 			if (eingabe == 0) {
 				zeitraum = new TreeMap<String, String>();
 				try {
@@ -162,13 +170,15 @@ public class KrankmeldungErstellenView extends JFrame {
 					myController.erstelleTermin(username, bez, zeitraum, grund);
 					System.exit(0);
 				}
-
+				
 				catch (Exception ex) {
 					JOptionPane.showMessageDialog(null,
 							"Daten konnten nicht umgewandelt wrerden, da die Dateiformate nicht stimmen! - Fehler: TerminErstellenView Zeile Button Bestätigen ActionPerformed",
 							"Error", JOptionPane.ERROR_MESSAGE);
 				}
 			} else {
+				
+				//Dieser Befehl beendet das komplette Programm, falls keine Fehlermeldung etc. mehr ausgegeben werden soll und das Fenster auch nicht auf bleiben soll, dann mach einfach this.dispose()
 				System.exit(0);
 			}
 		}

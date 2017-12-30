@@ -34,6 +34,15 @@ import controller.EinsatzplanController;
 import model.Einsatzplanmodel;
 import model.Einsatzplanmodel;
 
+//Klassenbeschreibung fehlt!
+
+//Autoren der Methoden fehlen!
+
+//Kommentare innerhalb der Methoden fehlen!
+
+//Implementierung von ActionListener überflüssig, siehe vorherige Klassen!
+
+//Hilfsklassen sind nicht public!
 public class KasseWochenView extends JFrame implements ActionListener {
 
 	private JPanel contentPane, pnlMenuBar;
@@ -53,6 +62,8 @@ public class KasseWochenView extends JFrame implements ActionListener {
 	private Einsatzplanview myView = null;
 	private JTable tbleWochenplan;
 
+	//siehe AnmeldungView!
+	
 	/**
 	 * Launch the application.
 	 */
@@ -70,12 +81,12 @@ public class KasseWochenView extends JFrame implements ActionListener {
 			}
 		});
 	}
-
+	//
+	
 	/**
 	 * Create the application.
 	 */
-	public KasseWochenView(Einsatzplanmodel myModel, EinsatzplanController myController,
-			Einsatzplanview myView) {
+	public KasseWochenView(Einsatzplanmodel myModel, EinsatzplanController myController, Einsatzplanview myView) {
 		this.myController = myController;
 		this.myModel = myModel;
 		this.myView = myView;
@@ -99,6 +110,8 @@ public class KasseWochenView extends JFrame implements ActionListener {
 		menuBar.setFont(new Font("Verdana", Font.PLAIN, 26));
 		setJMenuBar(menuBar);
 
+		//Auskommentierte Anweisungen können weg
+		
 		/*
 		 * mnNewMenuIcon = new JMenu(""); mnNewMenuIcon.setIcon(new
 		 * ImageIcon("C:\\Users\\Admin\\Desktop\\Chrysanthemum.jpg"));
@@ -110,7 +123,7 @@ public class KasseWochenView extends JFrame implements ActionListener {
 		mnWoche.setFont(new Font("VerdanaI", Font.PLAIN, 26));
 		menuBar.add(mnWoche);
 
-		mntmWocheErstellen = new JMenuItem("erstellen");
+		mntmWocheErstellen = new JMenuItem("Erstellen");
 		mntmWocheErstellen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				new KasseWocheErstellenView(myModel, myView, myController);
@@ -120,7 +133,7 @@ public class KasseWochenView extends JFrame implements ActionListener {
 		mntmWocheErstellen.setFont(new Font("Verdana", Font.PLAIN, 21));
 		mnWoche.add(mntmWocheErstellen);
 
-		mntmWocheLoeschen = new JMenuItem("löschen");
+		mntmWocheLoeschen = new JMenuItem("Löschen");
 		mntmWocheLoeschen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				new WochenplanLoeschenView(myView, myModel, myController);
@@ -130,7 +143,7 @@ public class KasseWochenView extends JFrame implements ActionListener {
 		mntmWocheLoeschen.setFont(new Font("Verdana", Font.PLAIN, 21));
 		mnWoche.add(mntmWocheLoeschen);
 
-		mntmWocheVerschicken = new JMenuItem("verschicken");
+		mntmWocheVerschicken = new JMenuItem("Verschicken");
 		mntmWocheVerschicken.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				new KasseWocheSendenView(myModel, myView, myController);
@@ -158,7 +171,7 @@ public class KasseWochenView extends JFrame implements ActionListener {
 		mnTermin.setFont(new Font("Dialog", Font.PLAIN, 26));
 		menuBar.add(mnTermin);
 
-		mntmTerminErstellen = new JMenuItem("erstellen");
+		mntmTerminErstellen = new JMenuItem("Erstellen");
 		mntmTerminErstellen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				new TerminErstellenView(myView, myModel, myController);
@@ -168,7 +181,7 @@ public class KasseWochenView extends JFrame implements ActionListener {
 		mntmTerminErstellen.setFont(new Font("Verdana", Font.PLAIN, 21));
 		mnTermin.add(mntmTerminErstellen);
 
-		mntmTerminLoeschen = new JMenuItem("löschen");
+		mntmTerminLoeschen = new JMenuItem("Löschen");
 		mntmTerminLoeschen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				new TerminLoeschenView(myView, myModel, myController);
@@ -182,7 +195,7 @@ public class KasseWochenView extends JFrame implements ActionListener {
 		mnKrankmeldung.setFont(new Font("Dialog", Font.PLAIN, 26));
 		menuBar.add(mnKrankmeldung);
 
-		mntmKrankErstellen = new JMenuItem("erstellen");
+		mntmKrankErstellen = new JMenuItem("Erstellen");
 		mntmKrankErstellen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				new KrankmeldungErstellenView(myView, myModel, myController);
@@ -192,7 +205,7 @@ public class KasseWochenView extends JFrame implements ActionListener {
 		mntmKrankErstellen.setFont(new Font("Verdana", Font.PLAIN, 21));
 		mnKrankmeldung.add(mntmKrankErstellen);
 
-		mntmKrankLoeschen = new JMenuItem("löschen");
+		mntmKrankLoeschen = new JMenuItem("Löschen");
 		mntmKrankLoeschen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				new KrankmeldungLoeschenView(myView, myModel, myController);
@@ -217,6 +230,7 @@ public class KasseWochenView extends JFrame implements ActionListener {
 		mnBenutzerrolle.add(mntmBenutzerZuweisen);
 		getContentPane().setLayout(null);
 
+		//Warum KW 1? Es gibt doch keine anderen Label in denen die KW steht
 		lblKW1 = new JLabel("");
 		lblKW1.setFont(new Font("Tahoma", Font.BOLD, 13));
 		lblKW1.setBounds(109, 11, 136, 30);
@@ -233,8 +247,7 @@ public class KasseWochenView extends JFrame implements ActionListener {
 		btnRechts.addActionListener(new ActionListener() {
 			
 			@Override
-			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
+			public void actionPerformed(ActionEvent e) {						
 				currentKW++;
 				if(wochenplaene.size() <= currentKW){
 					currentKW--;
@@ -244,6 +257,17 @@ public class KasseWochenView extends JFrame implements ActionListener {
 					getContentPane().remove(tbleWochenplan);
 					tbleWochenplan = myController.generiereWochenplanView(wochenplaene.get(currentKW));
 					tbleWochenplan.setBounds(24, 81, 1439, 676);
+					
+					//folgende Anweisungen fehlen um die columns etc. anzuzeigen
+					
+					/*
+					tbleWochenplan.getTableHeader().setSize(tbleWochenplan.getTableHeader().getPreferredSize());
+					tbleWochenplan.setSize(tbleWochenplan.getPreferredSize());
+					tbleWochenplan.setPreferredScrollableViewportSize(tbleWochenplan.getPreferredScrollableViewportSize());
+					tbleWochenplan.setFillsViewportHeight(true);
+					JScrollpane jsp = new JScrollPane(tbleWochenplan);					
+					*/
+					
 					getContentPane().add(tbleWochenplan);
 				}
 			}
@@ -259,7 +283,7 @@ public class KasseWochenView extends JFrame implements ActionListener {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
+			
 				currentKW--;
 				if(currentKW < 0){
 					currentKW++;
@@ -269,6 +293,9 @@ public class KasseWochenView extends JFrame implements ActionListener {
 					getContentPane().remove(tbleWochenplan);
 					tbleWochenplan = myController.generiereWochenplanView(wochenplaene.get(currentKW));
 					tbleWochenplan.setBounds(24, 81, 1439, 676);
+					
+					//siehe oben!
+					
 					getContentPane().add(tbleWochenplan);
 				}
 					
@@ -277,15 +304,17 @@ public class KasseWochenView extends JFrame implements ActionListener {
 		
 		getContentPane().add(btnLinks);
 		
+		//Für das anpassen der JTable solltest du ne eingene Methode machen, dass steht hier jetzt schon 3 mal --> Fehleranfälligkeit und doppelter Code wird verbessert
+		
 		tbleWochenplan = myController.generiereWochenplanView(wochenplaene.get(currentKW));
 		tbleWochenplan.setBounds(24, 81, 1439, 676);
 		
 		getContentPane().add(tbleWochenplan);
-
-
+		
 		setVisible(true);
 	}
 
+	//Überflüssige actionPerformed-Methode
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		// TODO Auto-generated method stub
