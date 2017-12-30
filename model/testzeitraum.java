@@ -1,5 +1,7 @@
 package model;
 
+//Sollte gelöscht werden!
+
 public class testzeitraum {
 	public static void main(String[] args){
  String anfangzeitraum="KW1001, Montag";

@@ -10,10 +10,13 @@ import java.util.LinkedList;
 import data.Ma_Schicht;
 import data.Userrecht;
 
+//Klassenbeschreibung fehlt!
+
+//Finally-Block fehlt!
+
+//Kommentare innerhalb der Methode fehlen
+
 class Datenbank_Userrecht {
-
-
-	
 	
 	/**
 	 * @author Anes Preljevic
@@ -27,17 +30,14 @@ class Datenbank_Userrecht {
 		String sqlStatement = "SELECT Job,Benutzerrolle  FROM Userrecht where job ='"+job+"'";
 
 		try {
+			//siehe vorherige Klassen!
 			stmt = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			
 			rs = stmt.executeQuery(sqlStatement);
 			
-			
-
 			rs.next();
 
-				Userrecht u = new Userrecht(rs.getString("Job"),rs.getString("Benutzerrolle"));
-
-				
-			
+			Userrecht u = new Userrecht(rs.getString("Job"),rs.getString("Benutzerrolle"));
 
 			rs.close();
 			stmt.close();
@@ -48,6 +48,7 @@ class Datenbank_Userrecht {
 			System.err.println("Methode getUserrecht SQL-Fehler: " + sql.getMessage());
 			return null;
 		}
+		//Finally Block fehlt!
 	}
 	}
 

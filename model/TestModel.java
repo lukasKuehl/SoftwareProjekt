@@ -3,6 +3,8 @@ import java.sql.*;
 import java.util.LinkedList;
 import data.*;
 
+//Testklasse --> Sollte nur zum Ausprobieren verwendet werden und muss später gelöscht werden
+
 /**
  * @author Anes Preljevic
  * @info Testen der Model Methoden

@@ -16,6 +16,12 @@ import data.Tag;
 
 import data.Wochenplan;
 
+//Klassenbeschreibung fehlt!
+
+//Kommentare innerhalb der Methode fehlen!
+
+//Finally Blöcke fehlen!
+
 class Datenbank_Wochenplan {
 
 	/**
@@ -30,8 +36,11 @@ class Datenbank_Wochenplan {
 				+ " Hauptzeitbeginn, Hauptzeitende, Benutzername, Minanzinfot, Minanzinfow,"
 				+ " Minanzkasse, Mehrbesetzung ) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		PreparedStatement pstmt = null;
+		
+		//Siehe vorherige Klassen!
 		Statement checkInput = null;
 		ResultSet checkRS = null;
+		
 		int wpnr = 0;
 		boolean öffentlichstatus = false;
 		String öffnungszeit = null;
@@ -47,7 +56,6 @@ class Datenbank_Wochenplan {
 		
 		try {
 			pstmt = con.prepareStatement(sqlStatement);
-
 
 			wpnr= wochenplan.getWpnr();
 			öffentlichstatus = wochenplan.isÖffentlichstatus();
@@ -69,6 +77,8 @@ class Datenbank_Wochenplan {
 			else{
 				//Es wurde sichergestellt, dass die PK- und FK-Check-Constraints nicht verletzt werden --> Der Datensatz kann erzeugt werden
 			
+				//Nein, siehe vorherige Klassen!
+				
 				pstmt.setInt(1, wpnr);
 				pstmt.setBoolean(2, öffentlichstatus);
 				pstmt.setString(3, öffnungszeit);
@@ -93,8 +103,9 @@ class Datenbank_Wochenplan {
 				con.commit();	
 				
 			}			
-			
+			//Das success muss mit in den else Block, da eine Bestätigung nur sinnvoll ist, wenn auch wirklich ein neuer Wochenplan erstellt worden ist			
 			success = true;
+			
 			con.setAutoCommit(true);
 			
 			
@@ -118,7 +129,8 @@ class Datenbank_Wochenplan {
 		} finally {
 			//Schließen der offen gebliebenen Statements & ResultSets
 			try {
-				
+	
+				//Siehe vorherige Klassen!
 				if(checkRS != null){
 					checkRS.close();
 				}				
@@ -171,24 +183,23 @@ class Datenbank_Wochenplan {
 	/**
 	 * @author Anes Preljevic
 	 * @info Ändert den Öffentlichstatus auf den Wert der übergebenen Woche
-	 */
-	
-	
+	 */	
 	protected void updateWochenplan(Wochenplan wochenplan,Connection con) {
 
 		int wpnr = wochenplan.getWpnr();
 		boolean öffentlichstatus = wochenplan.isÖffentlichstatus();
 
-
+		//Siehe vorherige Klassen!
 		String sqlStatement;
-
 		sqlStatement = "UPDATE WOCHENPLAN " + "SET Öffentlichkeitsstatus = ? WHERE Wpnr =" + wpnr;
+		
 		PreparedStatement pstmt = null;
 
 		try {
 
 			pstmt = con.prepareStatement(sqlStatement);
 
+			//Siehe vorherige Klassen!
 			con.setAutoCommit(false);
 			pstmt.setBoolean(1, öffentlichstatus);
 			
@@ -224,12 +235,12 @@ class Datenbank_Wochenplan {
 		String sqlStatement;
 
 		sqlStatement = "UPDATE WOCHENPLAN " + "SET Öffentlichkeitsstatus = true WHERE Wpnr =" + wpnr;
-		
-		
+				
 		try {
 
 			stmt = con.createStatement();
 
+			//Siehe vorherige Klassen!
 			con.setAutoCommit(false);
 			stmt.executeUpdate(sqlStatement);
 			con.commit();
@@ -269,7 +280,9 @@ class Datenbank_Wochenplan {
 
 			stmt = con.createStatement();
 
+			//Siehe vorherige Klassen!
 			con.setAutoCommit(false);
+		
 			stmt.executeUpdate(sqlStatement);
 			con.commit();
 
@@ -304,26 +317,31 @@ class Datenbank_Wochenplan {
 
 		Datenbank_Tag tag = new Datenbank_Tag();
 		LinkedList<Tag> tageList = tag.getTage(con);;
-	
 
 		Statement stmt = null;
 		ResultSet rs = null;
+	
+		//Select *
 		String sqlStatement = "select Wpnr, Öffentlichkeitsstatus, Öffnungszeit, Schließzeit, Hauptzeitbeginn, Hauptzeitende, Benutzername,"
 				+ "Minanzinfot, Minanzinfow, Minanzkasse, Mehrbesetzung from Wochenplan";
 
 		try {
-		
+			//Siehe vorherige Klassen!
 			stmt = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			
 			rs = stmt.executeQuery(sqlStatement);
 
 			LinkedList<Wochenplan> wochenplanList = new LinkedList<>();
 
 			while (rs.next()) {
 				
+			//Warum wird nicht einfach die Methode getWochenplan(wpnr, con) verwendet? Die Zeilen stehen da zwei mal
 				Wochenplan wp = new Wochenplan(rs.getInt("Wpnr"),rs.getBoolean("Öffentlichkeitsstatus"),rs.getTime("Öffnungszeit").toString(),
 						rs.getTime("SchließZeit").toString(),rs.getTime("Hauptzeitbeginn").toString(),rs.getTime("Hauptzeitende").toString(),
 						rs.getString("Benutzername"),rs.getInt("Minanzinfot"),
 						rs.getInt("Minanzinfow"),rs.getInt("Minanzkasse"),rs.getInt("Mehrbesetzung"));
+				
+				//Siehe vorherige Klassen!
 				LinkedList<Tag> tagewp=new LinkedList<>();
 				for (Tag ta : tageList) {
 					if (ta.getWpnr() == wp.getWpnr()) {
@@ -343,6 +361,8 @@ class Datenbank_Wochenplan {
 			System.err.println("Methode getWochenplaene SQL-Fehler: " + sql.getMessage());
 			return null;
 		}
+		//Finally-Block fehlt!
+		
 	}
 	/**
 		* @author Anes Preljevic
@@ -354,44 +374,45 @@ class Datenbank_Wochenplan {
 
 		Datenbank_Tag tag = new Datenbank_Tag();
 		LinkedList<Tag> tageList = tag.getTage(con);;
-	
-		
+			
 		if (!checkWochenplan(wpnr,con)){
 			return null;
 		}
 		else{
 		Statement stmt = null;
 		ResultSet rs = null;
+	
+		//Siehe vorherige Klassen!
 		String sqlStatement = "select Wpnr, Öffentlichkeitsstatus, Öffnungszeit, Schließzeit, Hauptzeitbeginn, Hauptzeitende, Benutzername,"
 				+ "Minanzinfot, Minanzinfow, Minanzkasse, Mehrbesetzung from Wochenplan where Wpnr ="+wpnr;
 
 		try {
+			//Siehe vorherige Klassen!
 			stmt = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			
 			rs = stmt.executeQuery(sqlStatement);
 	
 			rs.next();
 			int mehrb=rs.getInt("Mehrbesetzung");
 			if (rs.wasNull())
 				mehrb = 0;
-			
+				
+				//Siehe oben!
 				Wochenplan wp = new Wochenplan(rs.getInt("Wpnr"),rs.getBoolean("Öffentlichkeitsstatus"),rs.getTime("Öffnungszeit").toString(),
 						rs.getTime("SchließZeit").toString(),rs.getTime("Hauptzeitbeginn").toString(),rs.getTime("Hauptzeitende").toString(),
 						rs.getString("Benutzername"),rs.getInt("Minanzinfot"),
 						rs.getInt("Minanzinfow"),rs.getInt("Minanzkasse"),mehrb);
+				
+				//Siehe vorherige Klassen!
 				LinkedList<Tag> tagewp=new LinkedList<>();
 				for (Tag ta : tageList) {
-					if (ta.getWpnr() == wp.getWpnr()) {
-						
-						tagewp.add(ta);
-						
-				
+					if (ta.getWpnr() == wp.getWpnr()) {					
+						tagewp.add(ta);			
 					}
 				}
 				wp.setLinkedListTage(tagewp);
 			rs.close();
-			stmt.close();
-					
-			
+			stmt.close();		
 
 			return wp;
 		}
@@ -400,6 +421,8 @@ class Datenbank_Wochenplan {
 		}
 			return null;
 		}
+		
+		//Finally Block fehlt!
 		}
 	//}
 	/**
@@ -413,6 +436,7 @@ class Datenbank_Wochenplan {
 		
 
 		if (!checkWochenplan(wpnr, con)){
+			//Siehe vorherige Klassen!
 			return false;
 		}
 		else{
@@ -424,7 +448,9 @@ class Datenbank_Wochenplan {
 			
 		
 		try {
+			//Siehe vorherige Klassen!
 			con.setAutoCommit(false);
+			
 			stmt = con.createStatement();
 			stmt.execute(sqlStatement);
 			con.commit();
@@ -457,6 +483,7 @@ class Datenbank_Wochenplan {
 		}
 	}
 	
+	//Code kann gelöscht werden!
 
 //	if(tmp[3].equalsIgnoreCase("null"))
 //		pstmt.setNull(4, java.sql.Types.INTEGER);

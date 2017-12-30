@@ -10,14 +10,21 @@ import java.util.LinkedList;
 import data.Schicht;
 import data.Warenhaus;
 
+//Klassenbeschreibung fehlt!
+
+//Finally Block bei getWarenhaus fehlt
+
+//Einzelne getWarenhaus-Methode fehlt!
+
 class Datenbank_Warenhaus {
-
-
-
+	
+	//Methodenbeschreibung fehlt!
 	protected void addWarenhaus(Warenhaus warenhaus, Connection con) {
 
+		//Eine Anweisung sinnvoller
 		String sqlStatement;
 		sqlStatement = "insert into Warenhaus (Whname,Anzkasse,Anzinfo) values( ?, ?, ?)";
+		
 		PreparedStatement pstmt = null;
 
 		try {
@@ -26,10 +33,13 @@ class Datenbank_Warenhaus {
 			String whname = warenhaus.getWhname();
 			int anzkasse = warenhaus.getAnzkasse();
 			int anzinfo = warenhaus.getAnzinfo();
-			
-			con.setAutoCommit(false);
 
+			//Siehe vorherige Klassen!
+			con.setAutoCommit(false);
 		
+			//Abfrage mit CheckWarenhaus fehlt!
+			
+			
 				pstmt.setString(1, whname);
 				pstmt.setInt(2,anzkasse);
 				pstmt.setInt(3, anzinfo);
@@ -95,12 +105,16 @@ class Datenbank_Warenhaus {
 		Statement stmt = null;
 		ResultSet rs = null;
 
+		//Siehe vorherige Klassen!
 		String sqlStatement = "select Whname, anzkasse, anzinfo from Warenhaus";
 
 		try {
+			//Siehe vorherige Klassen!
 			stmt = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			
 			rs = stmt.executeQuery(sqlStatement);
 
+			//Siehe vorherige Klassen!
 			LinkedList<Warenhaus> warenhausList = new LinkedList<>();
 
 			while (rs.next()) {
@@ -118,6 +132,7 @@ class Datenbank_Warenhaus {
 			System.err.println("Methode getWarenhaus SQL-Fehler: " + sql.getMessage());
 			return null;
 		}
+		//Finally-Block fehlt!
 	}
 
 

@@ -1,6 +1,7 @@
 package model;
 import java.sql.*;
 
+//Klasse wird nicht verwendet und kann weg!
 
 public class DBConnector {
 
