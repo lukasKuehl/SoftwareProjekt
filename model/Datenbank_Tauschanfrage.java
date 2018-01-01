@@ -30,26 +30,22 @@ class Datenbank_Tauschanfrage {
 	protected boolean addTauschanfrage(int tauschNr, String senderName, int senderSchichtNr, String empfaengerName, int empfaengerSchichtNr,Connection con ) {
 		boolean success = false;
 	
-		
-		String sqlStatement;
-		sqlStatement = "insert into Tauschanfrage(empfänger, sender, bestätigungsstatus,schichtnrsender, schichtnrempfänger, tauschnr) values(?, ?, ?, ?, ?, ?)";
+		String sqlStatement = "insert into Tauschanfrage(empfänger, sender, bestätigungsstatus,schichtnrsender, schichtnrempfänger, tauschnr) values(?, ?, ?, ?, ?, ?)";
 		PreparedStatement pstmt = null;
-		
-		//Siehe vorherige Klassen!
-		Statement checkInput = null;
-		ResultSet checkRS = null;
-		
 		boolean bestaetigestatus = false;
 				
 		try {
 			pstmt = con.prepareStatement(sqlStatement);
-			
-			//Siehe vorherige Klassen
 			con.setAutoCommit(false);
-
+			
+			//Überprüfen des PK-Check-Constraints
 			if (checkTauschanfrage(tauschNr, con)) {
 				System.out.println("Die Tauschnummer befindet sich bereits in der Datenbank!");
+			//Überprüfung des FK-Check-Constraints
+			}if ((checkTauschanfrageFK(senderName,senderSchichtNr,empfaengerName,empfaengerSchichtNr,con) == false)){
+				System.out.println("Der Foreign-Key Constraint  der Tauschanfrage Tabelle wurde verletzt!");
 			}
+			
 			else{
 				//Es wurde sichergestellt, dass die PK- und FK-Check-Constraints nicht verletzt werden --> Der Datensatz kann erzeugt werden
 			
@@ -88,16 +84,6 @@ class Datenbank_Tauschanfrage {
 		} finally {
 			//Schließen der offen gebliebenen Statements & ResultSets
 			try {
-				
-				//Siehe vorherige Klassen
-				if(checkRS != null){
-					checkRS.close();
-				}				
-				
-				if(checkInput != null){
-					checkInput.close();
-				}			
-				
 				if (pstmt != null){
 					pstmt.close();
 				}			
@@ -137,6 +123,54 @@ class Datenbank_Tauschanfrage {
 		}
 	}
 
+	/**
+	 * @author Thomas Friesen
+	 * @info Die Methode prüft, ob die Foreign Keys der Tabelle Ma_Schicht eingehalten werden
+	 */
+	protected boolean checkTauschanfrageFK(String senderName, int senderSchichtNr, String empfaengerName, int empfaengerSchichtNr,Connection con) {
+		
+		boolean result = false;
+		Statement[] stmt = new Statement[4];
+		ResultSet[] rs = new ResultSet[4];
+		String sqlQuery[] = new String[4];
+		sqlQuery[0] = "select schichtnr from Schicht where schichtnr = "+ senderSchichtNr ;
+		sqlQuery[1] = "select benutzername from Mitarbeiter where benutzername = '" + senderName + "'";
+		sqlQuery[2] = "select schichtnr from Schicht where schichtnr = "+ empfaengerSchichtNr ;
+		sqlQuery[3] = "select benutzername from Mitarbeiter where benutzername = '" + empfaengerName + "'";
+		
+	
+		try {
+			for (int i=0; i<=3;i++){
+				stmt[i] = con.createStatement();
+				rs[i] = stmt[i].executeQuery(sqlQuery[i]);
+			}
+			
+			if ((rs[0].next()) == true && (rs[1].next())== true && (rs[2].next())== true && (rs[3].next())== true){
+				result = true;
+			}
+			
+				
+
+		} catch (SQLException sql) {
+			System.err.println("Methode checkMa_SchichtFK SQL-Fehler: " + sql.getMessage());
+		} finally {
+			try {
+				for(int i =0; i<=3;i++){
+					if(rs[i] != null){
+						rs[i].close();
+					}
+					if(stmt[i] != null){
+						stmt[i].close();
+					}
+				}
+			} catch (SQLException e) {
+				System.err.println("Methode checkMa_SchichtFK (finally) SQL-Fehler: " + e.getMessage());
+			}
+			
+		}
+		return result;
+	}
+	
 	/**
 	 * @Anes Preljevic
 	 * @info Ändert den Bestätigungsstatus der übergebenen Tauschanfrage

@@ -529,6 +529,20 @@ public class Einsatzplanmodel implements Observable {
 		}
 		return result;
 	}
+	
+	public boolean checkTauschanfrageFK(String senderName, int senderSchichtNr, String empfaengerName, int empfaengerSchichtNr) {
+		boolean result =false;
+		try{
+			result = this.dataTauschanfrage.checkTauschanfrageFK(senderName,senderSchichtNr,empfaengerName,empfaengerSchichtNr,con);
+			
+		}catch(Exception e){
+			System.out.println("Fehler innerhalb des Modells:");
+			System.out.println("Fehler beim Aufruf der Methode checkTauschanfrage:");
+			e.printStackTrace();	
+		}
+		return result;
+	}
+	
 	public boolean deleteTauschanfrage(int tauschnr) {
 		boolean result =false;
 		try{
