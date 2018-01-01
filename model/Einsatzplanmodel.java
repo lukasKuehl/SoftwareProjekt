@@ -190,6 +190,20 @@ public class Einsatzplanmodel implements Observable {
 		
 		return result;
 	}
+
+public boolean checkWochenplanFK(String benutzername) {
+	boolean result =false;
+	try{
+		result = this.dataWochenplan.checkWochenplanFK(benutzername, con);
+		
+	}catch(Exception e){
+		System.out.println("Fehler innerhalb des Modells:");
+		System.out.println("Fehler beim Aufruf der Methode checkWochenplanFK:");
+		e.printStackTrace();			
+	}
+	return result;
+}
+	
 	public boolean deleteWochenplan(int wpnr) {
 		boolean result =false;
 		try{

@@ -36,11 +36,6 @@ class Datenbank_Wochenplan {
 				+ " Hauptzeitbeginn, Hauptzeitende, Benutzername, Minanzinfot, Minanzinfow,"
 				+ " Minanzkasse, Mehrbesetzung ) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		PreparedStatement pstmt = null;
-		
-		//Siehe vorherige Klassen!
-		Statement checkInput = null;
-		ResultSet checkRS = null;
-		
 		int wpnr = 0;
 		boolean öffentlichstatus = false;
 		String öffnungszeit = null;
@@ -74,10 +69,12 @@ class Datenbank_Wochenplan {
 			if (checkWochenplan(wpnr,con)) {
 				System.out.println("Der Wochenplan ist bereits in der Tabelle eingetragen");
 			}
+			if (checkWochenplanFK(benutzername, con)){
+				System.out.println("Der angegebene Benutzer existiert nicht in der Mitarbeitertabelle");
+			}
 			else{
 				//Es wurde sichergestellt, dass die PK- und FK-Check-Constraints nicht verletzt werden --> Der Datensatz kann erzeugt werden
 			
-				//Nein, siehe vorherige Klassen!
 				
 				pstmt.setInt(1, wpnr);
 				pstmt.setBoolean(2, öffentlichstatus);
@@ -102,9 +99,8 @@ class Datenbank_Wochenplan {
 				dtag.addTag(new Tag ("Samstag", wpnr, false), öffnungszeit, schließzeit, hauptzeitbeginn, hauptzeitende,con);
 				con.commit();	
 				
-			}			
-			//Das success muss mit in den else Block, da eine Bestätigung nur sinnvoll ist, wenn auch wirklich ein neuer Wochenplan erstellt worden ist			
-			success = true;
+				success = true;
+			}						
 			
 			con.setAutoCommit(true);
 			
@@ -129,16 +125,6 @@ class Datenbank_Wochenplan {
 		} finally {
 			//Schließen der offen gebliebenen Statements & ResultSets
 			try {
-	
-				//Siehe vorherige Klassen!
-				if(checkRS != null){
-					checkRS.close();
-				}				
-				
-				if(checkInput != null){
-					checkInput.close();
-				}			
-				
 				if (pstmt != null){
 					pstmt.close();
 				}			
@@ -180,6 +166,50 @@ class Datenbank_Wochenplan {
 			}
 		}
 	}
+	
+	/**
+	 * @author Thomas Friesen
+	 * @info Die Methode prüft, ob der Foreign-Key-Constraint der Tabelle TerminBlockierung eingehalten werden
+	 */
+	protected boolean checkWochenplanFK(String benutzername,Connection con) {
+		boolean result = false;
+		Statement stmt = null;
+		ResultSet rs = null;
+		String sqlQuery = "select benutzername from Mitarbeiter where benutzername = '"+ benutzername +"'" ;
+		
+		try {
+			
+				stmt = con.createStatement();
+				rs = stmt.executeQuery(sqlQuery);
+			
+			if ((rs.next()) == true){
+				result = true;
+			}else{
+				result = false;
+			}
+			
+			
+		} catch (SQLException sql) {
+			System.err.println("Methode checkWochenplanFK SQL-Fehler: " + sql.getMessage());
+			return false;
+			
+		} finally {
+			try {
+					if(rs != null){
+						rs.close();
+					
+					if(stmt != null){
+						stmt.close();
+					}
+						
+				}
+			} catch (SQLException e) {
+				System.err.println("Methode checkWochenplanFK (finally) SQL-Fehler: " + e.getMessage());
+			}
+		}
+		return result;
+	}
+	
 	/**
 	 * @author Anes Preljevic
 	 * @info Ändert den Öffentlichstatus auf den Wert der übergebenen Woche
