@@ -285,6 +285,20 @@ public class Einsatzplanmodel implements Observable {
 		}
 		return result;
 	}
+	
+	public boolean checkMa_SchichtFK(int schichtnr, String benutzername) {
+		boolean result =false;
+		try{
+			result = this.dataMa_Schicht.checkMa_SchichtFK(schichtnr, benutzername,con);
+			
+		}catch(Exception e){
+			System.out.println("Fehler innerhalb des Modells:");
+			System.out.println("Fehler beim Aufruf der Methode checkMa_Schicht:");
+			e.printStackTrace();			
+		}
+		return result;
+	}
+	
 	public boolean deleteMa_Schicht(int schichtnr, String benutzername) {
 		boolean result =false;
 		try{

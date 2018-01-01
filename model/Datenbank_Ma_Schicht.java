@@ -18,95 +18,74 @@ import data.Ma_Schicht;
  class Datenbank_Ma_Schicht {
 
 
-	/**
-	 * @Thomas Friesen
-	 * @info Die Methode fügt einen Datensatz in die Ma_Schicht Tabelle ein.
-	 */
-	protected boolean addMa_Schicht(Ma_Schicht ma_schicht,Connection con) {
-		boolean success = false;
-	
-		//Wertzuweisung in eine Zeile --> übersichtlicher
-		String sqlStatement;
-		sqlStatement = "insert into Ma_Schicht (Schichtnr,Benutzername) values(?, ?)";
-		
-		PreparedStatement pstmt = null;
-		
-		//checkInput und checkRS sind beide überflüssig, da Sie noch nirgendwo verwendet werden, die sind zum Überprüfen der FK-Constraints!
-		Statement checkInput = null;
-		ResultSet checkRS = null;		
-		
-		int schichtnr = 0;
-		String benutzername = null;
-		
-		
-		try {
-			pstmt = con.prepareStatement(sqlStatement);
-
-			//Auslesen der als Parameter übergebenen Mitarbeiter-Schicht-Beziehung
-			schichtnr = ma_schicht.getSchichtnr();
-			benutzername = ma_schicht.getBenutzername();		
+	 /**
+		 * @Thomas Friesen
+		 * @info Die Methode fügt einen Datensatz in die Ma_Schicht Tabelle ein.
+		 */
+		protected boolean addMa_Schicht(Ma_Schicht ma_schicht,Connection con) {
+			boolean success = false;
+			String sqlStatement = "insert into Ma_Schicht (Schichtnr,Benutzername) values(?, ?)";
+			PreparedStatement pstmt = null;		
+			int schichtnr = 0;
+			String benutzername = null;
 			
-			//Nicht notwendig, es wird ja nur ein Datensatz eingefügt. Falls diese Methode in einer for-Schleife innerhalb einer anderen Methode aufgerufen wird, ändert ihr damit auch die AutoCommit-Einstellung der übergeordneten Methode(Alles über eine Connection).
-			con.setAutoCommit(false);
-
-			if (checkMa_Schicht(schichtnr, benutzername,con)) {
-				System.out.println("Der Mitarbeiter wurde bereits in die Schicht eingeteilt!");
-			}
-			else{
-								
-				//Es wurde sichergestellt, dass die PK- und FK-Check-Constraints nicht verletzt werden --> Der Datensatz kann erzeugt werden
-				
-				//Nein, du hast nur überprüft, ob es den Mitarbeiter-Schicht Datensatz schon gibt(Das ist der PK-Check), die FK-Checks(Mitarbeiter/Schicht existiert) fehlen!
-				
-				pstmt.setInt(1, schichtnr);
-				pstmt.setString(2, benutzername);
-			
-				pstmt.execute();
-				con.commit();	
-				
-			}			
-			
-			success = true;
-			//siehe oben
-			con.setAutoCommit(true);
-			
-			
-		} catch (SQLException sql) {
-			//Die Ausgaben dienen zur Ursachensuche und sollten im späteren Programm entweder gar nicht oder vielleicht als Dialog(ausgelöst in der View weil der Rückgabewert false ist) angezeigt werden
-			System.out.println("Fehler beim Einfügen eines neuen Datensatzes in die Datenbank!");
-			System.out.println("Fehler bei der Zuordnung eines Mitarbeiters zu einer Schicht:");
-			System.out.println("Parameter: Schichtnr = " + schichtnr + " Mitarbeiter = " + benutzername);
-			sql.printStackTrace();		
 			
 			try {
-				//Zurücksetzen des Connection Zustandes auf den Ursprungszustand
-				con.rollback();
-				con.setAutoCommit(true);
-			} catch (SQLException sqlRollback) {
-				System.err.println("Methode addMa_Schicht " + "- Rollback -  SQL-Fehler: " + sqlRollback.getMessage());
-			}
-		} finally {
-			//Schließen der offen gebliebenen Statements & ResultSets
-			try {
-				//siehe oben
-				if(checkRS != null){
-					checkRS.close();
-				}				
+				pstmt = con.prepareStatement(sqlStatement);
+
+				//Auslesen der als Parameter übergebenen Mitarbeiter-Schicht-Beziehung
+				schichtnr = ma_schicht.getSchichtnr();
+				benutzername = ma_schicht.getBenutzername();		
 				
-				if(checkInput != null){
-					checkInput.close();
+				//Überprüfung, dass die PK-Check-Constrains nicht verletzt werden
+				if (checkMa_Schicht(schichtnr, benutzername,con)) {
+					System.out.println("Der Mitarbeiter wurde bereits in die Schicht eingeteilt!");
+					
+				//Überprüfung, dass die FK-Check-Constraints nicht verletzt werden
+				}else if ((checkMa_SchichtFK(schichtnr,benutzername,con) == false)){
+					System.out.println("Der Foreign-Key Constraint  der Ma_Schicht Tabelle wurde verletzt!");
+				}
+				else{
+					//Es wurde sichergestellt, dass die PK- und FK-Check-Constraints nicht verletzt werden --> Der Datensatz kann erzeugt werden
+					
+					//Ausfüllen und ausführen des Prepared Statements
+					pstmt.setInt(1, schichtnr);
+					pstmt.setString(2, benutzername);
+					pstmt.execute();
+					con.commit();	
+					
 				}			
 				
-				if (pstmt != null){
-					pstmt.close();
-				}			
+				success = true;
 				
-			} catch (SQLException e) {
-				System.err.println("Methode addMa_Schicht(finally) SQL-Fehler: " + e.getMessage());
+				
+			} catch (SQLException sql) {
+				//Die Ausgaben dienen zur Ursachensuche und sollten im späteren Programm entweder gar nicht oder vielleicht als Dialog(ausgelöst in der View weil der Rückgabewert false ist) angezeigt werden
+				System.out.println("Fehler beim Einfügen eines neuen Datensatzes in die Datenbank!");
+				System.out.println("Fehler bei der Zuordnung eines Mitarbeiters zu einer Schicht:");
+				System.out.println("Parameter: Schichtnr = " + schichtnr + " Mitarbeiter = " + benutzername);
+				sql.printStackTrace();		
+				
+				try {
+					//Zurücksetzen des Connection Zustandes auf den Ursprungszustand
+					con.rollback();
+					con.setAutoCommit(true);
+				} catch (SQLException sqlRollback) {
+					System.err.println("Methode addMa_Schicht " + "- Rollback -  SQL-Fehler: " + sqlRollback.getMessage());
+				}
+			} finally {
+				//Schließen der offen gebliebenen Statements & ResultSets
+				try {		
+					if (pstmt != null){
+						pstmt.close();
+					}			
+					
+				} catch (SQLException e) {
+					System.err.println("Methode addMa_Schicht(finally) SQL-Fehler: " + e.getMessage());
+				}
 			}
+			return success;
 		}
-		return success;
-	}
 
 	/**
 	 * @author Anes Preljevic
@@ -135,6 +114,56 @@ import data.Ma_Schicht;
 					stmt.close();
 			} catch (SQLException e) {
 				System.err.println("Methode checkMa_Schicht (finally) SQL-Fehler: " + e.getMessage());
+			}
+		}
+	}
+
+	/**
+	 * @author Thomas Friesen
+	 * @info Die Methode prüft, ob die Foreign Keys der Tabelle Ma_Schicht eingehalten werden
+	 */
+	protected boolean checkMa_SchichtFK(int schichtnr, String benutzername,Connection con) {
+		boolean result = false;
+		Statement stmt = null;
+		Statement stmt2 = null;
+		ResultSet rs = null;
+		ResultSet rs2 = null;
+		String sqlQuery = "select schichtnr from Schicht where schichtnr = "+ schichtnr ;
+		String sqlQuery2 = "select benutzername from Mitarbeiter where benutzername = '" + benutzername + "'";
+		
+		try {
+			stmt = con.createStatement();
+			stmt2 = con.createStatement();
+			rs = stmt.executeQuery(sqlQuery);
+			rs2 = stmt2.executeQuery(sqlQuery2);
+			
+			if ((rs.next()) == true && (rs2.next())== true){
+				result = true;
+			}else{
+				result = false;
+			}
+			return result;
+				
+
+		} catch (SQLException sql) {
+			System.err.println("Methode checkMa_SchichtFK SQL-Fehler: " + sql.getMessage());
+			return false;
+		} finally {
+			try {
+				if (rs != null){
+						rs.close();
+				}
+				if (rs2 != null){
+						rs2.close();
+				}
+				if (stmt != null){
+						stmt.close();
+				}
+				if (stmt2 != null){
+						stmt2.close();
+				}
+			} catch (SQLException e) {
+				System.err.println("Methode checkMa_SchichtFK (finally) SQL-Fehler: " + e.getMessage());
 			}
 		}
 	}
