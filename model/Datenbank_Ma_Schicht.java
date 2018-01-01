@@ -42,7 +42,7 @@ import data.Ma_Schicht;
 					System.out.println("Der Mitarbeiter wurde bereits in die Schicht eingeteilt!");
 					
 				//Überprüfung, dass die FK-Check-Constraints nicht verletzt werden
-				}else if ((checkMa_SchichtFK(schichtnr,benutzername,con) == false)){
+				}if ((checkMa_SchichtFK(schichtnr,benutzername,con) == false)){
 					System.out.println("Der Foreign-Key Constraint  der Ma_Schicht Tabelle wurde verletzt!");
 				}
 				else{
@@ -124,48 +124,43 @@ import data.Ma_Schicht;
 	 */
 	protected boolean checkMa_SchichtFK(int schichtnr, String benutzername,Connection con) {
 		boolean result = false;
-		Statement stmt = null;
-		Statement stmt2 = null;
-		ResultSet rs = null;
-		ResultSet rs2 = null;
-		String sqlQuery = "select schichtnr from Schicht where schichtnr = "+ schichtnr ;
-		String sqlQuery2 = "select benutzername from Mitarbeiter where benutzername = '" + benutzername + "'";
+		Statement[] stmt = new Statement[2];
+		ResultSet[] rs = new ResultSet[2];
+		String[] sqlQuery = new String[2]; 
+		sqlQuery[0] = "select schichtnr from Schicht where schichtnr = "+ schichtnr ;
+		sqlQuery[1] = "select benutzername from Mitarbeiter where benutzername = '" + benutzername + "'";
 		
 		try {
-			stmt = con.createStatement();
-			stmt2 = con.createStatement();
-			rs = stmt.executeQuery(sqlQuery);
-			rs2 = stmt2.executeQuery(sqlQuery2);
-			
-			if ((rs.next()) == true && (rs2.next())== true){
+			for (int i=0;i<2;i++){
+				stmt[i] = con.createStatement();
+				rs[i] = stmt[i].executeQuery(sqlQuery[i]);
+			}
+			if ((rs[0].next()) == true && (rs[1].next())== true){
 				result = true;
 			}else{
 				result = false;
 			}
-			return result;
-				
-
+			
 		} catch (SQLException sql) {
 			System.err.println("Methode checkMa_SchichtFK SQL-Fehler: " + sql.getMessage());
 			return false;
+			
 		} finally {
 			try {
-				if (rs != null){
-						rs.close();
-				}
-				if (rs2 != null){
-						rs2.close();
-				}
-				if (stmt != null){
-						stmt.close();
-				}
-				if (stmt2 != null){
-						stmt2.close();
+				for(int i=0;i<2;i++){
+					if(rs[i] != null){
+						rs[i].close();
+					}
+					if(stmt[i] != null){
+						stmt[i].close();
+					}
+						
 				}
 			} catch (SQLException e) {
 				System.err.println("Methode checkMa_SchichtFK (finally) SQL-Fehler: " + e.getMessage());
 			}
 		}
+		return result;
 	}
 
 	

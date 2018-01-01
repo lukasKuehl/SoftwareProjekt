@@ -29,10 +29,9 @@ class Datenbank_Tauschanfrage {
 
 	protected boolean addTauschanfrage(int tauschNr, String senderName, int senderSchichtNr, String empfaengerName, int empfaengerSchichtNr,Connection con ) {
 		boolean success = false;
-	
-		String sqlStatement = "insert into Tauschanfrage(empfänger, sender, bestätigungsstatus,schichtnrsender, schichtnrempfänger, tauschnr) values(?, ?, ?, ?, ?, ?)";
-		PreparedStatement pstmt = null;
 		boolean bestaetigestatus = false;
+		PreparedStatement pstmt = null;
+		String sqlStatement = "insert into Tauschanfrage(empfänger, sender, bestätigungsstatus,schichtnrsender, schichtnrempfänger, tauschnr) values(?, ?, ?, ?, ?, ?)";
 				
 		try {
 			pstmt = con.prepareStatement(sqlStatement);
@@ -48,16 +47,12 @@ class Datenbank_Tauschanfrage {
 			
 			else{
 				//Es wurde sichergestellt, dass die PK- und FK-Check-Constraints nicht verletzt werden --> Der Datensatz kann erzeugt werden
-			
-				//Nein, siehe vorherige Klassen!
-				
 				pstmt.setString(1, empfaengerName);
 				pstmt.setString(2, senderName);
 				pstmt.setBoolean(3,bestaetigestatus);
 				pstmt.setInt(4,senderSchichtNr);
 				pstmt.setInt(5, empfaengerSchichtNr);
 				pstmt.setInt(6, tauschNr);
-			
 				pstmt.execute();
 				con.commit();	
 				
@@ -147,8 +142,9 @@ class Datenbank_Tauschanfrage {
 			
 			if ((rs[0].next()) == true && (rs[1].next())== true && (rs[2].next())== true && (rs[3].next())== true){
 				result = true;
+			}else{
+				result = false;
 			}
-			
 				
 
 		} catch (SQLException sql) {

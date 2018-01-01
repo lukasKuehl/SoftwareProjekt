@@ -818,6 +818,21 @@ public class Einsatzplanmodel implements Observable {
 		}
 		return result;
 	}
+	
+	
+	public boolean checkTerminBlockierungFK(String benutzername) {
+		boolean result =false;
+		try{
+			result = this.dataTerminBlockierung.checkTerminBlockierungFK(benutzername, con);
+			
+		}catch(Exception e){
+			System.out.println("Fehler innerhalb des Modells:");
+			System.out.println("Fehler beim Aufruf der Methode checkMa_Schicht:");
+			e.printStackTrace();			
+		}
+		return result;
+	}
+	
 	public boolean deleteTerminBlockierung(int tblocknr) {
 		boolean result =false;
 		try{

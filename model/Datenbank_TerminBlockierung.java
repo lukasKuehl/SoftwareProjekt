@@ -29,14 +29,8 @@ class Datenbank_TerminBlockierung {
 		boolean success = false;
 	
 		
-		String sqlStatement;
-		sqlStatement = "insert into Terminblockierung (tblocknr, benutzername, bbez, anfangzeitraum, endezeitraum, anfanguhrzeit, endeuhrzeit, grund) values(?, ?, ?, ?, ?, ?, ?, ?)";
+		String sqlStatement = "insert into Terminblockierung (tblocknr, benutzername, bbez, anfangzeitraum, endezeitraum, anfanguhrzeit, endeuhrzeit, grund) values(?, ?, ?, ?, ?, ?, ?, ?)";
 		PreparedStatement pstmt = null;
-		
-		//Siehe vorherige Klassen
-		Statement checkInput = null;
-		ResultSet checkRS = null;
-		
 		int tBlockNr = 0;
 		String benutzername = null;
 		String bbez = null;
@@ -65,6 +59,9 @@ class Datenbank_TerminBlockierung {
 
 			if (checkTerminBlockierung(tBlockNr,con)) {
 				System.out.println("Der Termin wurde bereits in die TerminBlockierung-Tabelle eingetragen");
+			}
+			if (checkTerminBlockierungFK(benutzername,con)){
+				System.out.println("Der Benutzername existiert nicht in der Mitarbeitertabelle");
 			}
 			else{
 				//Es wurde sichergestellt, dass die PK- und FK-Check-Constraints nicht verletzt werden --> Der Datensatz kann erzeugt werden
@@ -108,16 +105,7 @@ class Datenbank_TerminBlockierung {
 		} finally {
 			//Schließen der offen gebliebenen Statements & ResultSets
 			try {
-				
-				//Siehe vorherige Klassen!
-				if(checkRS != null){
-					checkRS.close();
-				}				
-				
-				if(checkInput != null){
-					checkInput.close();
-				}			
-				
+					
 				if (pstmt != null){
 					pstmt.close();
 				}			
@@ -159,6 +147,49 @@ class Datenbank_TerminBlockierung {
 		}
 	}
 
+	
+	/**
+	 * @author Thomas Friesen
+	 * @info Die Methode prüft, ob der Foreign-Key-Constraint der Tabelle TerminBlockierung eingehalten werden
+	 */
+	protected boolean checkTerminBlockierungFK(String benutzername,Connection con) {
+		boolean result = false;
+		Statement stmt = null;
+		ResultSet rs = null;
+		String sqlQuery = "select benutzername from Mitarbeiter where benutzername = '"+ benutzername +"'" ;
+		
+		try {
+			
+				stmt = con.createStatement();
+				rs = stmt.executeQuery(sqlQuery);
+			
+			if ((rs.next()) == true){
+				result = true;
+			}else{
+				result = false;
+			}
+			
+			
+		} catch (SQLException sql) {
+			System.err.println("Methode checkTerminBlockierungFK SQL-Fehler: " + sql.getMessage());
+			return false;
+			
+		} finally {
+			try {
+					if(rs != null){
+						rs.close();
+					
+					if(stmt != null){
+						stmt.close();
+					}
+						
+				}
+			} catch (SQLException e) {
+				System.err.println("Methode checkTerminBlockierungFK (finally) SQL-Fehler: " + e.getMessage());
+			}
+		}
+		return result;
+	}
 
 	/**
 	 * @author Anes Preljevic
