@@ -18,8 +18,6 @@ class BenutzerStrg {
 	//Initialisierung der Instanzvariablen
 	private EinsatzplanController myController = null;
 	private Einsatzplanmodel myModel = null;
-	
-	//private JDialog myDialog = null;
 			
 	/**
 	 * @author Lukas Kühl	
@@ -84,13 +82,21 @@ class BenutzerStrg {
 				
 				Mitarbeiter m = myModel.getMitarbeiter(username);				
 				
-				if(m.getPasswort().equals(pw)){
-					this.myModel.register(myController.getView(), username, pw);
-					success = true;
+				//SQL ist nicht case-sensitiv --> zusätzliche Überprüfung des eingegebenen Usernamen				
+				if(m.getBenutzername().equals(username)){
+					
+					if(m.getPasswort().equals(pw)){
+						this.myModel.register(myController.getView(), username, pw);
+						success = true;
+					}
+					else{
+						System.out.println("Das eingegebene Passwort ist nicht korrekt!");
+					}					
 				}
 				else{
-					System.out.println("Das eingegebene Passwort ist nicht korrekt!");
-				}					
+					System.out.println("Bitte Benutzernamen überprüfen!");
+				}
+				
 				
 			}catch(Exception e){
 				System.out.println("Fehler beim Anmelden des Users " + username + ", bitte Eingaben überprüfen :");
