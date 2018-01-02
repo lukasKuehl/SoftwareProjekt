@@ -36,7 +36,7 @@ import data.Wochenplan;
 import model.Einsatzplanmodel;
 
 /**
- * @author Lukas
+ * @author Lukas Kühl
  * @info Die Klasse WochenplanStrg dient dazu, jegliche Anfragen bezüglich eines Wochenplanes im System zu verarbeiten und zu validieren.
  */
 class WochenplanStrg {
@@ -47,7 +47,7 @@ class WochenplanStrg {
 	private JDialog myDialog = null;
 	
 	/**
-	 * @author 
+	 * @author Lukas Kühl
 	 * @info Erzeugen eines Objektes der Klasse WochenplanStrg. Setzen des allgemeinen EinsatzplanControllers als Parent. Die Variable myDialog wird erst bei jedem Methodenaufruf neu erzeugt und wird deshalb später zugewiesen.
 	 */
 	protected WochenplanStrg(EinsatzplanController myController, Einsatzplanmodel myModel){
@@ -69,7 +69,7 @@ class WochenplanStrg {
 		//muss noch implementiert werden
 		Userrecht recht = Einsatzplanmodel.getUserrecht(user.getJob());
 				
-		if(recht.getBenutzerrolle().equals("Chef")){		
+		if(recht.getBenutzerrolle().equals("Admin")){		
 			
 			Map<String, Date> zeitenDate = new TreeMap<String, Date>();
 			
