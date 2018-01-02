@@ -391,22 +391,7 @@ public class EinsatzplanController {
 		}	
 		
 		return rueckgabe;
-	}
-	
-	public ArrayList<String> getSchichten(String wpbez, String tbez){
-		ArrayList<String> rueckgabe = null;
-		
-		try{
-			rueckgabe = this.wochenplanSteuerung.getSchichten( wpbez,  tbez);
-		}catch(Exception e){
-			System.out.println("Fehler innerhalb des Controllers:");
-			System.out.println("Fehler beim Aufruf der Methode getSchichten:");
-			e.printStackTrace();			
-		}	
-		
-		return rueckgabe;
-	}
-	
+	}	
 	
 	protected Einsatzplanview getView(){
 		return this.view;		
