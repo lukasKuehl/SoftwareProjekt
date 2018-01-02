@@ -15,6 +15,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
@@ -201,7 +202,14 @@ public class MitarbeiterWochenView extends JFrame implements ActionListener {
 					getContentPane().remove(tbleWochenplan);
 					tbleWochenplan = myController.generiereWochenplanView(wochenplaene.get(currentKW));
 					tbleWochenplan.setBounds(24, 81, 1439, 676);
-					getContentPane().add(tbleWochenplan);
+					
+					tbleWochenplan.getTableHeader().setSize(tbleWochenplan.getTableHeader().getPreferredSize());
+					tbleWochenplan.setSize(tbleWochenplan.getPreferredSize());
+					tbleWochenplan.setPreferredScrollableViewportSize(tbleWochenplan.getPreferredScrollableViewportSize());
+					tbleWochenplan.setFillsViewportHeight(true);
+					JScrollPane jsp = new JScrollPane(tbleWochenplan);						
+					
+					getContentPane().add(jsp);
 				}
 
 			}
