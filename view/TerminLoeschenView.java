@@ -24,6 +24,7 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
+import javax.swing.SwingConstants;
 
 /**
  * 
@@ -79,7 +80,7 @@ class TerminLoeschenView extends JFrame {
 		}
 		listTermin.setModel(model);
 		listTermin.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		listTermin.setBounds(65, 145, 282, 355);
+		listTermin.setBounds(65, 145, 399, 355);
 		listTermin.getModel();
 		contentPane.add(listTermin);
 
@@ -88,7 +89,8 @@ class TerminLoeschenView extends JFrame {
 		lblTerminAuswaehlen.setBounds(62, 120, 152, 14);
 		contentPane.add(lblTerminAuswaehlen);
 
-		btnBestaetigen = new JButton("Bestätigen");
+		btnBestaetigen = new JButton("best\u00E4tigen");
+		btnBestaetigen.setHorizontalAlignment(SwingConstants.LEFT);
 		btnBestaetigen.setFont(new Font("Verdana", Font.PLAIN, 15));
 		btnBestaetigen.setBounds(500, 500, 110, 25);
 		contentPane.add(btnBestaetigen);
@@ -114,19 +116,23 @@ class TerminLoeschenView extends JFrame {
 								JOptionPane.YES_NO_CANCEL_OPTION);
 						// weiter bei ja
 						if (eingabe == JOptionPane.YES_OPTION) {
-							// Abfrage, ob die Liste leer ist
-							String s;
-							s = listTermin.getSelectedValue().toString();
-							s.trim();
-							s.split("-");
-							s.substring(0, 2);
-							int terminnr = Integer.parseInt(s);
-							myController.entferneTermin(terminnr, myView.getUsername());
-							JOptionPane.showConfirmDialog(null, "Termin erfolgreich gelöscht");
+							String s =listTermin.getSelectedValue().toString();
+							String [] temp =s.split("-");
+							temp[0] = temp[0].trim();
+							temp[0] = temp [0].substring(5, temp[0].length());		
+							int terminnr = Integer.parseInt(temp[0]);
+							System.out.println(terminnr);
+							String wpbez = temp [1];
+							String date = temp[2];
+							String anfangsUhrzeit = temp[3];
+							String endUhrzeit = temp [4];
+							System.out.println(myController.entferneTermin(terminnr, myView.getUsername()));
+							JOptionPane.showConfirmDialog(null, "Termin erfolgreich gelöscht", "", JOptionPane.INFORMATION_MESSAGE);
 							dispose();
+							
 						} else {
 							JOptionPane.showMessageDialog(null, "Wählen Sie einen anderen Termin aus!", " ",
-									JOptionPane.WARNING_MESSAGE);
+									JOptionPane.INFORMATION_MESSAGE);
 						}
 
 					} catch (Exception a) {

@@ -6,8 +6,6 @@ import javax.swing.*;
 import javax.swing.border.*;
 import javafx.scene.control.RadioButton;
 import model.Einsatzplanmodel;
-
-import java.awt.Color;
 import controller.EinsatzplanController;
 import java.awt.event.*;
 import java.util.ArrayList;
@@ -24,11 +22,10 @@ class KrankmeldungLoeschenView extends JFrame {
 
 	// Initialisierung der Instanzvariablen
 	private JPanel contentPane, panelKrankmeldung = null;
-	private JLabel lblKrankmeldungLoeschen = null;
 	private JList<String> listKrankmeldung = null;
 	private JButton btnBestaetigen = null;
 	private String username = null;
-	private JLabel lblBitteAuswaehlen = null;
+	private JLabel lblBitteAuswaehlen, lblKrankmeldungLoeschen = null;
 	private Einsatzplanview myView = null;
 	private Einsatzplanmodel myModel = null;
 	private EinsatzplanController myController = null;
@@ -60,7 +57,7 @@ class KrankmeldungLoeschenView extends JFrame {
 
 		lblKrankmeldungLoeschen = new JLabel("Krankmeldung löschen");
 		lblKrankmeldungLoeschen.setFont(new Font("Verdana", Font.BOLD, 21));
-		lblKrankmeldungLoeschen.setBounds(95, 74, 362, 26);
+		lblKrankmeldungLoeschen.setBounds(62, 74, 395, 26);
 		contentPane.add(lblKrankmeldungLoeschen);
 
 		// Liste der Krankmeldungen wird einem DefaultListModel hinzugefügt und dann in
@@ -73,18 +70,19 @@ class KrankmeldungLoeschenView extends JFrame {
 		}
 		listKrankmeldung.setModel(model);
 		listKrankmeldung.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		listKrankmeldung.setBounds(95, 126, 362, 399);
+		listKrankmeldung.setBounds(62, 143, 395, 382);
 		listKrankmeldung.getModel();
 		contentPane.add(listKrankmeldung);
 
 		btnBestaetigen = new JButton("bestätigen");
+		btnBestaetigen.setHorizontalAlignment(SwingConstants.LEFT);
 		btnBestaetigen.setFont(new Font("Verdana", Font.PLAIN, 15));
-		btnBestaetigen.setBounds(500, 500, 121, 25);
+		btnBestaetigen.setBounds(500, 500, 109, 25);
 		contentPane.add(btnBestaetigen);
 
 		lblBitteAuswaehlen = new JLabel("Bitte auswählen:");
 		lblBitteAuswaehlen.setFont(new Font("Verdana", Font.PLAIN, 14));
-		lblBitteAuswaehlen.setBounds(95, 128, 113, 14);
+		lblBitteAuswaehlen.setBounds(62, 121, 147, 18);
 		contentPane.add(lblBitteAuswaehlen);
 
 		setVisible(true);
@@ -114,28 +112,22 @@ class KrankmeldungLoeschenView extends JFrame {
 
 						// weiter bei ja
 						if (eingabe == JOptionPane.YES_OPTION) {
+							String s = listKrankmeldung.getSelectedValue().toString();
+							String [] temp =s.split("-");
+							temp[0] = temp[0].trim();
+							temp[0] = temp [0].substring(5, temp[0].length());		
+							int terminnr = Integer.parseInt(temp[0]);
+							String wpbez = temp [1];
+							String date = temp[2];
+							String anfangsUhrzeit = temp[3];
+							String endUhrzeit = temp [4];
 
-							String temp[] = new String[6];
-							kl = myController.getAlleTermine(myView.getUsername());
-							for (String m : kl) {
-								m.toString();
-								m.trim();
-								temp = m.split("-");
-								String grund = temp[0];
-								String wpBez = temp[1];
-								tblocknr = Integer.parseInt(wpBez.substring(2));
-								String anfangstag = temp[2];
-								String endtag = temp[3];
-								String anfangsuhrzeit = temp[4];
-								String enduhrzeit = temp[5];
-
-								// Übergabe an den Controller
-								myController.entferneTermin(tblocknr, grund);
-
-								dispose();
-							}
-						} else {
+							// Übergabe an den Controller
+							myController.entferneTermin(tblocknr, myView.getUsername());
+							JOptionPane.showMessageDialog(null, "Krankmeldung erfolgreich gelöscht!", "", JOptionPane.INFORMATION_MESSAGE);
 							dispose();
+						} else {
+							JOptionPane.showMessageDialog(null, "Wählen Sie eine andere Krankmeldug aus!", "", JOptionPane.INFORMATION_MESSAGE);
 						}
 					}
 				} catch (Exception a) {
@@ -143,6 +135,7 @@ class KrankmeldungLoeschenView extends JFrame {
 							"Die Liste konnte nicht übergeben werden. - Methode ActionPerformed (btnBestätigen, TerminLoeschen)",
 							"Error", JOptionPane.ERROR_MESSAGE);
 				}
+
 			}
 		});
 	}
