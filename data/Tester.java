@@ -9,7 +9,4 @@ public class Tester {
 		new EinsatzplanController(new Einsatzplanmodel());
 		System.out.println("Test erfolgreich!");		
 	}
-	
-	
-	
 }

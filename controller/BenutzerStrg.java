@@ -10,7 +10,7 @@ import model.Einsatzplanmodel;
 import view.Einsatzplanview;
 
 /**
- * @author 
+ * @author Lukas Kühl
  * @info Die Klasse BenutzerStrg dient dazu, jegliche Anfragen zu Benutzern durchzuführen und zu validieren.
  */
 class BenutzerStrg {
@@ -82,7 +82,7 @@ class BenutzerStrg {
 		if(this.myModel.getMitarbeiter(username) != null){
 			try{				
 				
-				Mitarbeiter m = myModel.getMitarbeiter(username);
+				Mitarbeiter m = myModel.getMitarbeiter(username);				
 				
 				if(m.getPasswort().equals(pw)){
 					this.myModel.register(myController.getView(), username, pw);
