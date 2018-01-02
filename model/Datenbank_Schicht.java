@@ -146,7 +146,7 @@ class Datenbank_Schicht {
 		Statement[] stmt = new Statement[2];
 		ResultSet[] rs = new ResultSet[2];
 		String[] sqlQuery = new String[2]; 
-		sqlQuery[0] = "select tbez from Tag where tbez = '"+ tbez + "'" ;
+		sqlQuery[0] = "select tbez from Tag where tbez = '"+ tbez + "'";
 		sqlQuery[1] = "select wpnr from Wochenplan where wpnr = " + wpnr;
 		
 		try {
@@ -295,7 +295,7 @@ class Datenbank_Schicht {
 	 * @info Löschen einer Schicht mit zugehörigen Ma_Schicht (Mitarbeitern in Schichten)aus den Datenbank Tabellen 
 	 * Schicht, Ma-Schicht.
 	 */
-	protected boolean deleteSchicht(int wpnr,Connection con) {
+	protected boolean deleteSchichtvonWp(int wpnr,Connection con) {
 		Datenbank_Tauschanfrage tauschanfrage = new Datenbank_Tauschanfrage();
 		LinkedList<Tauschanfrage> tauschList = tauschanfrage.getTauschanfragen(con);
 		Datenbank_Schicht schicht = new Datenbank_Schicht();

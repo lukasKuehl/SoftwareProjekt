@@ -1,9 +1,7 @@
-package model;
-
-import data.Wochenplan;
+package data;
 
 //Klasse gehört in das Package data --> Allgemeine Klasse
 
 public interface Observer {
-	public void update(Wochenplan wochenplan);
+	public void update();
 }

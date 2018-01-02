@@ -7,6 +7,7 @@ import javax.swing.JTable;
 
 import data.Ma_Schicht;
 import data.Mitarbeiter;
+import data.Observable;
 import data.Observer;
 import data.Schicht;
 import data.Standardeinstellungen;
@@ -453,7 +454,7 @@ public boolean checkWochenplanFK(String benutzername) {
 	public boolean deleteSchicht(int wpnr) {
 		boolean result =false;
 		try{
-			result = this.dataSchicht.deleteSchicht(wpnr,con);
+			result = this.dataSchicht.deleteSchichtvonWp(wpnr,con);
 			
 		}catch(Exception e){
 			System.out.println("Fehler innerhalb des Modells:");

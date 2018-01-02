@@ -125,7 +125,7 @@ class Datenbank_Tag {
 		ResultSet rs = null;
 		
 		//Eine wpnr ist kein Integer --> Anführungszeichen müssen weg!
-		String sqlQuery = "select tbez,wpnr from tag where tbez = '"+tbez+"' and wpnr= '"+wpnr+"'";
+		String sqlQuery = "select tbez,wpnr from tag where tbez = '"+tbez+"' and wpnr= "+wpnr+"";
 
 		try {
 			stmt = con.createStatement();
@@ -395,7 +395,7 @@ class Datenbank_Tag {
 		ResultSet rs = null;
 		
 		//Einfaches wpnr reicht aus, dann ist es überall einheitlich
-		String sqlQuery = "DELETE FROM tag WHERE tag.wpnr= "+wpnr;
+		String sqlQuery = "DELETE FROM tag WHERE wpnr= "+wpnr;
 
 		for (Tblock_Tag tbt : tblocktagList) {
 			if (tbt.getWpnr() == wpnr) {
@@ -404,10 +404,9 @@ class Datenbank_Tag {
 		}
 			
 
-		schicht.deleteSchicht(wpnr,con);;
+		schicht.deleteSchichtvonWp(wpnr,con);;
 		
-		
-		//Die Tblock-Einträge müssen auch gelöscht werden!
+
 	
 		
 	

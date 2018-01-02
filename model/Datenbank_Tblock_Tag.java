@@ -189,7 +189,7 @@ class Datenbank_Tblock_Tag {
 		ResultSet rs = null;
 
 		//Siehe vorherige Klassen
-		String sqlStatement = "select Tblocknr, Tbez, Wpnr from Tblock_Tag";
+		String sqlStatement = "select * from Tblock_Tag";
 
 		try {
 			stmt = con.createStatement();
@@ -221,6 +221,15 @@ class Datenbank_Tblock_Tag {
 		} catch (SQLException sql) {
 			System.err.println("Methode getAlleTblock_Tag SQL-Fehler: " + sql.getMessage());
 			return null;
+		}finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (stmt != null)
+					stmt.close();
+			} catch (SQLException e) {
+				System.err.println("Methode deleteTblock_Tag (finally) SQL-Fehler: " + e.getMessage());
+			}
 		}
 		
 		//finally Block fehlt!
@@ -268,6 +277,15 @@ class Datenbank_Tblock_Tag {
 		} catch (SQLException sql) {
 			System.err.println("Methode getTblock_TagTB SQL-Fehler: " + sql.getMessage());
 			return null;
+		}finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (stmt != null)
+					stmt.close();
+			} catch (SQLException e) {
+				System.err.println("Methode deleteTblock_Tag (finally) SQL-Fehler: " + e.getMessage());
+			}
 		}
 			//Finally-Block fehlt!
 			
@@ -313,6 +331,15 @@ class Datenbank_Tblock_Tag {
 		} catch (SQLException sql) {
 			System.err.println("Methode getTblock_TagT SQL-Fehler: " + sql.getMessage());
 			return null;
+		}finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (stmt != null)
+					stmt.close();
+			} catch (SQLException e) {
+				System.err.println("Methode deleteTblock_Tag (finally) SQL-Fehler: " + e.getMessage());
+			}
 		}
 		//finally Block fehlt
 		

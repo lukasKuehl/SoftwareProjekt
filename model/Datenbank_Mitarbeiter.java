@@ -236,6 +236,15 @@ class Datenbank_Mitarbeiter {
 		} catch (SQLException sql) {
 			System.err.println("Methode getMitarbeiter SQL-Fehler: " + sql.getMessage());
 			return null;
+		}finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (stmt != null)
+					stmt.close();
+			} catch (SQLException e) {
+				System.err.println("Methode deleteTblock_Tag (finally) SQL-Fehler: " + e.getMessage());
+			}
 		}
 		//Finally-Block fehlt!
 	}
