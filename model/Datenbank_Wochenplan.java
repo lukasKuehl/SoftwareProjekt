@@ -28,11 +28,11 @@ class Datenbank_Wochenplan {
 	 * @Thomas Friesen
 	 * @info Die Methode fügt einen Datensatz in die Wochenplan Tabelle hinzu.
 	 */
-	protected Boolean addWochenplan(Wochenplan wochenplan,Connection con) {
+	protected boolean addWochenplan(Wochenplan wochenplan,Connection con) {
 		boolean success = false;
 		
 		String sqlStatement = null;
-		sqlStatement = "insert into WOCHENPLAN (Wpnr, Oeffentlichstatus, Oeffnungszeit, Schließzeit,"
+		sqlStatement = "insert into WOCHENPLAN (Wpnr, Öffentlichkeitsstatus, Öffnungszeit, Schließzeit,"
 				+ " Hauptzeitbeginn, Hauptzeitende, Benutzername, Minanzinfot, Minanzinfow,"
 				+ " Minanzkasse, Mehrbesetzung ) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		PreparedStatement pstmt = null;
@@ -69,13 +69,12 @@ class Datenbank_Wochenplan {
 			if (checkWochenplan(wpnr,con)) {
 				System.out.println("Der Wochenplan ist bereits in der Tabelle eingetragen");
 			}
-			if (checkWochenplanFK(benutzername, con)){
+			if (checkWochenplanFK(benutzername, con) == false){
 				System.out.println("Der angegebene Benutzer existiert nicht in der Mitarbeitertabelle");
 			}
 			else{
 				//Es wurde sichergestellt, dass die PK- und FK-Check-Constraints nicht verletzt werden --> Der Datensatz kann erzeugt werden
 			
-				
 				pstmt.setInt(1, wpnr);
 				pstmt.setBoolean(2, öffentlichstatus);
 				pstmt.setString(3, öffnungszeit);
@@ -103,12 +102,12 @@ class Datenbank_Wochenplan {
 			}						
 			
 			con.setAutoCommit(true);
-			
+			return success;
 			
 		} catch (SQLException sql) {
 			//Die Ausgaben dienen zur Ursachensuche und sollten im späteren Programm entweder gar nicht oder vielleicht als Dialog(ausgelöst in der View weil der Rückgabewert false ist) angezeigt werden
 			System.out.println("Fehler beim Einfügen eines neuen Datensatzes in die Datenbank!");
-			System.out.println("Fehler bei der Erstellung eines neuen TerminBlockierung-Datensatzes:");
+			System.out.println("Fehler bei der Erstellung eines neuen Wochenplan-Datensatzes:");
 			System.out.println("Parameter: Wochenplannummer = " + wpnr + " Öffentlich = " + öffentlichstatus +
 					" Öffnungszeit: " + öffnungszeit + " Schließzeit: " + schließzeit + " Hauptzeitbeginn: " + hauptzeitbeginn +
 					"Hauptzeitende: " + hauptzeitende + "Benutzer; " + benutzername +"Minanzinfot: " + Minanzinfot +
@@ -119,8 +118,10 @@ class Datenbank_Wochenplan {
 				//Zurücksetzen des Connection Zustandes auf den Ursprungszustand
 				con.rollback();
 				con.setAutoCommit(true);
+				return success;
 			} catch (SQLException sqlRollback) {
 				System.err.println("Methode addWochenplan " + "- Rollback -  SQL-Fehler: " + sqlRollback.getMessage());
+				return success;
 			}
 		} finally {
 			//Schließen der offen gebliebenen Statements & ResultSets
@@ -133,9 +134,8 @@ class Datenbank_Wochenplan {
 				System.err.println("Methode addWochenplan(finally) SQL-Fehler: " + e.getMessage());
 			}
 		}
-		return success;
+		
 	}
-
 	/**
 	 * @author Anes Preljevic
 	 * @info Prüft ob es zu der eingegebenen Wochenplannr einen Wochenplan gibt,
@@ -175,7 +175,7 @@ class Datenbank_Wochenplan {
 		boolean result = false;
 		Statement stmt = null;
 		ResultSet rs = null;
-		String sqlQuery = "select benutzername from Mitarbeiter where benutzername = '+ benutzername +'" ;
+		String sqlQuery = "select benutzername from Mitarbeiter where benutzername = '"+ benutzername +"'" ;
 		
 		try {
 			

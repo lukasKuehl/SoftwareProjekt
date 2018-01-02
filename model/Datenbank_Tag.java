@@ -46,9 +46,6 @@ class Datenbank_Tag {
 			//Auslesen der als Parameter übergebenen Mitarbeiter-Schicht-Beziehung
 			tbez = tag.getTbez();
 			wpnr = tag.getWpnr();
-			
-			
-			con.setAutoCommit(false);
 
 			if (checkTag(tbez,wpnr,con)) {
 				System.out.println("Dieser Tag existiert bereits in dem angegebenen Wochenplan!");
@@ -62,7 +59,7 @@ class Datenbank_Tag {
 				pstmt.setString(1, tbez);
 				pstmt.setInt(2, wpnr);
 				pstmt.setBoolean(3, feiertag);
-			
+				pstmt.execute();
 				
 				//Einfügen von Schichten in einen Tag
 				
@@ -72,7 +69,7 @@ class Datenbank_Tag {
 				dschicht.addSchicht(new Schicht(dschicht.getNewSchichtnr(con),tbez, wpnr,hauptzeitbeginn, hauptzeitende),con);
 				dschicht.addSchicht(new Schicht(dschicht.getNewSchichtnr(con),tbez, wpnr,hauptzeitende, schließzeit),con);
 				
-				pstmt.execute();
+				
 					
 			}			
 			success = true;

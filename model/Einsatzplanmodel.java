@@ -125,21 +125,23 @@ public class Einsatzplanmodel implements Observable {
 		
 		return result;
 	}
-	public void addWochenplan(Wochenplan wochenplan){
-		
-		
-		try{
-			this.dataWochenplan.addWochenplan(wochenplan,con);
+	public boolean addWochenplan(Wochenplan wochenplan){
 			
-		}catch(Exception e){
-			System.out.println("Fehler innerhalb des Modells:");
-			System.out.println("Fehler beim Aufruf der Methode addWochenplan:");
-			e.printStackTrace();			
+			boolean result = false;
+			try{
+				this.dataWochenplan.addWochenplan(wochenplan,con);
+				result = true;
+				
+			}catch(Exception e){
+				System.out.println("Fehler innerhalb des Modells:");
+				System.out.println("Fehler beim Aufruf der Methode addWochenplan:");
+				e.printStackTrace();
+				result = false;
+			}
+			notifyObservers();
+			return result;
+			
 		}
-		notifyObservers();
-		
-		
-	}
 	public void oeffentlichStatusaendern(Wochenplan wochenplan){
 		
 		
