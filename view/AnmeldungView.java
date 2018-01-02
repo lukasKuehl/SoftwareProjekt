@@ -95,7 +95,7 @@ public class AnmeldungView extends JFrame{
 				
 		btnLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String pw = passwordField.getPassword().toString();
+				String pw = String.valueOf(passwordField.getPassword());
 				String username = textField.getText();
 				
 				if (myController.benutzerAnmelden(username, pw)) {
