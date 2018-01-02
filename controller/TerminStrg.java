@@ -213,7 +213,7 @@ class TerminStrg {
 				success = true;
 			}
 		}catch(Exception e){
-			System.out.println("Fehler beim erstellen eines neuen Termins:");
+			System.out.println("Fehler beim Erstellen eines neuen Termins:");
 			e.printStackTrace();			
 		}	
 	
@@ -308,22 +308,22 @@ class TerminStrg {
 	}
 	
 	protected ArrayList<String> getAlleTermine(String username){
-		ArrayList<String> rueckgabe = null;		
-		/*
-		boolean admin = false;
-		LinkedList<Userrecht> rechte = this.myModel.getUserrechte();
-		Mitarbeiter ma = this.myModel.getMitarbeiter(username);		
+		ArrayList<String> rueckgabe = new ArrayList<String>();		
 		
-		for(Userrecht u: rechte){
-			//Durchsuche die Job --> Recht Zuordnung nach dem Job des Mitarbeiters
-			if(u.getJob().equals(ma.getJob())){
-				//Prüfe, ob die zugehörige Rolle Admin ist
-				if(u.getBenutzerrolle().equals("Admin")){
-					//Der/Die Mitarbeiter/in hat die notwendigen Berechtigungen
-					admin = true;
-				}			
-			}		
-		}
+		boolean admin = false;
+				
+		Mitarbeiter ma = this.myModel.getMitarbeiter(username);	
+		Userrecht rechte = null;
+		
+		if(ma != null){
+			rechte = this.myModel.getUserrecht(ma.getJob());
+		}	
+			
+		//Prüfe, ob die zugehörige Rolle Admin ist
+		if(rechte.getBenutzerrolle().equals("Admin")){
+			//Der/Die Mitarbeiter/in hat die notwendigen Berechtigungen
+			admin = true;
+		}		
 		
 		if(admin){
 			
@@ -341,11 +341,11 @@ class TerminStrg {
 						String temp = tb.getBbez() + " - " + this.myModel.getMitarbeiter(tb.getBenutzername()).getVorname() + " " + this.myModel.getMitarbeiter(tb.getBenutzername()).getName() +" - KW" + tbt.getWpnr() + " - ";
 						
 						//Falls es sich um einen eintägigen Termin handelt, wird der Anfangs- und Endtag zusammengefasst
-						if(tb.getAnfzeitraum().equals(tb.getEndzeitraum())){
-							temp = temp + tb.getAnfzeitraum() + " - ";
+						if(tb.getAnfangzeitraum().equals(tb.getEndezeitraum())){
+							temp = temp + tb.getAnfangzeitraum() + " - ";
 						}
 						else{
-							temp = temp + tb.getAnfzeitraum() + "-" + tb.getEndzeitraum() + " - ";
+							temp = temp + tb.getAnfangzeitraum() + "-" + tb.getEndezeitraum() + " - ";
 						}
 						
 						temp = temp + tb.getAnfanguhrzeit() + "-" + tb.getEndeuhrzeit() + " Uhr";
@@ -357,9 +357,10 @@ class TerminStrg {
 			}		
 		}
 		else{
-			throw new Exception("Die notwendigen Berechtigungen sind nicht vorhanden, bitte wenden Sie sich an den Systemadministrator.");
+			//throw new Exception("Die notwendigen Berechtigungen sind nicht vorhanden, bitte wenden Sie sich an den Systemadministrator.");
+			System.out.println("Die notwendigen Berechtigungen sind nicht vorhanden, bitte wenden Sie sich an den Systemadministrator.");
 		}
-		*/
+		
 		
 		return rueckgabe;
 	}	
