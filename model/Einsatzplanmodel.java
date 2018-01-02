@@ -7,6 +7,7 @@ import javax.swing.JTable;
 
 import data.Ma_Schicht;
 import data.Mitarbeiter;
+import data.Observer;
 import data.Schicht;
 import data.Standardeinstellungen;
 import data.Tag;
@@ -91,7 +92,7 @@ public class Einsatzplanmodel implements Observable {
 		for(Observer observer: observers){
 			
 			//Muss das View-Team sich zu äußern, meiner Meinung nach muss da kein Parameter übergeben werden
-			observer.update(wochenplan);//provisorisch bis update methode bekannt ist aus der view
+			observer.update();//provisorisch bis update methode bekannt ist aus der view
 		}
 	}
 
