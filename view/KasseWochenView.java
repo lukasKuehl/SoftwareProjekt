@@ -260,8 +260,7 @@ public class KasseWochenView extends JFrame implements ActionListener {
 					tbleWochenplan.setBounds(24, 81, 1439, 676);
 					
 					//folgende Anweisungen fehlen um die columns etc. anzuzeigen
-					
-					
+										
 					tbleWochenplan.getTableHeader().setSize(tbleWochenplan.getTableHeader().getPreferredSize());
 					tbleWochenplan.setSize(tbleWochenplan.getPreferredSize());
 					tbleWochenplan.setPreferredScrollableViewportSize(tbleWochenplan.getPreferredScrollableViewportSize());

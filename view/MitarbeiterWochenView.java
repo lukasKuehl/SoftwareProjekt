@@ -218,10 +218,18 @@ public class MitarbeiterWochenView extends JFrame implements ActionListener {
 		tbleWochenplan = myController.generiereWochenplanView(wochenplaene.get(currentKW));
 		tbleWochenplan.setBounds(24, 81, 1439, 676);
 		
-		getContentPane().add(tbleWochenplan);
-
-
-
+		tbleWochenplan = myController.generiereWochenplanView(wochenplaene.get(currentKW));
+		tbleWochenplan.setBounds(24, 81, 1439, 676);
+		
+		tbleWochenplan.getTableHeader().setSize(tbleWochenplan.getTableHeader().getPreferredSize());
+		tbleWochenplan.setSize(tbleWochenplan.getPreferredSize());
+		tbleWochenplan.setPreferredScrollableViewportSize(tbleWochenplan.getPreferredScrollableViewportSize());
+		tbleWochenplan.setFillsViewportHeight(true);
+		JScrollPane jsp = new JScrollPane(tbleWochenplan);						
+		
+		//setContentPane(jsp);
+		
+		
 		setVisible(true);
 
 	}
