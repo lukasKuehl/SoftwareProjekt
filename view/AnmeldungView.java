@@ -19,8 +19,11 @@ import model.Einsatzplanmodel;
 import javax.swing.JButton;
 import javax.swing.ImageIcon;
 import java.awt.Color;
-
-//Klassenbeschreibung fehlt!
+/**
+ * @author Darius Panteli
+ * @info Die Klasse AnmeldungView dient dazu, dem Nutzer eine graphische Obefläche anzubieten, um sich im System
+ * anzumeldemn
+ */
 
 //Kommentare innerhalb der Methoden fehlen!
 
@@ -28,7 +31,7 @@ import java.awt.Color;
 
 //Die Klasse muss nicht den ActionListener implementieren wenn in der ActionPerformed Methode nix drin steht
 //Die Hilfsklasse soll nicht public sein --> Entwurfsschema
-public class AnmeldungView extends JFrame implements ActionListener {
+public class AnmeldungView extends JFrame{
 
 	private JPanel cpAnmeldung;
 	private JTextField textField;
@@ -39,17 +42,7 @@ public class AnmeldungView extends JFrame implements ActionListener {
 	private Einsatzplanmodel myModel = null;
 	private Einsatzplanview myView = null;
 
-	//WindowBuilder Kommentare entfernen oder durch persönliche Anmerkungen ersetzen
-	
-	/**
-	 * Launch the application.
-	 */
-
-
-	/**
-	 * Create the frame.
-	 */
-	public AnmeldungView(EinsatzplanController myController, Einsatzplanmodel myModel, Einsatzplanview myView) {
+	protected AnmeldungView(EinsatzplanController myController, Einsatzplanmodel myModel, Einsatzplanview myView) {
 
 		this.myController = myController;
 		this.myModel = myModel;
@@ -66,12 +59,12 @@ public class AnmeldungView extends JFrame implements ActionListener {
 		cpAnmeldung.setLayout(null);
 
 		lblAnmeldung = new JLabel("Anmeldung");
-		lblAnmeldung.setFont(new Font("Tahoma", Font.BOLD, 17));
-		lblAnmeldung.setBounds(12, 13, 110, 37);
+		lblAnmeldung.setFont(new Font("Verdana", Font.BOLD, 30));
+		lblAnmeldung.setBounds(12, 25, 190, 37);
 		cpAnmeldung.add(lblAnmeldung);
 
 		lblBenutzername = new JLabel("Benutzername:");
-		lblBenutzername.setFont(new Font("Tahoma", Font.BOLD, 15));
+		lblBenutzername.setFont(new Font("Verdana", Font.BOLD, 15));
 		lblBenutzername.setBounds(86, 141, 126, 16);
 		cpAnmeldung.add(lblBenutzername);
 
@@ -81,39 +74,29 @@ public class AnmeldungView extends JFrame implements ActionListener {
 		textField.setColumns(10);
 
 		lblPasswort = new JLabel("Passwort:");
-		lblPasswort.setFont(new Font("Tahoma", Font.BOLD, 14));
+		lblPasswort.setFont(new Font("Verdana", Font.BOLD, 15));
 		lblPasswort.setBounds(86, 202, 110, 16);
 		cpAnmeldung.add(lblPasswort);
 		
 		lblFehlermeldung = new JLabel("");
 		lblFehlermeldung.setForeground(Color.RED);
-		lblFehlermeldung.setFont(new Font("Tahoma", Font.BOLD, 15));
+		lblFehlermeldung.setFont(new Font("Verdana", Font.BOLD, 15));
 		lblFehlermeldung.setBounds(86, 310, 489, 37);
 
 		passwordField = new JPasswordField();
 		passwordField.setBounds(254, 200, 205, 22);
 		cpAnmeldung.add(passwordField);
 
-		btnLogin = new JButton("Ok");
+		btnLogin = new JButton("");
 		btnLogin.setContentAreaFilled(false);
 		btnLogin.setOpaque(false);
 		btnLogin.setBorderPainted(false);
-		
-		//Zuweisung mit persönlichen Pfaden können von anderen nicht bearbeitet werden, entweder in Projekt einfügen und mit dem relativen Pfad arbeiten oder komplett entfernen
-		btnLogin.setIcon(new ImageIcon("D:\\workspace\\EinsatzplanSoftwaretechnik\\src\\GUI\\loginsmall.png"));
+		btnLogin.setIcon(new ImageIcon("view/loginsmall.png"));
 				
 		btnLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
-				//Kann entfernt werden
-				/*
-				 * MitarbeiterView nw = new MitarbeiterView(); nw.NewScreen();
-				 */				
-				
 				String pw = passwordField.getPassword().toString();
-				
-				//Die Anweisung toString ist überflüssig, das ist schon ein String der da zurückkommt
-				String username = textField.getText().toString();
+				String username = textField.getText();
 				
 				if (myController.benutzerAnmelden(username, pw)) {
 					
@@ -124,23 +107,21 @@ public class AnmeldungView extends JFrame implements ActionListener {
 						new KasseWochenView(myModel, myController, myView);
 
 					} else {						
-						// falls Benutzer normaler Mitarbeiter ist
 						
-						//Übergabeparameter fehlen (Model, Controller, View)
-						
-						new MitarbeiterWochenView();
+						new MitarbeiterWochenView(myModel, myController, myView);
 						
 					}
 					
 				}else {
 					//Das ist doch eigentlich gar kein Fehler(Benutzer hat vielleicht nur sein pw falsch eingegeben)
+					//evtl unterscheiden ob PW oder Username Falsch war
 					
 					lblFehlermeldung.setText("Fehler beim Anmelden des Users " + username + "!");
 				}
 			}
 			
 		});
-		btnLogin.setBounds(316, 248, 54, 47);
+		btnLogin.setBounds(316, 248, 57, 47);
 		cpAnmeldung.add(btnLogin);
 		
 		
@@ -150,9 +131,4 @@ public class AnmeldungView extends JFrame implements ActionListener {
 
 	//Die actionPerformed Methode ist überflüssig, wenn sie nicht gefüllt ist
 	
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
-
-	}
 }

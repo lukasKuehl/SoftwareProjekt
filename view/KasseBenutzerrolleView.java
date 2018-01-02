@@ -16,12 +16,11 @@ import javax.swing.JOptionPane;
 import data.Mitarbeiter;
 import model.Einsatzplanmodel;
 import controller.EinsatzplanController;
-
-//Klassendokumentation fehlt!
-
-//Kommentare innerhalb der Methoden fehlen!
-
-//Autoren der einzelnen Methoden fehlen!
+/**
+ * @author Darius Panteli
+ * @info Die Klasse KasseBenutzerrolleView dient dazu, dem Nutzer eine graphische Obefläche anzubieten, um die Rechte
+ * eines Nutzers ändern zu können
+ */
 
 class KasseBenutzerrolleView extends JFrame {
 	private JComboBox cbMitarbeiter;
@@ -30,17 +29,6 @@ class KasseBenutzerrolleView extends JFrame {
 	private Einsatzplanmodel myModel = null;
 	private Einsatzplanview myView = null;
 	private EinsatzplanController myController=null;
-
-	//Löschen der WindowBuilder Kommentare oder ändern in persönliche
-	
-	// private JFrame frame;
-
-	/**
-	 * Launch the application.
-	 * 
-	 */
-	
-	//Siehe AnmeldungView!
 	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -53,9 +41,6 @@ class KasseBenutzerrolleView extends JFrame {
 				}
 			}
 		});}
-	/**
-	 * Create the application.
-	 */
 	
 	//Parameter myController fehlt --> in dem Fall bleibt der einfach null
 	public KasseBenutzerrolleView(Einsatzplanmodel myModel, Einsatzplanview myView) {
@@ -89,7 +74,6 @@ class KasseBenutzerrolleView extends JFrame {
 
 		//ComboBox sollte Informationen darüber bekommen, welche Werte eingetragen werden können (z.B. JComboBox<String>)
 		cbMitarbeiter = new JComboBox();
-		
 		cbMitarbeiter.setBounds(381, 274, 128, 20);
 		LinkedList<Mitarbeiter> alleMitarbeiter = this.myModel.getAlleMitarbeiter();
 		
@@ -118,11 +102,6 @@ class KasseBenutzerrolleView extends JFrame {
 		getContentPane().add(btnBestaetigen);
 		setVisible(true);
 
-		//Löschen falls nicht mehr benötigt!
-		/*
-		 * frame = new JFrame(); frame.setBounds(100, 100, 1538,864);
-		 * frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		 */
 	}
 
 	protected String gibAusgewaehltenMitarbeiter(){
