@@ -144,7 +144,7 @@ class WochenplanStrg {
 		
 		Userrecht recht = myModel.getUserrecht(user.getJob());
 				
-		if(recht.getBenutzerrolle().equals("Chef")){	
+		if(recht.getBenutzerrolle().equals("Admin")){	
 			
 			try{
 				Standardeinstellungen settings = this.myModel.getStandardeinstellungen();				

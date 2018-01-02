@@ -18,11 +18,8 @@ public class TestKlasse {
 		
 		myModel = new Einsatzplanmodel();		
 		myController = new EinsatzplanController(myModel);
-		
-		
-		
-		
-		
+				
+		myController.erstelleWochenplanStandard("Dgöring", "KW1002");
 		
 		/*
 		
