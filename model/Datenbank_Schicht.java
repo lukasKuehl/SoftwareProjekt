@@ -30,14 +30,8 @@ class Datenbank_Schicht {
 		boolean success = false;
 		
 		
-		String sqlStatement;
-		sqlStatement = "insert into Schicht(schichtnr, tbez, wpnr, anfanguhrzeit, endeuhrzeit) values(?, ?, ?, ?, ?)";
+		String sqlStatement = "insert into Schicht(schichtnr, tbez, wpnr, anfanguhrzeit, endeuhrzeit) values(?, ?, ?, ?, ?)";
 		PreparedStatement pstmt = null;
-		
-		//siehe obere Klassen!
-		Statement checkInput = null;
-		ResultSet checkRS = null;
-		
 		int schichtnr = 0;
 		String tbez = null;
 		int wpnr = 0;
@@ -58,14 +52,15 @@ class Datenbank_Schicht {
 			//siehe obere Klassen!
 			con.setAutoCommit(false);
 
-			//Siehe obere Klassen!
+			
 			if (checkSchicht(schichtnr,con)) {
 				System.out.println("Diese schichtnr existiert bereits in der Tabelle Schicht!");
 			}
+			if ((checkSchichtFK(tbez,wpnr,con) == false)){
+				System.out.println("Die übergebenen Parameter verletztn die Foreign-Key-Constraints der Schichttabelle");
+			}
 			else{
 				//Es wurde sichergestellt, dass die PK- und FK-Check-Constraints nicht verletzt werden --> Der Datensatz kann erzeugt werden
-			
-				//Nein, siehe obere Klassen!
 				
 				pstmt.setInt(1, schichtnr);
 				pstmt.setString(2, tbez);
@@ -74,12 +69,12 @@ class Datenbank_Schicht {
 				pstmt.setString(5, endeuhrzeit);
 			
 				pstmt.execute();
-					
+				success = true;
 				
 			}			
 			
-			success = true;
-		
+			
+			
 			
 			
 		} catch (SQLException sql) {
@@ -99,16 +94,7 @@ class Datenbank_Schicht {
 		} finally {
 			//Schließen der offen gebliebenen Statements & ResultSets
 			try {
-				
-				//Siehe obere Klassen!
-				if(checkRS != null){
-					checkRS.close();
-				}				
-				
-				if(checkInput != null){
-					checkInput.close();
-				}			
-				
+					
 				if (pstmt != null){
 					pstmt.close();
 				}			
@@ -151,7 +137,53 @@ class Datenbank_Schicht {
 		}
 	}
 
+	/**
+	 * @author Thomas Friesen
+	 * @info Die Methode prüft, ob die Foreign Keys der Tabelle Schicht eingehalten werden
+	 */
+	protected boolean checkSchichtFK(String tbez, int wpnr,Connection con) {
+		boolean result = false;
+		Statement[] stmt = new Statement[2];
+		ResultSet[] rs = new ResultSet[2];
+		String[] sqlQuery = new String[2]; 
+		sqlQuery[0] = "select tbez from Tag where tbez = '"+ tbez + "'" ;
+		sqlQuery[1] = "select wpnr from Wochenplan where wpnr = " + wpnr;
+		
+		try {
+			for (int i=0;i<2;i++){
+				stmt[i] = con.createStatement();
+				rs[i] = stmt[i].executeQuery(sqlQuery[i]);
+			}
+			if ((rs[0].next()) == true && (rs[1].next())== true){
+				result = true;
+			}else{
+				result = false;
+			}
+			
+		} catch (SQLException sql) {
+			System.err.println("Methode checkSchichtFK SQL-Fehler: " + sql.getMessage());
+			return false;
+			
+		} finally {
+			try {
+				for(int i=0;i<2;i++){
+					if(rs[i] != null){
+						rs[i].close();
+					}
+					if(stmt[i] != null){
+						stmt[i].close();
+					}
+						
+				}
+			} catch (SQLException e) {
+				System.err.println("Methode checkSchichtFK (finally) SQL-Fehler: " + e.getMessage());
+			}
+		}
+		return result;
+	}
 
+	
+	
 	/**
 	 * @author Anes Preljevic
 	 * @info Auslesen aller Schichten aus der Datenbank und Erzeugen von Schicht-Objekten.

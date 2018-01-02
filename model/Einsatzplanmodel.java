@@ -435,6 +435,20 @@ public boolean checkWochenplanFK(String benutzername) {
 		}
 		return result;
 	}
+	
+	public boolean checkSchichtFK(String tbez, int wpnr) {
+		boolean result =false;
+		try{
+			result = this.dataSchicht.checkSchichtFK(tbez,wpnr,con);
+			
+		}catch(Exception e){
+			System.out.println("Fehler innerhalb des Modells:");
+			System.out.println("Fehler beim Aufruf der Methode checkSchichtFK:");
+			e.printStackTrace();	
+		}
+		return result;
+	}
+	
 	public boolean deleteSchicht(int wpnr) {
 		boolean result =false;
 		try{
