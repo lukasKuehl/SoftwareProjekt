@@ -10,7 +10,11 @@ import javax.swing.JOptionPane;
 import controller.EinsatzplanController;
 import model.Einsatzplanmodel;
 
-//Klassenbeschreibung fehlt!
+/**
+ * 
+ * @author 
+ * @Info 
+ */
 
 //Kommentare innerhalb der Methoden fehlen!
 

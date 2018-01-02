@@ -175,9 +175,8 @@ class TauschanfrageErstellenView extends JFrame {
 		contentPane.add(labelSchichtAndererMA);
 
 		comboBoxSchichtAndererMA = new JComboBox<String>();
-		ArrayList<String> al = myController.getTauschanfragen(myView.getUsername());
 		//  Ausgeben einer ArrayList mit allen Schichten in einer JComboBox
-		 SchichtAndererMa = myController.getSchichten(cmbBoxWP.getSelectedItem().toString(),
+		ArrayList<String> al = myController.getSchichten(cmbBoxWP.getSelectedItem().toString(),
 		 cmbBoxTag.getSelectedItem().toString()); 
 		 // Methode Get Schichten noch in den
 		 // EinsatzplanController integrieren
