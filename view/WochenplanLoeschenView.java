@@ -14,27 +14,29 @@ import java.awt.event.ActionEvent;
 import controller.EinsatzplanController;
 import model.Einsatzplanmodel;
 
-public class WochenplanLoeschenView extends JFrame {
+class WochenplanLoeschenView extends JFrame {
 
 	// Initialisierung der Instanzvariablen
 	private JPanel contentPane = null;;
-	private JLabel lblWochenplanLschen, lblBitteAuswhlen = null;
-	private JList<Object> listWochenplaene = null;
-	private JButton btnLschen = null;
+	private JLabel lblWochenplanLoeschen, lblBitteAusaewhlen = null;
+	private JList<String> listWochenplaene = null;
+	private JButton btnLoeschen = null;
 	private EinsatzplanController myController = null;
 	private Einsatzplanmodel myModel = null;
 	private Einsatzplanview myView = null;
 	private String username = null;
-	private DefaultListModel<Object> model = null;
+	private DefaultListModel<String> model = null;
 	private ArrayList<String> wpl = null;
 	private ArrayList<String> wpli = null;
+	private String wpbez = null;
 
 	/**
 	 * 
 	 * @author Ramona Gerke
-	 * @Info Konstruktor der die View Krankmeldung löschen erstellt.
+	 * @Info Konstruktor der die View Wochenplan löschen .
 	 */
-	public WochenplanLoeschenView(Einsatzplanview myView, Einsatzplanmodel myModel, EinsatzplanController myController) {
+	public WochenplanLoeschenView(Einsatzplanview myView, Einsatzplanmodel myModel,
+			EinsatzplanController myController) {
 		this.myView = myView;
 		this.myController = myController;
 		this.myModel = myModel;
@@ -48,16 +50,17 @@ public class WochenplanLoeschenView extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
-		//Umlaut fehlt
-		lblWochenplanLschen = new JLabel("Wochenplan l\u00F6schen");
-		lblWochenplanLschen.setFont(new Font("Verdana", Font.PLAIN, 21));
-		lblWochenplanLschen.setBounds(51, 40, 243, 27);
-		contentPane.add(lblWochenplanLschen);
 
-		listWochenplaene = new JList<Object>();
+		lblWochenplanLoeschen = new JLabel("Wochenplan löschen");
+		lblWochenplanLoeschen.setFont(new Font("Verdana", Font.PLAIN, 21));
+		lblWochenplanLoeschen.setBounds(51, 40, 243, 27);
+		contentPane.add(lblWochenplanLoeschen);
+
+		listWochenplaene = new JList<String>();
+		// Ausgeben einer ArrayList mit allen Wochenplänen und in einer JComboBox
+		// hinterlegen
 		wpl = myController.getWochenplaene();
-		model = new DefaultListModel<Object>();
+		model = new DefaultListModel<String>();
 		for (String m : wpl) {
 			model.addElement(m);
 		}
@@ -67,65 +70,67 @@ public class WochenplanLoeschenView extends JFrame {
 		listWochenplaene.setBounds(51, 126, 362, 399);
 		contentPane.add(listWochenplaene);
 
-		//Umlaut fehlt
-		btnLschen = new JButton("löschen");
-		btnLschen.setFont(new Font("Verdana", Font.PLAIN, 15));
-		btnLschen.setBounds(500,500,110,25);
-		contentPane.add(btnLschen);
+		btnLoeschen = new JButton("löschen");
+		btnLoeschen.setFont(new Font("Verdana", Font.PLAIN, 15));
+		btnLoeschen.setBounds(500, 500, 110, 25);
+		contentPane.add(btnLoeschen);
 
-		lblBitteAuswhlen = new JLabel("Bitte auswählen");
-		lblBitteAuswhlen.setFont(new Font("Verdana", Font.PLAIN, 15));
-		lblBitteAuswhlen.setBounds(51, 90, 143, 26);
-		
-		//Umlaut fehlt!
-		contentPane.add(lblBitteAuswhlen);
+		lblBitteAusaewhlen = new JLabel("Bitte auswählen");
+		lblBitteAusaewhlen.setFont(new Font("Verdana", Font.PLAIN, 15));
+		lblBitteAusaewhlen.setBounds(51, 90, 143, 26);
+		contentPane.add(lblBitteAusaewhlen);
 
-		btnLschen.addActionListener(new ActionListener() {
+		/**
+		 * @author Ramona Gerke
+		 * @Info Action Performed Methode die nach dem bestätigen des Buttons
+		 *       "bestätigen", dass das ausgewählte Element anhand der dessen Usernamen
+		 *       und Wochenplanbez gelöscht.
+		 */
+		// ACTION PERFROMED Methode
+		btnLoeschen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//Siehe vorherige Klassen,(ActionEvent muss vom button kommen)
-				
-				if (e.getSource() == btnLschen) {
-					int eingabe = JOptionPane.showConfirmDialog(null, "Wollen Sie die den Wochenplan wirklich löschen?",
-							null, JOptionPane.YES_NO_CANCEL_OPTION);
-
-					if (listWochenplaene.isSelectionEmpty()) {
-						JOptionPane.showMessageDialog(null, "Es wurde keine Eingabe getätigt", "Error",
-								JOptionPane.ERROR_MESSAGE);
-					} else {
-						try {
-							//Siehe vorherige Klassen!
-							if (eingabe == 0) {
-								int wpbez = 0;
-								String temp[] = new String[4];
-								wpli = myController.getWochenplaene();
-								for (String m : wpli) {
-									m.toString();
-									m.trim();
-									temp = m.split("-");
-									
-									//Siehe vorherige Klassen!
-									wpbez = Integer.parseInt(temp[0].substring(2));  // CODE MUSS EVTL noch in String gewandelt
-									String oeffnungszeitenAnfang = temp[1];
-									String oeffnungszeitenEnd = temp[2];
-									String hauptzeitAnfang = temp[3];
-									String hauptzeitEnd = temp[4];
-
-//									// Methode entferne Wochenplan WpBez bereits in Int gewandelt
-									
-//									myView.entferneWochenplan(myView.getUsername().toString(), wpbez);
-									System.exit(0);
-								}
-							}
-						} catch (Exception a) {
-							JOptionPane.showMessageDialog(null,
-									"Die Liste konnte nicht übergeben werden. - Methode ActionPerformed (btnBLoeschen, WPLoeschen)",
-									"Error", JOptionPane.ERROR_MESSAGE);
-						}
-					}
+				// Abfrage, ob die Liste leer ist
+				if (listWochenplaene.isSelectionEmpty()) {
+					JOptionPane.showMessageDialog(null, "Es wurde keine Eingabe getätigt", "Error",
+							JOptionPane.ERROR_MESSAGE);
 				} else {
-					//Siehe vorherige Klassen!
-					System.exit(0);
+					try {
+						// Meldung, ob die Daten wirklich gelöscht werden soll ( Ja, Nein , Abbrechen
+						// Abfrage)
+						int eingabe = JOptionPane.showConfirmDialog(null,
+								"Wollen Sie die den Wochenplan wirklich löschen?", null,
+								JOptionPane.YES_NO_CANCEL_OPTION);
+						// weiter bei ja
+						if (eingabe == JOptionPane.YES_OPTION) {
+							String temp[] = new String[5];
+							wpli = myController.getWochenplaene();
+							for (String m : wpli) {
+								m.toString();
+								m.trim();
+								temp = m.split("-");
+								String wpbeztemp = temp[0];
+								wpbez = wpbeztemp.substring(2);
+								String oeffnungszeitenAnfang = temp[1];
+								String oeffnungszeitenEnd = temp[2];
+								String hauptzeitAnfang = temp[3];
+								String hauptzeitEnd = temp[4];
+			
+								//Übergabe an den Controller
+								myController.entferneWochenplan(myView.getUsername().toString(), wpbez);
+								JOptionPane.showConfirmDialog(null, "Wochenplan erfolgreich gelöscht");
+								dispose();
+							}
+						} else {
+							JOptionPane.showMessageDialog(null, "Wählen Sie einen anderen Wochenplan aus!", "  ",
+									JOptionPane.WARNING_MESSAGE);
+						}
+					} catch (Exception a) {
+						JOptionPane.showMessageDialog(null,
+								"Die Liste konnte nicht übergeben werden. - Methode ActionPerformed (btnBLoeschen, WPLoeschen)",
+								"Error", JOptionPane.ERROR_MESSAGE);
+					}
 				}
+
 			}
 
 		});

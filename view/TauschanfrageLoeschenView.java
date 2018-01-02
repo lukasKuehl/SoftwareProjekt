@@ -15,28 +15,33 @@ import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.DefaultListModel;
 
-//Klassenbeschreibung fehlt!
-
-//Kommentare innerhalb der Methoden fehlen!
-
-//Hilfsklassen sind nicht public!
-public class TauschanfrageLoeschenView extends JFrame {
-
+/**
+ * 
+ * @author Ramona Gerke
+ * @Info Die Klasse der View Tauschanfrage löschen. Diese beinhaltet seinen
+ *       Konstruktor und die ActionPerformed Methode.
+ *
+ */
+class TauschanfrageLoeschenView extends JFrame {
+	// Initialisierung der Instanzvariablen
 	private JPanel contentPane, panelTauschanfrage = null;
 	private JLabel lblTauschanfrageLoeschen = null;
-	
-	//Siehe vorherige Klassen!
-	private JList<Object> listTauschanfragen = null;
-	
+	private JList<String> listTauschanfragen = null;
 	private JButton btnBestaetigen = null;
 	private ArrayList<String> tl, al = null;
-	private DefaultListModel<Object> modelTauschanfrage = null;
+	private DefaultListModel<String> modelTauschanfrage = null;
 	private Einsatzplanview myView = null;
 	private EinsatzplanController myController = null;
 	private Einsatzplanmodel myModel = null;
-	private int tauschanfrageNr=0;
+	private int tauschanfrageNr = 0;
 
-	protected TauschanfrageLoeschenView(Einsatzplanview myView, Einsatzplanmodel myModel, EinsatzplanController myController) {
+	/**
+	 * @ author Ramona Gerke
+	 * 
+	 * @Info Der Konstruktor der View Tauschanfrage erstellen.
+	 */
+	protected TauschanfrageLoeschenView(Einsatzplanview myView, Einsatzplanmodel myModel,
+			EinsatzplanController myController) {
 		this.myView = myView;
 		this.myController = myController;
 		this.myModel = myModel;
@@ -62,9 +67,11 @@ public class TauschanfrageLoeschenView extends JFrame {
 		lblTauschanfrageLoeschen.setBounds(70, 89, 284, 26);
 		panelTauschanfrage.add(lblTauschanfrageLoeschen);
 
-		listTauschanfragen = new JList<Object>();
+		listTauschanfragen = new JList<String>();
+
+		// Ausgeben einer ArrayList für die Tauschanfragen anhand des Usernamens
 		tl = myController.getTauschanfragen(myView.getUsername());
-		modelTauschanfrage = new DefaultListModel<Object>();
+		modelTauschanfrage = new DefaultListModel<String>();
 		for (String m : tl) {
 			modelTauschanfrage.addElement(m);
 		}
@@ -74,90 +81,71 @@ public class TauschanfrageLoeschenView extends JFrame {
 		panelTauschanfrage.add(listTauschanfragen);
 
 		btnBestaetigen = new JButton("Bestätigen");
-		btnBestaetigen.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				
-				//Wird später gefüllt --> Dieses Kommando kann weg!
-			}
-		});
 		btnBestaetigen.setBounds(519, 483, 141, 35);
 		panelTauschanfrage.add(btnBestaetigen);
 
 		setVisible(true);
 
-	}
-
-	/**
-	 * @author Ramona Gerke
-	 * @Info Action Perfomed Methode für den Button "bestätigen". Nach der
-	 *       Ausführung des Button wird die ArralyList al von der Methode
-	 *       getTaususchanfragen aus dem Controller aufgerufen und die wichtigen
-	 *       Methoden werden dann n einen String gewandelt und in ein Array
-	 *       gespeichert
-	 * @Info Die gespeicherten Informationen werden dann für die Methode
-	 *       entferneTauschanfrage weitergeben, somit diese Methode die
-	 *       Tasuchanfrage aus der Datenbank löschen kann.
-	 */
-	public void actionPerformed(ActionEvent e) {
-
-		if (e.getSource() == btnBestaetigen) {
-
-			int eingabe = JOptionPane.showConfirmDialog(null, "Wollen Sie die Auswahl bestätigen?", null,
-					JOptionPane.YES_NO_CANCEL_OPTION);
-
-			if (eingabe == 0) {
+		/**
+		 * @author Ramona Gerke
+		 * @Info Action Performed Methode die nach dem bestätigen des Buttons
+		 *       "bestätigen", dass das ausgewählte Element anhand der Tauschanfrage Nr
+		 *       gelöscht.
+		 */
+		btnBestaetigen.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
 				try {
+					// Abfrage, ob ein Element ausgewählt worden ist
 					if (listTauschanfragen.isSelectionEmpty()) {
 						JOptionPane.showMessageDialog(null,
 								"Es wurde keine Tauschanfrage ausgewählt. Bitte wählen Sie eine Tauschanfrage aus.",
 								"Error", JOptionPane.ERROR_MESSAGE);
-
 					} else {
-						
-						//Ein String Array mit einer Länge von 14 geht von 0 bis 13 --> IndexOutOfBoundsException --> entweder das Array länger machen oder nochmal die Werte prüfen
-						String temp[] = new String[14];
-						al = myView.getTauschanfragen(myView.getUsername());
-						for (String m : al) {
-							m.toString();
-							m.trim();
-							temp = m.split("-");
-							String  tauschanfrageNrS = temp [0].substring(10);
-							tauschanfrageNr =Integer.parseInt(tauschanfrageNrS);
-							String senderVorname = temp[1];
-							String senderName = temp[2];
-							String senderSchichtNr = temp[3];
-							String senderWpNr = temp[4];
-							String senderTbez = temp[5];
-							String senderAnfangsuhrzeit = temp[6];
-							String senderEnduhrzeit = temp[7];
-							String empfaengerVorname = temp[8];
-							String empfaengerName = temp[9];
-							String empfaengerSchichtNr = temp[10];
-							String empfaengerWpBez = temp[11];
-							String empfaengerTagBez = temp[12];
-							String empfaengerAnfangsuhrzeit = temp[13];
-							String emfaengerEnduhrzeit = temp[14];
+						// Meldung, ob die Daten wirklich gelöscht werden soll ( Ja, Nein , Abbrechen
+						// Abfrage)
+						int eingabe = JOptionPane.showConfirmDialog(null, "Wollen Sie die Auswahl bestätigen?", null,
+								JOptionPane.YES_NO_CANCEL_OPTION);
+						// weiter bei ja
+						if (eingabe == JOptionPane.YES_OPTION) {
+							String temp[] = new String[15];
+							al = myController.getTauschanfragen(myView.getUsername());
+							for (String m : al) {
+								m.toString();
+								m.trim();
+								temp = m.split("-");
+								String tauschanfrageNrS = temp[0].substring(10);
+								tauschanfrageNr = Integer.parseInt(tauschanfrageNrS);
+								String senderVorname = temp[1];
+								String senderName = temp[2];
+								String senderSchichtNr = temp[3];
+								String senderWpNr = temp[4];
+								String senderTbez = temp[5];
+								String senderAnfangsuhrzeit = temp[6];
+								String senderEnduhrzeit = temp[7];
+								String empfaengerVorname = temp[8];
+								String empfaengerName = temp[9];
+								String empfaengerSchichtNr = temp[10];
+								String empfaengerWpBez = temp[11];
+								String empfaengerTagBez = temp[12];
+								String empfaengerAnfangsuhrzeit = temp[13];
+								String emfaengerEnduhrzeit = temp[14];
+							}
+							// Übergabe an den Controller
+							myController.entferneTauschanfrage(tauschanfrageNr);
+							dispose();
+						} else {
+							JOptionPane.showMessageDialog(null, "Wählen Sie eine andere Tauschanfrage", "Warnung",
+									JOptionPane.WARNING_MESSAGE);
 						}
-					
-						myController.entferneTauschanfrage(tauschanfrageNr);
-					
-						//Siehe vorherige Klassen!
-						System.exit(0);
-					
 					}
 				} catch (Exception ex) {
-					ex.getStackTrace();
-					System.err.println(
+					JOptionPane.showMessageDialog(null,
 							"Fehler in der Eingabe der Daten - ActionPerformed Button Bestätigen und Klasse TauschanfrageLoeschen");
 				}
+
 			}
-		} else {		
-			//Wenn abbruch = Keine Tauschanfragen sollen gelöscht werden, dann passt das, ansonsten kann der else Teil komplett weg.
-			
-			//Siehe vorherige Klassen!
-			System.exit(0);
-		}
+		});
 
 		setVisible(true);
-	};
+	}
 }
