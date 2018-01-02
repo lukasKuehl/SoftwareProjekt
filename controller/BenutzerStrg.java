@@ -101,17 +101,14 @@ class BenutzerStrg {
 			}catch(Exception e){
 				System.out.println("Fehler beim Anmelden des Users " + username + ", bitte Eingaben überprüfen :");
 				e.printStackTrace();
-			}
+			}		
+		}			
 		
-		}		
-		
-		
-		return success;
-		
+		return success;		
 	}
 	
 	/**
-	 * @author 
+	 * @author Lukas Kühl
 	 * @info Ausloggen eines Nutzers aus dem System
 	 */
 	protected boolean benutzerAbmelden(String username){

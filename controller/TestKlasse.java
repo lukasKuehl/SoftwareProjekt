@@ -16,10 +16,14 @@ public class TestKlasse {
 	
 	public static void main(String[] args) {
 		
-		myModel = new Einsatzplanmodel();		
+		myModel = new Einsatzplanmodel();			
 		myController = new EinsatzplanController(myModel);
 				
-		myController.erstelleWochenplanStandard("Dgöring", "KW1002");
+		
+		
+		myController.entferneWochenplan("Dgöring", "KW1002");		
+		
+		//myController.erstelleWochenplanStandard("Dgöring", "KW1002");
 		
 		/*
 		

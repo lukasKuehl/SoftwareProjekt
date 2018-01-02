@@ -393,13 +393,35 @@ class WochenplanStrg {
 	}
 	
 	/**
-	 * @author
+	 * @author Lukas Kühl
 	 * @info Entfernen eines bereits erstellten Wochenplanes aus dem System mit allen daraus resultierenden Informationen über Tage, Schichten und Terminen/Krankheiten/Urlaub
 	 */
 	protected boolean entferneWochenplan(String username, String wpbez){
 		
 		boolean success = false;
-		//ausfüllen
+		
+		//Umwandeln der Wpbez in die eindeutige Wochennummer
+    	int wpnr = Integer.parseInt((wpbez.substring(2).trim()));  	
+		
+    	Mitarbeiter ma = myModel.getMitarbeiter(username);
+    	
+    	
+    	Userrecht recht = myModel.getUserrecht(ma.getJob());
+		
+		if(recht.getBenutzerrolle().equals("Admin")){	
+			
+			try{
+				
+				if(myModel.getWochenplan(wpnr) != null){
+					this.myModel.deleteWochenplan(wpnr);
+					success = true;
+				}			
+				
+			}catch(Exception e){
+				System.out.println("Fehler beim Löschen eines Wochenplanes");				
+			}		
+		}	
+		
 		return success;
 	}
 		
