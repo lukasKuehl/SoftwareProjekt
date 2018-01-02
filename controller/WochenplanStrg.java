@@ -511,34 +511,7 @@ class WochenplanStrg {
 		}		
 		
 		return rueckgabe;
-	}
-	
-	//Hat ramona benötigt
-	protected ArrayList<String> getSchichten(String wpbez, String tbez){
-		ArrayList<String> rueckgabe = new ArrayList<String>();
-		
-		//Umwandeln der Wpbez in die eindeutige Wochennummer
-    	int wpnr = Integer.parseInt((wpbez.substring(2).trim()));  			
-		
-		LinkedList<Schicht> alleSchichten = this.myModel.getSchichten();
-		LinkedList<Schicht> schichtenTag = new LinkedList<Schicht>(); 
-		
-		for(Schicht s: alleSchichten){
-			if(s.getWpnr() == wpnr && s.getTbez().equals(tbez)){
-				schichtenTag.add(s);				
-			}
-		}
-		
-		for(Schicht s : schichtenTag){
-
-		String Schichtnr = new Integer(s.getSchichtnr()).toString();
-			rueckgabe.add(Schichtnr);
-		}		
-		
-		return rueckgabe;
-	}
-	
-	
+	}	
 	
 	/**
 	 * @author 
