@@ -7,6 +7,8 @@ import javax.swing.JTable;
 
 import data.Ma_Schicht;
 import data.Mitarbeiter;
+import data.Observable;
+import data.Observer;
 import data.Schicht;
 import data.Standardeinstellungen;
 import data.Tag;
@@ -91,7 +93,7 @@ public class Einsatzplanmodel implements Observable {
 		for(Observer observer: observers){
 			
 			//Muss das View-Team sich zu äußern, meiner Meinung nach muss da kein Parameter übergeben werden
-			observer.update(wochenplan);//provisorisch bis update methode bekannt ist aus der view
+			observer.update();//provisorisch bis update methode bekannt ist aus der view
 		}
 	}
 
@@ -123,21 +125,23 @@ public class Einsatzplanmodel implements Observable {
 		
 		return result;
 	}
-	public void addWochenplan(Wochenplan wochenplan){
-		
-		
-		try{
-			this.dataWochenplan.addWochenplan(wochenplan,con);
+	public boolean addWochenplan(Wochenplan wochenplan){
 			
-		}catch(Exception e){
-			System.out.println("Fehler innerhalb des Modells:");
-			System.out.println("Fehler beim Aufruf der Methode addWochenplan:");
-			e.printStackTrace();			
+			boolean result = false;
+			try{
+				this.dataWochenplan.addWochenplan(wochenplan,con);
+				result = true;
+				
+			}catch(Exception e){
+				System.out.println("Fehler innerhalb des Modells:");
+				System.out.println("Fehler beim Aufruf der Methode addWochenplan:");
+				e.printStackTrace();
+				result = false;
+			}
+			notifyObservers();
+			return result;
+			
 		}
-		notifyObservers();
-		
-		
-	}
 	public void oeffentlichStatusaendern(Wochenplan wochenplan){
 		
 		
@@ -452,7 +456,7 @@ public boolean checkWochenplanFK(String benutzername) {
 	public boolean deleteSchicht(int wpnr) {
 		boolean result =false;
 		try{
-			result = this.dataSchicht.deleteSchicht(wpnr,con);
+			result = this.dataSchicht.deleteSchichtvonWp(wpnr,con);
 			
 		}catch(Exception e){
 			System.out.println("Fehler innerhalb des Modells:");

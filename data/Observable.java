@@ -1,4 +1,4 @@
-package model;
+package data;
 
 //Klasse gehört in das Package data --> Allgemeine Klasse
 

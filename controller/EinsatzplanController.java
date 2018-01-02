@@ -232,6 +232,21 @@ public class EinsatzplanController {
 		return success;		
 	}
 	
+	public boolean erstelleWochenplanStandard(String username, String wpbez){
+		
+		boolean success = false;
+		try{
+			success = this.wochenplanSteuerung.erstelleWochenplanStandard(username, wpbez);
+			
+		}catch(Exception e){
+			System.out.println("Fehler innerhalb des Controllers:");
+			System.out.println("Fehler beim Aufruf der Methode erstelleWochenplanStandard:");
+			e.printStackTrace();			
+		}	
+		
+		return success;		
+	}
+	
 	public boolean publishWochenplan(String username, String wpbez){
 		
 		boolean result = false;

@@ -85,7 +85,7 @@ class BenutzerStrg {
 				Mitarbeiter m = myModel.getMitarbeiter(username);
 				
 				if(m.getPasswort().equals(pw)){
-					//this.myModel.register(myController.getView(), username, pw);
+					this.myModel.register(myController.getView(), username, pw);
 					success = true;
 				}
 				else{

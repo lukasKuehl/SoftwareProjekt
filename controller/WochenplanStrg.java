@@ -36,7 +36,7 @@ import data.Wochenplan;
 import model.Einsatzplanmodel;
 
 /**
- * @author Lukas
+ * @author Lukas Kühl
  * @info Die Klasse WochenplanStrg dient dazu, jegliche Anfragen bezüglich eines Wochenplanes im System zu verarbeiten und zu validieren.
  */
 class WochenplanStrg {
@@ -47,7 +47,7 @@ class WochenplanStrg {
 	private JDialog myDialog = null;
 	
 	/**
-	 * @author 
+	 * @author Lukas Kühl
 	 * @info Erzeugen eines Objektes der Klasse WochenplanStrg. Setzen des allgemeinen EinsatzplanControllers als Parent. Die Variable myDialog wird erst bei jedem Methodenaufruf neu erzeugt und wird deshalb später zugewiesen.
 	 */
 	protected WochenplanStrg(EinsatzplanController myController, Einsatzplanmodel myModel){
@@ -69,7 +69,7 @@ class WochenplanStrg {
 		//muss noch implementiert werden
 		Userrecht recht = Einsatzplanmodel.getUserrecht(user.getJob());
 				
-		if(recht.getBenutzerrolle().equals("Chef")){		
+		if(recht.getBenutzerrolle().equals("Admin")){		
 			
 			Map<String, Date> zeitenDate = new TreeMap<String, Date>();
 			
@@ -136,17 +136,19 @@ class WochenplanStrg {
 	protected boolean erstelleWochenplanStandard(String username, String wpbez){
 		
 		boolean success = false;
-		/*
+		
 		Mitarbeiter user = myModel.getMitarbeiter(username);
 	
-		//Muss noch implementier werden
+		//Umwandeln der Wpbez in die eindeutige Wochennummer
+    	int wpnr = Integer.parseInt((wpbez.substring(2).trim())); 
+		
 		Userrecht recht = myModel.getUserrecht(user.getJob());
 				
-		if(recht.getBenutzerrolle().equals("Chef")){	
+		if(recht.getBenutzerrolle().equals("Admin")){	
 			
 			try{
 				Standardeinstellungen settings = this.myModel.getStandardeinstellungen();				
-				Wochenplan wp = new Wochenplan(0, false, settings.getÖffnungszeit(), settings.getSchließzeit(), settings.getHauptzeitbeginn(), settings.getHauptzeitende(), this.myController.getView().getUsername(), settings.getMinanzinfot(), settings.getMinanzinfow(), settings.getMinanzkasse(), settings.getMehrbesetzungkasse());
+				Wochenplan wp = new Wochenplan(wpnr, false, settings.getÖffnungszeit(), settings.getSchließzeit(), settings.getHauptzeitbeginn(), settings.getHauptzeitende(), username, settings.getMinanzinfot(), settings.getMinanzinfow(), settings.getMinanzkasse(), settings.getMehrbesetzung());
 				this.myModel.addWochenplan(wp);
 				
 				if(this.myModel.getWochenplan(wp.getWpnr()) != null){
@@ -162,8 +164,7 @@ class WochenplanStrg {
 		else{
 			System.out.println("Fehler beim Erstellen eines neuen Wochenplanes:");
 			System.out.println("Der Benutzer verfügt nicht über die notwendigen Berechtigungen zum Anlegen eines neuen Einsatzplanes!");
-		}	
-		*/
+		}		
 		
 		return success;
 	}	

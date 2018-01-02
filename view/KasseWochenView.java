@@ -24,6 +24,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
@@ -260,15 +261,14 @@ public class KasseWochenView extends JFrame implements ActionListener {
 					
 					//folgende Anweisungen fehlen um die columns etc. anzuzeigen
 					
-					/*
+					
 					tbleWochenplan.getTableHeader().setSize(tbleWochenplan.getTableHeader().getPreferredSize());
 					tbleWochenplan.setSize(tbleWochenplan.getPreferredSize());
 					tbleWochenplan.setPreferredScrollableViewportSize(tbleWochenplan.getPreferredScrollableViewportSize());
 					tbleWochenplan.setFillsViewportHeight(true);
-					JScrollpane jsp = new JScrollPane(tbleWochenplan);					
-					*/
+					JScrollPane jsp = new JScrollPane(tbleWochenplan);						
 					
-					getContentPane().add(tbleWochenplan);
+					getContentPane().add(jsp);
 				}
 			}
 		});

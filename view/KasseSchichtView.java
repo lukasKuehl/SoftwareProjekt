@@ -20,29 +20,31 @@ import java.awt.event.ActionListener;
 import java.util.LinkedList;
 import java.awt.event.ActionEvent;
 
-//Klassenbeschreibung fehlt!
+/**
+ * @author Darius Panteli
+ * @info Die Klasse KasseSchichtView dient dazu, dem Nutzer eine graphische
+ *       Obefläche anzubieten, um Mitarbeiter einem jeweils ausgewählten
+ *       Wochenplan einer Schicht hinzuu zu
+ */
+// Klassenbeschreibung fehlt!
 
-//Kommentare innerhalb der Methoden fehlen!
+// Kommentare innerhalb der Methoden fehlen!
 
-//Autoren der einzelnen Methoden fehlen!
+// Autoren der einzelnen Methoden fehlen!
 
-//Hilfsklassen sind nicht public!
+// Hilfsklassen sind nicht public!
 public class KasseSchichtView extends JFrame {
 
 	private EinsatzplanController myController = null;
 	private Einsatzplanmodel myModel = null;
 	private Einsatzplanview myView = null;
-	
-	//Umlaute fehlen!
-	private JLabel lblBitteWochenplanAuswhlen, lblBitteDenTag, lblBitteDieSchicht, lblBitteDenMitarbeiter = null;
-	
+
+	private JLabel lblBitteWochenplanAuswaehlen, lblBitteDenTag, lblBitteDieSchicht, lblBitteDenMitarbeiter,
+			lblSchichtBearbeiten = null;
+
 	private JComboBox cbTage, cbWochenplan, cbMitarbeiter, cbSchicht = null;
 	private JButton btnPlanBestaetigen, btnTagAuswahl, btnSchichtAuswahl, btnMitarbeiterBestaetigen = null;
 
-	//Siehe AnmeldungView!
-	/**
-	 * Create the application.
-	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -55,7 +57,7 @@ public class KasseSchichtView extends JFrame {
 		});
 	}
 
-	public KasseSchichtView(Einsatzplanmodel myModel, Einsatzplanview myView, EinsatzplanController myController) {
+	protected KasseSchichtView(Einsatzplanmodel myModel, Einsatzplanview myView, EinsatzplanController myController) {
 		this.myView = myView;
 		this.myModel = myModel;
 		this.myController = myController;
@@ -67,46 +69,48 @@ public class KasseSchichtView extends JFrame {
 	 */
 	private void initialize() {
 		setTitle("Schicht bearbeiten");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setResizable(false);
 		setLocationRelativeTo(null);
-		setBounds(100, 100, 1538, 864);
+		setBounds(100, 100, 800, 600);
 		getContentPane().setLayout(null);
 		setVisible(true);
 
-		lblBitteWochenplanAuswhlen = new JLabel("Bitte Wochenplan ausw\u00E4hlen:");
-		lblBitteWochenplanAuswhlen.setFont(new Font("Tahoma", Font.BOLD, 15));
-		lblBitteWochenplanAuswhlen.setBounds(22, 152, 243, 16);
-		getContentPane().add(lblBitteWochenplanAuswhlen);
+		lblBitteWochenplanAuswaehlen = new JLabel("Bitte Wochenplan ausw\u00E4hlen:");
+		lblBitteWochenplanAuswaehlen.setFont(new Font("Verdana", Font.BOLD, 15));
+		lblBitteWochenplanAuswaehlen.setBounds(22, 152, 243, 16);
+		getContentPane().add(lblBitteWochenplanAuswaehlen);
 
-		//Siehe KasseBenutzerrolleView!
+		// Siehe KasseBenutzerrolleView!
 		cbWochenplan = new JComboBox();
 		cbWochenplan.setBounds(32, 181, 233, 22);
 		LinkedList<Wochenplan> alleWochenplaene = this.myModel.getWochenplaene();
-		alleWochenplaene.forEach((temp) -> { 
-			cbWochenplan.addItem("KW " +temp.getWpnr()); 
-			});
+		alleWochenplaene.forEach((temp) -> {
+			cbWochenplan.addItem("KW " + temp.getWpnr());
+		});
 		getContentPane().add(cbWochenplan);
 		//
-		
-		//Bestätigen Button ohne Funktion und ohne Namen :)
-		btnPlanBestaetigen = new JButton("New button");
+
+		// Bestätigen Funktion Ohne Namen und Funktion (Reset Funktion fehlt)
+		btnPlanBestaetigen = new JButton("best\u00E4tigen");
+		btnPlanBestaetigen.setFont(new Font("Verdana", Font.PLAIN, 13));
 		btnPlanBestaetigen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				cbTage.setEnabled(true);
+				btnTagAuswahl.setEnabled(true);
 			}
 		});
-		btnPlanBestaetigen.setBounds(168, 301, 97, 25);
+		btnPlanBestaetigen.setBounds(93,240, 125, 25);
 		getContentPane().add(btnPlanBestaetigen);
 
 		lblBitteDenTag = new JLabel("Bitte den Tag ausw\u00E4hlen:");
-		lblBitteDenTag.setFont(new Font("Tahoma", Font.BOLD, 15));
-		lblBitteDenTag.setBounds(22, 334, 243, 16);
+		lblBitteDenTag.setFont(new Font("Verdana", Font.BOLD, 15));
+		lblBitteDenTag.setBounds(22, 309, 243, 16);
 		getContentPane().add(lblBitteDenTag);
 
-		//siehe oben
+		// siehe oben (Füllen mit getTage)
 		cbTage = new JComboBox();
-		cbTage.setBounds(22, 383, 243, 22);
+		cbTage.setBounds(22, 354, 243, 22);
 		cbTage.addItem("Montag");
 		cbTage.addItem("Dienstag");
 		cbTage.addItem("Mittwoch");
@@ -116,110 +120,123 @@ public class KasseSchichtView extends JFrame {
 		getContentPane().add(cbTage);
 		cbTage.setEnabled(false);
 
-		//siehe oben!
-		btnTagAuswahl = new JButton("New button");
+		// siehe oben!
+		btnTagAuswahl = new JButton("best\u00E4tigen");
+		btnTagAuswahl.setFont(new Font("Verdana", Font.PLAIN, 13));
 		btnTagAuswahl.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				cbSchicht.setEnabled(true);
-				System.out.println(gibWochenplan());
+				btnSchichtAuswahl.setEnabled(true);
 			}
 		});
-		btnTagAuswahl.setBounds(168, 418, 97, 25);
+		btnTagAuswahl.setBounds(93, 389, 125, 25);
 		getContentPane().add(btnTagAuswahl);
+		btnTagAuswahl.setEnabled(false);
 		//
-		
+
 		lblBitteDieSchicht = new JLabel("Bitte die Schicht ausw\u00E4hlen:");
-		lblBitteDieSchicht.setFont(new Font("Tahoma", Font.BOLD, 15));
-		lblBitteDieSchicht.setBounds(22, 454, 243, 16);
+		lblBitteDieSchicht.setFont(new Font("Verdana", Font.BOLD, 15));
+		lblBitteDieSchicht.setBounds(404, 152, 243, 16);
 		getContentPane().add(lblBitteDieSchicht);
 
-		//Siehe oben!
+		// Siehe oben!
 		cbSchicht = new JComboBox();
-		cbSchicht.setBounds(22, 503, 243, 22);
+		cbSchicht.setBounds(414, 181, 243, 22);
 		LinkedList<Schicht> alleSchichten = this.myModel.getSchichten();
-		alleSchichten.forEach((temp) -> { 
-			cbSchicht.addItem("Schicht " +temp.getSchichtnr()); 
-			});
+		alleSchichten.forEach((temp) -> {
+			cbSchicht.addItem("Schicht " + temp.getSchichtnr());
+		});
 		getContentPane().add(cbSchicht);
 		cbSchicht.setEnabled(false);
 		//
-		
-		//Siehe oben!
-		btnSchichtAuswahl = new JButton("New button");
+
+		// Siehe oben!
+		btnSchichtAuswahl = new JButton("best\u00E4tigen");
+		btnSchichtAuswahl.setFont(new Font("Verdana", Font.PLAIN, 13));
 		btnSchichtAuswahl.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				cbMitarbeiter.setEnabled(true);
 				btnMitarbeiterBestaetigen.setEnabled(true);
 			}
 		});
-		btnSchichtAuswahl.setBounds(168, 647, 97, 25);
+		btnSchichtAuswahl.setBounds(466, 240, 125, 25);
 		getContentPane().add(btnSchichtAuswahl);
+		btnSchichtAuswahl.setEnabled(false);
 		//
-		
+
 		lblBitteDenMitarbeiter = new JLabel("Bitte den Mitarbeiter ausw\u00E4hlen:");
-		lblBitteDenMitarbeiter.setFont(new Font("Tahoma", Font.BOLD, 15));
-		lblBitteDenMitarbeiter.setBounds(644, 153, 299, 16);
+		lblBitteDenMitarbeiter.setFont(new Font("Verdana", Font.BOLD, 15));
+		lblBitteDenMitarbeiter.setBounds(404, 309, 299, 16);
 		getContentPane().add(lblBitteDenMitarbeiter);
 
-		//Siehe oben!
+		// Siehe oben!
 		cbMitarbeiter = new JComboBox();
-		cbMitarbeiter.setBounds(644, 215, 368, 22);
-		LinkedList<Mitarbeiter> alleMitarbeiter = this.myModel.getAlleMitarbeiter();
-		alleMitarbeiter.forEach((temp) -> { 
-			cbMitarbeiter.addItem(temp.getBenutzername()); 
-			});
+		cbMitarbeiter.setBounds(414, 354, 243, 22);
+		LinkedList<Mitarbeiter> alleMitarbeiter = this.myModel.getAlleMitarbeiter();//ändern zu verfügbare mitarbeiter
+		alleMitarbeiter.forEach((temp) -> {
+			cbMitarbeiter.addItem(temp.getBenutzername());
+		});
 		getContentPane().add(cbMitarbeiter);
 		cbMitarbeiter.setEnabled(false);
 		//
-		
+
 		btnMitarbeiterBestaetigen = new JButton("best\u00E4tigen");
+		btnMitarbeiterBestaetigen.setFont(new Font("Verdana", Font.PLAIN, 13));
 		btnMitarbeiterBestaetigen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int confirmed = JOptionPane.showConfirmDialog(null, "Sind Sie sicher?", "Warnung",
 						JOptionPane.YES_NO_OPTION);
 
 				if (confirmed == JOptionPane.YES_OPTION) {
-						
-						//welche Methode soll hier ausgeführt werden?
-						
-						// --> EinsatzplanController.fülleSchicht(int schichtNr, String[] mitarbeiter)	
-						
-					dispose();
-					} else {
-						//Fehlermeldung überflüssig, da der Benutzer abgebrochen hat
-						
-						//JLabel Fehlermeldung erstellen (siehe)
-						//lblFehlermeldung.setText("Fehler beim Erstellen des Wochenplans. Bitte überprüfen Sie Ihre Eingaben.");
 
-					}
+					// welche Methode soll hier ausgeführt werden?
+
+					// --> EinsatzplanController.fülleSchicht(int schichtNr,
+					// String[] mitarbeiter)
+
+					dispose();
+				} else {
+					// Fehlermeldung überflüssig, da der Benutzer abgebrochen
+					// hat
+
+					// JLabel Fehlermeldung erstellen (siehe)
+					// lblFehlermeldung.setText("Fehler beim Erstellen des
+					// Wochenplans. Bitte überprüfen Sie Ihre Eingaben.");
 
 				}
-			
+
+			}
+
 		});
-		btnMitarbeiterBestaetigen.setBounds(846, 714, 97, 25);
+		btnMitarbeiterBestaetigen.setBounds(466, 389, 115, 25);
 		getContentPane().add(btnMitarbeiterBestaetigen);
 		btnMitarbeiterBestaetigen.setEnabled(false);
 
+		lblSchichtBearbeiten = new JLabel("Schicht bearbeiten");
+		lblSchichtBearbeiten.setFont(new Font("Verdana", Font.BOLD, 30));
+		lblSchichtBearbeiten.setBounds(22, 13, 315, 58);
+		getContentPane().add(lblSchichtBearbeiten);
 	}
-	
-	public String gibMitarbeiter() {
+
+	protected String gibMitarbeiter() {
 		return cbMitarbeiter.getSelectedItem().toString();
 	}
-	
-	public String gibSchicht() {
-		//Sinnvolleres Trennungskriterium als ein Leerzeichen bestimmen (z.B. , | -)
+
+	protected String gibSchicht() {
+		// Sinnvolleres Trennungskriterium als ein Leerzeichen bestimmen (z.B. ,
+		// | -)
 		String[] teile = cbSchicht.getSelectedItem().toString().split(" ");
 		return teile[1];
 	}
-	
-	//Methodenname irreführend, besser gibTag/gibAusgewaehltenTag
-	public String gibTage() {
+
+	// Methodenname irreführend, besser gibTag/gibAusgewaehltenTag
+	protected String gibTage() {
 		return cbTage.getSelectedItem().toString();
 	}
-	
-	public String gibWochenplan() {
-		//Siehe oben!
+
+	protected String gibWochenplan() {
+		// Siehe oben!
 		String[] teile = cbWochenplan.getSelectedItem().toString().split(" ");
 		return teile[1];
-	}	
+	}
 }

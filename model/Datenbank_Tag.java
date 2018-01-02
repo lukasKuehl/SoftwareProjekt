@@ -46,9 +46,6 @@ class Datenbank_Tag {
 			//Auslesen der als Parameter übergebenen Mitarbeiter-Schicht-Beziehung
 			tbez = tag.getTbez();
 			wpnr = tag.getWpnr();
-			
-			
-			con.setAutoCommit(false);
 
 			if (checkTag(tbez,wpnr,con)) {
 				System.out.println("Dieser Tag existiert bereits in dem angegebenen Wochenplan!");
@@ -62,7 +59,7 @@ class Datenbank_Tag {
 				pstmt.setString(1, tbez);
 				pstmt.setInt(2, wpnr);
 				pstmt.setBoolean(3, feiertag);
-			
+				pstmt.execute();
 				
 				//Einfügen von Schichten in einen Tag
 				
@@ -72,7 +69,7 @@ class Datenbank_Tag {
 				dschicht.addSchicht(new Schicht(dschicht.getNewSchichtnr(con),tbez, wpnr,hauptzeitbeginn, hauptzeitende),con);
 				dschicht.addSchicht(new Schicht(dschicht.getNewSchichtnr(con),tbez, wpnr,hauptzeitende, schließzeit),con);
 				
-				pstmt.execute();
+				
 					
 			}			
 			success = true;
@@ -125,7 +122,7 @@ class Datenbank_Tag {
 		ResultSet rs = null;
 		
 		//Eine wpnr ist kein Integer --> Anführungszeichen müssen weg!
-		String sqlQuery = "select tbez,wpnr from tag where tbez = '"+tbez+"' and wpnr= '"+wpnr+"'";
+		String sqlQuery = "select tbez,wpnr from tag where tbez = '"+tbez+"' and wpnr= "+wpnr+"";
 
 		try {
 			stmt = con.createStatement();
@@ -395,7 +392,7 @@ class Datenbank_Tag {
 		ResultSet rs = null;
 		
 		//Einfaches wpnr reicht aus, dann ist es überall einheitlich
-		String sqlQuery = "DELETE FROM tag WHERE tag.wpnr= "+wpnr;
+		String sqlQuery = "DELETE FROM tag WHERE wpnr= "+wpnr;
 
 		for (Tblock_Tag tbt : tblocktagList) {
 			if (tbt.getWpnr() == wpnr) {
@@ -404,10 +401,9 @@ class Datenbank_Tag {
 		}
 			
 
-		schicht.deleteSchicht(wpnr,con);;
+		schicht.deleteSchichtvonWp(wpnr,con);;
 		
-		
-		//Die Tblock-Einträge müssen auch gelöscht werden!
+
 	
 		
 	

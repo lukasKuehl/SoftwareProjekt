@@ -79,12 +79,12 @@ public class KasseWocheErstellenView extends JFrame {
 		getContentPane().setLayout(null);
 
 		lblWochenplanErstellen = new JLabel("Wochenplan erstellen");
-		lblWochenplanErstellen.setFont(new Font("Tahoma", Font.BOLD, 30));
+		lblWochenplanErstellen.setFont(new Font("Verdana", Font.BOLD, 30));
 		lblWochenplanErstellen.setBounds(39, 127, 327, 52);
 		getContentPane().add(lblWochenplanErstellen);
 
 		lblKalenderwocheKw = new JLabel("Kalenderwoche KW:");
-		lblKalenderwocheKw.setFont(new Font("Tahoma", Font.BOLD, 15));
+		lblKalenderwocheKw.setFont(new Font("Verdana", Font.BOLD, 15));
 		lblKalenderwocheKw.setBounds(39, 358, 160, 16);
 		getContentPane().add(lblKalenderwocheKw);
 
@@ -98,7 +98,7 @@ public class KasseWocheErstellenView extends JFrame {
 		//
 		
 		lblOeffnungszeiten = new JLabel("\u00D6ffnungszeiten:");
-		lblOeffnungszeiten.setFont(new Font("Tahoma", Font.BOLD, 15));
+		lblOeffnungszeiten.setFont(new Font("Verdana", Font.BOLD, 15));
 		lblOeffnungszeiten.setBounds(39, 441, 160, 16);
 		getContentPane().add(lblOeffnungszeiten);
 
@@ -182,7 +182,7 @@ public class KasseWocheErstellenView extends JFrame {
 		txtOeffnungEndeB.setColumns(2);
 
 		lblHauptzeiten = new JLabel("Hauptzeiten:");
-		lblHauptzeiten.setFont(new Font("Tahoma", Font.BOLD, 15));
+		lblHauptzeiten.setFont(new Font("Verdana", Font.BOLD, 15));
 		lblHauptzeiten.setBounds(39, 574, 160, 16);
 		getContentPane().add(lblHauptzeiten);
 
@@ -264,19 +264,19 @@ public class KasseWocheErstellenView extends JFrame {
 		txtHauptEndeB.setColumns(2);
 
 		lblMindestbesetzung = new JLabel("Mindestbesetzung f\u00FCr Technikwarenaus: Info");
-		lblMindestbesetzung.setFont(new Font("Tahoma", Font.BOLD, 15));
+		lblMindestbesetzung.setFont(new Font("Verdana", Font.BOLD, 15));
 		lblMindestbesetzung.setBounds(487, 431, 509, 16);
 		getContentPane().add(lblMindestbesetzung);
 
 		lblMindestbesetzungFrLebensmittel = new JLabel(
 				"Mindestbesetzung f\u00FCr Lebensmittel- / Haushaltswarenhaus: Info");
-		lblMindestbesetzungFrLebensmittel.setFont(new Font("Tahoma", Font.BOLD, 15));
+		lblMindestbesetzungFrLebensmittel.setFont(new Font("Verdana", Font.BOLD, 15));
 		lblMindestbesetzungFrLebensmittel.setBounds(487, 474, 509, 16);
 		getContentPane().add(lblMindestbesetzungFrLebensmittel);
 
 		lblMindestbesetzungFrLebensmittel_1 = new JLabel(
 				"Mindestbesetzung f\u00FCr Lebensmittel- / Haushaltswarenhaus Kasse:");
-		lblMindestbesetzungFrLebensmittel_1.setFont(new Font("Tahoma", Font.BOLD, 15));
+		lblMindestbesetzungFrLebensmittel_1.setFont(new Font("Verdana", Font.BOLD, 15));
 		lblMindestbesetzungFrLebensmittel_1.setBounds(487, 524, 509, 16);
 		getContentPane().add(lblMindestbesetzungFrLebensmittel_1);
 
@@ -307,7 +307,7 @@ public class KasseWocheErstellenView extends JFrame {
 		getContentPane().add(lblKassen);
 
 		lblFehlermeldung = new JLabel("");
-		lblFehlermeldung.setFont(new Font("Tahoma", Font.BOLD, 15));
+		lblFehlermeldung.setFont(new Font("Verdana", Font.BOLD, 15));
 		lblFehlermeldung.setBounds(487, 626, 509, 16);
 		getContentPane().add(lblFehlermeldung);
 		
@@ -430,11 +430,6 @@ public class KasseWocheErstellenView extends JFrame {
 		getContentPane().add(lblUhr_3);
 		setVisible(true);
 
-		//Kann entfernt werden, da nicht mehr benötigt
-		/*
-		 * frame = new JFrame(); frame.setBounds(100, 100, 450, 300);
-		 * frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		 */
 	}
 
 	protected TreeMap<String, String> gibOeffnungszeiten() {
@@ -442,18 +437,10 @@ public class KasseWocheErstellenView extends JFrame {
 		//Auskommentierte Zeilen können weg --> nicht mehr notwendig
 		
 		TreeMap<String, String> zeiten = new TreeMap<String, String>();
-		// zeiten.put("OeffnunAnfangA", txtOeffnungAnfangA.getText());
 		zeiten.put("Öffnungszeit", txtOeffnungAnfangA.getText() + ":" + txtOeffnungAnfangB.getText());
-		// zeiten.put("OeffnunAnfangB", txtOeffnungAnfangB.getText());
 		zeiten.put("Schließzeit", txtOeffnungEndeA.getText() + ":" + txtOeffnungEndeB.getText());
-		// zeiten.put("OeffnungEndeA", txtOeffnungEndeA.getText());
-		// zeiten.put("OeffnungEndeB", txtOeffnungEndeB.getText());
 		zeiten.put("HauptzeitBeginn", txtHauptAnfangA.getText() + ":" + txtHauptAnfangB.getText());
-		// zeiten.put("AnfangA", txtHauptAnfangA.getText());
-		// zeiten.put("AnfangB", txtHauptAnfangB.getText());
 		zeiten.put("HauptzeitEnde", txtHauptEndeA.getText() + ":" + txtHauptEndeB.getText());
-		// zeiten.put("EndeA", txtHauptEndeA.getText());
-		// zeiten.put("EndeB", txtHauptEndeB.getText());
 
 		return zeiten;
 
@@ -469,7 +456,7 @@ public class KasseWocheErstellenView extends JFrame {
 		return besetzung;
 	}
 
-	public String gibWochenplanbezeichnung() {
+	protected String gibWochenplanbezeichnung() {
 		return cbKW.getSelectedItem().toString();
 	}
 

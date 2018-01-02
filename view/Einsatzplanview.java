@@ -2,12 +2,12 @@ package view;
 
 import java.awt.EventQueue;
 import java.util.ArrayList;
-import java.util.Observer;
 import java.util.TreeMap;
 
 import javax.swing.JOptionPane;
 
 import controller.EinsatzplanController;
+import data.Observer;
 import model.Einsatzplanmodel;
 
 /**
@@ -20,7 +20,7 @@ import model.Einsatzplanmodel;
 
 //Update-Methode wurde noch nicht ausgefüllt!(siehe Beschreibung in der Methode)
 
-public class Einsatzplanview {
+public class Einsatzplanview implements Observer {
 
 	private EinsatzplanController myController = null;
 	private Einsatzplanmodel myModel = null;
@@ -65,10 +65,13 @@ public class Einsatzplanview {
 	 *@Info Update Methode, sobald sich die Daten aus dem aktuellen geändert haben, wird ein neur Wochenplan generiert.
 	 */
 	public void update() {
+		
 
 		//Muss noch ausgefüllt werden --> zu Programmstart die erste Woche in der Wochenliste, andernfalls die aktuelle die in dem Label in der jeweiligen Wochenview liegt
 		
 		
 		
 	}
+
+
 }
