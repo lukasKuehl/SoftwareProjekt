@@ -13,33 +13,37 @@ import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.TreeMap;
 
-//Klassenbeschreibung fehlt!
-
-//Hilfsklassen sind nicht public!
-public class KrankmeldungLoeschenView extends JFrame {
+/**
+ * 
+ * @author Ramona Gerke
+ * @Info Die Klasse der View Krankmeldung löschen. Diese beinhaltet seinen
+ *       Konstruktor und die ActionPerformed Methode.
+ *
+ */
+class KrankmeldungLoeschenView extends JFrame {
 
 	// Initialisierung der Instanzvariablen
 	private JPanel contentPane, panelKrankmeldung = null;
 	private JLabel lblKrankmeldungLoeschen = null;
-	
-	//Der Typ sollte definiert sein, entweder String oder TerminBlockierung
-	private JList<Object> listKrankmeldung = null;
-	
+	private JList<String> listKrankmeldung = null;
 	private JButton btnBestaetigen = null;
 	private String username = null;
 	private JLabel lblBitteAuswaehlen = null;
 	private Einsatzplanview myView = null;
 	private Einsatzplanmodel myModel = null;
 	private EinsatzplanController myController = null;
-	private ArrayList<String> kl = null;	
-	private DefaultListModel<Object> model = null;
+	private ArrayList<String> kl = null;
+	private DefaultListModel<String> model = null;
+	private int tblocknr = 0;
 
 	/**
 	 * @author RamonaGerke
-	 * @Info Konstruktor der View Krankmeldung löschen.
+	 * @Info Der Konstruktor der View Krankmeldung löschen. Dieser erstellt die
+	 *       gesamten Komponenten der
 	 */
 
-	protected KrankmeldungLoeschenView(Einsatzplanview myView, Einsatzplanmodel myModel, EinsatzplanController myController) {
+	public KrankmeldungLoeschenView(Einsatzplanview myView, Einsatzplanmodel myModel,
+			EinsatzplanController myController) {
 		this.myView = myView;
 		this.myController = myController;
 		this.myModel = myModel;
@@ -59,24 +63,14 @@ public class KrankmeldungLoeschenView extends JFrame {
 		lblKrankmeldungLoeschen.setBounds(95, 74, 362, 26);
 		contentPane.add(lblKrankmeldungLoeschen);
 
-		/**
-		 * @author Ramona Gerke
-		 * @info Liste der Krankmeldungen wird einem DefaultListModel hinzugefügt und
-		 *       dann in einer ComboBox ausgegeben.
-		 */
-
-		listKrankmeldung = new JList<Object>();
-		 String grund = "Krankheit";
-		 
-		 //Auskommentierte Anweisungen können raus!
-		 
-//		 kl = myController.getAlleTermine(myView.getUsername());  
-//		 if ( tb.getBbez() == "Krankheit"){
-
-		model = new DefaultListModel<Object>();
-//		for (String m : kl) {
-//			model.addElement(m);
-//		}
+		// Liste der Krankmeldungen wird einem DefaultListModel hinzugefügt und dann in
+		// einer ComboBox ausgegeben.
+		listKrankmeldung = new JList<String>();
+		kl = myController.getAlleTermine(myView.getUsername());
+		model = new DefaultListModel<String>();
+		for (String m : kl) {
+			model.addElement(m);
+		}
 		listKrankmeldung.setModel(model);
 		listKrankmeldung.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		listKrankmeldung.setBounds(95, 126, 362, 399);
@@ -93,68 +87,64 @@ public class KrankmeldungLoeschenView extends JFrame {
 		lblBitteAuswaehlen.setBounds(95, 128, 113, 14);
 		contentPane.add(lblBitteAuswaehlen);
 
+		setVisible(true);
+
 		/**
 		 * @author Ramona Gerke
 		 * @Info Die ActionPerformed Methode wird nach dem drücken des Buttons
-		 *       "bestätigen" ausgeführt. Die liest eine ArrayList aus und wandelt die
-		 *       benötigten Werte für die Methode myController.entferneTermin um.
+		 *       "bestätigen" ausgeführt. Diese fragt den Nutzer, ob die Daten korrekt
+		 *       sind und liest eine ArrayList aus und wandelt die benötigten Werte für
+		 *       die Methode myController.entferneTermin um.
 		 */
 
 		// ACTION PERFROMED METHODE
 		btnBestaetigen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-
-				if (e.getSource() == btnBestaetigen) {
-					int eingabe = JOptionPane.showConfirmDialog(null,
-							"Wollen Sie die die Krankmeldung wirklich löschen?", null,
-							JOptionPane.YES_NO_CANCEL_OPTION);
-					
-					// siehe vorherige Klasse!
-					
-					if (eingabe == 0) {
-						if (listKrankmeldung.isSelectionEmpty()) {
-							JOptionPane.showMessageDialog(null, "Es wurde keine Eingabe getätigt", "Error",
-									JOptionPane.ERROR_MESSAGE);
-						} else {
-							try {
-								
-								//siehe TauschanfrageLoeschenView() IndexOutOfBound!
-								
-								int tblocknr = 0;
-								String temp[] = new String[5];
-								kl = myController.getAlleTermine(myView.getUsername());
-								for (String m : kl) {
-									m.toString();
-									m.trim();
-									temp = m.split("-");
-									String grund = temp[0];
-									String wpBez = temp[1];
-									tblocknr = Integer.parseInt(wpBez.substring(2));
-									String anfangstag = temp[2];
-									String endtag = temp[3];
-									String nfangsuhrzeit = temp[4];
-									String enduhrzeit = temp[5];
-
-									myController.entferneTermin(tblocknr, grund);
-									
-									//Siehe vorherige Klasse!
-									System.exit(0);
-								}
-							} catch (Exception a) {
-								JOptionPane.showMessageDialog(null,
-										"Die Liste konnte nicht übergeben werden. - Methode ActionPerformed (btnBestätigen, TerminLoeschen)",
-										"Error", JOptionPane.ERROR_MESSAGE);
-							}
-						}
+				try {
+					// Abfrage, ob ein Element ausgewäjlt worden ist
+					if (listKrankmeldung.isSelectionEmpty()) {
+						JOptionPane.showMessageDialog(null, "Es wurde keine Eingabe getätigt", "Error",
+								JOptionPane.ERROR_MESSAGE);
 					} else {
-						
-						//siehe vorherige Klasse!
-						System.exit(0);
+						// Meldung, ob die Daten wirklich gelöscht werden soll ( Ja, Nein , Abbrechen
+						// Abfrage)
+						int eingabe = JOptionPane.showConfirmDialog(null,
+								"Wollen Sie die die Krankmeldung wirklich löschen?", null,
+								JOptionPane.YES_NO_CANCEL_OPTION);
+
+						// weiter bei ja
+						if (eingabe == JOptionPane.YES_OPTION) {
+
+							String temp[] = new String[6];
+							kl = myController.getAlleTermine(myView.getUsername());
+							for (String m : kl) {
+								m.toString();
+								m.trim();
+								temp = m.split("-");
+								String grund = temp[0];
+								String wpBez = temp[1];
+								tblocknr = Integer.parseInt(wpBez.substring(2));
+								String anfangstag = temp[2];
+								String endtag = temp[3];
+								String anfangsuhrzeit = temp[4];
+								String enduhrzeit = temp[5];
+
+								// Übergabe an den Controller
+								myController.entferneTermin(tblocknr, grund);
+
+								dispose();
+							}
+						} else {
+							dispose();
+						}
 					}
+				} catch (Exception a) {
+					JOptionPane.showMessageDialog(null,
+							"Die Liste konnte nicht übergeben werden. - Methode ActionPerformed (btnBestätigen, TerminLoeschen)",
+							"Error", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});
-
-		setVisible(true);
 	}
+
 }

@@ -18,14 +18,14 @@ import controller.EinsatzplanController;
 import data.Mitarbeiter;
 import model.Einsatzplanmodel;
 
-//Klassenbeschreibung fehlt!
-
-//Autoren der einzelnen Methoden fehlen!
-
-//Kommentare innerhalb der Methoden fehlen!
-
-//Hilfsklassen sind nicht public!
-public class KrankmeldungErstellenView extends JFrame {
+/**
+ * 
+ * @author Ramona Gerke
+ * @Info Die Klasse der View Krankmeldung löschen. Diese beinhaltet seinen
+ *       Konstruktor und die ActionPerformed Methode.
+ *
+ */
+class KrankmeldungErstellenView extends JFrame {
 
 	// Initialisierung der Instanzvariablen
 	private JPanel contentPane, panelKrankmeldung, panelTermin = null;
@@ -43,7 +43,14 @@ public class KrankmeldungErstellenView extends JFrame {
 	private ArrayList<String> wp = null;
 	private LinkedList<Mitarbeiter> ma = null;
 
-	protected KrankmeldungErstellenView(Einsatzplanview myView, Einsatzplanmodel myModel, EinsatzplanController myController) {
+	/**
+	 * 
+	 * @author Ramona Gerke
+	 * @Info Ein Kronstruktor der die View der Krankmeldung erstellen erstellt.
+	 *
+	 */
+	public KrankmeldungErstellenView(Einsatzplanview myView, Einsatzplanmodel myModel,
+			EinsatzplanController myController) {
 		this.myView = myView;
 		this.myController = myController;
 		this.myModel = myModel;
@@ -70,6 +77,7 @@ public class KrankmeldungErstellenView extends JFrame {
 		panelKrankmeldung.add(labelKrankmeldungErstellen);
 
 		comboBoxWochenplaene = new JComboBox<String>();
+		// Ausgeben einer ArrayListe für die gesamten Wochenpläne
 		wp = myController.getWochenplaene();
 		for (String m : wp) {
 			comboBoxWochenplaene.addItem(m);
@@ -98,13 +106,14 @@ public class KrankmeldungErstellenView extends JFrame {
 		panelKrankmeldung.add(comboBoxEnd);
 
 		comboBoxMA = new JComboBox<String>();
+		// Ausgeben einer Arraylist der gesamten Mitarbeiter
 		ma = myModel.getAlleMitarbeiter();
 		for (Mitarbeiter m : ma) {
 			comboBoxMA.addItem(m.getBenutzername() + m.getVorname() + " " + m.getName());
 		}
 		comboBoxMA.setBounds(150, 229, 180, 20);
 		panelKrankmeldung.add(comboBoxMA);
-		
+
 		txtGrund = new JTextField();
 		txtGrund.setHorizontalAlignment(SwingConstants.CENTER);
 		txtGrund.setFont(new Font("Verdana", Font.PLAIN, 14));
@@ -135,52 +144,56 @@ public class KrankmeldungErstellenView extends JFrame {
 		buttonBestaetigen = new JButton("Bestätigen");
 		buttonBestaetigen.setHorizontalAlignment(SwingConstants.LEFT);
 		buttonBestaetigen.setFont(new Font("Verdana", Font.PLAIN, 15));
-		buttonBestaetigen.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
 		buttonBestaetigen.setBounds(500, 500, 118, 25);
 		panelKrankmeldung.add(buttonBestaetigen);
 
 		setVisible(true);
-	}
 
-	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == buttonBestaetigen) {
-			int eingabe = JOptionPane.showConfirmDialog(null, "Wollen Sie die Daten bestätigen?", null,
-					JOptionPane.YES_NO_CANCEL_OPTION);
+		/**
+		 * 
+		 * @author Ramona Gerke
+		 * @Info Eine ActionPerformedMethode, welche für die Ausführung des Buttons
+		 *       "Bestätigen" zuständig ist. @ Info Nach dem betätigen des Buttons
+		 *       werden die zuvor eingegebenen Daten für die Übergabe an den Controller
+		 *       aufgearbeitet.
+		 *
+		 */
+		buttonBestaetigen.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				// Meldung, ob die Daten wirklich gelöscht werden soll ( Ja, Nein , Abbrechen
+				// Abfrage)
+				int eingabe = JOptionPane.showConfirmDialog(null, "Wollen Sie die Daten bestätigen?", null,
+						JOptionPane.YES_NO_CANCEL_OPTION);
+				// weiter bei ja
+				if (eingabe == JOptionPane.YES_OPTION) {
+					// Treemap für den Zeitraum
+					zeitraum = new TreeMap<String, String>();
+					try {
+						username = comboBoxMA.getSelectedItem().toString();
+						username.trim();
+						username.split("-");
+						username.substring(0);
+						String bez = "Krankheit";
+						String grund = txtGrund.getText().toString();
+						zeitraum.put("wpbez", comboBoxWochenplaene.getSelectedItem().toString());
+						zeitraum.put("anfZeitraumTag", comboBoxAnfang.getSelectedItem().toString());
+						zeitraum.put("endZeitraumTag", comboBoxEnd.getSelectedItem().toString());
 
-			//0 funktioniert zwar, besser ist aber JOptionPane.YES_OPTION
-						
-			if (eingabe == 0) {
-				zeitraum = new TreeMap<String, String>();
-				try {
-					username = comboBoxMA.getSelectedItem().toString();
-					username.trim();
-					username.split("-");
-					username.substring(0);
-					String bez = "Krankheit";
-					String grund = txtGrund.getText().toString();
-					String wpbez = comboBoxWochenplaene.getSelectedItem().toString();
+						// Übergabe an den Controller
+						myController.erstelleTermin(username, bez, zeitraum, grund);
+						JOptionPane.showMessageDialog(null, "Krankmeldung wurde erfolgreich erstellt!");
+						dispose();
+					}
 
-					String zeitr = comboBoxAnfang.getSelectedItem().toString()
-							+ comboBoxEnd.getSelectedItem().toString();
-					zeitraum.put(wpbez, zeitr);
-
-					myController.erstelleTermin(username, bez, zeitraum, grund);
-					System.exit(0);
+					catch (Exception ex) {
+						JOptionPane.showMessageDialog(null,
+								"Daten konnten nicht umgewandelt werden, da die Dateiformate nicht stimmen! - Fehler: TerminErstellenView Zeile Button Bestätigen ActionPerformed",
+								"Error", JOptionPane.ERROR_MESSAGE);
+					}
+				} else {
+					JOptionPane.showMessageDialog(null, "Daten können geändert werden.");
 				}
-				
-				catch (Exception ex) {
-					JOptionPane.showMessageDialog(null,
-							"Daten konnten nicht umgewandelt wrerden, da die Dateiformate nicht stimmen! - Fehler: TerminErstellenView Zeile Button Bestätigen ActionPerformed",
-							"Error", JOptionPane.ERROR_MESSAGE);
-				}
-			} else {
-				
-				//Dieser Befehl beendet das komplette Programm, falls keine Fehlermeldung etc. mehr ausgegeben werden soll und das Fenster auch nicht auf bleiben soll, dann mach einfach this.dispose()
-				System.exit(0);
 			}
-		}
+		});
 	}
 }

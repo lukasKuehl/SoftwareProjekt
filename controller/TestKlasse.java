@@ -1,6 +1,7 @@
 package controller;
 
 import java.awt.GridLayout;
+import java.util.ArrayList;
 
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
@@ -23,8 +24,22 @@ public class TestKlasse {
 		
 		
 		
+		/*
+		
+		//Testen der Methode getAlleTermine
+		
+		ArrayList<String> alleTermine = myController.getAlleTermine("Dgöring");
 		
 		
+		if(alleTermine != null){
+			
+			for(String s: alleTermine){
+				System.out.println(s);
+			}	
+			
+		}
+		
+		*/
 		
 		/*
 		

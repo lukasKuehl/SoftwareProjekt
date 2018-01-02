@@ -29,21 +29,20 @@ import java.util.TreeMap;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextArea;
 
-//Klassenbeschreibung fehlt!
-
-//Kommentare innerhalb der Methoden fehlen!
-
-//Hilfsklassen sind nicht public!
-public class TauschanfrageAnzeigenView extends JFrame {
-
+/**
+ * 
+ * @author Ramona Gerke
+ * @Info Die Klasse der View Tauschanfrage anzeigen.
+ * @info Diese beinhaltet seinen Konstruktor und die ActionPerformed Methode.
+ *
+ */
+class TauschanfrageAnzeigenView extends JFrame {
+	// Initialisierung der Instanzvariablen
 	private JPanel contentPane = null;
 	private JTextField textFieldDatum = null;
 	private JLabel lblTauschanfrageAnzeigen = null;
 	private JButton btnAnnehmen = null;
-	
-	//JList<String> oder JList<Tauschanfrage> besser
-	private JList<Object> listTauschanfragen = null;
-	
+	private JList<String> listTauschanfragen = null;
 	private Einsatzplanmodel myModel = null;
 	private Einsatzplanview myView = null;
 	private EinsatzplanController myController = null;
@@ -71,10 +70,8 @@ public class TauschanfrageAnzeigenView extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 
-		//Siehe oben!		
-		listTauschanfragen = new JList<Object>();
-		
-		// tl = myController.getTauschanfragen(myView.getUsername());
+		listTauschanfragen = new JList<String>();
+		tl = myController.getTauschanfragen(myView.getUsername());
 		modelTauschanfrage = new DefaultListModel<Object>();
 		listTauschanfragen.setBounds(72, 140, 315, 336);
 		contentPane.add(listTauschanfragen);
@@ -94,9 +91,8 @@ public class TauschanfrageAnzeigenView extends JFrame {
 		/**
 		 * @author Ramona Gerke
 		 * @info Action Performed Methode, die nach dem Bestätigen des Buttons
-		 *       "Annehmen" ausgeführt wird,
-		 * 		 Sie übergibt die TauschanfrageNr. der ausgwählten Tauschanfrage an den
-		 *       Controller.
+		 *       "Annehmen" ausgeführt wird, Sie übergibt die TauschanfrageNr. der
+		 *       ausgwählten Tauschanfrage an den Controller.
 		 * 
 		 */
 
@@ -104,57 +100,54 @@ public class TauschanfrageAnzeigenView extends JFrame {
 
 		btnAnnehmen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (e.getSource() == btnAnnehmen) {
+				// Ausgabe der Fehlermeldung bei leerer Liste
+				if (tl.isEmpty()) {
+					JOptionPane.showMessageDialog(null,
+							"Es wurde keine Tauschanfrage ausgewählt. Bitte wählen Sie eine Tauschanfrage aus.",
+							"Error", JOptionPane.ERROR_MESSAGE);
+				} else {
+					// Meldung, ob die Daten wirklich gelöscht werden soll ( Ja, Nein , Abbrechen
+					// Abfrage)
 					int eingabe = JOptionPane.showConfirmDialog(null, "Wollen Sie die Tauschanfrage annehmen?", null,
 							JOptionPane.YES_NO_CANCEL_OPTION);
-					
-					//Siehe vorherige Klassen!
-					if (eingabe == 0) {
+					// weiter bei ja
+					if (eingabe == JOptionPane.YES_OPTION) {
+						String empfaengerName = null;
+						int tauschanfrageNr = 0;
+						String temp[] = new String[15];
+						tl = myController.getTauschanfragen(myView.getUsername());
+						for (String m : tl) {
+							m.toString();
+							m.trim();
+							temp = m.split("-");
+							String tauschanfrageNrS = temp[0].substring(10);
+							tauschanfrageNr = Integer.parseInt(tauschanfrageNrS);
+							String senderVorname = temp[1];
+							String senderName = temp[2];
+							String senderSchichtNr = temp[3];
+							String senderWpNr = temp[4];
+							String senderTbez = temp[5];
+							String senderAnfangsuhrzeit = temp[6];
+							String senderEnduhrzeit = temp[7];
+							String empfaengerVorname = temp[8];
+							empfaengerName = temp[9];
+							String empfaengerSchichtNr = temp[10];
+							String empfaengerWpBez = temp[11];
+							String empfaengerTagBez = temp[12];
+							String empfaengerAnfangsuhrzeit = temp[13];
+							String emfaengerEnduhrzeit = temp[14];
+							myController.akzeptiereTauschanfrage(empfaengerName, tauschanfrageNr);
+							JOptionPane.showConfirmDialog(null, "Tauschanfrage erfolgreich angenommen");
+							dispose();
 
-						if (tl.isEmpty()) {
-							JOptionPane.showMessageDialog(null,
-									"Es wurde keine Tauschanfrage ausgewählt. Bitte wählen Sie eine Tauschanfrage aus.",
-									"Error", JOptionPane.ERROR_MESSAGE);
-						} else {
-							
-							//siehe TauschanfrageLoeschenView() IndexOutOfBound!
-							
-							String empfaengerName = null;
-							int tauschanfrageNr = 0;
-							String temp[] = new String[14];
-							tl = myController.getTauschanfragen(myView.getUsername());
-							for (String m : tl) {
-								m.toString();
-								m.trim();
-								temp = m.split("-");
-								String tauschanfrageNrS = temp[0].substring(10);
-								tauschanfrageNr = Integer.parseInt(tauschanfrageNrS);
-								String senderVorname = temp[1];
-								String senderName = temp[2];
-								String senderSchichtNr = temp[3];
-								String senderWpNr = temp[4];
-								String senderTbez = temp[5];
-								String senderAnfangsuhrzeit = temp[6];
-								String senderEnduhrzeit = temp[7];
-								String empfaengerVorname = temp[8];
-								empfaengerName = temp[9];
-								String empfaengerSchichtNr = temp[10];
-								String empfaengerWpBez = temp[11];
-								String empfaengerTagBez = temp[12];
-								String empfaengerAnfangsuhrzeit = temp[13];
-								String emfaengerEnduhrzeit = temp[14];
-							}
-							myView.akzeptiereTauschanfrage(empfaengerName, tauschanfrageNr);
-							
-							//Erfolgsdialog/Rückmeldung für den Benutzer fehlt!
 						}
-
+					} else {
+						JOptionPane.showMessageDialog(null, "Wählen Sie eine andere Tauschanfrage zum Annehmen aus!",
+								"  ", JOptionPane.WARNING_MESSAGE);
 					}
-
 				}
 			}
-
 		});
-
 	}
+
 }

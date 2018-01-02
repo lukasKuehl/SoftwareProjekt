@@ -25,29 +25,32 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 
-//Klassenbeschreibung fehlt!
-
-
-//Hilfsklassen sind nicht public!
-public class TerminLoeschenView extends JFrame {
-
-	private JPanel contentPane, panelTermin = null;
+/**
+ * 
+ * @author Ramona Gerke
+ * @Info Die Klasse der View Termin löschen.
+ * @info Diese beinhaltet seinen Konstruktor und die ActionPerformed Methode.
+ *
+ */
+class TerminLoeschenView extends JFrame {
+	// Initialisierung der Instanzvariablen
+	private JPanel contentPane = null;
 	private JLabel lblTerninLoeschen, lblTerminAuswaehlen = null;
-	
-	//Siehe vorherige Klassen!
-	private JList<Object> listTermin = null;
-	
+	private JList<String> listTermin = null;
 	private String username = null;
-	private DefaultListModel<Object> model = null;
+	private DefaultListModel<String> model = null;
 	private ArrayList<String> tl = null;
 	private Einsatzplanmodel myModel = null;
 	private Einsatzplanview myView = null;
 	private EinsatzplanController myController = null;
-	
-	//Umlaut fehlt!
-	private JButton btnBesttigen = null;
+	private JButton btnBestaetigen = null;
 
-	protected TerminLoeschenView(Einsatzplanview myView, Einsatzplanmodel myModel, EinsatzplanController myController) {
+	/**
+	 * @ author Ramona Gerke
+	 * 
+	 * @Info Der Konstruktor der View Termin loeschen..
+	 */
+	public TerminLoeschenView(Einsatzplanview myView, Einsatzplanmodel myModel, EinsatzplanController myController) {
 		this.myView = myView;
 		this.myController = myController;
 		this.myModel = myModel;
@@ -67,13 +70,13 @@ public class TerminLoeschenView extends JFrame {
 		lblTerninLoeschen.setBounds(60, 83, 199, 26);
 		contentPane.add(lblTerninLoeschen);
 
-		//Siehe oben, dann sollte die Zuweisung auch klappen
-		listTermin = new JList<Object>();
-//		tl = myController.getMitarbeiterTermine(myView.getUsername());
-		model = new DefaultListModel<Object>();
-//		for (String m : tl) {
-//			model.addElement(m);
-//		}
+		listTermin = new JList<String>();
+		// Ausgeben einer Arraylist für alle Termine des Mitarbeiters
+		tl = myController.getMitarbeiterTermine(myView.getUsername());
+		model = new DefaultListModel<String>();
+		for (String m : tl) {
+			model.addElement(m);
+		}
 		listTermin.setModel(model);
 		listTermin.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		listTermin.setBounds(65, 145, 282, 355);
@@ -85,49 +88,52 @@ public class TerminLoeschenView extends JFrame {
 		lblTerminAuswaehlen.setBounds(62, 120, 152, 14);
 		contentPane.add(lblTerminAuswaehlen);
 
-		btnBesttigen = new JButton("Bestätigen");
-		btnBesttigen.setFont(new Font("Verdana", Font.PLAIN, 15));
-		btnBesttigen.setBounds(500,500,110,25);
-		contentPane.add(btnBesttigen);
+		btnBestaetigen = new JButton("Bestätigen");
+		btnBestaetigen.setFont(new Font("Verdana", Font.PLAIN, 15));
+		btnBestaetigen.setBounds(500, 500, 110, 25);
+		contentPane.add(btnBestaetigen);
 
 		/**
 		 * @author Ramona Gerke
-		 * @Info Action Performed Methode die nach dem bestätigen des Buttons "bestätigen", das ausgewählte Element anhand der Tauschanfrage Nr löscht.
+		 * @Info Action Performed Methode die nach dem bestätigen des Buttons
+		 *       "bestätigen", dass das ausgewählte Element anhand der Termin Nr und
+		 *       dessen Usernamen gelöscht.
 		 */
-		// ACTION PERFROMED Methode	
-		btnBesttigen.addActionListener(new ActionListener() {
+		// ACTION PERFROMED Methode
+		btnBestaetigen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-
-				int eingabe = JOptionPane.showConfirmDialog(null, "Wollen Sie die Daten bestätigen?", null,
-						JOptionPane.YES_NO_CANCEL_OPTION);
-
-				if (eingabe == 0) {
-
-					if (listTermin.isSelectionEmpty()) {
-						JOptionPane.showMessageDialog(null, "Es wurde keine Eingabe getätigt", "Error",
-								JOptionPane.ERROR_MESSAGE);
-					} else {
-						try {
+				// Abfrage, ob kein Element in der Liste ausgewählt ist
+				if (listTermin.isSelectionEmpty()) {
+					JOptionPane.showMessageDialog(null, "Es wurde keine Eingabe getätigt", "Error",
+							JOptionPane.ERROR_MESSAGE);
+				} else {
+					try {
+						// Meldung, ob die Daten wirklich gelöscht werden soll ( Ja, Nein , Abbrechen
+						// Abfrage)
+						int eingabe = JOptionPane.showConfirmDialog(null, "Wollen Sie den Termin löschen?", null,
+								JOptionPane.YES_NO_CANCEL_OPTION);
+						// weiter bei ja
+						if (eingabe == JOptionPane.YES_OPTION) {
+							// Abfrage, ob die Liste leer ist
 							String s;
 							s = listTermin.getSelectedValue().toString();
 							s.trim();
 							s.split("-");
 							s.substring(0, 2);
 							int terminnr = Integer.parseInt(s);
-							myView.entferneTermin(terminnr, myView.getUsername());
-							System.exit(0);
-
-						} catch (Exception a) {
-							JOptionPane.showMessageDialog(null,
-									"Die Liste konnte nicht übergeben werden. - Methode ActionPerformed (btnBestätigen, TerminLoeschen)",
-									"Error", JOptionPane.ERROR_MESSAGE);
+							myController.entferneTermin(terminnr, myView.getUsername());
+							JOptionPane.showConfirmDialog(null, "Termin erfolgreich gelöscht");
+							dispose();
+						} else {
+							JOptionPane.showMessageDialog(null, "Wählen Sie einen anderen Termin aus!", " ",
+									JOptionPane.WARNING_MESSAGE);
 						}
+
+					} catch (Exception a) {
+						JOptionPane.showMessageDialog(null,
+								"Die Liste konnte nicht übergeben werden. - Methode ActionPerformed (btnBestätigen, TerminLoeschen)",
+								"Error", JOptionPane.ERROR_MESSAGE);
 					}
-				} else {
-					//Andere Termine löschen? --> Fenster nicht schließen
-					
-					//Siehe vorherige Klassen!
-					System.exit(0);
 				}
 			}
 
