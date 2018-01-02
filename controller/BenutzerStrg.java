@@ -5,6 +5,7 @@ import java.util.TreeMap;
 
 import javax.swing.JDialog;
 
+import data.Mitarbeiter;
 import model.Einsatzplanmodel;
 import view.Einsatzplanview;
 
@@ -77,18 +78,27 @@ class BenutzerStrg {
 	protected boolean benutzerAnmelden(String username, String pw){
 
 		boolean success = false;
-		/*
+		
 		if(this.myModel.getMitarbeiter(username) != null){
-			try{
-				this.myModel.abonniere(username, pw, this.myController.getView());	
-				success = true;
+			try{				
+				
+				Mitarbeiter m = myModel.getMitarbeiter(username);
+				
+				if(m.getPasswort().equals(pw)){
+					//this.myModel.register(myController.getView(), username, pw);
+					success = true;
+				}
+				else{
+					System.out.println("Das eingegebene Passwort ist nicht korrekt!");
+				}					
+				
 			}catch(Exception e){
 				System.out.println("Fehler beim Anmelden des Users " + username + ", bitte Eingaben überprüfen :");
 				e.printStackTrace();
 			}
 		
 		}		
-		*/
+		
 		
 		return success;
 		
