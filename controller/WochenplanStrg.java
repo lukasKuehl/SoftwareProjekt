@@ -136,17 +136,19 @@ class WochenplanStrg {
 	protected boolean erstelleWochenplanStandard(String username, String wpbez){
 		
 		boolean success = false;
-		/*
+		
 		Mitarbeiter user = myModel.getMitarbeiter(username);
 	
-		//Muss noch implementier werden
+		//Umwandeln der Wpbez in die eindeutige Wochennummer
+    	int wpnr = Integer.parseInt((wpbez.substring(2).trim())); 
+		
 		Userrecht recht = myModel.getUserrecht(user.getJob());
 				
 		if(recht.getBenutzerrolle().equals("Chef")){	
 			
 			try{
 				Standardeinstellungen settings = this.myModel.getStandardeinstellungen();				
-				Wochenplan wp = new Wochenplan(0, false, settings.getÖffnungszeit(), settings.getSchließzeit(), settings.getHauptzeitbeginn(), settings.getHauptzeitende(), this.myController.getView().getUsername(), settings.getMinanzinfot(), settings.getMinanzinfow(), settings.getMinanzkasse(), settings.getMehrbesetzungkasse());
+				Wochenplan wp = new Wochenplan(wpnr, false, settings.getÖffnungszeit(), settings.getSchließzeit(), settings.getHauptzeitbeginn(), settings.getHauptzeitende(), username, settings.getMinanzinfot(), settings.getMinanzinfow(), settings.getMinanzkasse(), settings.getMehrbesetzung());
 				this.myModel.addWochenplan(wp);
 				
 				if(this.myModel.getWochenplan(wp.getWpnr()) != null){
@@ -162,8 +164,7 @@ class WochenplanStrg {
 		else{
 			System.out.println("Fehler beim Erstellen eines neuen Wochenplanes:");
 			System.out.println("Der Benutzer verfügt nicht über die notwendigen Berechtigungen zum Anlegen eines neuen Einsatzplanes!");
-		}	
-		*/
+		}		
 		
 		return success;
 	}	
