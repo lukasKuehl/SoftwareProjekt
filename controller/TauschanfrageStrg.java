@@ -20,8 +20,7 @@ class TauschanfrageStrg {
 	//Initialsierung der Instanzvariablen
 	private EinsatzplanController myController = null;	
 	private Einsatzplanmodel myModel = null;
-	private JDialog myDialog = null;
-	//ToDo verfügbare Dialoge als Variablen festhalten	
+	private JDialog myDialog = null;	
 	
 	/**
 	 * @author Lukas

@@ -43,7 +43,8 @@ class SchichtStrg {
 	 */
 	protected boolean ausfüllenSchicht(int schichtNr, String[] mitarbeiter){
 
-		boolean success = false;			
+		boolean success = false;		
+		
 		LinkedList<Ma_Schicht> einteilung= this.myModel.getMitarbeiterausderSchicht(schichtNr);
 		
 		for(Ma_Schicht ma : einteilung){

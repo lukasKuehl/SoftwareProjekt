@@ -227,13 +227,14 @@ class TerminStrg {
 	protected boolean entferneTermin(int tblocknr, String username){
 
 		boolean success = false;
-		boolean valid = false;
+		boolean valid = false;		
+		
 		
 		LinkedList<TerminBlockierung> alleTerminblockierungen = this.myModel.getTerminBlockierungen();
 		
 		for(TerminBlockierung tb: alleTerminblockierungen){
-			//Prüfe, ob der Termin existiert und ob der Nutzer die Berechtigung zum Löschen besitzt(Bedingung: Ersteller/in des Termins)
-			if((tb.getTblocknr() == tblocknr) && tb.getBenutzername().equals(username)){
+			//Prüfe, ob der Termin existiert und ob der Nutzer die Berechtigung zum Löschen besitzt(Bedingung: Ersteller/in des Termins oder Benutzer besitzt Adminrechte)
+			if(((tb.getTblocknr() == tblocknr) && tb.getBenutzername().equals(username)) || myController.isUserAdmin(username)){
 				valid = true;				
 			}
 		}
@@ -308,24 +309,9 @@ class TerminStrg {
 	}
 	
 	protected ArrayList<String> getAlleTermine(String username){
-		ArrayList<String> rueckgabe = new ArrayList<String>();		
+		ArrayList<String> rueckgabe = new ArrayList<String>();	
 		
-		boolean admin = false;
-				
-		Mitarbeiter ma = this.myModel.getMitarbeiter(username);	
-		Userrecht rechte = null;
-		
-		if(ma != null){
-			rechte = this.myModel.getUserrecht(ma.getJob());
-		}	
-			
-		//Prüfe, ob die zugehörige Rolle Admin ist
-		if(rechte.getBenutzerrolle().equals("Admin")){
-			//Der/Die Mitarbeiter/in hat die notwendigen Berechtigungen
-			admin = true;
-		}		
-		
-		if(admin){
+		if(myController.isUserAdmin(username)){
 			
 			LinkedList<TerminBlockierung> alleTermine = this.myModel.getTerminBlockierungen();
 						

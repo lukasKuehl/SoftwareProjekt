@@ -62,14 +62,9 @@ class WochenplanStrg {
 	 * @info Keys der "besetzung" Map: "MinBesetzungKasse", "MinBesetzungInfoWaren", "MinBesetzungInfoTechnik", "MehrbesetzungKasse"
 	 */
 	protected boolean erstelleWochenplanCustom(String username, String wpbez, TreeMap<String, String> zeiten, TreeMap<String, Integer> besetzung){
-		boolean success = false;		
-		/*
-		Mitarbeiter user = myModel.getMitarbeiter(username);
-		
-		//muss noch implementiert werden
-		Userrecht recht = Einsatzplanmodel.getUserrecht(user.getJob());
+		boolean success = false;			
 				
-		if(recht.getBenutzerrolle().equals("Admin")){		
+		if(myController.isUserAdmin(username)){		
 			
 			Map<String, Date> zeitenDate = new TreeMap<String, Date>();
 			
@@ -103,7 +98,7 @@ class WochenplanStrg {
 					
 				//Alle Anforderungen wurden erfüllt --> ein neuer Wochenplan kann im System hinterlegt werden
 				if(checkbesetzung){
-					Wochenplan wp = new Wochenplan(0, false, zeiten.get("Öffnungszeit"), zeiten.get("Schließzeit"), zeiten.get("HauptzeitBeginn"), zeiten.get("HauptzeitEnde"), this.myController.getView().getUsername(), besetzung.get("MinBesetzungInfoTechnik"), besetzung.get("MinBesetzungInfoWaren"), besetzung.get("MinBesetzungKasse"), besetzung.get("MehrbesetzungKasse"));
+					Wochenplan wp = new Wochenplan(0, false, zeiten.get("Öffnungszeit"), zeiten.get("Schließzeit"), zeiten.get("HauptzeitBeginn"), zeiten.get("HauptzeitEnde"), username, besetzung.get("MinBesetzungInfoTechnik"), besetzung.get("MinBesetzungInfoWaren"), besetzung.get("MinBesetzungKasse"), besetzung.get("MehrbesetzungKasse"));
 					this.myModel.addWochenplan(wp);
 					
 					if(this.myModel.getWochenplan(wp.getWpnr()) != null){
@@ -125,7 +120,7 @@ class WochenplanStrg {
 			System.out.println("Fehler beim Erstellen eines neuen Wochenplanes:");
 			System.out.println("Der Benutzer verfügt nicht über die notwendigen Berechtigungen zum Anlegen eines neuen Einsatzplanes!");
 		}	
-		*/
+		
 	return success;
    }
 	
@@ -135,16 +130,12 @@ class WochenplanStrg {
 	 */
 	protected boolean erstelleWochenplanStandard(String username, String wpbez){
 		
-		boolean success = false;
-		
-		Mitarbeiter user = myModel.getMitarbeiter(username);
+		boolean success = false;		
 	
 		//Umwandeln der Wpbez in die eindeutige Wochennummer
-    	int wpnr = myController.getWpnr(wpbez);    	
-		
-		Userrecht recht = myModel.getUserrecht(user.getJob());
+    	int wpnr = myController.getWpnr(wpbez);
 				
-		if(recht.getBenutzerrolle().equals("Admin")){	
+		if(myController.isUserAdmin(username)){	
 			
 			try{
 				Standardeinstellungen settings = this.myModel.getStandardeinstellungen();				
@@ -190,9 +181,8 @@ class WochenplanStrg {
     			wochenTage.put(counter, t);
     			counter++;
     		}    		
-    	}  	
-    	
-		//LinkedList<Mitarbeiter> alleMitarbeiter = myModel.getAlleMitarbeiter();
+    	}    	
+		
 		TreeMap<String, Mitarbeiter> tempMitarbeiter = new TreeMap<String, Mitarbeiter>();
 		LinkedList<Mitarbeiter> wochenMitarbeiter = new LinkedList<Mitarbeiter>();
 		
@@ -401,14 +391,9 @@ class WochenplanStrg {
 		boolean success = false;
 		
 		//Umwandeln der Wpbez in die eindeutige Wochennummer
-    	int wpnr = myController.getWpnr(wpbez);
+    	int wpnr = myController.getWpnr(wpbez);  
 		
-    	Mitarbeiter ma = myModel.getMitarbeiter(username);
-    	
-    	
-    	Userrecht recht = myModel.getUserrecht(ma.getJob());
-		
-		if(recht.getBenutzerrolle().equals("Admin")){	
+		if(myController.isUserAdmin(username)){	
 			
 			try{
 				
@@ -433,47 +418,50 @@ class WochenplanStrg {
 			
 		boolean success = false;				
 		
-		int w = Math.max(wochenplan.getWidth(), header.getWidth());
-        int h = wochenplan.getHeight() + header.getHeight();
-        BufferedImage bi = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
-        Graphics2D g2 = bi.createGraphics();
-        header.paint(g2);
-        g2.translate(0, header.getHeight());
-        wochenplan.paint(g2);
-        g2.dispose();
-        try
-        {
-        	String filePath = System.getProperty("user.home") + "/Desktop/Kalenderwochenübersicht_" + wpbez +".png";
-            ImageIO.write(bi, "png", new File(filePath));
-            
-            LinkedList<Mitarbeiter> alleMitarbeiter = this.myModel.getAlleMitarbeiter();
-            
-            MailStrg myMailController = new MailStrg();
-            
-            final String user = "einsatzplan.team";
-            final String password = "";
-            final String senderAddress = "einsatzplan.team@web.de";           
-            
-            for(Mitarbeiter m: alleMitarbeiter){
-            	//Festlegung des Textes für die E-Mail
-            	String message = "Hallo " + m.getVorname() + " " + m.getName() +",\n" + 
-            			"anbei dieser Mail finden Sie den Mitarbeitereinsatzplan für die " + wpbez +".\n" + 
-            			"\n" +
-            			"Mit freundlichen Grüßen,\n" +
-            			"Team der Einsatzplanverwaltung";           	
-            	
-            	//Nutzung des Gruppenaccounts bei Web.de
-            	myMailController.sendMail(user, password, senderAddress, m.getEmail(), "Einsatzplan für " + wpbez, message, filePath);	
-            	
-            }
-            
-            success = true;
+		if(myController.isUserAdmin(username)){
+			int w = Math.max(wochenplan.getWidth(), header.getWidth());
+	        int h = wochenplan.getHeight() + header.getHeight();
+	        BufferedImage bi = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
+	        Graphics2D g2 = bi.createGraphics();
+	        header.paint(g2);
+	        g2.translate(0, header.getHeight());
+	        wochenplan.paint(g2);
+	        g2.dispose();
+	        try
+	        {
+	        	String filePath = System.getProperty("user.home") + "/Desktop/Kalenderwochenübersicht_" + wpbez +".png";
+	            ImageIO.write(bi, "png", new File(filePath));
+	            
+	            LinkedList<Mitarbeiter> alleMitarbeiter = this.myModel.getAlleMitarbeiter();
+	            
+	            MailStrg myMailController = new MailStrg();
+	            
+	            final String user = "einsatzplan.team";
+	            final String password = "";
+	            final String senderAddress = "einsatzplan.team@web.de";           
+	            
+	            for(Mitarbeiter m: alleMitarbeiter){
+	            	//Festlegung des Textes für die E-Mail
+	            	String message = "Hallo " + m.getVorname() + " " + m.getName() +",\n" + 
+	            			"anbei dieser Mail finden Sie den Mitarbeitereinsatzplan für die " + wpbez +".\n" + 
+	            			"\n" +
+	            			"Mit freundlichen Grüßen,\n" +
+	            			"Team der Einsatzplanverwaltung";           	
+	            	
+	            	//Nutzung des Gruppenaccounts bei Web.de
+	            	myMailController.sendMail(user, password, senderAddress, m.getEmail(), "Einsatzplan für " + wpbez, message, filePath);	
+	            	
+	            }
+	            success = true;
+	        }catch(IOException ioe)
+	        {
+	        	System.out.println("Fehler beim Verschicken der Wochenpläne per E-Mail:");
+	        	ioe.printStackTrace();
+	        }              
         }
-        catch(IOException ioe)
-        {
-            System.out.println("Fehler beim Verschicken der Wochenpläne per E-Mail:");
-            ioe.printStackTrace();
-        }        
+		else{
+			System.out.println("Sie verfügen nicht über die notwendigen Berechtigungen zum Verschicken eines Wochenplanes, bitte wenden Sie sich an den Systemadministrator.");
+		}
         
 		return success;
 	} 

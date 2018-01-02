@@ -20,10 +20,6 @@ public class TestKlasse {
 		myController = new EinsatzplanController(myModel);		
 		
 		
-		
-		
-		
-		
 		/*
 		
 		//Testen Erstellen eines Wochenplanes nach Standardeinstellungen
@@ -33,8 +29,7 @@ public class TestKlasse {
 		
 		myController.entferneWochenplan("Dgöring", "KW1002");			
 		
-		*/
-		
+		*/		
 		
 		/*
 		

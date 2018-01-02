@@ -6,7 +6,9 @@ import java.util.TreeMap;
 import javax.swing.JTable;
 import javax.swing.table.JTableHeader;
 
+import data.Mitarbeiter;
 import data.Schicht;
+import data.Userrecht;
 import model.Einsatzplanmodel;
 import view.Einsatzplanview;
 
@@ -411,4 +413,17 @@ public class EinsatzplanController {
 		}	
 	}
 	
+	protected boolean isUserAdmin(String username){
+		
+		Mitarbeiter user = model.getMitarbeiter(username);
+		
+		if(user != null){
+			Userrecht recht = model.getUserrecht(user.getJob());
+			
+			if(recht.getBenutzerrolle().equals("Admin")){	
+				return true;
+			}			
+		}
+		return false;		
+	}
 }
