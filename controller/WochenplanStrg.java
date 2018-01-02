@@ -140,7 +140,7 @@ class WochenplanStrg {
 		Mitarbeiter user = myModel.getMitarbeiter(username);
 	
 		//Umwandeln der Wpbez in die eindeutige Wochennummer
-    	int wpnr = Integer.parseInt((wpbez.substring(2).trim())); 
+    	int wpnr = myController.getWpnr(wpbez);    	
 		
 		Userrecht recht = myModel.getUserrecht(user.getJob());
 				
@@ -177,7 +177,7 @@ class WochenplanStrg {
 		JTable wochenplan = null;	
 		
 		//Umwandeln der Wpbez in die eindeutige Wochennummer
-    	int wpnr = Integer.parseInt((wpbez.substring(2).trim()));  			
+    	int wpnr = myController.getWpnr(wpbez);			
 		
 		LinkedList<Tag> alleTage = myModel.getTage();
     	TreeMap<Integer, Tag> wochenTage = new TreeMap<Integer, Tag>();
@@ -401,7 +401,7 @@ class WochenplanStrg {
 		boolean success = false;
 		
 		//Umwandeln der Wpbez in die eindeutige Wochennummer
-    	int wpnr = Integer.parseInt((wpbez.substring(2).trim()));  	
+    	int wpnr = myController.getWpnr(wpbez);
 		
     	Mitarbeiter ma = myModel.getMitarbeiter(username);
     	
@@ -495,7 +495,7 @@ class WochenplanStrg {
 		ArrayList<String> rueckgabe = new ArrayList<String>();
 		
 		//Umwandeln der Wpbez in die eindeutige Wochennummer
-    	int wpnr = Integer.parseInt((wpbez.substring(2).trim()));  			
+    	int wpnr = myController.getWpnr(wpbez);  			
 		
 		LinkedList<Tag> alleTage = this.myModel.getTage();
 		LinkedList<Tag> wochenTage = new LinkedList<Tag>(); 

@@ -395,5 +395,20 @@ public class EinsatzplanController {
 	
 	protected Einsatzplanview getView(){
 		return this.view;		
-	}	
+	}
+	
+	
+	//Hilfsmethode zum konvertieren einer wpbez zu einer wpnr
+	protected int getWpnr(String wpbez){	
+		
+		try{
+			//Umwandeln der Wpbez in die eindeutige Wochennummer
+	    	int wpnr = Integer.parseInt((wpbez.substring(2).trim())); 
+	    	return wpnr;
+			
+		}catch(NumberFormatException nfe){
+			return 0;
+		}	
+	}
+	
 }

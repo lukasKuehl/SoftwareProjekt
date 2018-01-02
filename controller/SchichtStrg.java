@@ -35,19 +35,7 @@ class SchichtStrg {
 	protected SchichtStrg(EinsatzplanController myController, Einsatzplanmodel myModel){
 		this.myController = myController;
 		this.myModel = myModel;
-	}
-	
-	
-	/**
-	 * @author Lukas Kühl
-	 * @info Hilfsmethode zum automatischen erstellen von Schichten innerhalb eines Tages und hinterlegen in der Datenbank. 
-	 */
-	protected boolean erstelleSchicht(){
-
-		boolean success = false;
-		//Ausfüllen
-		return success;
-	}
+	}	
 		
 	/**
 	 * @author Lukas Kühl
@@ -168,10 +156,9 @@ class SchichtStrg {
 	 * @info Methode zur Ermittlung der Schichten eines Mitarbeiters für einen bestimmten Tag innerhalb eines Wochenplanes
 	 */
 	protected ArrayList<String> getMitarbeiterSchichten(String wpbez, String tagbez, String username){
-		ArrayList<String> rueckgabe = new ArrayList<String>();
-		
+				
 		//Umwandeln der Wpbez in die eindeutige Wochennummer
-    	int wpnr = Integer.parseInt((wpbez.substring(2).trim())); 		
+    	int wpnr = myController.getWpnr(wpbez); 		
 		
     	//Abfrage der gesamten Zuordnung und Suche nach den Schichten, die dem übergebenen benuzternamen zugeordnet sind
 		LinkedList<Ma_Schicht> einteilung = this.myModel.getMa_Schicht();
@@ -213,9 +200,6 @@ class SchichtStrg {
 	
 	protected ArrayList<String> getAndereMitarbeiterSchichten(String wpbez, String username, int schichtNr){
 		LinkedList<Schicht> uebergabe = new LinkedList<Schicht>();
-		
-		//Umwandeln der Wpbez in die eindeutige Wochennummer
-    	int wpnr = Integer.parseInt((wpbez.substring(2).trim())); 	
     	
     	LinkedList<Ma_Schicht> einteilung = this.myModel.getMa_Schicht();
 		LinkedList<Ma_Schicht> andereMitarbeiterEinteilung = new LinkedList<Ma_Schicht>();

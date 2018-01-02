@@ -54,7 +54,7 @@ class TerminStrg {
 		
 		try{
 			//Umwandeln der Wpbez in die eindeutige Wochennummer
-	    	wpnr = Integer.parseInt((zeitraum.get("wpbez").substring(2).trim())); 
+	    	wpnr = myController.getWpnr(zeitraum.get("wpbez")); 
 		}catch(Exception e){
 			System.out.println("Fehler bei der Erstellung eines Termins:");
 			System.out.println("Die Wochenplanbezeichnung entspricht nicht den Vorgaben (KWXX)!");
@@ -356,8 +356,7 @@ class TerminStrg {
 				}			
 			}		
 		}
-		else{
-			//throw new Exception("Die notwendigen Berechtigungen sind nicht vorhanden, bitte wenden Sie sich an den Systemadministrator.");
+		else{			
 			System.out.println("Die notwendigen Berechtigungen sind nicht vorhanden, bitte wenden Sie sich an den Systemadministrator.");
 		}
 		

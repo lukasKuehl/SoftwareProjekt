@@ -17,13 +17,24 @@ public class TestKlasse {
 	public static void main(String[] args) {
 		
 		myModel = new Einsatzplanmodel();			
-		myController = new EinsatzplanController(myModel);
-				
+		myController = new EinsatzplanController(myModel);		
 		
 		
-		myController.entferneWochenplan("Dgöring", "KW1002");		
 		
-		//myController.erstelleWochenplanStandard("Dgöring", "KW1002");
+		
+		
+		
+		/*
+		
+		//Testen Erstellen eines Wochenplanes nach Standardeinstellungen
+		
+		
+		myController.erstelleWochenplanStandard("Dgöring", "KW1002");
+		
+		myController.entferneWochenplan("Dgöring", "KW1002");			
+		
+		*/
+		
 		
 		/*
 		
