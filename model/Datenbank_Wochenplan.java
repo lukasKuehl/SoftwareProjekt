@@ -175,7 +175,7 @@ class Datenbank_Wochenplan {
 		boolean result = false;
 		Statement stmt = null;
 		ResultSet rs = null;
-		String sqlQuery = "select benutzername from Mitarbeiter where benutzername = '"+ benutzername +"'" ;
+		String sqlQuery = "select benutzername from Mitarbeiter where benutzername = '+ benutzername +'" ;
 		
 		try {
 			
