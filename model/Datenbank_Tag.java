@@ -50,6 +50,9 @@ class Datenbank_Tag {
 			if (checkTag(tbez,wpnr,con)) {
 				System.out.println("Dieser Tag existiert bereits in dem angegebenen Wochenplan!");
 			}
+			if (checkTagFK(wpnr,con) == false){
+				System.out.println("Die wpnr existiert nicht in der Wochenplan-Tabelle");
+			}
 			else{
 				//Es wurde sichergestellt, dass die PK- und FK-Check-Constraints nicht verletzt werden --> Der Datensatz kann erzeugt werden
 				
@@ -147,6 +150,50 @@ class Datenbank_Tag {
 	}
 	
 
+	/**
+	 * @author Thomas Friesen
+	 * @info Die Methode prüft, ob die Foreign Keys der Tabelle Ma_Schicht eingehalten werden
+	 */
+	protected boolean checkTagFK(int wpnr, Connection con) {
+		boolean result = false;
+		Statement[] stmt = new Statement[1];
+		ResultSet[] rs = new ResultSet[1];
+		String[] sqlQuery = new String[1]; 
+		sqlQuery[0] = "select wpnr from Wochenplan where wpnr = "+ wpnr ;
+		
+		try {
+			for (int i=0;i<1;i++){
+				stmt[i] = con.createStatement();
+				rs[i] = stmt[i].executeQuery(sqlQuery[i]);
+			}
+			if ((rs[0].next()) == true){
+				result = true;
+			}else{
+				result = false;
+			}
+			
+		} catch (SQLException sql) {
+			System.err.println("Methode checkTagFK SQL-Fehler: " + sql.getMessage());
+			return false;
+			
+		} finally {
+			try {
+				for(int i=0;i<1;i++){
+					if(rs[i] != null){
+						rs[i].close();
+					}
+					if(stmt[i] != null){
+						stmt[i].close();
+					}
+						
+				}
+			} catch (SQLException e) {
+				System.err.println("Methode checkTagFK (finally) SQL-Fehler: " + e.getMessage());
+			}
+		}
+		return result;
+	}
+	
 	/**
 	 * @author Anes Preljevic
 	 * @info Ändert den Feiertag status auf true, bei dem Tag mit der übergebenen Tbez und wpnr.

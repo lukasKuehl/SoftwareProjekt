@@ -680,6 +680,21 @@ public boolean checkWochenplanFK(String benutzername) {
 		}
 		return result;
 	}
+	
+	public boolean checkTagFK(int wpnr) {
+		boolean result =false;
+		
+		try{
+			result = this.dataTag.checkTagFK(wpnr,con);
+			
+		}catch(Exception e){
+			System.out.println("Fehler innerhalb des Modells:");
+			System.out.println("Fehler beim Aufruf der Methode checkTagFK:");
+			e.printStackTrace();	
+		}
+		return result;
+	}
+	
 	public boolean deleteTag(int wpnr) {
 		boolean result =false;
 		try{
