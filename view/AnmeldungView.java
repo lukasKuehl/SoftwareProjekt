@@ -100,6 +100,9 @@ public class AnmeldungView extends JFrame{
 				
 				if (myController.benutzerAnmelden(username, pw)) {
 					
+					myView.setUsername(username);
+					
+					
 					if (myModel.getMitarbeiter(username).getJob().equalsIgnoreCase("chef")
 							|| myModel.getMitarbeiter(username).getJob().equalsIgnoreCase("kassenbüro")) {
 						
