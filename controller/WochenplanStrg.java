@@ -370,16 +370,32 @@ class WochenplanStrg {
     }  
     
 	/**
-	 * @author 
+	 * @author Thomas Friesen
 	 * @return 
 	 * @info Veröffentlichen eines erstellten Wochenplanes im System, so dass er von allen Mitarbeitern und nicht nur vom Kassenbüro/Chef gesehen werden kann.
 	 */
 	protected boolean publishWochenplan(String username, String wpbez){
 		
-		boolean success = false;
-		//Ausfüllen
-		return success;
+	boolean success = false;
 		
+		//Umwandeln der Wpbez in die eindeutige Wochennummer
+    	int wpnr = myController.getWpnr(wpbez);  
+		
+		if(myController.isUserAdmin(username)){	
+			
+			try{
+				
+				if(myModel.getWochenplan(wpnr) != null){
+					this.myModel.oeffentlichStatustrue(wpnr);
+					success = true;
+				}			
+				
+			}catch(Exception e){
+				System.out.println("Fehler beim Veröffentlichen eines Wochenplanes");				
+			}		
+		}	
+		
+		return success;
 	}
 	
 	/**
@@ -505,12 +521,19 @@ class WochenplanStrg {
 	 * @author 
 	 * @info Hilfsmethode zum ändern der hinterlegten Standardeinstellungen für einen Wochenplan in der Datenbank.
 	 */
-	private void bearbeiteStandardeinstellungen(Standardeinstellungen settings){
-		
-		//ausfüllen
-		
-		
-	}
+	private boolean bearbeiteStandardeinstellungen(Standardeinstellungen settings){
+				  
+			boolean result = false;
+			
+			try{
+					this.myModel.updateStanadardeinstellungen(settings);	
+					result = true;
+				
+			}catch(Exception e){
+				System.out.println("Fehler beim Update der Standardeinstellungen");	
+			}	
+			return result;
+		}	
 	
 	
 	/**

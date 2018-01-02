@@ -18,7 +18,7 @@ public class Datenbank_Connection{
 		
 		try{
 			//Das sind die spezifischen Settings mit denen alle anderen direkt eine Fehlermeldung bekommen, bitte einfach frei lassen, sodass die erst jeder ausfüllen muss. Dann aber anschließend diese Klasse nicht mehr committen
-			return  DriverManager.getConnection("jdbc:mysql://localhost:3306/sys?autoReconnect=true&useSSL=false", "root", "famasb0b12");
+			return  DriverManager.getConnection("jdbc:mysql://localhost:3306/einsatzplanung?autoReconnect=true&useSSL=false", "root", "test");
 
 		}catch(SQLException sqle){
 			
