@@ -30,24 +30,23 @@ class KasseBenutzerrolleView extends JFrame {
 	private Einsatzplanview myView = null;
 	private EinsatzplanController myController=null;
 	
-	public static void main(String[] args) {
+/*	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
 					KasseBenutzerrolleView kasseBenutzerrolleView = new KasseBenutzerrolleView(new Einsatzplanmodel(),
-							null);
+							null, null);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
-		});}
+		});} */
 	
 	//Parameter myController fehlt --> in dem Fall bleibt der einfach null
-	public KasseBenutzerrolleView(Einsatzplanmodel myModel, Einsatzplanview myView) {
+	public KasseBenutzerrolleView(Einsatzplanmodel myModel, Einsatzplanview myView, EinsatzplanController myController) {
 		this.myView = myView;
 		this.myModel = myModel;
 		this.myController=myController;
-
 		initialize();
 	}
 

@@ -223,7 +223,7 @@ public class KasseWochenView extends JFrame implements ActionListener {
 		mntmBenutzerZuweisen = new JMenuItem("zuweisen");
 		mntmBenutzerZuweisen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new KasseBenutzerrolleView(null, null);
+				new KasseBenutzerrolleView(myModel, myView, myController);
 			}
 		});
 		mntmBenutzerZuweisen.setHorizontalAlignment(SwingConstants.TRAILING);

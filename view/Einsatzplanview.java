@@ -32,18 +32,7 @@ public class Einsatzplanview implements Observer {
 	
 	
 
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Einsatzplanview einsatzplanView = new Einsatzplanview(new EinsatzplanController(epm),
-							new Einsatzplanmodel());
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+
 	
 	public Einsatzplanview(EinsatzplanController einsatzplanController, Einsatzplanmodel model) {
 		this.myController = einsatzplanController;
