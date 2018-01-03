@@ -22,16 +22,18 @@ public class TestKlasse {
 		
 		
 		
+		
+		
 		/*
 		
 		//Testen Hinzufügen eines neuen Mitarbeiters zu einer Schicht
 		
-		String[] data = {"Cfriese"};
+		String[] data = {"Cfriese", "Dgöring", "Kmuster", "r"};
 		
 		myController.fülleSchicht(10000, data);
 		
 		*/
-		
+	
 		/*
 		
 		//Testen Erstellen eines Wochenplanes nach Standardeinstellungen

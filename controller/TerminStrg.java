@@ -92,40 +92,26 @@ class TerminStrg {
 				
 				String reihenfolgeFehlermeldung = "Die Reihenfolge der Anfangs- und Endtage des Termins sind vertauscht!";
 				
-				if(anfZeitraum.equals("Dienstag")){
-					if(endZeitraum.equals("Montag")){
+				//Zuordnung einer Nummer zu jedem Tag, um zu Überprüfen, ob der Anfangstag nach dem Endtag liegt
+				TreeMap<String, Integer> checkTage = new TreeMap<String, Integer>();
+				
+				checkTage.put("Montag", 1);
+				checkTage.put("Dienstag", 2);
+				checkTage.put("Mittwoch", 3);
+				checkTage.put("Donnerstag", 4);
+				checkTage.put("Freitag", 5);
+				checkTage.put("Samstag", 6);
+				checkTage.put("Sonntag", 7);
+				
+				//Prüfe, ob die Tage den Vorgaben entsprechen
+				if((checkTage.get(anfZeitraum) != null) && (checkTage.get(endZeitraum) != null)){
+					//Prüfe, ob der Anfangstag nach dem Endtag liegt
+					if(checkTage.get(anfZeitraum) > checkTage.get(endZeitraum)){
 						throw new Exception(reihenfolgeFehlermeldung);
 					}
-				}
-				if(anfZeitraum.equals("Mittwoch")){
-					if((endZeitraum.equals("Dienstag")) || (endZeitraum.equals("Montag"))){
-						throw new Exception(reihenfolgeFehlermeldung);
-					}
+					
 				}
 				
-				if(anfZeitraum.equals("Donnerstag")){
-					if((endZeitraum.equals("Mittwoch")) || (endZeitraum.equals("Dienstag")) || (endZeitraum.equals("Montag"))){
-						throw new Exception(reihenfolgeFehlermeldung);
-					}
-				}
-				
-				if(anfZeitraum.equals("Freitag")){
-					if((endZeitraum.equals("Donnerstag")) ||(endZeitraum.equals("Mittwoch")) || (endZeitraum.equals("Dienstag")) || (endZeitraum.equals("Montag"))){
-						throw new Exception(reihenfolgeFehlermeldung);
-					}
-				}
-				
-				if(anfZeitraum.equals("Samstag")){
-					if((endZeitraum.equals("Freitag"))||(endZeitraum.equals("Donnerstag")) ||(endZeitraum.equals("Mittwoch")) || (endZeitraum.equals("Dienstag")) || (endZeitraum.equals("Montag"))){
-						throw new Exception(reihenfolgeFehlermeldung);
-					}
-				}
-				
-				if(anfZeitraum.equals("Sonntag")){
-					if((endZeitraum.equals("Samstag"))||(endZeitraum.equals("Freitag"))||(endZeitraum.equals("Donnerstag")) ||(endZeitraum.equals("Mittwoch")) || (endZeitraum.equals("Dienstag")) || (endZeitraum.equals("Montag"))){
-						throw new Exception(reihenfolgeFehlermeldung);
-					}
-				}		
 				//Der Zeitraum ist korrekt
 			}
 			
