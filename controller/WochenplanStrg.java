@@ -483,6 +483,10 @@ class WochenplanStrg {
 	} 
 	
  
+	/**
+	 * @author Lukas Kühl
+	 * @info Hilfsmethode zum Ausgeben aller vorhandenen Wochenpläne in der Datenbank.
+	 */
 	protected ArrayList<String> getWochenplaene(){
 		ArrayList<String> rueckgabe = new ArrayList<String>();
 	
@@ -495,6 +499,11 @@ class WochenplanStrg {
 		return rueckgabe;
 	}
 	
+	
+	/**
+	 * @author Lukas Kühl
+	 * @info Hilfsmethode zum Anzeigen von den zugehörigen Tagen eines Wochenplanes.
+	 */
 	protected ArrayList<String> getTage(String wpbez){
 		ArrayList<String> rueckgabe = new ArrayList<String>();
 		
@@ -518,7 +527,7 @@ class WochenplanStrg {
 	}	
 	
 	/**
-	 * @author 
+	 * @author Thomas Friesen
 	 * @info Hilfsmethode zum ändern der hinterlegten Standardeinstellungen für einen Wochenplan in der Datenbank.
 	 */
 	private boolean bearbeiteStandardeinstellungen(Standardeinstellungen settings){
@@ -541,6 +550,22 @@ class WochenplanStrg {
 	 * @info Hilfsmethode zum Prüfen der Struktur von Öffnungs- und Hauptzeiten(die richtige Struktur ist Öffnungszeit --> Hauptzeitbeginn --> HauptzeitEnde --> Schließzeit) 
 	 */
 	private boolean checkZeitenWochenplan(Map<String, Date> zeitenDate) {
-		return ((zeitenDate.get("Öffnungszeit").before(zeitenDate.get("HauptzeitBeginn"))) && (zeitenDate.get("HauptzeitBeginn").before(zeitenDate.get("HauptzeitEnde"))) && (zeitenDate.get("HauptzeitEnde").before(zeitenDate.get("Schließzeit")))); 		
+		
+		boolean datenVollstaendig = true;
+		
+		for(String s: zeitenDate.keySet()){
+			
+			if(zeitenDate.get(s) == null){
+				datenVollstaendig = false;
+			}
+		}
+		
+		if(datenVollstaendig){
+			return ((zeitenDate.get("Öffnungszeit").before(zeitenDate.get("HauptzeitBeginn"))) && (zeitenDate.get("HauptzeitBeginn").before(zeitenDate.get("HauptzeitEnde"))) && (zeitenDate.get("HauptzeitEnde").before(zeitenDate.get("Schließzeit")))); 		
+		}
+		else{
+			return false;
+		}
+		
 	}	
 }
