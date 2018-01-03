@@ -1,10 +1,5 @@
 package controller;
 
-import java.util.Observer;
-import java.util.TreeMap;
-
-import javax.swing.JDialog;
-
 import data.Mitarbeiter;
 import model.Einsatzplanmodel;
 import view.Einsatzplanview;

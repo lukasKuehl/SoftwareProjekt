@@ -27,6 +27,7 @@ import javax.mail.internet.MimeMultipart;
 
 class MailStrg {	
 	
+	//Ergänzung der Paramter message und iconPath
 	public void sendMail(String username, String password,
 			String senderAddress, String recipientsAddress, String subject, String message, String iconPath ){
 		
@@ -59,7 +60,8 @@ class MailStrg {
 		properties.put("mail.transport.protocol", "smtp");
 		// Verschlüsselung festlegen
 		properties.put("mail.smtp.starttls.enable", "true");
-		//Ergänzung um Handshake-Exception auszuschließen
+		
+		//Ergänzung um aufgetretene Handshake-Exception zu vermeiden
 		properties.put("mail.smtp.ssl.trust", "smtp.web.de");
 		return properties;
 	}

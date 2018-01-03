@@ -6,10 +6,6 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.TreeMap;
 
-import javax.swing.JDialog;
-
-import org.omg.CORBA.MARSHAL;
-
 import data.Ma_Schicht;
 import data.Mitarbeiter;
 import data.Schicht;
@@ -25,8 +21,7 @@ class SchichtStrg {
 
 	//Initialisierung der Instanzvariablen
 	private EinsatzplanController myController = null;
-	private Einsatzplanmodel myModel = null;
-	private JDialog myDialog = null;		
+	private Einsatzplanmodel myModel = null;			
 		
 	/**
 	 * @author Lukas Kühl
@@ -45,19 +40,20 @@ class SchichtStrg {
 
 		boolean success = false;		
 		
+		//Abruf der gesamten Schichteinteilung aus der Datenbank
 		LinkedList<Ma_Schicht> einteilung= this.myModel.getMa_Schicht();
 		LinkedList<Ma_Schicht> schichtEinteilung= new LinkedList<Ma_Schicht>();
-		
 		
 		for(Ma_Schicht ma : einteilung){
 			
 			//Suche nach der zugehörigen Schichteinteilung zur übergebenen Schicht
 			if(ma.getSchichtnr() == schichtNr){				
+				//Die Schichtnummer stimmt überein --> die Schichteinteilung gehört zu der übergebenen Schicht
 				schichtEinteilung.add(ma);	
 			}						
 		}	
 		
-		//Gehe jeden eingetragenen Mitarbeiter durch und prüfe, ob dieser schon in der Schicht eingeteilt wurde. Falls nein, wird ein neuer Eintrag erstellt.
+		//Gehe jeden eingetragenen Mitarbeiter durch und prüfe, ob dieser schon in einer Einteilung zu dieser Schicht auftaucht. Falls nein, wird ein neuer Eintrag erstellt.
 		for(String s: mitarbeiter){	
 			
 			boolean checkEingeteilt = true;
@@ -98,16 +94,18 @@ class SchichtStrg {
 				
 		for(Mitarbeiter m: alleMitarbeiter){		
 			
-			
+			//Suche nach den Schichteinteilungen, die den aktuellen Mitarbeiter betreffen.
 			LinkedList<Schicht> alleSchichten = this.myModel.getSchichten();
 			LinkedList<Ma_Schicht> alleSchichtEinteilungen = this.myModel.getMa_Schicht();
 			LinkedList<Schicht> mitarbeiterSchichten = new LinkedList<Schicht>();
 			
-			
+			//Durchsuche alle Schichten, um die Schichten zu ermitteln, in die der Mitarbeiter eingeteilt wurde
 			for(Schicht s : alleSchichten){
 				
-				for(Ma_Schicht mas: alleSchichtEinteilungen){
+				for(Ma_Schicht mas: alleSchichtEinteilungen){					
+					//Prüfe, ob ein zugehöriger Schichteinteilungseintrag zu der aktuellen Schicht gefunden wurde.
 					if(s.getSchichtnr() == mas.getSchichtnr()){
+						//Prüfe, ob der Schichteinteilungseintrag zu dem aktuellen Mitarbeiter gehört, falls ja wird die aktuelle Schicht zu den Schichten des Mitarbeiters hinzugefügt.
 						if(m.getBenutzername().equals(mas.getBenutzername())){
 							mitarbeiterSchichten.add(s);
 						}						
@@ -117,6 +115,7 @@ class SchichtStrg {
 			
 			int maxDauer, dauer = 0; 
 			
+			//Abfrage der maximal zulässigen Wochenarbeitsstunden für den aktuellen Mitarbeiter 
 			maxDauer = m.getMaxstunden();
 					
 			//Bereits vorhande Schichten werden addiert um momentane Auslastung zu ermitteln
@@ -132,6 +131,7 @@ class SchichtStrg {
 			//Prüfe, ob durch die zusätzliche Schicht nicht die maximale Kapazität für den Mitarbeiter überschritten wurde.
 			if(dauer <= maxDauer ){
 								
+				//Es muss noch überprüft werden, ob eine Terminblockierung vorliegt, welche die Einteilung des Mitarbeiters in die übergebene Schicht verhindern würde.
 				LinkedList<TerminBlockierung> alleTerminBlockierungen = this.myModel.getTerminBlockierungen();
 				LinkedList<TerminBlockierung> mitarbeiterTerminBlockierungen = new LinkedList<TerminBlockierung>();
 				
@@ -139,8 +139,7 @@ class SchichtStrg {
 				for(TerminBlockierung tb: alleTerminBlockierungen){
 					if(tb.getBenutzername().equals(m.getBenutzername())){
 						mitarbeiterTerminBlockierungen.add(tb);
-					}
-					
+					}					
 				}			
 				
 				boolean frei = true;
@@ -162,11 +161,11 @@ class SchichtStrg {
 				}		
 				
 				if(frei){
-					verfuegbareMitarbeiter.add(m.getBenutzername());
+					//Der Mitarbeiter ist für die übergebene Schicht verfügbar und kann eingeteilt werden.
+					verfuegbareMitarbeiter.add(m.getBenutzername() +" - " + m.getVorname() + " " + m.getName());
 				}	
 			}			
-		}
-		
+		}		
 		
 		return verfuegbareMitarbeiter;
 	}
@@ -215,13 +214,17 @@ class SchichtStrg {
 				mitarbeiterTagesSchichten.add(s);
 			}		
 		}	
-		
+		//Bereite die Informationen über die MitarbeiterTagesSchichten zusätzlich auf und gebe Sie anschließend zurück.
 		return getSchichteinteilungView(mitarbeiterTagesSchichten);	
 	}	
 	
+	/**
+	 * @author Lukas Kühl
+	 * @info Methode zur Ermittlung von anderen Schichten innerhalb eines Wochenplanes, mit denen die übergebene Schicht getauscht werden könnte
+	 */
 	protected ArrayList<String> getAndereMitarbeiterSchichten(String wpbez, String username, int schichtNr){
-		LinkedList<Schicht> uebergabe = new LinkedList<Schicht>();
-    	
+		LinkedList<Schicht> uebergabe = new LinkedList<Schicht>();    	
+		
     	LinkedList<Ma_Schicht> einteilung = this.myModel.getMa_Schicht();
 		LinkedList<Ma_Schicht> andereMitarbeiterEinteilung = new LinkedList<Ma_Schicht>();
 		LinkedList<Integer> belegteSchichtnummern = new LinkedList<Integer>();
@@ -255,17 +258,21 @@ class SchichtStrg {
 				
 		for(Schicht s: alleSchichten){				
 			for(Ma_Schicht mas: andereMitarbeiterEinteilung){
-						
+				
+				//Prüfe, ob die Schicht zu der zugehörigen Schichteinteilung gehört und noch nicht in der Map mit potentiellen Schichten zum Tauschen vorhanden ist
 				if(s.getSchichtnr() == mas.getSchichtnr() && (!andereMitarbeiterSchichtenAlle.containsKey(s.getSchichtnr()))){
+					//Hinterlegen der Schicht in der Map
 					andereMitarbeiterSchichtenAlle.put(s.getSchichtnr(),s);
 				}			
 			}		
 		}			
 		
-		 for(Integer i: andereMitarbeiterSchichtenAlle.keySet()){
-			 uebergabe.add(andereMitarbeiterSchichtenAlle.get(i));
-		 }	
+		//Umwandeln der Map in eine Liste zur Aufbereitung der Darstellung der ermittelten Schichten
+		for(Integer i: andereMitarbeiterSchichtenAlle.keySet()){
+			uebergabe.add(andereMitarbeiterSchichtenAlle.get(i));
+		}	
 		
+		//Aufbereitung der Informationen zu den ermittelten Schichten und Rückgabe der Informationen
 		return getSchichteinteilungView(uebergabe);
 	}
 	
