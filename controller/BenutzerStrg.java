@@ -21,7 +21,7 @@ class BenutzerStrg {
 			
 	/**
 	 * @author Lukas Kühl	
-	 * @info Erzeugen eines Objektes der Klasse BenutzerStrg. Setzen des allgemeinen EinsatzplanControllers als Parent. Die Variable myDialog wird erst bei jedem Methodenaufruf neu erzeugt und wird deshalb später zugewiesen.
+	 * @info Erzeugen eines Objektes der Klasse BenutzerStrg. Setzen des allgemeinen EinsatzplanControllers als Parent. Zuweisen des Models, um entsprechende Anfragen weiterleiten zu können.
 	 */
 	protected BenutzerStrg(EinsatzplanController myController, Einsatzplanmodel myModel){
 		this.myController = myController;
@@ -32,19 +32,20 @@ class BenutzerStrg {
 	 * @author Lukas Kühl	
 	 * @info Anlegen eines neuen Benutzers für einen Mitarbeiter eines Warenhauses im System. 
 	 */
-	protected boolean benutzerErstellen(String username, String pw){
+	protected boolean benutzerErstellen(Mitarbeiter m){
 
-		boolean success = false;
+		boolean success = false;	
 		
-		/*
-		if(this.myModel.getMitarbeiter(username) == null){
-			this.myModel.addMitarbeiter(username, pw);			
+		//Prüfe, ob der Mitarbeiter bereits vorhanden ist. Falls nein, wird ein neuer Mitarbeiter in die Datenbank eingefügt.
+		if(this.myModel.getMitarbeiter(m.getBenutzername()) == null){
+			this.myModel.addMitarbeiter(m);			
 			success = true;
 		}		
-		*/
+		
 		return success;
 	}
 		
+	//Wird zur Zeit noch nicht verwendet!
 	/**
 	 * @author Lukas Kühl	
 	 * @info Entfernen eines nicht mehr benötigten Users für einen Mitarbeiter eines Warenhauses
@@ -69,22 +70,24 @@ class BenutzerStrg {
 		return success;
 	}
 		
+	
 	/**
 	 * @author Lukas Kühl
-	 * @info Login Angaben für einen spezifischen Nutzer überprüfen und bei korrekten Angaben einloggen des Benutzers ins System
+	 * @info Login Angaben für einen spezifischen Nutzer überprüfen und bei korrekten Angaben anmelden des Benutzers im System und hinterlegen der View in der Observer-Liste des Models.
 	 */
 	protected boolean benutzerAnmelden(String username, String pw){
 
 		boolean success = false;
 		
+		//Prüfe, ob es einen Mitarbeiter zu dem übergebenen Benutzernamen gibt.
 		if(this.myModel.getMitarbeiter(username) != null){
-			try{				
-				
+			try{								
 				Mitarbeiter m = myModel.getMitarbeiter(username);				
 				
 				//SQL ist nicht case-sensitiv --> zusätzliche Überprüfung des eingegebenen Usernamen				
 				if(m.getBenutzername().equals(username)){
 					
+					//Prüfe, ob das Passwort korrekt ist, falls ja wird der Benutzer angemeldet.
 					if(m.getPasswort().equals(pw)){
 						this.myModel.register(myController.getView(), username, pw);
 						success = true;
@@ -95,8 +98,7 @@ class BenutzerStrg {
 				}
 				else{
 					System.out.println("Bitte Benutzernamen überprüfen!");
-				}
-				
+				}				
 				
 			}catch(Exception e){
 				System.out.println("Fehler beim Anmelden des Users " + username + ", bitte Eingaben überprüfen :");
@@ -109,24 +111,20 @@ class BenutzerStrg {
 	
 	/**
 	 * @author Lukas Kühl
-	 * @info Ausloggen eines Nutzers aus dem System
+	 * @info Ausloggen eines Nutzers aus dem System.
 	 */
 	protected boolean benutzerAbmelden(String username){
-		boolean success = false;
-
-		/*
+		boolean success = false;	
+		
 		if(this.myModel.getMitarbeiter(username) != null){
 			try{
-				this.myModel.deabonniere(username, this.myController.getView());		
+				//Entferne die View aus der Liste der Observer beim Model.
+				this.myModel.removeObserver(this.myController.getView());		
 			}catch(Exception e){
 				System.out.println("Fehler beim Abmelden des Users " + username + " :");
 				e.printStackTrace();
-			}
-		
-		}			
-		*/		
-		
-		
+			}	
+		}				
 		return success;
 	}
 	
@@ -135,18 +133,18 @@ class BenutzerStrg {
 	 * @info Ändern der jeweiligen Rechte eines Mitarbeiters von Mitarbeiter- zu Kassenbüro-Rechten oder umgekehrt(je nach derzeitigen Berechtigungen) 
 	 */
 	protected boolean benutzerRechteÄndern(String username){
-		boolean success = false;
-		/*
+		boolean success = false;		
+		
+		//Prüfe, ob der Mitarbeiter einen Eintrag in der Mitarbeitertabelle besitzt und somit eine aktuelle Berechtigung besitzt.
 		if(this.myModel.getMitarbeiter(username) != null){
 			try{
-				this.myModel.benutzerRechteWechsel(username);				
+				//Wechsel der Benutzerrolle des übergebenen Mitarbeiters.
+				this.myModel.wechselBenutzerrolle(username);				
 			}catch(Exception e){
 				System.out.println("Fehler beim Ändern der Rechte des Nutzers " + username + " :");
 				e.printStackTrace();
 			}			
-		}
-		
-		*/			
+		}				
 		
 		return success;
 	}
