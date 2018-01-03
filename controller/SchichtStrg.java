@@ -45,23 +45,43 @@ class SchichtStrg {
 
 		boolean success = false;		
 		
-		LinkedList<Ma_Schicht> einteilung= this.myModel.getMitarbeiterausderSchicht(schichtNr);
+		LinkedList<Ma_Schicht> einteilung= this.myModel.getMa_Schicht();
+		LinkedList<Ma_Schicht> schichtEinteilung= new LinkedList<Ma_Schicht>();
+		
 		
 		for(Ma_Schicht ma : einteilung){
 			
-			for(String s : mitarbeiter){
-				if(ma.getBenutzername().equals(s)){
-					//Mitarbeiter bereits in der Schicht eingeteilt --> weiter
-				}
-				else{
-					//Prüfe, ob der Mitarbeiter im System vorhanden ist und somit eingeteilt werden kann
-					if(this.myModel.checkMitarbeiter(s)){							
-						//Teile den Mitarbeiter in die gewünschte Schicht ein
-						this.myModel.addMa_Schicht(new Ma_Schicht(s, schichtNr));					
-					}
-				}
-			}			
+			//Suche nach der zugehörigen Schichteinteilung zur übergebenen Schicht
+			if(ma.getSchichtnr() == schichtNr){				
+				schichtEinteilung.add(ma);	
+			}						
 		}	
+		
+		//Gehe jeden eingetragenen Mitarbeiter durch und prüfe, ob dieser schon in der Schicht eingeteilt wurde. Falls nein, wird ein neuer Eintrag erstellt.
+		for(String s: mitarbeiter){	
+			
+			boolean checkEingeteilt = true;
+			
+			for(Ma_Schicht mas: schichtEinteilung){
+				
+				if(mas.getBenutzername().equals(s)){
+					//Mitarbeiter bereits in der Schicht eingeteilt --> weiter
+					checkEingeteilt = false;
+					break;
+				}				
+			}	
+			
+			if(checkEingeteilt){
+				//Prüfe, ob der Mitarbeiter im System vorhanden ist und somit eingeteilt werden kann
+				if(this.myModel.getMitarbeiter(s) != null){							
+					//Teile den Mitarbeiter in die gewünschte Schicht ein
+					this.myModel.addMa_Schicht(new Ma_Schicht(s, schichtNr));	
+					System.out.println("Eintrag hinzugefügt");
+				}
+				
+			}		
+		}
+		
 		success = true;
 		
 		return success;

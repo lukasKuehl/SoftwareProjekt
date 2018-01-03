@@ -20,6 +20,18 @@ public class TestKlasse {
 		myController = new EinsatzplanController(myModel);		
 		
 		
+		
+		
+		/*
+		
+		//Testen Hinzufügen eines neuen Mitarbeiters zu einer Schicht
+		
+		String[] data = {"Cfriese"};
+		
+		myController.fülleSchicht(10000, data);
+		
+		*/
+		
 		/*
 		
 		//Testen Erstellen eines Wochenplanes nach Standardeinstellungen
