@@ -12,13 +12,16 @@ import java.util.LinkedList;
 
 import data.TerminBlockierung;
 
-//Klassenbeschreibung fehlt!
+
 
 //Kommentare innerhalb der Methoden fehlen!
 
 //Finally Blöcke fehlen oft!
 
-
+/**
+ * @author Thomas Friesen, Anes Preljevic
+ * @info Die Klasse dient dazu, jegliche Abfragen und Änderung in der Datenbank im Bezug auf die Tabelle TerminBlockierung zu verarbeiten.
+ */
 class Datenbank_TerminBlockierung {
 
 	/**
@@ -27,9 +30,6 @@ class Datenbank_TerminBlockierung {
 	 */
 	protected boolean addTerminBlockierung(TerminBlockierung terminBlockierung,Connection con) {
 		boolean success = false;
-	
-		
-		String sqlStatement = "insert into Terminblockierung (tblocknr, benutzername, bbez, anfangzeitraum, endezeitraum, anfanguhrzeit, endeuhrzeit, grund) values(?, ?, ?, ?, ?, ?, ?, ?)";
 		PreparedStatement pstmt = null;
 		int tBlockNr = 0;
 		String benutzername = null;
@@ -39,9 +39,10 @@ class Datenbank_TerminBlockierung {
 		String anfanguhrzeit = null;
 		String endeuhrzeit = null;
 		String grund = null;
-		
+		String sqlStatement = "insert into Terminblockierung (tblocknr, benutzername, bbez, anfangzeitraum, endezeitraum, anfanguhrzeit, endeuhrzeit, grund) values(?, ?, ?, ?, ?, ?, ?, ?)";
 		
 		try {
+			//Erstellen des prepared Statement Objektes
 			pstmt = con.prepareStatement(sqlStatement);
 
 			//Auslesen der als Parameter übergebenen Mitarbeiter-Schicht-Beziehung
@@ -54,20 +55,20 @@ class Datenbank_TerminBlockierung {
 			endeuhrzeit = terminBlockierung.getEndeuhrzeit();
 			grund = terminBlockierung.getGrund();
 			
-			//Siehe vorherige Klassen!
+			// Da es sich um mehrere SQL-Anweisungen handelt, muss die Einstellung AutoCommit auf false gesetzt werden
 			con.setAutoCommit(false);
 
+			//Prüfung der PK-Constraints
 			if (checkTerminBlockierung(tBlockNr,con)) {
 				System.out.println("Der Termin wurde bereits in die TerminBlockierung-Tabelle eingetragen");
 			}
+			//Prüfung der FK-Constraints
 			if (checkTerminBlockierungFK(benutzername,con)){
 				System.out.println("Der Benutzername existiert nicht in der Mitarbeitertabelle");
 			}
 			else{
 				//Es wurde sichergestellt, dass die PK- und FK-Check-Constraints nicht verletzt werden --> Der Datensatz kann erzeugt werden
-			
-				//Nein, siehe vorherige Klassen!
-				
+				//Füllen des prepared Statement Objektes
 				pstmt.setInt(1, tBlockNr);
 				pstmt.setString(2, benutzername);
 				pstmt.setString(3, bbez);
@@ -77,12 +78,15 @@ class Datenbank_TerminBlockierung {
 				pstmt.setString(7, endeuhrzeit);
 				pstmt.setString(8, grund);
 			
+				//Ausführen der SQL-Anweisung
 				pstmt.execute();
-				con.commit();	
 				
+				//Übertragung der Daten in die Datenbanktabelle TBlock_Tag und TerminBlockierung
+				con.commit();
+				
+				success = true;
 			}			
-			
-			success = true;
+			//AutoCommit Grundeinstellung wieder aktivieren
 			con.setAutoCommit(true);
 			
 			

@@ -12,21 +12,21 @@ import data.Schicht;
 import data.Tauschanfrage;
 import data.Tblock_Tag;
 
-//Klassenbeschreibung fehlt!
+
 
 //Kommentare innerhalb der Methoden fehlen!
 
 //Finally_Blöcke fehlen oft!
-
+/**
+ * @author Thomas Friesen, Anes Preljevic
+ * @info Die Klasse dient dazu, jegliche Abfragen und Änderung in der Datenbank im Bezug auf die Tabelle Tauschanfrage zu verarbeiten.
+ */
 class Datenbank_Tauschanfrage {
-
-
 
 	/**
 	 * @Thomas Friesen
 	 * @info  Fügt eine neue Tauschanfrage in der Tabelle Tauschanfrage hinzu
 	 */
-
 	protected boolean addTauschanfrage(int tauschNr, String senderName, int senderSchichtNr, String empfaengerName, int empfaengerSchichtNr,Connection con ) {
 		boolean success = false;
 		boolean bestaetigestatus = false;
@@ -34,8 +34,8 @@ class Datenbank_Tauschanfrage {
 		String sqlStatement = "insert into Tauschanfrage(empfänger, sender, bestätigungsstatus,schichtnrsender, schichtnrempfänger, tauschnr) values(?, ?, ?, ?, ?, ?)";
 				
 		try {
+			//Erstellen des prepared Statement Objektes
 			pstmt = con.prepareStatement(sqlStatement);
-			con.setAutoCommit(false);
 			
 			//Überprüfen des PK-Check-Constraints
 			if (checkTauschanfrage(tauschNr, con)) {
@@ -47,19 +47,23 @@ class Datenbank_Tauschanfrage {
 			
 			else{
 				//Es wurde sichergestellt, dass die PK- und FK-Check-Constraints nicht verletzt werden --> Der Datensatz kann erzeugt werden
+				//Ausfüllen des prepared Statement Objektes
 				pstmt.setString(1, empfaengerName);
 				pstmt.setString(2, senderName);
 				pstmt.setBoolean(3,bestaetigestatus);
 				pstmt.setInt(4,senderSchichtNr);
 				pstmt.setInt(5, empfaengerSchichtNr);
 				pstmt.setInt(6, tauschNr);
+				
+				//Ausführen der SQL-Anweisung
 				pstmt.execute();
+				
+				//Übertragung der Daten in die Datenbank
 				con.commit();	
 				
+				success = true;
+				
 			}			
-			
-			success = true;
-			con.setAutoCommit(true);
 			
 			
 		} catch (SQLException sql) {
@@ -135,22 +139,24 @@ class Datenbank_Tauschanfrage {
 		
 	
 		try {
+			//Erstellen der Statement- und Resultsetobjekte
 			for (int i=0; i<=3;i++){
 				stmt[i] = con.createStatement();
 				rs[i] = stmt[i].executeQuery(sqlQuery[i]);
 			}
-			
+			//Prüfung, ob alle FK-COnstraints eingehalten werden
 			if ((rs[0].next()) == true && (rs[1].next())== true && (rs[2].next())== true && (rs[3].next())== true){
 				result = true;
 			}else{
 				result = false;
 			}
-				
-
+			
 		} catch (SQLException sql) {
 			System.err.println("Methode checkMa_SchichtFK SQL-Fehler: " + sql.getMessage());
+		
 		} finally {
 			try {
+				//Schließen der offenen Resultset und Statementobjekte
 				for(int i =0; i<=3;i++){
 					if(rs[i] != null){
 						rs[i].close();

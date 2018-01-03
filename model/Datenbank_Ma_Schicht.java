@@ -56,11 +56,12 @@ import data.Ma_Schicht;
 					pstmt.execute();
 					
 					//Übertragung der Daten in die Datenbank
-					con.commit();	
+					con.commit();
+					success = true;
 					
 				}			
 				
-				success = true;
+				
 				
 				
 			} catch (SQLException sql) {

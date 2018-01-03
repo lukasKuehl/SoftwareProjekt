@@ -11,14 +11,18 @@ import data.Tag;
 import data.TerminBlockierung;
 import data.Tblock_Tag;
 
-//Klassenbeschreibung fehlt!
+
 
 //Kommentare innerhalb der Methoden fehlen!
 
 //Finally Blöcke fehlen oft!
 
-class Datenbank_Tblock_Tag {
+/**
+ * @author Thomas Friesen, Anes Preljevic
+ * @info Die Klasse dient dazu, jegliche Abfragen und Änderung in der Datenbank im Bezug auf die Tabelle TBlock_Tag zu verarbeiten.
+ */
 
+class Datenbank_Tblock_Tag {
 	
 	/**
 	 * @Thomas Friesen
@@ -26,22 +30,14 @@ class Datenbank_Tblock_Tag {
 	 */
 	protected boolean addTblock_Tag(Tblock_Tag tblock_tag,Connection con) {
 		boolean success = false;
-		
-		
-		String sqlStatement;
-		sqlStatement = "insert into Tblock_Tag (tblocknr, tbez, wpnr) values(?, ?, ?)";
-		PreparedStatement pstmt = null;
-		
-		//Siehe vorherige Klassen!
-		Statement checkInput = null;
-		ResultSet checkRS = null;
-		
-		int tBlockNr = 0;
-		String tbez = null;
 		int wpnr = 0;
-		
+		int tBlockNr = 0;
+		PreparedStatement pstmt = null;
+		String tbez = null;
+		String sqlStatement = "insert into Tblock_Tag (tblocknr, tbez, wpnr) values(?, ?, ?)";
 		
 		try {
+			//Erstellen des prepared Statement Objektes
 			pstmt = con.prepareStatement(sqlStatement);
 
 			//Auslesen der als Parameter übergebenen TerminBlockierung-Tag Beziehung
@@ -49,33 +45,32 @@ class Datenbank_Tblock_Tag {
 			tbez = tblock_tag.getTbez();
 			wpnr = tblock_tag.getTblocknr();
 
-			//Siehe vorherige Klassen
-			con.setAutoCommit(false);
-
 			//Die beiden Check-Methoden können auch in eins gemacht werden oder sollten zumindestens eindeutiger benannt werden --> Abfrage der selben Tabelle
 			
+			//Überprüfung der PK-Constraints
 			if (checkTblock_TagTB(tBlockNr,con)) {
 				System.out.println("Keine Beziehung von Terminblockierung zu Tagen!");
 			}
+			//Überprüfung der PK-Constraints
 			if (checkTblock_TagTA(tbez,wpnr,con)) {
 				System.out.println("Keine Beziehung von Terminbezeichnung und Wochenplannummern zu Tagen vorhanden!");
 			}
+			//Überprüfung der FK-Constraints
+			if(checkTblock_TagFK(tBlockNr,tbez,wpnr,con) == false){
+				System.out.println("Die Foreign-Key-Constraints der Tabelle TBlock_Tag wurden verletzt" );
+			}
 			else{
 				//Es wurde sichergestellt, dass die PK- und FK-Check-Constraints nicht verletzt werden --> Der Datensatz kann erzeugt werden
-			
-				//Nein, siehe vorherige Klassen!
-				
+				//Füllen des prepared Statement Objektes
 				pstmt.setInt(1, tBlockNr);
 				pstmt.setString(2, tbez);
 				pstmt.setInt(3, wpnr);
 			
+				//Ausführen der SQL-Anweisung
 				pstmt.execute();
-				con.commit();	
-				
 			}			
 			
 			success = true;
-			con.setAutoCommit(true);
 			
 			
 		} catch (SQLException sql) {
@@ -95,16 +90,7 @@ class Datenbank_Tblock_Tag {
 		} finally {
 			//Schließen der offen gebliebenen Statements & ResultSets
 			try {
-				
-				//Siehe vorherige Klassen!
-				if(checkRS != null){
-					checkRS.close();
-				}				
-				
-				if(checkInput != null){
-					checkInput.close();
-				}			
-				
+			
 				if (pstmt != null){
 					pstmt.close();
 				}			
@@ -175,7 +161,56 @@ class Datenbank_Tblock_Tag {
 			}
 		}
 	}
-
+	
+	/**
+	 * @author Thomas Friesen
+	 * @info Die Methode prüft, ob die Foreign Keys der Tabelle Ma_Schicht eingehalten werden
+	 */
+	protected boolean checkTblock_TagFK(int tblocknr, String tbez, int wpnr,Connection con) {
+		
+		boolean result = false;
+		Statement[] stmt = new Statement[2];
+		ResultSet[] rs = new ResultSet[2];
+		String sqlQuery[] = new String[2];
+		sqlQuery[0] = "select tblocknr from TerminBlockierung where tblocknr = "+ tblocknr ;
+		sqlQuery[1] = "select tbez, wpnr from Tag where tbez = '" + tbez + "' and wpnr =" + wpnr;
+		
+		
+	
+		try {
+			//Erstellen der Statement- und Resultsetobjekte
+			for (int i=0; i<=1;i++){
+				stmt[i] = con.createStatement();
+				rs[i] = stmt[i].executeQuery(sqlQuery[i]);
+			}
+			//Prüfung, ob alle FK-COnstraints eingehalten werden
+			if ((rs[0].next()) == true && (rs[1].next())== true){
+				result = true;
+			}else{
+				result = false;
+			}
+			
+		} catch (SQLException sql) {
+			System.err.println("Methode checkTblock_TagFK SQL-Fehler: " + sql.getMessage());
+		
+		} finally {
+			try {
+				//Schließen der offenen Resultset und Statementobjekte
+				for(int i =0; i<=1;i++){
+					if(rs[i] != null){
+						rs[i].close();
+					}
+					if(stmt[i] != null){
+						stmt[i].close();
+					}
+				}
+			} catch (SQLException e) {
+				System.err.println("Methode checkTblock_TagFK (finally) SQL-Fehler: " + e.getMessage());
+			}
+			
+		}
+		return result;
+	}
 
 	/**
 	 * @author Anes Preljevic

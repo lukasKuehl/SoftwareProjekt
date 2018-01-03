@@ -71,9 +71,11 @@ class Datenbank_Schicht {
 			
 				//Ausführen der SQL-Anweisung
 				pstmt.execute();
+				
+				success = true;
 			}			
 			
-			success = true;
+			
 			
 			
 			

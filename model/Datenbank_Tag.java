@@ -73,8 +73,10 @@ class Datenbank_Tag {
 				dschicht.addSchicht(new Schicht(dschicht.getNewSchichtnr(con),tbez, wpnr,hauptzeitbeginn, hauptzeitende),con);
 				dschicht.addSchicht(new Schicht(dschicht.getNewSchichtnr(con),tbez, wpnr,hauptzeitende, schließzeit),con);
 					
+				success = true;
+				
 			}			
-			success = true;
+			
 			
 		} catch (SQLException sql) {
 			//Die Ausgaben dienen zur Ursachensuche und sollten im späteren Programm entweder gar nicht oder vielleicht als Dialog(ausgelöst in der View weil der Rückgabewert false ist) angezeigt werden
