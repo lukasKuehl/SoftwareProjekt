@@ -1,50 +1,61 @@
 package model;
 import java.sql.*;
 
-//Klassenbeschreibung fehlt --> Erl‰uterung warum wir daf¸r eine eigene Klasse brauchen
+
 /**
  * @author Anes Preljevic
- * @info 
+ * @info Die Klasse Datenbank_Connection soll eine Verbindung zur Datenbank herstellen,
+ *  gegebenenfalls die Verbindung verwalten, pr¸fen, entfernen.
  */
-public class Datenbank_Connection{
-
+class Datenbank_Connection{
+	
+	//Initialsierung der Instanzvariable
 	private Connection con = null;	
 
-	//Leerer Konstruktor kann einfach weg --> selber Effekt
-	public Datenbank_Connection(){
-		
-	}
+	/**
+	 * @author Anes Preljevic
+	 * @info Die Methode createCon soll zu einer Datenbank eine Verbindung herstellen.
+	 * Bei erfolgreichem Verbindungsaufbau soll ein Connection-Objekt zur¸ckgegeben werden,
+	 * bei fehlschlag wird null zur¸ckgegeben und eine Ausgabe zur Fehlersuche.
+	 */
 	protected  Connection createCon() {
 		
 		try{
-			//Das sind die spezifischen Settings mit denen alle anderen direkt eine Fehlermeldung bekommen, bitte einfach frei lassen, sodass die erst jeder ausf¸llen muss. Dann aber anschlieﬂend diese Klasse nicht mehr committen
-			return  DriverManager.getConnection("jdbc:mysql://localhost:3306/einsatzplanung?autoReconnect=true&useSSL=false", "root", "test");
+			//Gibt die Datenbankverbindung wieder, welche ¸ber den angegebenen Link abgefragt wird(url,name,pw)
+			return  DriverManager.getConnection("jdbc:mysql://localhost:3306/DATENBANKNAME?autoReconnect=true&useSSL=false", "root", "PASSWORT");
 
 		}catch(SQLException sqle){
-			
+			//Fehlerhandling, Ausgaben zur Ursachensuche und R¸ckgabewert auf null setzen
 			System.out.println("Fehler beim Verbindungsaufbau zur Datenbank!");
 			System.out.println("SQL-Fehler: ");
 			sqle.printStackTrace();
 			return null;
 		}finally{
-			//Aufruf der Methode closeDBCon h‰tte den selben Effekt --> Vermeidung von doppeltem Code
-			try{
-				if(con != null)
-					con.close();
-			}catch(SQLException sqlefinal){
-				System.out.println("Fehler beim Schlieﬂen der Verbindung:");
-				sqlefinal.printStackTrace();
-			}			
+			//Schlieﬂen der offen gebliebenen Datenverbindung
+			closeDBCon(con);
 			
 		}
 				
 	}
-
-	public static void closeDBCon(Connection con){
+	/**
+	 * @author Anes Preljevic
+	 * @info Normale get-Methode f¸r Connection-Objekte.
+	 */
+	protected Connection getCon(){
+		return con;
+	}
+	/**
+	 * @author Anes Preljevic
+	 * @info Die Methode closeDBcon soll die aktuelle Datenbankverbindung schlieﬂen, falls
+	 * diese Vorhanden ist. Ansonsten wird eine Ausgabe zur Fehlersuche erzeugt.
+	 */
+	protected static void closeDBCon(Connection con){
 		try{
+			//Wenn die Datenbankverbindung nicht null ist, wird diese geschlossen
 			if(con != null)
 				con.close();
 		}catch(SQLException sqlexception){
+			//Fehlerhandling, Ausgaben zur Ursachensuche
 			System.err.println("MethodecloseDBCon SQL-Fehler: "
 					+ sqlexception.getMessage());
 		}
