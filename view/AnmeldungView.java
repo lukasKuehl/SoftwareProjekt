@@ -19,24 +19,19 @@ import model.Einsatzplanmodel;
 import javax.swing.JButton;
 import javax.swing.ImageIcon;
 import java.awt.Color;
+import javax.swing.SwingConstants;
 /**
  * @author Darius Panteli
  * @info Die Klasse AnmeldungView dient dazu, dem Nutzer eine graphische Obefläche anzubieten, um sich im System
- * anzumeldemn
+ * anzumelden
  */
 
-//Kommentare innerhalb der Methoden fehlen!
-
-//Autoren der einzelnen Methoden fehlen!
-
-//Die Klasse muss nicht den ActionListener implementieren wenn in der ActionPerformed Methode nix drin steht
-//Die Hilfsklasse soll nicht public sein --> Entwurfsschema
 public class AnmeldungView extends JFrame{
 
 	private JPanel cpAnmeldung;
 	private JTextField textField;
 	private JPasswordField passwordField;
-	private JLabel lblAnmeldung, lblBenutzername, lblPasswort,lblFehlermeldung;
+	private JLabel lblAnmeldung, lblBenutzername, lblPasswort,lblFehlermeldung,lblFehlermeldung1;
 	private JButton btnLogin;
 	private EinsatzplanController myController = null;
 	private Einsatzplanmodel myModel = null;
@@ -78,21 +73,29 @@ public class AnmeldungView extends JFrame{
 		lblPasswort.setBounds(86, 202, 110, 16);
 		cpAnmeldung.add(lblPasswort);
 		
-		lblFehlermeldung = new JLabel("");
-		lblFehlermeldung.setForeground(Color.RED);
-		lblFehlermeldung.setFont(new Font("Verdana", Font.BOLD, 15));
-		lblFehlermeldung.setBounds(86, 310, 489, 37);
-
-		passwordField = new JPasswordField();
+	    passwordField = new JPasswordField();
 		passwordField.setBounds(254, 200, 205, 22);
 		cpAnmeldung.add(passwordField);
-
+		
+		lblFehlermeldung = new JLabel("");
+		lblFehlermeldung.setHorizontalAlignment(SwingConstants.CENTER);
+		lblFehlermeldung.setForeground(Color.RED);
+		lblFehlermeldung.setFont(new Font("Verdana", Font.BOLD, 15));
+		lblFehlermeldung.setBounds(48, 310, 527, 37);
+		
+		lblFehlermeldung1 = new JLabel("");
+		lblFehlermeldung1.setHorizontalAlignment(SwingConstants.CENTER);
+		lblFehlermeldung1.setForeground(Color.RED);
+		lblFehlermeldung1.setFont(new Font("Verdana", Font.BOLD, 15));
+		lblFehlermeldung1.setBounds(48, 349, 527, 37);
+		
 		btnLogin = new JButton("");
 		btnLogin.setContentAreaFilled(false);
 		btnLogin.setOpaque(false);
 		btnLogin.setBorderPainted(false);
 		btnLogin.setIcon(new ImageIcon("view/loginsmall.png"));
-				
+		//Sobald der Login Button gedrückt wird, werden Benutzername und Passwort übergeben und überprüft, welche Art
+		//von Benutzer die Person ist
 		btnLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String pw = String.valueOf(passwordField.getPassword());
@@ -110,28 +113,23 @@ public class AnmeldungView extends JFrame{
 						new KasseWochenView(myModel, myController, myView);
 						dispose();
 					} else {						
-						
+						//falls der Benutzer kein Admin ist/keine Admin Rechte hat
 						new MitarbeiterWochenView(myModel, myController, myView);
 						dispose();
 					}
 					
 				}else {
-					//Das ist doch eigentlich gar kein Fehler(Benutzer hat vielleicht nur sein pw falsch eingegeben)
-					//evtl unterscheiden ob PW oder Username Falsch war
-					
-					lblFehlermeldung.setText("Fehler beim Anmelden des Users " + username + "!");
+					//Falls es bei der Anmeldung einen Fehler gab
+					lblFehlermeldung.setText("Fehler beim Anmelden des Users " + username+"!");
+					lblFehlermeldung1.setText("Bitte überprüfen Sie Ihre Eingaben!");
 				}
 			}
 			
 		});
 		btnLogin.setBounds(316, 248, 57, 47);
 		cpAnmeldung.add(btnLogin);
-		
-		
 		cpAnmeldung.add(lblFehlermeldung);
+		cpAnmeldung.add(lblFehlermeldung1);
 		setVisible(true);
 	}
-
-	//Die actionPerformed Methode ist überflüssig, wenn sie nicht gefüllt ist
-	
 }
