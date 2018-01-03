@@ -108,11 +108,11 @@ public class AnmeldungView extends JFrame{
 						
 						// falls Benutzer Admin ist
 						new KasseWochenView(myModel, myController, myView);
-
+						dispose();
 					} else {						
 						
 						new MitarbeiterWochenView(myModel, myController, myView);
-						
+						dispose();
 					}
 					
 				}else {

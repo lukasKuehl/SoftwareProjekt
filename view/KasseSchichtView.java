@@ -11,6 +11,7 @@ import javax.swing.JOptionPane;
 import controller.EinsatzplanController;
 import data.Mitarbeiter;
 import data.Schicht;
+import data.Tag;
 import data.Wochenplan;
 import model.Einsatzplanmodel;
 
@@ -96,6 +97,12 @@ public class KasseSchichtView extends JFrame {
 		btnPlanBestaetigen.setFont(new Font("Verdana", Font.PLAIN, 13));
 		btnPlanBestaetigen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				Wochenplan wochenplan = myModel.getWochenplan(Integer.valueOf(cbWochenplan.getSelectedItem().toString().split(" ")[1]));
+				LinkedList<Tag> tage = wochenplan.getLinkedListTage();
+				cbTage.removeAll();
+				for(Tag tag : tage){
+					cbTage.addItem(tag.getTbez());
+				}
 				cbTage.setEnabled(true);
 				btnTagAuswahl.setEnabled(true);
 			}
@@ -111,12 +118,6 @@ public class KasseSchichtView extends JFrame {
 		// siehe oben (Füllen mit getTage)
 		cbTage = new JComboBox();
 		cbTage.setBounds(22, 354, 243, 22);
-		cbTage.addItem("Montag");
-		cbTage.addItem("Dienstag");
-		cbTage.addItem("Mittwoch");
-		cbTage.addItem("Donnerstag");
-		cbTage.addItem("Freitag");
-		cbTage.addItem("Samstag");
 		getContentPane().add(cbTage);
 		cbTage.setEnabled(false);
 

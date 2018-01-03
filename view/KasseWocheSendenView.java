@@ -98,14 +98,18 @@ public class KasseWocheSendenView extends JFrame {
 						//Methode im Controller muss aufgerufen werden!
 						//Außerdem muss kontrolliert werden, ob das Senden erfolgreich war, bevor das Fenster geschlossen wird
 					
-						//myController.verschickeWochenplan(myView.getUsername(), gibWochenplan(), wochenplan)
-						dispose();
+						if(myController.verschickeWochenplan(myView.getUsername(), gibWochenplan(), myController.generiereWochenplanView(gibWochenplan()))){
+							dispose();
+						}else{
+							//JLabel Fehlermeldung erstellen (siehe)
+							//lblFehlermeldung.setText("Fehler beim Erstellen des Wochenplans. Bitte überprüfen Sie Ihre Eingaben.");
+
+						}
+						
 					} else {
 						//Fehlermeldung überflüssig --> Benutzer hat abgebrochen
 						
-						//JLabel Fehlermeldung erstellen (siehe)
-						//lblFehlermeldung.setText("Fehler beim Erstellen des Wochenplans. Bitte überprüfen Sie Ihre Eingaben.");
-
+						
 					}
 				}
 		});

@@ -23,7 +23,7 @@ import controller.EinsatzplanController;
  */
 
 class KasseBenutzerrolleView extends JFrame {
-	private JComboBox cbMitarbeiter;
+	private JComboBox<String> cbMitarbeiter;
 	private JButton btnBestaetigen;
 	private JLabel lblBenutzerZuweisen, lblMitarbeiterAuswaehlen;
 	private Einsatzplanmodel myModel = null;
@@ -76,10 +76,9 @@ class KasseBenutzerrolleView extends JFrame {
 		cbMitarbeiter.setBounds(381, 274, 128, 20);
 		LinkedList<Mitarbeiter> alleMitarbeiter = this.myModel.getAlleMitarbeiter();
 		
-		// Warum eine spezifische foreach Schleife und keine Standard foreach-Schleife?
-		alleMitarbeiter.forEach((temp) -> { 
-			cbMitarbeiter.addItem(temp.getBenutzername()); 
-			});
+		for(Mitarbeiter mitarbeiter: alleMitarbeiter){
+			cbMitarbeiter.addItem(mitarbeiter.getBenutzername()); 
+		}	
 		getContentPane().add(cbMitarbeiter);
 
 		btnBestaetigen = new JButton("Best\u00E4tigen");
