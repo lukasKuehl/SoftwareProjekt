@@ -54,8 +54,10 @@ class TerminStrg {
 		
 		try{
 			
+			Wochenplan wp = null;
+			
 			if(this.myModel.getWochenplan(wpnr) != null){
-				Wochenplan wp = this.myModel.getWochenplan(wpnr);
+				wp = this.myModel.getWochenplan(wpnr);
 				
 				LinkedList<Tag> alleTage = this.myModel.getTage();
 				
@@ -63,18 +65,24 @@ class TerminStrg {
 				boolean checkEndtag = false;
 				
 				anfZeitraum = zeitraum.get("anfZeitraumTag");
-				endZeitraum = zeitraum.get("endZeitraumTag");
+				endZeitraum = zeitraum.get("endZeitraumTag");			
 				
-				for(Tag t: alleTage){
+				//Prüfe, ob es die ausgewählten Tage in dem übergebenen Wochenplan gibt
+				if((anfZeitraum != null) && (endZeitraum != null)){
 					
-					if((t.getWpnr() == wpnr) && (t.getTbez().equals(anfZeitraum))){
-						checkAnfangstag = true;						
-					}
+					for(Tag t: alleTage){
+						//Prüfe, ob der ausgewählte Anfangstag in der Woche vorhanden ist
+						if((t.getWpnr() == wpnr) && (t.getTbez().equals(anfZeitraum))){
+							checkAnfangstag = true;						
+						}
+						
+						//Prüfe, ob der ausgewählte Endtag in der Woche vorhanden ist
+						if((t.getWpnr() == wpnr)&&(t.getTbez().equals(endZeitraum))){
+							checkEndtag = true;
+						}				
+					}	
 					
-					if((t.getWpnr() == wpnr)&&(t.getTbez().equals(endZeitraum))){
-						checkEndtag = true;
-					}				
-				}				
+				}						
 				
 				if(!(checkAnfangstag && checkEndtag)){
 					throw new Exception("Die eingetragenen Tage sind im Wochenplan KW" + wpnr + " nicht vorhanden, bitte Wochenplan erneut erstellen");
@@ -96,7 +104,8 @@ class TerminStrg {
 				checkTage.put("Sonntag", 7);
 				
 				//Prüfe, ob die Tage den Vorgaben entsprechen
-				if((checkTage.get(anfZeitraum) != null) && (checkTage.get(endZeitraum) != null)){
+				if((anfZeitraum != null) && (endZeitraum != null)){				
+					
 					//Prüfe, ob der Anfangstag nach dem Endtag liegt
 					if(checkTage.get(anfZeitraum) > checkTage.get(endZeitraum)){
 						throw new Exception(reihenfolgeFehlermeldung);
@@ -112,6 +121,23 @@ class TerminStrg {
 			String anfangsUhrzeit = zeitraum.get("anfangsUhrzeit");
 			String endUhrzeit = zeitraum.get("endUhrzeit");	
 			
+			
+			//Prüfe, ob Uhrzeiten mit übergeben wurden. Falls nicht, wird der Termin/ die Krankmeldung ganztägig eingetragen.
+			if(anfangsUhrzeit == null || endUhrzeit == null){				
+				
+				if(wp != null){
+					anfangsUhrzeit = wp.getÖffnungszeit().substring(0, 5);
+					endUhrzeit = wp.getSchließzeit().substring(0,5);
+					
+					System.out.println(anfangsUhrzeit);
+					System.out.println(endUhrzeit);
+				}
+				else{
+					System.out.println("Der ausgewählte Wochenplan existiert nicht, bitte Eingaben überprüfen!");
+					
+				}			
+			}		
+			
 			Date anfangsUhrzeitDate = null;
 			Date endUhrzeitDate = null;
 			
@@ -123,7 +149,7 @@ class TerminStrg {
 				endUhrzeitDate = sdf.parse(endUhrzeit);
 				
 			}catch(Exception e){
-				System.out.println("Fehler beim erstellen eines neuen Termins:");				
+				System.out.println("Fehler beim Erstellen eines neuen Termins:");				
 				System.out.println("Fehler beim Konvertieren der Öffnungs- und Schließzeiten");
 				e.printStackTrace();
 			}
@@ -133,7 +159,7 @@ class TerminStrg {
 				
 				int newTbNr = this.myModel.getNewTblocknr();				
 				
-				TerminBlockierung tb = new TerminBlockierung(newTbNr, username, bez, zeitraum.get("anfangsZeitraum"), zeitraum.get("endZeitraum"), zeitraum.get("anfangsUhrzeit"), zeitraum.get("endZeitraum"), grund);
+				TerminBlockierung tb = new TerminBlockierung(newTbNr, username, bez, zeitraum.get("anfZeitraumTag"), zeitraum.get("endZeitraumTag"), anfangsUhrzeit, endUhrzeit, grund);
 				this.myModel.addTerminBlockierung(tb);				
 				
 				//Da nun eine Terminblockierung vorliegt, muss überprüft werden, ob der Mitarbeiter nun für bereits eingeteilte Schichten nicht mehr zur Verfügung steht und somit aus der Zurodnung entfernt werden muss
