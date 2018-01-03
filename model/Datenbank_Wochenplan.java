@@ -16,12 +16,14 @@ import data.Tag;
 
 import data.Wochenplan;
 
-//Klassenbeschreibung fehlt!
-
 //Kommentare innerhalb der Methode fehlen!
 
 //Finally Blöcke fehlen!
 
+/**
+ * @author Thomas Friesen, Anes Preljevic
+ * @info Die Klasse dient dazu, jegliche Abfragen und Änderung in der Datenbank im Bezug auf die Tabelle Wochenplan zu verarbeiten.
+ */
 class Datenbank_Wochenplan {
 
 	/**
@@ -29,29 +31,31 @@ class Datenbank_Wochenplan {
 	 * @info Die Methode fügt einen Datensatz in die Wochenplan Tabelle hinzu.
 	 */
 	protected boolean addWochenplan(Wochenplan wochenplan,Connection con) {
-		boolean success = false;
 		
-		String sqlStatement = null;
-		sqlStatement = "insert into WOCHENPLAN (Wpnr, Öffentlichkeitsstatus, Öffnungszeit, Schließzeit,"
-				+ " Hauptzeitbeginn, Hauptzeitende, Benutzername, Minanzinfot, Minanzinfow,"
-				+ " Minanzkasse, Mehrbesetzung ) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-		PreparedStatement pstmt = null;
-		int wpnr = 0;
+		boolean success = false;
 		boolean öffentlichstatus = false;
+		PreparedStatement pstmt = null;
+		Datenbank_Tag dtag= new Datenbank_Tag();
+		int wpnr = 0;
+		int Minanzinfot = 0;
+		int Minanzinfow = 0;
+		int Minanzkasse = 0;
+		int Mehrbesetzung = 0;
 		String öffnungszeit = null;
 		String schließzeit = null;
 		String hauptzeitbeginn = null;
 		String hauptzeitende = null;
 		String benutzername = null;
-		int Minanzinfot = 0;
-		int Minanzinfow = 0;
-		int Minanzkasse = 0;
-		int Mehrbesetzung = 0;
+		String sqlStatement = "insert into WOCHENPLAN (Wpnr, Öffentlichkeitsstatus, Öffnungszeit, Schließzeit,"
+				+ " Hauptzeitbeginn, Hauptzeitende, Benutzername, Minanzinfot, Minanzinfow,"
+				+ " Minanzkasse, Mehrbesetzung ) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		
 		
 		try {
+			//Erstellen des prepared Statement Objektes
 			pstmt = con.prepareStatement(sqlStatement);
 
+			//Auslesen der Parameter des übergebenen Wochenplan-Objektes
 			wpnr= wochenplan.getWpnr();
 			öffentlichstatus = wochenplan.isÖffentlichstatus();
 			öffnungszeit = wochenplan.getÖffnungszeit();
@@ -64,17 +68,20 @@ class Datenbank_Wochenplan {
 			Minanzkasse = wochenplan.getMinanzkasse();
 			Mehrbesetzung = wochenplan.getMehrbesetzung();
 			
+			//Änderung der Grundeinstellung von AutoCommit auf false
 			con.setAutoCommit(false);
 
+			//Prüfung des PK-Constraints
 			if (checkWochenplan(wpnr,con)) {
 				System.out.println("Der Wochenplan ist bereits in der Tabelle eingetragen");
 			}
+			//Prüfung des FK-COnstraints
 			if (checkWochenplanFK(benutzername, con) == false){
 				System.out.println("Der angegebene Benutzer existiert nicht in der Mitarbeitertabelle");
 			}
 			else{
 				//Es wurde sichergestellt, dass die PK- und FK-Check-Constraints nicht verletzt werden --> Der Datensatz kann erzeugt werden
-			
+				//Füllen des prepared Statement Objektes
 				pstmt.setInt(1, wpnr);
 				pstmt.setBoolean(2, öffentlichstatus);
 				pstmt.setString(3, öffnungszeit);
@@ -87,9 +94,10 @@ class Datenbank_Wochenplan {
 				pstmt.setInt(10, Minanzkasse);
 				pstmt.setInt(11, Mehrbesetzung);
 			
+				//Ausführen der SQL-Anweisung
 				pstmt.execute();
 				
-				Datenbank_Tag dtag= new Datenbank_Tag();
+				//Einfügen der Tage in den Wochenplan, da ein Wochenplan immer im Zusammenhang mit den dazugehörigenden Tagen erstellt wird
 				dtag.addTag(new Tag ("Montag", wpnr, false), öffnungszeit, schließzeit, hauptzeitbeginn, hauptzeitende,con);
 				dtag.addTag(new Tag ("Dienstag", wpnr, false), öffnungszeit, schließzeit, hauptzeitbeginn, hauptzeitende,con);
 				dtag.addTag(new Tag ("Mittwoch", wpnr, false), öffnungszeit, schließzeit, hauptzeitbeginn, hauptzeitende,con);
@@ -100,7 +108,7 @@ class Datenbank_Wochenplan {
 				
 				success = true;
 			}						
-			
+			// Änderung der AutoCommit Einstellung auf den Ursprung
 			con.setAutoCommit(true);
 			return success;
 			
@@ -177,11 +185,13 @@ class Datenbank_Wochenplan {
 		ResultSet rs = null;
 		String sqlQuery = "select benutzername from Mitarbeiter where benutzername = '"+ benutzername +"'" ;
 		
+		
 		try {
-			
+			// Erstellen der Statement und Resultsetobjekte
 				stmt = con.createStatement();
 				rs = stmt.executeQuery(sqlQuery);
 			
+				//Prüfung der FK-Constraints
 			if ((rs.next()) == true){
 				result = true;
 			}else{
@@ -194,6 +204,7 @@ class Datenbank_Wochenplan {
 			return false;
 			
 		} finally {
+			//Schließen der offenen Statement und ResultSetobjekte
 			try {
 					if(rs != null){
 						rs.close();

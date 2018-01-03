@@ -11,12 +11,12 @@ import data.Ma_Schicht;
 import data.Userrecht;
 
 
-//Klassenbeschreibung fehlt!
-
-
-
 //Kommentare innerhalb der Methode fehlen
 
+/**
+ * @author Anes Preljevic
+ * @info Die Klasse dient dazu, jegliche Abfragen und Änderung in der Datenbank im Bezug auf die Tabelle Userrecht zu verarbeiten.
+ */
 class Datenbank_Userrecht {
 	
 	/**

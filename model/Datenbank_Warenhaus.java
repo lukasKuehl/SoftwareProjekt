@@ -10,12 +10,15 @@ import java.util.LinkedList;
 import data.Schicht;
 import data.Warenhaus;
 
-//Klassenbeschreibung fehlt!
 
 //Finally Block bei getWarenhaus fehlt
 
 //Einzelne getWarenhaus-Methode fehlt!
 
+/**
+ * @author Anes Preljevic
+ * @info Die Klasse dient dazu, jegliche Abfragen und Änderung in der Datenbank im Bezug auf die Tabelle Warenhaus zu verarbeiten.
+ */
 class Datenbank_Warenhaus {
 	
 	//Methodenbeschreibung fehlt!

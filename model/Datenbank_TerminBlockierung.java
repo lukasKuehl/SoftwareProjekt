@@ -45,7 +45,7 @@ class Datenbank_TerminBlockierung {
 			//Erstellen des prepared Statement Objektes
 			pstmt = con.prepareStatement(sqlStatement);
 
-			//Auslesen der als Parameter übergebenen Mitarbeiter-Schicht-Beziehung
+			//Auslesen der Parameter des übergebenen TerminBlockierung-Objektes
 			tBlockNr = terminBlockierung.getTblocknr();
 			benutzername = terminBlockierung.getBenutzername();	
 			bbez = terminBlockierung.getBbez();
@@ -163,10 +163,11 @@ class Datenbank_TerminBlockierung {
 		String sqlQuery = "select benutzername from Mitarbeiter where benutzername = '"+ benutzername +"'" ;
 		
 		try {
-			
+			// Erstellen der Statement und Resultsetobjekte
 				stmt = con.createStatement();
 				rs = stmt.executeQuery(sqlQuery);
 			
+			//Prüfung des FK-Constraints
 			if ((rs.next()) == true){
 				result = true;
 			}else{
@@ -179,6 +180,7 @@ class Datenbank_TerminBlockierung {
 			return false;
 			
 		} finally {
+			//Schließen der offenen Resultset- und Statementobjekte
 			try {
 					if(rs != null){
 						rs.close();
