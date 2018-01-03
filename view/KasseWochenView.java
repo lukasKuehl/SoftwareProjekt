@@ -111,15 +111,6 @@ public class KasseWochenView extends JFrame {
 		menuBar.setFont(new Font("Verdana", Font.PLAIN, 26));
 		setJMenuBar(menuBar);
 
-		//Auskommentierte Anweisungen können weg
-		
-		/*
-		 * mnNewMenuIcon = new JMenu(""); mnNewMenuIcon.setIcon(new
-		 * ImageIcon("C:\\Users\\Admin\\Desktop\\Chrysanthemum.jpg"));
-		 * mnNewMenuIcon.setFont(new Font("Segoe UI", Font.PLAIN, 5));
-		 * menuBar.add(mnNewMenuIcon);
-		 */
-
 		mnWoche = new JMenu("Wochenplan");
 		mnWoche.setFont(new Font("VerdanaI", Font.PLAIN, 26));
 		menuBar.add(mnWoche);
@@ -253,7 +244,8 @@ public class KasseWochenView extends JFrame {
 				if(wochenplaene.size() <= currentKW){
 					currentKW--;
 				}else{
-					lblKW1.setText(wochenplaene.get(currentKW).toString());
+					generiereTabelle();
+					/*lblKW1.setText(wochenplaene.get(currentKW).toString());
 					
 					getContentPane().remove(tbleWochenplan);
 					tbleWochenplan = myController.generiereWochenplanView(wochenplaene.get(currentKW));
@@ -268,7 +260,7 @@ public class KasseWochenView extends JFrame {
 					JScrollPane jsp = new JScrollPane(tbleWochenplan);	*/					
 					
 					//getContentPane().add(jsp);
-					getContentPane().add(tbleWochenplan);
+					//getContentPane().add(tbleWochenplan);
 				}
 			}
 		});
@@ -295,12 +287,7 @@ public class KasseWochenView extends JFrame {
 		});
 		
 		getContentPane().add(btnLinks);
-		
-		//Für das anpassen der JTable solltest du ne eingene Methode machen, dass steht hier jetzt schon 3 mal --> Fehleranfälligkeit und doppelter Code wird verbessert
-		
 		generiereTabelle();
-		
-		
 		setVisible(true);
 	}
 	
@@ -312,14 +299,14 @@ public class KasseWochenView extends JFrame {
 		tbleWochenplan.setBounds(24, 81, 1439, 676);
 
 		
-		tbleWochenplan.getTableHeader().setSize(tbleWochenplan.getTableHeader().getPreferredSize());
+		/*tbleWochenplan.getTableHeader().setSize(tbleWochenplan.getTableHeader().getPreferredSize());
 		tbleWochenplan.setSize(tbleWochenplan.getPreferredSize());
 		tbleWochenplan.setPreferredScrollableViewportSize(tbleWochenplan.getPreferredScrollableViewportSize());
 		tbleWochenplan.setFillsViewportHeight(true);
-		JScrollPane jsp = new JScrollPane(tbleWochenplan);					
+		JScrollPane jsp = new JScrollPane(tbleWochenplan);	*/				
 		
-		getContentPane().add(jsp);
-		//getContentPane().add(tbleWochenplan);
+		//getContentPane().add(jsp);
+		getContentPane().add(tbleWochenplan);
 		
 	}
 

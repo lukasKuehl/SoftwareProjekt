@@ -31,7 +31,7 @@ import model.Einsatzplanmodel;
 
 //Klasse braucht das implements ActionListener nicht --> kann weg
 //Hilfsklassen sind nicht public!
-public class MitarbeiterWochenView extends JFrame implements ActionListener {
+public class MitarbeiterWochenView extends JFrame{
 
 	private JPanel contentPane, pnlMenuBar;
 	private JTable tbleWochenplan;
@@ -173,12 +173,13 @@ public class MitarbeiterWochenView extends JFrame implements ActionListener {
 				if (wochenplaene.size() <= currentKW) {
 					currentKW--;
 				} else {
-					lblKW1.setText(wochenplaene.get(currentKW).toString());
+					generiereTabelle();
+					/*lblKW1.setText(wochenplaene.get(currentKW).toString());
 
 					getContentPane().remove(tbleWochenplan);
 					tbleWochenplan = myController.generiereWochenplanView(wochenplaene.get(currentKW));
 					tbleWochenplan.setBounds(24, 81, 1439, 676);
-					getContentPane().add(tbleWochenplan);
+					getContentPane().add(tbleWochenplan);*/
 				}
 			}
 		});
@@ -197,7 +198,8 @@ public class MitarbeiterWochenView extends JFrame implements ActionListener {
 				if (currentKW < 0) {
 					currentKW++;
 				} else {
-					lblKW1.setText(wochenplaene.get(currentKW).toString());
+					generiereTabelle();
+					/*lblKW1.setText(wochenplaene.get(currentKW).toString());
 
 					getContentPane().remove(tbleWochenplan);
 					tbleWochenplan = myController.generiereWochenplanView(wochenplaene.get(currentKW));
@@ -209,13 +211,14 @@ public class MitarbeiterWochenView extends JFrame implements ActionListener {
 					tbleWochenplan.setFillsViewportHeight(true);
 					JScrollPane jsp = new JScrollPane(tbleWochenplan);						
 					
-					getContentPane().add(jsp);
+					getContentPane().add(jsp);*/
 				}
 
 			}
 		});
 		getContentPane().add(btnLinks);
-		tbleWochenplan = myController.generiereWochenplanView(wochenplaene.get(currentKW));
+		generiereTabelle();
+		/*tbleWochenplan = myController.generiereWochenplanView(wochenplaene.get(currentKW));
 		tbleWochenplan.setBounds(24, 81, 1439, 676);
 		
 		tbleWochenplan = myController.generiereWochenplanView(wochenplaene.get(currentKW));
@@ -228,16 +231,28 @@ public class MitarbeiterWochenView extends JFrame implements ActionListener {
 		JScrollPane jsp = new JScrollPane(tbleWochenplan);						
 		
 		//setContentPane(jsp);
-		
+		*/
 		
 		setVisible(true);
-
 	}
+	private void generiereTabelle(){
+		ArrayList<String> wochenplaene = myController.getWochenplaene();
+		lblKW1.setText(wochenplaene.get(currentKW).toString());
+		
+		tbleWochenplan = myController.generiereWochenplanView(wochenplaene.get(currentKW));
+		tbleWochenplan.setBounds(24, 81, 1439, 676);
 
-	//Unnötig, kann gelöscht werden!
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
+		
+		/*tbleWochenplan.getTableHeader().setSize(tbleWochenplan.getTableHeader().getPreferredSize());
+		tbleWochenplan.setSize(tbleWochenplan.getPreferredSize());
+		tbleWochenplan.setPreferredScrollableViewportSize(tbleWochenplan.getPreferredScrollableViewportSize());
+		tbleWochenplan.setFillsViewportHeight(true);
+		JScrollPane jsp = new JScrollPane(tbleWochenplan);	*/				
+		
+		//getContentPane().add(jsp);
+		getContentPane().add(tbleWochenplan);
 		
 	}
+
+	
 }
