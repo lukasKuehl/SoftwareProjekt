@@ -63,7 +63,8 @@ class WochenplanStrg {
 	 */
 	protected boolean erstelleWochenplanCustom(String username, String wpbez, TreeMap<String, String> zeiten, TreeMap<String, Integer> besetzung){
 		boolean success = false;			
-				
+		
+		//Prüfe, ob der Benutzer über die notwendigen Berechtigungen zum Erstellen eines neuen Wochenplanes verfügt
 		if(myController.isUserAdmin(username)){		
 			
 			Map<String, Date> zeitenDate = new TreeMap<String, Date>();
@@ -74,16 +75,16 @@ class WochenplanStrg {
 				String zeitString = zeiten.get(key);
 				SimpleDateFormat format = new SimpleDateFormat("hh:mm");
 								
-				try{
+				try{							
 					Date temp = format.parse(zeitString);				
 					zeitenDate.put(key, temp);			
 					
 				}catch(Exception e){
-					System.out.println("Fehler beim Konvertieren eines Datums");					
-				}				
-				
+					System.out.println("Fehler beim Konvertieren einer Uhrzeit");					
+				}					
 			}
-				//Prüfe, ob die Zeiten den Vorgaben entsprechen
+			
+			//Prüfe, ob die Zeiten den Vorgaben entsprechen
 			if(checkZeitenWochenplan(zeitenDate)){
 					
 				boolean checkbesetzung = true;					
@@ -135,10 +136,13 @@ class WochenplanStrg {
 		//Umwandeln der Wpbez in die eindeutige Wochennummer
     	int wpnr = myController.getWpnr(wpbez);
 				
+    	//Prüfe, ob der Benutzer über die notwendigen Berechtigungen verfügt, um einen neuen Wochenplan zu Erstellen
 		if(myController.isUserAdmin(username)){	
 			
 			try{
 				Standardeinstellungen settings = this.myModel.getStandardeinstellungen();				
+				
+				//Erstelle einen neuen Wochenplan mit den Daten der Standardeinstellung und hinterlege diesen in der Datenbank
 				Wochenplan wp = new Wochenplan(wpnr, false, settings.getÖffnungszeit(), settings.getSchließzeit(), settings.getHauptzeitbeginn(), settings.getHauptzeitende(), username, settings.getMinanzinfot(), settings.getMinanzinfow(), settings.getMinanzkasse(), settings.getMehrbesetzung());
 				this.myModel.addWochenplan(wp);
 				
@@ -183,7 +187,8 @@ class WochenplanStrg {
     		}    		
     	}    	
 		
-		TreeMap<String, Mitarbeiter> tempMitarbeiter = new TreeMap<String, Mitarbeiter>();
+    	//Suche nach allen Mitarbeitern, die innerhalb mind. einer Schicht des Wochenplanes eingeteilt wurden. 
+		TreeMap<String, Mitarbeiter> tempMitarbeiter = new TreeMap<String, Mitarbeiter>(); 
 		LinkedList<Mitarbeiter> wochenMitarbeiter = new LinkedList<Mitarbeiter>();
 		
 		LinkedList<Schicht> alleSchichten = myModel.getSchichten();
@@ -193,14 +198,14 @@ class WochenplanStrg {
 			if(s.getWpnr() == wpnr){
 				
 				for(Ma_Schicht mas : alleSchichtEinteilungen){
-					
+					//Prüfe, ob der Mitarbeiter bereits in einer Schichteinteilung zu der Woche aufgetaucht ist. Falls nein, wird ein neuer Eintrag hinzugefügt.
 					if(!tempMitarbeiter.containsKey(mas.getBenutzername())){
 						tempMitarbeiter.put(mas.getBenutzername(), this.myModel.getMitarbeiter(mas.getBenutzername()));
 					}				
 				}						
 			}			
 		}
-		
+		//Wandle die tempMitarbeiter-map zu einer LinkedList<Mitarbeiter> um
 		for(String s: tempMitarbeiter.keySet()){
 			wochenMitarbeiter.add(tempMitarbeiter.get(s));			
 		}	
@@ -210,10 +215,12 @@ class WochenplanStrg {
 				
 		for(int i = 0; i< spaltennamen.length; i++){	
 			
+			//Leerzeile in der oberen Linken Ecke des Wochenplanes
 			if(i == 0){				
 				spaltennamen[0] = "";
 			}
 			else{				
+				//Hinterlegen des Tages als Spaltenname
 				spaltennamen[i] = wochenTage.get(i).getTbez();
 			}			
 		}
@@ -221,14 +228,17 @@ class WochenplanStrg {
 		LinkedList <String[]> temp = new LinkedList<String[]>();
 		
 		for(Mitarbeiter m : wochenMitarbeiter){
+			//Erzeuge für jeden Mitarbeiter die zugehörige Spalte innerhalb der Wochenplanübersicht
 			temp.add(generiereMitarbeiterSpalte(wpnr, m, spaltennamen));				
 		}	
 		
+		//Rückgabe aus der temporären Liste in das zwei dimensionale Array
 		for(int i = 0; i < zeilen.length; i++){
 			zeilen[i]= temp.get(i);			
 		}				
 		
 		try{		
+			//Erzeuge eine neue JTable mit den erhobenen Daten, welche die Wochenübersicht in der View repräsentiert
 			wochenplan = new JTable(zeilen,spaltennamen);
 		}catch(Exception e){
 			System.out.println("Fehler beim Erstellen eines neuen JTables für den Wochenplan" + wpbez);
@@ -236,9 +246,7 @@ class WochenplanStrg {
 		}
 		
          return wochenplan;
-	}
-
-	
+	}	
 	
 	/**
 	 * @author Lukas Kühl
@@ -274,17 +282,18 @@ class WochenplanStrg {
 			}		
 		}    	
     	
-    	Map<String, LinkedList<Schicht>> tageSchichtenMap = new TreeMap<String, LinkedList<Schicht>>();    	
-    	
+		//Map zur Speicherung aller vorhandenen Schichten zu einem bestimmten Tag aus dem Wochenplan um den gesamten Tageszeitraum, in dem der Mitarbeiter eingeteilt ist abzubilden
+    	Map<String, LinkedList<Schicht>> tageSchichtenMap = new TreeMap<String, LinkedList<Schicht>>();   	
     	
     	for(int i = 1; i< rueckgabe.length; i++){   		
     		
     		for(Schicht s: mitarbeiterSchichten){
     			if(s.getTbez().equals(wochenTage[i])){
-    				
+    				//Falls noch kein Eintrag mit einer SchichtenListe für den jeweiligen Tag erzeugt wurde, wird ein neuer Eintrag in der tageSchichtenMap erzeugt
     				if(tageSchichtenMap.get(wochenTage[i]) == null){
     					tageSchichtenMap.put(wochenTage[i], new LinkedList<Schicht>());    					
     				}
+    				//Füge die Schicht zu dem aktuellen Tag hinzu
     				tageSchichtenMap.get(wochenTage[i]).add(s);    				
     			}
     		}
@@ -294,17 +303,17 @@ class WochenplanStrg {
     	for(int i = 0; i< rueckgabe.length; i++){
     		
     		if(i == 0){
+    			//In der ersten Spalte wird der Name des Mitarbeiters eingetragen
     			rueckgabe[0] = ma.getVorname() + " " + ma.getName();
     		}
     		else{
+    			//Trage den gesamten Tageszeitraum zu dem jeweiligen Tag (Tag X Mitarbeiter --> Tageszeitraum) ein
     			rueckgabe[i] = getTageszeitraum(tageSchichtenMap.get(wochenTage[i]));
     		}
     	} 	
     	
     	return rueckgabe;
-    }
-		
-    
+    }    
     
     /**
 	 * @author Lukas Kühl
@@ -314,6 +323,7 @@ class WochenplanStrg {
     	
     	String rueckgabe = null;
     	
+    	//Ein Mitarbeiter ist an dem jeweiligen Tag keiner Schicht zugeteilt worden
     	if(schichten == null){
     		return "-";
     	}
@@ -409,10 +419,11 @@ class WochenplanStrg {
 		//Umwandeln der Wpbez in die eindeutige Wochennummer
     	int wpnr = myController.getWpnr(wpbez);  
 		
+    	//Prüfe, ob der Benutzer über die notwendigen Berechtigungen zum Löschen eines Wochenplanes aus dem System verfügt
 		if(myController.isUserAdmin(username)){	
 			
 			try{
-				
+				//Prüfe, ob der Wochenplan noch in der Datenbank vorhanden ist
 				if(myModel.getWochenplan(wpnr) != null){
 					this.myModel.deleteWochenplan(wpnr);
 					success = true;
@@ -422,6 +433,9 @@ class WochenplanStrg {
 				System.out.println("Fehler beim Löschen eines Wochenplanes");				
 			}		
 		}	
+		else{
+			System.out.println("Sie verfügen nicht über die notwendigen Berechtigungen, zum Entfernen eines Wochenplanes. Bitte wenden Sie sich an den Systemadministrator.");
+		}
 		
 		return success;
 	}
@@ -435,23 +449,34 @@ class WochenplanStrg {
 		boolean success = false;				
 		
 		if(myController.isUserAdmin(username)){
+			
+			//Ermittle die benötigte Höhe und Breite für ein Bild, mit der übergebenen JTable
 			int w = Math.max(wochenplan.getWidth(), header.getWidth());
 	        int h = wochenplan.getHeight() + header.getHeight();
+	        
+	        //Erstelle eine Maske, in der die JTable eingefügt werden kann
 	        BufferedImage bi = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
 	        Graphics2D g2 = bi.createGraphics();
 	        header.paint(g2);
 	        g2.translate(0, header.getHeight());
-	        wochenplan.paint(g2);
+	        
+	        //Übertrage die JTable in die erstellte Maske        
+	        wochenplan.paint(g2);	        
+	       
 	        g2.dispose();
+	        
 	        try
 	        {
+	        	//Speichern des Bildes der übergebenen JTable auf dem Desktop des Benutzers
 	        	String filePath = System.getProperty("user.home") + "/Desktop/Kalenderwochenübersicht_" + wpbez +".png";
 	            ImageIO.write(bi, "png", new File(filePath));
 	            
 	            LinkedList<Mitarbeiter> alleMitarbeiter = this.myModel.getAlleMitarbeiter();
 	            
+	            //Erstelle eine neue MailStrg zum Versenden der Mails mit einem Bild der JTable
 	            MailStrg myMailController = new MailStrg();
 	            
+	            //Parameter E-Mail-Account der Einsatzplanverwaltung
 	            final String user = "einsatzplan.team";
 	            final String password = "";
 	            final String senderAddress = "einsatzplan.team@web.de";           
@@ -485,13 +510,14 @@ class WochenplanStrg {
  
 	/**
 	 * @author Lukas Kühl
-	 * @info Hilfsmethode zum Ausgeben aller vorhandenen Wochenpläne in der Datenbank.
+	 * @info Hilfsmethode zum Ausgeben aller vorhandenen Wochenpläne aus der Datenbank.
 	 */
 	protected ArrayList<String> getWochenplaene(){
 		ArrayList<String> rueckgabe = new ArrayList<String>();
 	
 		LinkedList<Wochenplan> alleWochenplaene = this.myModel.getWochenplaene();
 		
+		//Abfrage der Wochenplannummern und hinzufügen der Bezeichnung KW zum Auswählen in der View
 		for(Wochenplan wp : alleWochenplaene){			
 			rueckgabe.add("KW" + wp.getWpnr());			
 		}	
@@ -513,12 +539,14 @@ class WochenplanStrg {
 		LinkedList<Tag> alleTage = this.myModel.getTage();
 		LinkedList<Tag> wochenTage = new LinkedList<Tag>(); 
 		
+		//Suche alle Tage der übergebenen Woche
 		for(Tag t: alleTage){
 			if(t.getWpnr() == wpnr){
 				wochenTage.add(t);				
 			}
 		}
 		
+		//Suche die Tagbezeichnungen der übergebenen Woche
 		for(Tag t : wochenTage){
 			rueckgabe.add(t.getTbez());
 		}		
@@ -560,12 +588,12 @@ class WochenplanStrg {
 			}
 		}
 		
+		//Wenn die Daten vollständig eingetragen wurden, überprüfe die Reihenfolge
 		if(datenVollstaendig){
 			return ((zeitenDate.get("Öffnungszeit").before(zeitenDate.get("HauptzeitBeginn"))) && (zeitenDate.get("HauptzeitBeginn").before(zeitenDate.get("HauptzeitEnde"))) && (zeitenDate.get("HauptzeitEnde").before(zeitenDate.get("Schließzeit")))); 		
 		}
 		else{
 			return false;
-		}
-		
+		}		
 	}	
 }

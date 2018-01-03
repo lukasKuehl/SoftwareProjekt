@@ -258,7 +258,7 @@ public class EinsatzplanController {
 	
 	/**
 	 * @author Lukas Kühl
-	 * @info Weiterleitung einer Anfrage zum Erstellen eines JTables mit den Einteilungen für die Mitarbeiter, abhängig von der übergebenen Kalenderwoche. Falls kein Wochenplan für die angefragte Woche verfügbar ist, wird null zurück gegeben.
+	 * @info Weiterleitung einer Anfrage zum Erstellen eines JTables mit den Einteilungen für die betroffenen Mitarbeiter, abhängig von der übergebenen Kalenderwoche. Falls kein Wochenplan für die angefragte Woche verfügbar ist, wird null zurück gegeben.
 	 */
 	public JTable generiereWochenplanView(String wpbez){
 		
