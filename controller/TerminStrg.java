@@ -20,7 +20,7 @@ import data.Wochenplan;
 import model.Einsatzplanmodel;
 
 /**
- * @author 
+ * @author Lukas Kühl
  * @info Die Klasse TerminStrg dient dazu, jegliche Anfragen zu Terminen durchzuführen und zu validieren.
  */
 class TerminStrg {
@@ -45,11 +45,12 @@ class TerminStrg {
 	 * Keys der "zeitraum" Map: "wpbez", "anfZeitraumTag", "endZeitraumTag", "anfangsUhrzeit", "endUhrzeit"
 	 */
 	protected boolean erstelleTermin(String username, String bez, TreeMap<String,String> zeitraum, String grund ){
-		boolean success = false;	
+		boolean success = false;			
 		
-		TreeMap<String, Date> zeitraumDate = new TreeMap<String, Date>();
 		String anfZeitraum = null;
 		String endZeitraum = null;
+		
+		//Konvertieren der übergebenen wpbez in eine wpnr
 		int wpnr = myController.getWpnr(zeitraum.get("wpbez")); 		
 		
 		try{
@@ -64,6 +65,7 @@ class TerminStrg {
 				boolean checkAnfangstag = false;
 				boolean checkEndtag = false;
 				
+				//Abfrage des Anfangs- und EndZeitraumes(Wochentage) aus der übergebenen zeitraum-Map
 				anfZeitraum = zeitraum.get("anfZeitraumTag");
 				endZeitraum = zeitraum.get("endZeitraumTag");			
 				
@@ -83,7 +85,7 @@ class TerminStrg {
 					}	
 					
 				}						
-				
+				//Werfe Fehlermeldung, wenn die ausgewählten Tage nicht in der übergebenen Woche vorhanden sind.
 				if(!(checkAnfangstag && checkEndtag)){
 					throw new Exception("Die eingetragenen Tage sind im Wochenplan KW" + wpnr + " nicht vorhanden, bitte Wochenplan erneut erstellen");
 				}		
@@ -115,7 +117,7 @@ class TerminStrg {
 					System.out.println("Bitte die Zeitangaben überprüfen!");
 				}
 				
-				//Der Zeitraum ist korrekt
+				//-->Der Zeitraum ist korrekt, da keine Exception geworfen wurde
 			}
 			
 			String anfangsUhrzeit = zeitraum.get("anfangsUhrzeit");
@@ -125,25 +127,22 @@ class TerminStrg {
 			//Prüfe, ob Uhrzeiten mit übergeben wurden. Falls nicht, wird der Termin/ die Krankmeldung ganztägig eingetragen.
 			if(anfangsUhrzeit == null || endUhrzeit == null){				
 				
+				//Überschreibe die nicht hinterlegten Anfangs- und Enduhrzeiten mit den Öffnungs- und Schließzeiten des Wochenplanes --> Abdeckung des gesamten Tages
 				if(wp != null){
 					anfangsUhrzeit = wp.getÖffnungszeit().substring(0, 5);
-					endUhrzeit = wp.getSchließzeit().substring(0,5);
-					
-					System.out.println(anfangsUhrzeit);
-					System.out.println(endUhrzeit);
+					endUhrzeit = wp.getSchließzeit().substring(0,5);			
 				}
 				else{
-					System.out.println("Der ausgewählte Wochenplan existiert nicht, bitte Eingaben überprüfen!");
-					
+					System.out.println("Der ausgewählte Wochenplan existiert nicht, bitte Eingaben überprüfen!");					
 				}			
 			}		
 			
 			Date anfangsUhrzeitDate = null;
-			Date endUhrzeitDate = null;
+			Date endUhrzeitDate = null;			
 			
+			SimpleDateFormat sdf = new SimpleDateFormat("hh:mm");
 			
-			SimpleDateFormat sdf = new SimpleDateFormat("kk:mm");
-			
+			//Konvertierung der übergebenen Uhrzeiten ins Date-Format 
 			try{
 				anfangsUhrzeitDate = sdf.parse(anfangsUhrzeit);
 				endUhrzeitDate = sdf.parse(endUhrzeit);
@@ -159,6 +158,7 @@ class TerminStrg {
 				
 				int newTbNr = this.myModel.getNewTblocknr();				
 				
+				//Erstelle eine neue TerminBlockierung und füge diese in die Datenbank ein
 				TerminBlockierung tb = new TerminBlockierung(newTbNr, username, bez, zeitraum.get("anfZeitraumTag"), zeitraum.get("endZeitraumTag"), anfangsUhrzeit, endUhrzeit, grund);
 				this.myModel.addTerminBlockierung(tb);				
 				
@@ -234,13 +234,12 @@ class TerminStrg {
 	
 	/**
 	 * @author Lukas Kühl
-	 * @info Entfernen eines bereits angelegten Termines aus der Datenbank.
+	 * @info Entfernen einer bereits angelegten Terminblockierung aus der Datenbank.
 	 */
 	protected boolean entferneTermin(int tblocknr, String username){
 
 		boolean success = false;
-		boolean valid = false;		
-		
+		boolean valid = false;			
 		
 		LinkedList<TerminBlockierung> alleTerminblockierungen = this.myModel.getTerminBlockierungen();
 		
@@ -286,7 +285,8 @@ class TerminStrg {
 		}		
 		
 		LinkedList<Tblock_Tag> alleTerminZuordnungen = this.myModel.getAlleTblock_Tag();
-		// Zuordnung von Terminen zu einem Wochenplan --> Key TerminNr; Value WochenplanNr
+		
+		// Zuordnung von Terminen zu einem Wochenplan --> Key TerminNr; Value WochenplanNr --> Zusätzliche Informationen, in welchem Wochenplan sich der Termin befindet
 		TreeMap<Integer, Integer> mitarbeiterTerminZuordnungen = new TreeMap<Integer, Integer>();
 		
 		for(TerminBlockierung tb: mitarbeiterTermine){
@@ -320,9 +320,14 @@ class TerminStrg {
 		return rueckgabe;
 	}
 	
+	/**
+	 * @author Lukas Kühl
+	 * @info Ausgabe einer Liste mit allen hinterlegten Terminen innerhalb des Systems zur Prüfung durch einen berechtigten Nutzer(Admin)
+	 */
 	protected ArrayList<String> getAlleTermine(String username){
 		ArrayList<String> rueckgabe = new ArrayList<String>();	
 		
+		//Prüfe, ob der Nutzer berechtigt ist, alle Termine abzufragen
 		if(myController.isUserAdmin(username)){
 			
 			LinkedList<TerminBlockierung> alleTermine = this.myModel.getTerminBlockierungen();
@@ -334,6 +339,7 @@ class TerminStrg {
 				
 				for(Tblock_Tag tbt : alleTerminZuordnungen){
 					
+					//Terminblockierung und Terminblockierungszuordnung sind gleich --> zusätzliche Informationen zum zugehörigen Wochenplan sind verfügbar
 					if(tbt.getTblocknr() == tb.getTblocknr()){
 						
 						String temp = tb.getBbez() + " - " + this.myModel.getMitarbeiter(tb.getBenutzername()).getVorname() + " " + this.myModel.getMitarbeiter(tb.getBenutzername()).getName() +" - KW" + tbt.getWpnr() + " - ";

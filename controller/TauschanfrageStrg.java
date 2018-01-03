@@ -12,7 +12,7 @@ import data.TerminBlockierung;
 import model.Einsatzplanmodel;
 
 /**
- * @author Lukas
+ * @author Lukas Kühl
  * @info Die Klasse TauschanfrageStrg dient dazu Anfragen, welche sich auf Tauschanfragen beziehen zu bearbeiten und zu validieren. 
  */
 class TauschanfrageStrg {
