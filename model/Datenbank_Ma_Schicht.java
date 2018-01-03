@@ -14,12 +14,9 @@ import data.Ma_Schicht;
  * @info Die Klasse dient dazu, jegliche Abfragen und Änderung in der Datenbank im Bezug auf die Tabelle Ma_Schicht zu verarbeiten.
  */
 
-//Innerhalb fast aller Methoden ist kein einziger Kommentar zur Erklärung was ihr mit den einzelnen Anweisungen macht!
- 
-//Bei vielen Methoden von Anes fehlen die finally-Blöcke
 
  class Datenbank_Ma_Schicht {
-
+	 
 	 /**
 		 * @Thomas Friesen
 		 * @info Die Methode fügt einen Datensatz in die Ma_Schicht Tabelle ein.
@@ -94,24 +91,29 @@ import data.Ma_Schicht;
 
 	/**
 	 * @author Anes Preljevic
-	 * @info Prüft ob es zu der eingegebenen schichtnr und dem benutzernamen bereits einen Mitarbeiter in der Schicht gibt, bei existenz return true, sonst false
+	 * @info Prüft ob es zu der eingegebenen schichtnr und dem benutzernamen bereits einen Mitarbeiter in der Schicht gibt,
+	 *  bei Existenz return true, sonst false.
 	 */
 	protected boolean checkMa_Schicht(int schichtnr, String benutzername,Connection con) {
+		
 		Statement stmt = null;
 		ResultSet rs = null;
 		
-		//Ein Integer darf nicht in Anführungszeichen stehen, sonst wird er als String erkannt!
-		String sqlQuery = "select schichtnr, benutzername from Ma_Schicht where schichtnr = '"+schichtnr+"' and benutzername= '"+benutzername+"'";
+		//Benötigten Sql-Befehlt speichern
+		String sqlQuery = "select schichtnr, benutzername from Ma_Schicht where schichtnr = "+schichtnr+" and benutzername= '"+benutzername+"'";
 
 		try {
+			//Statement wird erstellt und Sql-Befehl wird ausgeführt, schließend wird der nächste Datensatz aus dem Resultset ausgegeben
 			stmt = con.createStatement();
 			rs = stmt.executeQuery(sqlQuery);
 			return rs.next();
 
 		} catch (SQLException sql) {
+			//Fehlerhandling, Ausgaben zur Ursachensuche und Rückgabewert auf false setzen
 			System.err.println("Methode checkMa_Schicht SQL-Fehler: " + sql.getMessage());
 			return false;
 		} finally {
+			//Schließen der offen gebliebenen Resultsets und Statements
 			try {
 				if (rs != null)
 					rs.close();
@@ -173,24 +175,29 @@ import data.Ma_Schicht;
 	}
 
 	
+	
 	/**
 	 * @author Anes Preljevic
-	 * @info Auslesen der Mitarbeiter mit den zugehörigen Schichten aus der Datenbank und hinzufügen in eine Liste, welche den Ausgabewert darstellt 
+	 * @info Auslesen der Mitarbeiter mit den zugehörigen Schichten aus der Datenbank und hinzufügen in eine Liste, welche den Ausgabewert darstellt .
+	 * Im Fehlerfall Ausgaben zur Fehlersuche erzeugen und null zurückgeben.
 	 */
 	protected LinkedList<Ma_Schicht> getMa_Schicht(Connection con) {
 
 		Statement stmt = null;
 		ResultSet rs = null;
-
-		String sqlStatement = "SELECT Benutzername, Schichtnr FROM Ma_Schicht";
+		
+		//Benötigten Sql-Befehlt speichern
+		String sqlStatement = "SELECT * FROM Ma_Schicht";
 
 		try {
-			//Die zusätzlichen Anweisungen sind zwar nicht verkehrt, du nutzt die zusätzlichen Möglichkeiten aber nicht, also können die auch weg --> ist verwirrend
-			stmt = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			//Statement wird erstellt, der Sql-Befehl wird ausgeführt und im Resultset gespeichert
+			stmt = con.createStatement();
 			rs = stmt.executeQuery(sqlStatement);
 			
 			LinkedList<Ma_Schicht> ma_schichtList = new LinkedList<>();
-
+			
+			// Solange es einen "nächsten" Datensatz in dem Resultset gibt, mit den Daten des RS 
+			// ein neues Ma_Schicht-Objekt erzeugen. Dieses wird anschließend der Liste hinzugefügt.
 			while (rs.next()) {
 
 				Ma_Schicht ms = new Ma_Schicht(rs.getString("Benutzername"),rs.getInt("Schichtnr"));
@@ -198,58 +205,77 @@ import data.Ma_Schicht;
 				ma_schichtList.add(ms);
 			}
 
-			rs.close();
-			stmt.close();
-
+			//Liste mit Ma_Schicht-Objekten zurückgeben
 			return ma_schichtList;
 
 		} catch (SQLException sql) {
+			//Fehlerhandling, Ausgaben zur Ursachensuche und Rückgabewert auf null setzen
 			System.err.println("Methode getMa_Schicht SQL-Fehler: " + sql.getMessage());
 			return null;
+		}finally {
+			//Schließen der offen gebliebenen Resultsets und Statements
+			try {
+				if (rs != null)
+					rs.close();
+				if (stmt != null)
+					stmt.close();
+			} catch (SQLException e) {
+				System.err.println("Methode getMa_Schicht (finally) SQL-Fehler: " + e.getMessage());
+			}
 		}
-		//Finally-Block fehlt!
+		
 	}
 
-	
-	//Finde die beiden unteren Methoden an sich nicht unbedingt sinnvoll, besser wäre LinkedList<Mitarbeiter> getMitarbeiterausderSchicht und LinkedList<Schicht> getSchichtenEinesMitarbeiters --> Im Moment kommt man mit getAlleMa_Schicht und zwei for-Schleifen direkt zu LinkedList<Mitarbeiter>/LinkedList<Schicht> und mit der Schicht-Beziehung brauche ich trotzdem eine for-Schleife um an die Mitarbeiter/Schichten zu kommen.
 	
 	
 	/**
 	* @author Anes Preljevic
-	* @info Auslesen der Mitarbeiter die in eine Schicht gehören mit der übergebenen Schichtnr aus der Datenbank,
-	*  erstellen eines Objektes Ma_Schicht mit den Daten aus der Datenbank. Liste mit den Ma_Schicht Objekten
+	* @info Auslesen der Mitarbeiter die in eine Schicht gehören mit der übergebenen Schichtnr aus der Datenbank.
+	*  Erstellen eines Objektes Ma_Schicht mit den Daten aus der Datenbank. Liste mit den Ma_Schicht Objekten
 	*  wird ausgegeben.
 	*/
 	protected LinkedList<Ma_Schicht> getMitarbeiterausderSchicht(int schichtnr,Connection con) {
 
 		Statement stmt = null;
 		ResultSet rs = null;
-
-		String sqlStatement = "SELECT Benutzername, Schichtnr from Ma_Schicht WHERE schichtnr="+schichtnr;
+		//Benötigten Sql-Befehlt speichern
+		String sqlStatement = "SELECT * from Ma_Schicht WHERE schichtnr="+schichtnr;
 
 		try {
-			//siehe vorherige Methode
-			stmt = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			//Statement wird erstellt, der Sql-Befehl wird ausgeführt und im Resultset gespeichert
+			stmt = con.createStatement();
 			rs = stmt.executeQuery(sqlStatement);
 
 			LinkedList<Ma_Schicht> ma_schichtList = new LinkedList<>();
-
+			
+			// Solange es einen "nächsten" Datensatz in dem Resultset gibt, mit den Daten des RS 
+			// ein neues Ma_Schicht-Objekt erzeugen. Dieses wird anschließend der Liste hinzugefügt.
 			while (rs.next()) {
 				Ma_Schicht ms = new Ma_Schicht(rs.getString("Benutzername"),rs.getInt("Schichtnr"));
 
 				ma_schichtList.add(ms);
 			}
 
-			rs.close();
-			stmt.close();
 
+			//Liste der Ma_Schicht-Objekte mit "Schichtnr" zurückgeben
 			return ma_schichtList;
 
 		} catch (SQLException sql) {
+			//Fehlerhandling, Ausgaben zur Ursachensuche und Rückgabewert auf null setzen
 			System.err.println("Methode getMitarbeiterausderSchicht SQL-Fehler: " + sql.getMessage());
 			return null;
+		}finally {
+			//Schließen der offen gebliebenen Resultsets und Statements
+			try {
+				if (rs != null)
+					rs.close();
+				if (stmt != null)
+					stmt.close();
+			} catch (SQLException e) {
+				System.err.println("Methode getMitarbeiterausderSchicht (finally) SQL-Fehler: " + e.getMessage());
+			}
 		}
-		//Finally-Block fehlt!
+		
 	}
 	
 	
@@ -263,16 +289,19 @@ import data.Ma_Schicht;
 
 		Statement stmt = null;
 		ResultSet rs = null;
-
-		String sqlStatement = "SELECT Benutzername, Schichtnr from Ma_Schicht WHERE benutzername='"+benutzername+"'";
+		
+		//Benötigten Sql-Befehlt speichern
+		String sqlStatement = "SELECT * from Ma_Schicht WHERE benutzername='"+benutzername+"'";
 
 		try {
-			//siehe vorherige Methode
-			stmt = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			//Statement wird erstellt, der Sql-Befehl wird ausgeführt und im Resultset gespeichert
+			stmt = con.createStatement();
 			rs = stmt.executeQuery(sqlStatement);
 
 			LinkedList<Ma_Schicht> ma_schichtList = new LinkedList<>();
-
+			
+			// Solange es einen "nächsten" Datensatz in dem Resultset gibt, mit den Daten des RS 
+			// ein neues Ma_Schicht-Objekt erzeugen. Dieses wird anschließend der Liste hinzugefügt.
 			while (rs.next()) {
 				Ma_Schicht ms = new Ma_Schicht(rs.getString("Benutzername"),rs.getInt("Schichtnr"));
 
@@ -280,63 +309,76 @@ import data.Ma_Schicht;
 				ma_schichtList.add(ms);
 			}
 
-			rs.close();
-			stmt.close(); 
-
+			//Liste der Ma_Schicht-Objekte mit "benutzername" zurückgeben
 			return ma_schichtList;
 
 		} catch (SQLException sql) {
+			//Fehlerhandling, Ausgaben zur Ursachensuche und Rückgabewert auf null setzen
 			System.err.println("Methode getSchichteneinesMitarbeiters SQL-Fehler: " + sql.getMessage());
 			return null;
-		}
-		//Finally-Block fehlt!
-	}
-	/**
-	 * @author Anes Preljevic
-	 * @info Löschen eines Mitarbeiters aus einer Schicht
-	 */
-	protected boolean deleteMa_Schicht(int schichtnr, String benutzername, Connection con) {
-		if(checkMa_Schicht(schichtnr, benutzername,con)==false){
-			return false;
-		}
-		else{
-		Statement stmt = null;
-		ResultSet rs = null;
-		
-		//siehe oben, eine SchichtNr ist ein Integer!
-		String sqlStatement = "DELETE from Ma_Schicht where schichtnr = '"+schichtnr+"' and benutzername= '"+benutzername+"'";
-		
-		try {
-			//Das AutoCommit kann aktiviert bleiben, es ist nur eine DML-Anweisung!
-			con.setAutoCommit(false);
-			stmt = con.createStatement();
-			stmt.execute(sqlStatement);
-			con.commit();
-			
-			
-			con.setAutoCommit(true);
-			return true;
-		}			catch (SQLException sql) {
-			System.err.println("Methode deleteMa_Schicht SQL-Fehler: " + sql.getMessage());
-			try {
-				
-				con.rollback();
-				con.setAutoCommit(true);
-				return false;
-			} catch (SQLException sqlRollback) {
-					System.err.println("Methode deleteMa_schicht " + "- Rollback -  SQL-Fehler: " + sqlRollback.getMessage());
-					return false;
-				}
-		}  finally {
+		}finally {
+			//Schließen der offen gebliebenen Resultsets und Statements
 			try {
 				if (rs != null)
 					rs.close();
 				if (stmt != null)
 					stmt.close();
 			} catch (SQLException e) {
+				System.err.println("Methode getSchichteneinesMitarbeiters (finally) SQL-Fehler: " + e.getMessage());
+			}
+		}
+		
+	}
+	/**
+	 * @author Anes Preljevic
+	 * @info Löschen eines Mitarbeiters aus einer Schicht
+	 */
+	protected boolean deleteMa_Schicht(int schichtnr, String benutzername, Connection con) {
+		//Überprüfen ob der zu löschende Datensatz existiert
+		if(checkMa_Schicht(schichtnr, benutzername,con)==false){
+			return true;
+		}
+		else{
+		Statement stmt = null;
+		
+		//Benötigten Sql-Befehlt speichern
+		String sqlStatement = "DELETE from Ma_Schicht where schichtnr = "+schichtnr+" and benutzername= '"+benutzername+"'";
+		
+		try {
+			//Wenn aus der vorherigen Verbindung das AutoCommit noch auf true ist, auf false setzen
+			if(con.getAutoCommit()!= false);
+			{
+				con.setAutoCommit(false);
+			}
+			
+			//Sql-Statement ausführen
+			stmt = con.createStatement();
+			stmt.execute(sqlStatement);
+			
+			//Connection Zustand bestätigen und somit fest in die Datenbank schreiben
+			con.commit();
+			return true;
+		}			catch (SQLException sql) {
+			System.err.println("Methode deleteMa_Schicht SQL-Fehler: " + sql.getMessage());
+			try {
+				//Zurücksetzen des Connection Zustandes auf den Ursprungszustand
+				con.rollback();
+				return false;
+			} catch (SQLException sqlRollback) {
+					System.err.println("Methode deleteMa_schicht " + "- Rollback -  SQL-Fehler: " + sqlRollback.getMessage());
+					return false;
+				}
+		}  finally {
+			//Schließen der offen gebliebenen Statements
+			try {
+
+				if (stmt != null)
+					stmt.close();
+			} catch (SQLException e) {
 				System.err.println("Methode deleteMa_Schicht (finally) SQL-Fehler: " + e.getMessage());
 			}
-		}}
+		}
+		}
 	}
 	/**
 	 * @author Anes Preljevic
@@ -344,42 +386,46 @@ import data.Ma_Schicht;
 	 * wenn die Schicht gelöscht wurde.
 	 */
 	protected boolean deleteMa_SchichtWochenplan(int schichtnr,Connection con) {
-		Statement stmt = null;
-		ResultSet rs = null;
-		String sqlStatement = "DELETE FROM Ma_Schicht WHERE Schichtnr = "+schichtnr;
 
+		Statement stmt = null;
+		
+		//Benötigten Sql-Befehlt speichern
+		String sqlStatement = "DELETE from Ma_Schicht where schichtnr = "+schichtnr;
+		
 		try {
-			//siehe obere Methode!
-			con.setAutoCommit(false);
+			//Wenn aus der vorherigen Verbindung das AutoCommit noch auf true ist, auf false setzen
+			if(con.getAutoCommit()!= false);
+			{
+				con.setAutoCommit(false);
+			}
+			
+			//Sql-Statement ausführen
 			stmt = con.createStatement();
 			stmt.execute(sqlStatement);
 			
+			//Connection Zustand bestätigen und somit fest in die Datenbank schreiben
 			con.commit();
-			con.setAutoCommit(true);
-			
 			return true;
-			
-			
-		}			catch (SQLException sql) {
-			System.err.println("Methode deleteWochenplan SQL-Fehler: " + sql.getMessage());
+		}catch (SQLException sql) {
+			System.err.println("Methode deleteMa_SchichtWochenplan SQL-Fehler: " + sql.getMessage());
 			try {
-				
+				//Zurücksetzen des Connection Zustandes auf den Ursprungszustand
 				con.rollback();
-				con.setAutoCommit(true);
 				return false;
 			} catch (SQLException sqlRollback) {
-					System.err.println("Methode deleteWochenplan " + "- Rollback -  SQL-Fehler: " + sqlRollback.getMessage());
+					System.err.println("Methode deleteMa_schichtWochenplan " + "- Rollback -  SQL-Fehler: " + sqlRollback.getMessage());
 					return false;
 				}
 		}  finally {
+			//Schließen der offen gebliebenen Statements
 			try {
-				if (rs != null)
-					rs.close();
+
 				if (stmt != null)
 					stmt.close();
 			} catch (SQLException e) {
-				System.err.println("Methode deleteMa_Schicht (finally) SQL-Fehler: " + e.getMessage());
+				System.err.println("Methode deleteMa_SchichtWochenplan (finally) SQL-Fehler: " + e.getMessage());
+			}
 			}
 		}
-	}
 }
+
