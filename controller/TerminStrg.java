@@ -50,15 +50,7 @@ class TerminStrg {
 		TreeMap<String, Date> zeitraumDate = new TreeMap<String, Date>();
 		String anfZeitraum = null;
 		String endZeitraum = null;
-		int wpnr = 0;
-		
-		try{
-			//Umwandeln der Wpbez in die eindeutige Wochennummer
-	    	wpnr = myController.getWpnr(zeitraum.get("wpbez")); 
-		}catch(Exception e){
-			System.out.println("Fehler bei der Erstellung eines Termins:");
-			System.out.println("Die Wochenplanbezeichnung entspricht nicht den Vorgaben (KWXX)!");
-		}		
+		int wpnr = myController.getWpnr(zeitraum.get("wpbez")); 		
 		
 		try{
 			
@@ -108,20 +100,23 @@ class TerminStrg {
 					//Prüfe, ob der Anfangstag nach dem Endtag liegt
 					if(checkTage.get(anfZeitraum) > checkTage.get(endZeitraum)){
 						throw new Exception(reihenfolgeFehlermeldung);
-					}
-					
+					}				
+				}
+				else{
+					System.out.println("Bitte die Zeitangaben überprüfen!");
 				}
 				
 				//Der Zeitraum ist korrekt
 			}
 			
 			String anfangsUhrzeit = zeitraum.get("anfangsUhrzeit");
-			String endUhrzeit = zeitraum.get("endUhrzeit");
+			String endUhrzeit = zeitraum.get("endUhrzeit");	
+			
 			Date anfangsUhrzeitDate = null;
 			Date endUhrzeitDate = null;
 			
 			
-			SimpleDateFormat sdf = new SimpleDateFormat("hh:mm");
+			SimpleDateFormat sdf = new SimpleDateFormat("kk:mm");
 			
 			try{
 				anfangsUhrzeitDate = sdf.parse(anfangsUhrzeit);
@@ -133,9 +128,10 @@ class TerminStrg {
 				e.printStackTrace();
 			}
 			
-			if(anfangsUhrzeitDate.before(endUhrzeitDate)){
+			//Prüfe, ob die Daten in der richtigen Reihenfolge sind(Anfangszeit darf nicht hinter der Endzeit liegen)
+			if(anfangsUhrzeitDate.before(endUhrzeitDate) || anfangsUhrzeitDate.equals(endUhrzeitDate)){
 				
-				int newTbNr = this.myModel.getNewTblocknr();
+				int newTbNr = this.myModel.getNewTblocknr();				
 				
 				TerminBlockierung tb = new TerminBlockierung(newTbNr, username, bez, zeitraum.get("anfangsZeitraum"), zeitraum.get("endZeitraum"), zeitraum.get("anfangsUhrzeit"), zeitraum.get("endZeitraum"), grund);
 				this.myModel.addTerminBlockierung(tb);				
@@ -198,6 +194,10 @@ class TerminStrg {
 				
 				success = true;
 			}
+			else{
+				System.out.println("Die Anfangsuhrzeit liegt hinter der Enduhrzeit! Bitte Eingaben überprüfen.");
+			}
+			
 		}catch(Exception e){
 			System.out.println("Fehler beim Erstellen eines neuen Termins:");
 			e.printStackTrace();			
