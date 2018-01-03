@@ -144,11 +144,11 @@ public class EinsatzplanController {
 	 * @author Lukas Kühl
 	 * @info Weiterleitung einer Anfrage aus der View zum Hinzufügen eines oder mehrerer Mitarbeiter zu einer bestimmten Schicht im Einsatzplan. Rückmeldung an die View über Erfolg/Misserfolg.
 	 */
-	public boolean fülleSchicht(int schichtNr, String[] mitarbeiternummern){
+	public boolean fülleSchicht(int schichtNr, String[] mitarbeiternamen){
 		
 		boolean result = false;
 		try{
-			result = this.schichtSteuerung.ausfüllenSchicht(schichtNr, mitarbeiternummern);
+			result = this.schichtSteuerung.ausfüllenSchicht(schichtNr, mitarbeiternamen);
 			
 		}catch(Exception e){
 			System.out.println("Fehler innerhalb des Controllers:");

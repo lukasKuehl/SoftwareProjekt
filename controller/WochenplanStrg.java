@@ -563,8 +563,8 @@ class WochenplanStrg {
 			boolean result = false;
 			
 			try{
-					this.myModel.updateStanadardeinstellungen(settings);	
-					result = true;
+				this.myModel.updateStanadardeinstellungen(settings);	
+				result = true;
 				
 			}catch(Exception e){
 				System.out.println("Fehler beim Update der Standardeinstellungen");	
