@@ -266,47 +266,53 @@ class TerminErstellenView extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				// Meldung, ob die Daten wirklich gelöscht werden soll ( Ja, Nein , Abbrechen
 				// Abfrage)
-				int eingabe = JOptionPane.showConfirmDialog(null, "Wollen Sie die Daten bestätigen?", null,
-						JOptionPane.YES_NO_CANCEL_OPTION);
+				try {
+					int eingabe = JOptionPane.showConfirmDialog(null, "Wollen Sie die Daten bestätigen?", null,
+							JOptionPane.YES_NO_CANCEL_OPTION);
 
-				// weiter bei ja
-				if (eingabe == JOptionPane.YES_OPTION) {
-					try {
-						kontrolleStunden(txtFldUhrzeitBisA);
-						kontrolleStunden(txtFldUhrzeitTerminV);
-						kontrolleMinuten(txtFldUhrzeitBisB);
-						kontrolleMinuten(txtFldUhrzeitBisB);
+					// weiter bei ja
+					if (eingabe == JOptionPane.YES_OPTION) {
+						try {
+							kontrolleStunden(txtFldUhrzeitBisA);
+							kontrolleStunden(txtFldUhrzeitTerminV);
+							kontrolleMinuten(txtFldUhrzeitBisB);
+							kontrolleMinuten(txtFldUhrzeitBisB);
 
-					} catch (NumberFormatException ex) {
-						JOptionPane.showMessageDialog(null, "Die Eingabe der Uhrzeit konnte nicht geprüft werden!",
-								"Error", JOptionPane.ERROR_MESSAGE);
-					}
-					zeitraum = new TreeMap<String, String>();
-					try {
+						} catch (NumberFormatException ex) {
+							JOptionPane.showMessageDialog(null, "Die Eingabe der Uhrzeit konnte nicht geprüft werden!",
+									"Error", JOptionPane.ERROR_MESSAGE);
+						}
+						zeitraum = new TreeMap<String, String>();
+
 						username = myView.getUsername();
 						String bez = comboBoxTerminGrund.getSelectedItem().toString();
 						String grund = txtFldGrund.getText().toString();
-						zeitraum.put ("wpbez", comboBoxWochenplaene.getSelectedItem().toString());
+						zeitraum.put("wpbez", comboBoxWochenplaene.getSelectedItem().toString());
 						zeitraum.put("anfZeitraumTag", comboBoxAnfang.getSelectedItem().toString());
 						zeitraum.put("endZeitraumTag", comboBoxEnd.getSelectedItem().toString());
-						zeitraum.put("anfangsUhrzeit", txtFldUhrzeitTerminV.getText().toString()
-								+ ":" + txtFldUhrzeitTerminB.getText().toString());
-						zeitraum.put("endUhrzeit", txtFldUhrzeitBisA.getText().toString() + ":" + txtFldUhrzeitBisB.getText().toString());
+						zeitraum.put("anfangsUhrzeit", txtFldUhrzeitTerminV.getText().toString() + ":"
+								+ txtFldUhrzeitTerminB.getText().toString());
+						zeitraum.put("endUhrzeit",
+								txtFldUhrzeitBisA.getText().toString() + ":" + txtFldUhrzeitBisB.getText().toString());
 
 						// Übergabe an den Controller
 						myController.erstelleTermin(username, bez, zeitraum, grund);
+						JOptionPane.showMessageDialog(null, "Termin erfolgreich angelegt!", "  ",
+								JOptionPane.INFORMATION_MESSAGE);
 						dispose();
-					} catch (Exception e1) {
-						JOptionPane.showMessageDialog(null,
-								"Daten konnten nicht umgewandelt werden, da die Dateiformate nicht stimmen! -"
-										+ " Fehler: TerminErstellenView Zeile Button Bestätigen ActionPerformed",
-								"Error", JOptionPane.ERROR_MESSAGE);
+					} else {
+						JOptionPane.showMessageDialog(null, "Wählen Sie andere Daten aus!", "  ",
+								JOptionPane.INFORMATION_MESSAGE);
 					}
-
-				} else {
-					JOptionPane.showMessageDialog(null, "Wählen Sie andere Daten aus!", "  ",
-							JOptionPane.WARNING_MESSAGE);
 				}
+
+				catch (Exception e1) {
+					JOptionPane.showMessageDialog(null,
+							"Daten konnten nicht umgewandelt werden, da die Dateiformate nicht stimmen! -"
+									+ " Fehler: TerminErstellenView Zeile Button Bestätigen ActionPerformed",
+							"Error", JOptionPane.ERROR_MESSAGE);
+				}
+
 			}
 		});
 	}

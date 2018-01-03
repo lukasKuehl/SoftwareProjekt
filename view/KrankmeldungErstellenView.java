@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.TreeMap;
 
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
@@ -29,7 +28,6 @@ class KrankmeldungErstellenView extends JFrame {
 
 	// Initialisierung der Instanzvariablen
 	private JPanel contentPane, panelKrankmeldung, panelTermin = null;
-	private JFormattedTextField txtBisTermin, txtVonTermin = null;
 	private JComboBox<String> comboBoxMA, comboBoxWochenplaene, comboBoxAnfang, comboBoxEnd = null;
 	private JLabel labelKrankmeldungErstellen, lblMitarbeiterAuswaehlen, lblWochenplan, lblNotizEintragen, lblVon,
 			lblBis = null;
@@ -162,13 +160,15 @@ class KrankmeldungErstellenView extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				// Meldung, ob die Daten wirklich gelöscht werden soll ( Ja, Nein , Abbrechen
 				// Abfrage)
-				int eingabe = JOptionPane.showConfirmDialog(null, "Wollen Sie die Daten bestätigen?", null,
-						JOptionPane.YES_NO_CANCEL_OPTION);
-				// weiter bei ja
-				if (eingabe == JOptionPane.YES_OPTION) {
-					// Treemap für den Zeitraum
-					zeitraum = new TreeMap<String, String>();
-					try {
+				try {
+					int eingabe = JOptionPane.showConfirmDialog(null, "Wollen Sie die Daten bestätigen?", null,
+							JOptionPane.YES_NO_CANCEL_OPTION);
+					// weiter bei ja
+					if (eingabe == JOptionPane.YES_OPTION) {
+						// Treemap für den Zeitraum
+						zeitraum = new TreeMap<String, String>();
+
+						// Username anpassen - substring
 						username = comboBoxMA.getSelectedItem().toString();
 						username.trim();
 						username.split("-");
@@ -181,19 +181,18 @@ class KrankmeldungErstellenView extends JFrame {
 
 						// Übergabe an den Controller
 						myController.erstelleTermin(username, bez, zeitraum, grund);
-						JOptionPane.showMessageDialog(null, "Krankmeldung wurde erfolgreich erstellt!");
+						JOptionPane.showMessageDialog(null, "Krankmeldung wurde erfolgreich erstellt!",  "", JOptionPane.INFORMATION_MESSAGE);
 						dispose();
-					}
-
-					catch (Exception ex) {
-						JOptionPane.showMessageDialog(null,
-								"Daten konnten nicht umgewandelt werden, da die Dateiformate nicht stimmen! - Fehler: TerminErstellenView Zeile Button Bestätigen ActionPerformed",
-								"Error", JOptionPane.ERROR_MESSAGE);
-					}
-				} else {
-					JOptionPane.showMessageDialog(null, "Daten können geändert werden.");
+					} else {
+						JOptionPane.showMessageDialog(null, "Daten können geändert werden.",  "", JOptionPane.INFORMATION_MESSAGE);
+					} 
+				} catch (Exception ex) {
+					JOptionPane.showMessageDialog(null,
+							"Daten konnten nicht umgewandelt werden, da die Dateiformate nicht stimmen! - Fehler: TerminErstellenView Zeile Button Bestätigen ActionPerformed",
+							"Error", JOptionPane.ERROR_MESSAGE);
 				}
 			}
+
 		});
 	}
 }

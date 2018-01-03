@@ -52,10 +52,8 @@ class TauschanfrageErstellenView extends JFrame {
 	private Einsatzplanmodel myModel = null;
 	private Schicht mySchicht = null;
 	private int senderSchichtnr = 0;
-	String temp[] = new String[14];
+	private String empfaengerName = null;
 
-	// JComboBox Inhalt festlegen!
-	private JComboBox comboBox;
 
 	/**
 	 * @author Ramona Gerke
@@ -173,14 +171,27 @@ class TauschanfrageErstellenView extends JFrame {
 		labelSchichtAndererMA.setFont(new Font("Verdana", Font.PLAIN, 15));
 		labelSchichtAndererMA.setBounds(62, 409, 136, 26);
 		contentPane.add(labelSchichtAndererMA);
-
+		
+		// Fehler suche ??
 		comboBoxSchichtAndererMA = new JComboBox<String>();
 		//  Ausgeben einer ArrayList mit allen Schichten in einer JComboBox
-		ArrayList<String> al = myController.getSchichten(cmbBoxWP.getSelectedItem().toString(),
-		 cmbBoxTag.getSelectedItem().toString()); 
-		 // Methode Get Schichten noch in den
-		 // EinsatzplanController integrieren
+		String s =(String) cmbBoxSchicht.getSelectedItem();
+		String zwi = s.trim();
+		 String [] temp =zwi.split("-");
+	// Fehler beim parsen - JComboBox leer?
+		int schichtNr = Integer.parseInt(temp[0]); 
+		String kw = temp [1];
+		String Tag = temp [2];
+		String Zeitraum = temp [3];
+		empfaengerName = temp [4];
+		// Fehler suche 
+		System.out.println(temp[1] + temp [2] +temp[3] + temp [4] );
+	
+		// Ausgabe einer ArrayList mit den Schichten der anderen Mitarbeiter
+		SchichtAndererMa =myController.getAndereMitarbeiterSchichten(cmbBoxWP.getSelectedItem().toString(), cmbBoxTag.getSelectedItem().toString(), myView.getUsername(), schichtNr);
 		for (String c : SchichtAndererMa) {
+		//Fehler suche
+			System.out.println(c);
 			comboBoxSchichtAndererMA.addItem(c);
 		}
 		comboBoxSchichtAndererMA.setEnabled(false);
@@ -193,15 +204,10 @@ class TauschanfrageErstellenView extends JFrame {
 		lblMitarbeiter.setBounds(62, 452, 124, 26);
 		contentPane.add(lblMitarbeiter);
 
-		// Ausgeben einer ArraysList mit den Mitarbeiter der ausgewählten Schicht
-		int schichtNr = Integer.parseInt(comboBoxSchichtAndererMA.getSelectedItem().toString());
-		 empfaenger = myController.getVerfuegbareMitarbeiter(schichtNr);
-		 comboBoxEmpfaengerName = new JComboBox();
-		 for (String c : empfaenger) {
-		 comboBoxEmpfaengerName.addItem(c);
-		 }
-		comboBoxEmpfaengerName.setBounds(249, 450, 136, 26);
-		contentPane.add(comboBoxEmpfaengerName);
+		
+		//Fehler suche
+		System.out.println(myController == null);
+		
 
 		/**
 		 * @author Ramona Gerke
@@ -275,20 +281,18 @@ class TauschanfrageErstellenView extends JFrame {
 					if (eingabe == JOptionPane.YES_OPTION) {
 
 						String senderName = myView.getUsername();
-						int senderSchichtnr = Integer.parseInt(temp[2]);
-						String empfaengerName = comboBoxEmpfaengerName.getSelectedItem().toString();
+						int senderSchichtnr = schichtNr;
 						String empfaengerSchichtNrString = comboBoxSchichtAndererMA.getSelectedItem().toString();
 						int empfaengerSchichtNr = Integer.parseInt(empfaengerSchichtNrString);
 
 						// Übergabe an den Controller
 						myController.erstelleTauschanfrage(senderName, senderSchichtnr, empfaengerName,
 								empfaengerSchichtNr);
-						JOptionPane.showConfirmDialog(null, "Tauschanfrage erfolgreich erstellt");
+						JOptionPane.showConfirmDialog(null, "Tauschanfrage erfolgreich erstellt",  "", JOptionPane.INFORMATION_MESSAGE);;
 						dispose();
 
 					} else {
-						JOptionPane.showMessageDialog(null, "Wählen Sie andere Daten aus!", "  ",
-								JOptionPane.WARNING_MESSAGE);
+						JOptionPane.showMessageDialog(null, "Wählen Sie andere Daten aus!",  "", JOptionPane.INFORMATION_MESSAGE);;
 					}
 
 				} catch (Exception a) {

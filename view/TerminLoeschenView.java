@@ -122,12 +122,10 @@ class TerminLoeschenView extends JFrame {
 							temp[0] = temp[0].trim();
 							temp[0] = temp [0].substring(5, temp[0].length());		
 							int terminnr = Integer.parseInt(temp[0]);
-							System.out.println(terminnr);
 							String wpbez = temp [1];
 							String date = temp[2];
 							String anfangsUhrzeit = temp[3];
 							String endUhrzeit = temp [4];
-							System.out.println(myController.entferneTermin(terminnr, myView.getUsername()));
 							JOptionPane.showConfirmDialog(null, "Termin erfolgreich gelöscht", "", JOptionPane.INFORMATION_MESSAGE);
 							dispose();
 							

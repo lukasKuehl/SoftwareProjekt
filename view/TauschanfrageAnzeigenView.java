@@ -101,27 +101,22 @@ class TauschanfrageAnzeigenView extends JFrame {
 		btnAnnehmen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// Ausgabe der Fehlermeldung bei leerer Liste
-				if (tl.isEmpty()) {
+				if (listTauschanfragen.isSelectionEmpty()) {
 					JOptionPane.showMessageDialog(null,
 							"Es wurde keine Tauschanfrage ausgewählt. Bitte wählen Sie eine Tauschanfrage aus.",
 							"Error", JOptionPane.ERROR_MESSAGE);
 				} else {
 					// Meldung, ob die Daten wirklich gelöscht werden soll ( Ja, Nein , Abbrechen
 					// Abfrage)
-					int eingabe = JOptionPane.showConfirmDialog(null, "Wollen Sie die Tauschanfrage annehmen?", null,
-							JOptionPane.YES_NO_CANCEL_OPTION);
-					// weiter bei ja
-					if (eingabe == JOptionPane.YES_OPTION) {
-						String empfaengerName = null;
-						int tauschanfrageNr = 0;
-						String temp[] = new String[15];
-						tl = myController.getTauschanfragen(myView.getUsername());
-						for (String m : tl) {
-							m.toString();
-							m.trim();
-							temp = m.split("-");
-							String tauschanfrageNrS = temp[0].substring(10);
-							tauschanfrageNr = Integer.parseInt(tauschanfrageNrS);
+					try {
+						int eingabe = JOptionPane.showConfirmDialog(null, "Wollen Sie die Tauschanfrage annehmen?",
+								null, JOptionPane.YES_NO_CANCEL_OPTION);
+						// weiter bei ja
+						if (eingabe == JOptionPane.YES_OPTION) {
+							String s = listTauschanfragen.getSelectedValue().toString().trim();
+							String[] temp = s.split("-");
+							String tauschanfrageNrS = temp[0].substring(10); // substring länge bestimmen
+							int tauschanfrageNr = Integer.parseInt(tauschanfrageNrS);
 							String senderVorname = temp[1];
 							String senderName = temp[2];
 							String senderSchichtNr = temp[3];
@@ -130,24 +125,30 @@ class TauschanfrageAnzeigenView extends JFrame {
 							String senderAnfangsuhrzeit = temp[6];
 							String senderEnduhrzeit = temp[7];
 							String empfaengerVorname = temp[8];
-							empfaengerName = temp[9];
+							String empfaengerName = temp[9];
 							String empfaengerSchichtNr = temp[10];
 							String empfaengerWpBez = temp[11];
 							String empfaengerTagBez = temp[12];
 							String empfaengerAnfangsuhrzeit = temp[13];
 							String emfaengerEnduhrzeit = temp[14];
 							myController.akzeptiereTauschanfrage(empfaengerName, tauschanfrageNr);
-							JOptionPane.showConfirmDialog(null, "Tauschanfrage erfolgreich angenommen");
+							JOptionPane.showConfirmDialog(null, "Tauschanfrage erfolgreich angenommen",  "", JOptionPane.INFORMATION_MESSAGE);
 							dispose();
 
+						} else {
+							JOptionPane.showMessageDialog(null,
+									"Wählen Sie eine andere Tauschanfrage zum Annehmen aus!", "  ",
+									JOptionPane.WARNING_MESSAGE);
 						}
-					} else {
-						JOptionPane.showMessageDialog(null, "Wählen Sie eine andere Tauschanfrage zum Annehmen aus!",
-								"  ", JOptionPane.WARNING_MESSAGE);
+					}
+
+					catch (Exception a) {
+						JOptionPane.showMessageDialog(null,
+								"Die Liste konnte nicht übergeben werden. - Methode ActionPerformed (btnBestätigen, TerminLoeschen)",
+								"Error", JOptionPane.ERROR_MESSAGE);
 					}
 				}
 			}
 		});
 	}
-
 }

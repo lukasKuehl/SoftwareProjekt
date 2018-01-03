@@ -102,27 +102,17 @@ class WochenplanLoeschenView extends JFrame {
 								JOptionPane.YES_NO_CANCEL_OPTION);
 						// weiter bei ja
 						if (eingabe == JOptionPane.YES_OPTION) {
-							String temp[] = new String[5];
-							wpli = myController.getWochenplaene();
-							for (String m : wpli) {
-								m.toString();
-								m.trim();
-								temp = m.split("-");
-								String wpbeztemp = temp[0];
-								wpbez = wpbeztemp.substring(2);
-								String oeffnungszeitenAnfang = temp[1];
-								String oeffnungszeitenEnd = temp[2];
-								String hauptzeitAnfang = temp[3];
-								String hauptzeitEnd = temp[4];
-			
-								//Übergabe an den Controller
-								myController.entferneWochenplan(myView.getUsername().toString(), wpbez);
-								JOptionPane.showConfirmDialog(null, "Wochenplan erfolgreich gelöscht");
-								dispose();
-							}
+							String s = listWochenplaene.getSelectedValue().toString();
+							wpbez = s.substring(2);
+							System.out.println(wpbez);
+							// Übergabe an den Controller
+							myController.entferneWochenplan(myView.getUsername(), wpbez);
+							JOptionPane.showMessageDialog(null, "Wochenplan erfolgreich gelöscht", 
+								 "  ", JOptionPane.INFORMATION_MESSAGE);
+							dispose();
 						} else {
 							JOptionPane.showMessageDialog(null, "Wählen Sie einen anderen Wochenplan aus!", "  ",
-									JOptionPane.WARNING_MESSAGE);
+									JOptionPane.INFORMATION_MESSAGE);
 						}
 					} catch (Exception a) {
 						JOptionPane.showMessageDialog(null,
@@ -130,9 +120,7 @@ class WochenplanLoeschenView extends JFrame {
 								"Error", JOptionPane.ERROR_MESSAGE);
 					}
 				}
-
 			}
-
 		});
 
 		setVisible(true);
