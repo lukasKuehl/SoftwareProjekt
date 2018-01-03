@@ -558,7 +558,7 @@ class WochenplanStrg {
 	 * @author Thomas Friesen
 	 * @info Hilfsmethode zum ändern der hinterlegten Standardeinstellungen für einen Wochenplan in der Datenbank.
 	 */
-	private boolean bearbeiteStandardeinstellungen(Standardeinstellungen settings){
+	protected boolean bearbeiteStandardeinstellungen(Standardeinstellungen settings){
 				  
 			boolean result = false;
 			
