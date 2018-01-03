@@ -20,12 +20,8 @@ import data.Schicht;
  * @info Die Klasse dient dazu, jegliche Abfragen und Änderung in der Datenbank im Bezug auf die Tabelle Tag zu verarbeiten.
  */
 
-//Kommentare innerhalb der Methoden fehlen!
-
-//Finally Blöcke fehlen bei ein paar Methoden!
-
 class Datenbank_Tag {
-
+	
 	/**
 	 * @Thomas Friesen
 	 * @info Die Methode fügt einen Datensatz in die Tag Tabelle ein.
@@ -116,19 +112,23 @@ class Datenbank_Tag {
 		Statement stmt = null;
 		ResultSet rs = null;
 		
-		//Eine wpnr ist kein Integer --> Anführungszeichen müssen weg!
-		String sqlQuery = "select tbez,wpnr from tag where tbez = '"+tbez+"' and wpnr= "+wpnr+"";
+		//Benötigten Sql-Befehlt speichern
+		String sqlQuery = "select tbez,wpnr from tag where tbez = '"+tbez+"' and wpnr= "+wpnr;
 
 		try {
+			//Statement, Resultset wird erstellt und Sql-Befehl wird ausgeführt, schließend wird der 
+			//nächste Datensatz aus dem Resultset ausgegeben
 			stmt = con.createStatement();
 			rs = stmt.executeQuery(sqlQuery);
 			return rs.next();
 
 		} catch (SQLException sql) {
+			//Fehlerhandling, Ausgaben zur Ursachensuche und Rückgabewert auf false setzen
 			System.err.println("Methode checkTag SQL-Fehler: "
 					+ sql.getMessage());
 			return false;
 		} finally {
+			//Schließen der offen gebliebenen Resultsets und Statements
 			try {
 				if (rs != null)
 					rs.close();
@@ -191,35 +191,44 @@ class Datenbank_Tag {
 	 * @info Ändert den Feiertag status auf true, bei dem Tag mit der übergebenen Tbez und wpnr.
 	 */
 	protected void setzeFeiertagtrue(String tbez, int wpnr, Connection con) {
+		
 		Statement stmt = null;
 		String sqlStatement;
 		sqlStatement = "UPDATE Tag Set Feiertag=true  WHERE Tbez = '"+tbez+"' and Wpnr="+wpnr;
 		
 		
 		try {	
-		
-			//Keine Überprüfung ob es den Tag überhaupt gibt --> Fehlermeldung!
+			//Wenn aus der vorherigen Verbindung das AutoCommit noch auf true ist, auf false setzen
 			
+			if(con.getAutoCommit()!= false);
+			{
+				con.setAutoCommit(false);
+			}
+			//Überprüfung ob es den Tag gibt
+			if(checkTag(tbez,wpnr,con)==true){
+		
 			
 			stmt = con.createStatement();
 			con.setAutoCommit(false);
 			stmt.executeUpdate(sqlStatement);
-			con.commit();			
-
-			con.setAutoCommit(true);
 			
+			//Connection Zustand bestätigen und somit fest in die Datenbank schreiben
+			con.commit();			
+			}
 		} catch (SQLException sql) {
+			//Zurücksetzen des Connection Zustandes auf den Ursprungszustand
 			System.err.println("Methode setzeFeiertagtrue SQL-Fehler: "
 					+ sql.getMessage());
 			try {
 				con.rollback();
-				con.setAutoCommit(true);
+				
 			} catch (SQLException sqlRollback) {
 				System.err.println("Methode setzeFeiertagtrue "
 						+ "- Rollback -  SQL-Fehler: "
 						+ sqlRollback.getMessage());
 			}
 		} finally {
+			//Schließen der offen gebliebenen Statements
 			try {
 				if (stmt != null)
 					stmt.close();
@@ -242,27 +251,38 @@ class Datenbank_Tag {
 		
 		try {	
 			
-			//Siehe setzeFeiertagtrue
+			//Wenn aus der vorherigen Verbindung das AutoCommit noch auf true ist, auf false setzen
+			
+			if(con.getAutoCommit()!= false);
+			{
+				con.setAutoCommit(false);
+			}
+			//Überprüfung ob es den Tag gibt
+			if(checkTag(tbez,wpnr,con)==true){
+		
+			
 			
 			stmt = con.createStatement();
 			con.setAutoCommit(false);
 			stmt.executeUpdate(sqlStatement);
+			
+			//Connection Zustand bestätigen und somit fest in die Datenbank schreiben
 			con.commit();			
 
-			con.setAutoCommit(true);
-			
+			}
 		} catch (SQLException sql) {
 			System.err.println("Methode setzeFeiertagfalse SQL-Fehler: "
 					+ sql.getMessage());
 			try {
+				//Zurücksetzen des Connection Zustandes auf den Ursprungszustand
 				con.rollback();
-				con.setAutoCommit(true);
 			} catch (SQLException sqlRollback) {
 				System.err.println("Methode setzeFeiertagfalse "
 						+ "- Rollback -  SQL-Fehler: "
 						+ sqlRollback.getMessage());
 			}
 		} finally {
+			//Schließen der offen gebliebenen Statements
 			try {
 				if (stmt != null)
 					stmt.close();
@@ -273,7 +293,6 @@ class Datenbank_Tag {
 		}
 	}	
 	
-	//Sehe den Sinn für den Controller oder die View nicht, falls das eine Hilfsmethode von dir ist, kann die trotzdem drin bleiben
 	
 	/**
 	 * @author Anes Preljevic
@@ -283,30 +302,30 @@ class Datenbank_Tag {
 	 * Diese Liste ist in der Tag List enthalten welche außerdem den Ausgabewert darstellt.
 	 */
 	protected LinkedList<Tag> getTage(Connection con) {
-
-			
-			Datenbank_Schicht schicht = new Datenbank_Schicht();
+			Datenbank_Schicht schicht= new Datenbank_Schicht();
+			Datenbank_Tblock_Tag tblocktag= new Datenbank_Tblock_Tag();
 			LinkedList<Schicht> schichtList = schicht.getSchichten(con);
-			
-			Datenbank_Tblock_Tag tblock_tag = new Datenbank_Tblock_Tag();
-			LinkedList<Tblock_Tag> tblocktagList = tblock_tag.getAlleTblock_Tag(con);
+			LinkedList<Tblock_Tag> tblocktagList = tblocktag.getAlleTblock_Tag(con);
 			
 			Statement stmt = null;
 			ResultSet rs = null;
 			
-			//Kommt da eine Fehlermeldung, wenn eine Woche keinen Sonntag hat? Bitte teste das mal
+			//Benötigten Sql-Befehlt speichern
 			String sqlStatement = "SELECT tbez, wpnr, Feiertag FROM Tag ORDER BY wpnr , FIELD(tbez, 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag','Freitag','Samstag','Sonntag')";
 
 			try {
-				//siehe vorherige Klassen
-				stmt = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+				//Statement/Resultset wird erstellt, der Sql-Befehl wird ausgeführt und im Resultset gespeichert
+				stmt = con.createStatement();
 				rs = stmt.executeQuery(sqlStatement);
 
 				LinkedList<Tag> tagList = new LinkedList<>();
+				// Solange es einen "nächsten" Datensatz in dem Resultset gibt, mit den Daten des RS 
+				// ein neues Tag-Objekt erzeugen. Dieses wird anschließend der Liste hinzugefügt.
 
 				while (rs.next()) {
 					Tag t = new Tag(rs.getString("Tbez"),rs.getInt("Wpnr"),rs.getBoolean("Feiertag"));
-
+					
+					//Schichten des Tages in der SchichttagList speichern
 					LinkedList<Schicht> schichttagList = new LinkedList<>();	
 					for (Schicht sch : schichtList) {
 						if (sch.getWpnr() == t.getWpnr()&& sch.getTbez().equals(t.getTbez())) {	
@@ -316,34 +335,37 @@ class Datenbank_Tag {
 					t.setLinkedListSchichten(schichttagList);
 				
 				LinkedList<Tblock_Tag> tblocktagtList = new LinkedList<>();
+			
 				
-				//Auskommentierte Befehle können gelöscht werden
 				
-				//Die Schleife wird kein einziges Mal durchlaufen, da die LinkedList leer ist --> Meintest du vielleicht Einsatzplanmodel.getTblock()
 				for (Tblock_Tag tbt : tblocktagList) {
-					// && tbt.getTbez().equals(t.getTbez())
+				
 						if (tbt.getWpnr() == t.getWpnr()&& tbt.getTbez().equals(t.getTbez())) {
 							tblocktagtList.add(tbt);
-							//System.out.println(tbt.getTbez() + "  " + tbt.getWpnr()+ "   " +tbt.getTblocknr());
-							//System.out.println(t.getTbez() + "  " + t.getWpnr());
 						}
 				}
 				t.setLinkedListTblock_Tag(tblocktagtList);
 				
 				tagList.add(t);
 				}
-
-				rs.close();
-				stmt.close();
-
+				//Liste mit Tag-Objekten zurückgeben
 				return tagList;
 
 			} catch (SQLException sql) {
+				//Fehlerhandling, Ausgaben zur Ursachensuche und Rückgabewert auf null setzen
 				System.err.println("Methode getTage SQL-Fehler: " + sql.getMessage());
 				return null;
+			}finally {
+				//Schließen der offen gebliebenen Statements und Resultsets
+				try {
+					if (rs != null)
+						rs.close();
+					if (stmt != null)
+						stmt.close();
+				} catch (SQLException e) {
+					System.err.println("Methode getTage(finally) SQL-Fehler: " + e.getMessage());
+				}
 			}
-			
-			//finally Block fehlt!
 		}
 	
 	/**
@@ -354,30 +376,29 @@ class Datenbank_Tag {
 	 * Diese Liste ist in der Tag List enthalten welche außerdem den Ausgabewert darstellt.
 	 */
 	protected LinkedList<Tag> getTagewp(int wpnr, Connection con) {
-
-			Datenbank_Schicht schicht = new Datenbank_Schicht();
+			Datenbank_Schicht schicht= new Datenbank_Schicht();
+			Datenbank_Tblock_Tag tblocktag= new Datenbank_Tblock_Tag();
 			LinkedList<Schicht> schichtList = schicht.getSchichten(con);
-			Datenbank_Tblock_Tag tblock_tag = new Datenbank_Tblock_Tag();
-			LinkedList<Tblock_Tag> tblocktagList = tblock_tag.getAlleTblock_Tag(con);
-			
+			LinkedList<Tblock_Tag> tblocktagList = tblocktag.getAlleTblock_Tag(con);
+
 			Statement stmt = null;
 			ResultSet rs = null;
 			
-			//Wpnr ist kein String!
-			//Siehe vorherige Methode(Fehlermeldung falls es keinen Sonntag gibt)
-			String sqlStatement = "SELECT tbez, wpnr, feiertag FROM Tag where wpnr='"+wpnr+"' ORDER BY FIELD(tbez, 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag','Freitag','Samstag','Sonntag')";
+			String sqlStatement = "SELECT tbez, wpnr, feiertag FROM Tag where wpnr="+wpnr+" ORDER BY FIELD(tbez, 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag','Freitag','Samstag','Sonntag')";
 
 			try {
-				//siehe vorherige Klassen
-				stmt = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+				//Statement/Resultset wird erstellt, der Sql-Befehl wird ausgeführt und im Resultset gespeichert
+				stmt = con.createStatement();
 				rs = stmt.executeQuery(sqlStatement);
 
 				LinkedList<Tag> tagList = new LinkedList<>();
 
+				// Solange es einen "nächsten" Datensatz in dem Resultset gibt, mit den Daten des RS 
+				// ein neues Mitarbeiter-Objekt erzeugen. Dieses wird anschließend der Liste hinzugefügt.
 				while (rs.next()) {
 					Tag t = new Tag(rs.getString("Tbez"),rs.getInt("Wpnr"),rs.getBoolean("Feiertag"));
 
-					
+					//Schichten des Tages in der SchichttagList speichern
 					for (Schicht sch : schichtList) {
 						if (sch.getWpnr() == t.getWpnr()&& sch.getTbez().equals(t.getTbez())) {
 							LinkedList<Schicht> schichttagList = new LinkedList<>();	
@@ -400,17 +421,26 @@ class Datenbank_Tag {
 					tagList.add(t);
 				}
 
-				rs.close();
-				stmt.close();
 
+				//Liste mit Tag-Objekten zurückgeben
 				return tagList;
 
 			} catch (SQLException sql) {
-				System.err.println("Methode getTage SQL-Fehler: " + sql.getMessage());
+				//Fehlerhandling, Ausgaben zur Ursachensuche und Rückgabewert auf null setzen
+				System.err.println("Methode getTagewp SQL-Fehler: " + sql.getMessage());
 				return null;
+			}finally {
+				//Schließen der offen gebliebenen Statements und Resultsets
+				try {
+					if (rs != null)
+						rs.close();
+					if (stmt != null)
+						stmt.close();
+				} catch (SQLException e) {
+					System.err.println("Methode getTagewp (finally) SQL-Fehler: " + e.getMessage());
+				}
 			}
-			
-			//Finally-Block fehlt!
+
 		}
 	
 	/**
@@ -422,35 +452,29 @@ class Datenbank_Tag {
 	protected boolean deleteTag(int wpnr,Connection con) {
 		Datenbank_Schicht schicht = new Datenbank_Schicht();
 		Datenbank_TerminBlockierung terminblockierung = new Datenbank_TerminBlockierung();
-		Datenbank_Tblock_Tag tblock_tag = new Datenbank_Tblock_Tag();
-		LinkedList<Tblock_Tag> tblocktagList = tblock_tag.getAlleTblock_Tag(con);
-		
+		Datenbank_Tblock_Tag tblocktag= new Datenbank_Tblock_Tag();
+		LinkedList<Tblock_Tag> tblocktagList = tblocktag.getAlleTblock_Tag(con);;
 
 		
 		Statement stmt = null;
-		ResultSet rs = null;
 		
-		//Einfaches wpnr reicht aus, dann ist es überall einheitlich
+		
 		String sqlQuery = "DELETE FROM tag WHERE wpnr= "+wpnr;
-
+		//Alle Tblock_Tag mit der Wpnr auslesen, die tblocknr der zutreffenden Tblock_Tag-Objekte
+		// stellt die TerminBlockierung da welche, ebenfalls gelöscht werden muss
+		//Tblock_Tag wird in der Methode deleteTerminBlockierung mitgelöscht
 		for (Tblock_Tag tbt : tblocktagList) {
 			if (tbt.getWpnr() == wpnr) {
 				terminblockierung.deleteTerminBlockierung(tbt.getTblocknr(),con);;
 			}
 		}
-			
-
+		//Schichten der Woche löschen
 		schicht.deleteSchichtvonWp(wpnr,con);;
-		
-
-	
-		
-	
-	
 		try {
+			//Sql-Statement ausführen
 			stmt = con.createStatement();
 			stmt.execute(sqlQuery);
-			System.out.println("Tag gelöscht");
+			
 			return true;
 			
 		} catch (SQLException sql) {
@@ -458,9 +482,9 @@ class Datenbank_Tag {
 					+ sql.getMessage());
 			return false;
 		} finally {
+			//Schließen der offen gebliebenen Statements
 			try {
-				if (rs != null)
-					rs.close();
+
 				if (stmt != null)
 					stmt.close();
 			} catch (SQLException e) {

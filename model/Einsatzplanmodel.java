@@ -32,17 +32,7 @@ public class Einsatzplanmodel implements Observable {
 	
 	//Initialiserung der Instanzvariablen
 	private ArrayList<Observer> observers=null;
-	
-	//Controller kann, muss aber nicht als Variable abgespeichert werden.
-	//private EinsatzplanController controller = null;
-	
-	private Einsatzplanmodel myModel=null;
-	
-	//Da alle Observer gleich behandelt werden sollen, muss jeder Observer aus der Liste durch gegangen werden --> Aus der Sicht des Models sind die alle gleich, also keine zusätzliche Variable nötig!
-	private Einsatzplanview view = null;
-	
-	
-	//private Observer view=null;
+
 	private Datenbank_Connection dataConnection = null;
 	private Connection con=null;
 	
@@ -59,8 +49,6 @@ public class Einsatzplanmodel implements Observable {
 	private Datenbank_Warenhaus dataWarenhaus = null;
 	private Datenbank_Wochenplan dataWochenplan=null;
 
-	//Der Wochenplan wird doch zu Beginn von der View abgefragt --> Keine zustätzliche Variable nötig
-	private Wochenplan wochenplan=null;
 	
 	public Einsatzplanmodel(){
 		
@@ -931,6 +919,19 @@ public boolean checkWochenplanFK(String benutzername) {
 		}
 		return result;
 	}	
+	public Warenhaus geteinWarenhaus(String whname) {
+		Warenhaus result = null;;
+		try{
+			result = this.dataWarenhaus.geteinWarenhaus(whname,con);
+			
+		}catch(Exception e){
+			System.out.println("Fehler innerhalb des Modells:");
+			System.out.println("Fehler beim Aufruf der Methode getWarenhaus:");
+			e.printStackTrace();			
+		}
+		return result;
+	}	
+		
 		
 	public void addWarenhaus(Warenhaus warenhaus){
 		

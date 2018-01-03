@@ -8,7 +8,7 @@ public class Schicht {
 	private int wpnr=0;
 	private String anfanguhrzeit=null;
 	private String endeuhrzeit=null;
-	private LinkedList<Ma_Schicht> ll_ma_schicht = null;
+	private LinkedList<Mitarbeiter> ll_mitarbeiter = null;
 	/**
 	 * @author Anes Preljevic
 	 * @info Erzeugen eines Objektes vom Typ Schicht und 
@@ -38,12 +38,12 @@ public class Schicht {
 		this.endeuhrzeit = endeuhrzeit;
 	}
 
-	public LinkedList<Ma_Schicht> getLl_ma_schicht() {
-		return ll_ma_schicht;
+	public LinkedList<Mitarbeiter> getLl_mitarbeiter() {
+		return ll_mitarbeiter;
 	}
 
-	public void setLl_ma_schicht(LinkedList<Ma_Schicht> ll_ma_schicht) {
-		this.ll_ma_schicht = ll_ma_schicht;
+	public void setLl_mitarbeiter(LinkedList<Mitarbeiter> ll_ma_schicht) {
+		this.ll_mitarbeiter = ll_mitarbeiter;
 	}
 
 	public int getSchichtnr() {
@@ -70,13 +70,5 @@ public class Schicht {
 	public void setWpnr(int wpnr) {
 		this.wpnr = wpnr;
 	}
-	public LinkedList<Ma_Schicht> getLl_maschicht() {
-		return ll_ma_schicht;
-	}
 
-	public void setLinkedListMa_Schicht(LinkedList<Ma_Schicht> ll_ma_schicht) {
-		this.ll_ma_schicht=ll_ma_schicht;
-		
-	}
-	
 }
