@@ -28,7 +28,7 @@ import javax.mail.internet.MimeMultipart;
 class MailStrg {	
 	
 	//Ergänzung der Paramter message und iconPath
-	public void sendMail(String username, String password,
+	protected void sendMail(String username, String password,
 			String senderAddress, String recipientsAddress, String subject, String message, String iconPath ){
 		
 		Authenticator auth = getAuthenticator(username, password);
@@ -46,7 +46,7 @@ class MailStrg {
 	 * Eigenschaften des Mail-Servers werden gesetzt
 	 * @return
 	 */
-	public Properties getProperties() {
+	protected Properties getProperties() {
 		Properties properties = new Properties();
 		// Den Properties wird die ServerAdresse hinzugefügt
 		properties.put("mail.smtp.host", "smtp.web.de");
@@ -73,7 +73,7 @@ class MailStrg {
 	 * @param recipientsAddress
 	 * @param subject
 	 */
-	public void sendMessage(Session session, String senderAddress,
+	protected void sendMessage(Session session, String senderAddress,
 			String recipientsAddress, String subject, String message, String iconPath) {
 		try {
 			// Eine neue Message erzeugen
@@ -117,7 +117,7 @@ class MailStrg {
 	 * Nachrichtentext wird gesetzt
 	 * @return
 	 */
-	public BodyPart getText(String message) {
+	protected BodyPart getText(String message) {
 		try {
 			// message part erstellen
 			BodyPart messageBodyPart = new MimeBodyPart();
@@ -139,7 +139,7 @@ class MailStrg {
 	 * Angang wird hinzugefügt
 	 * @return
 	 */
-	public BodyPart getAttachment(String iconPath) {
+	protected BodyPart getAttachment(String iconPath) {
 		try {
 			// message part erstellen
 			BodyPart messageBodyPart = new MimeBodyPart();
@@ -174,7 +174,7 @@ class MailStrg {
 	 * @param user
 	 * @param password
 	 */
-	public Authenticator getAuthenticator(final String user, final String password) {
+	protected Authenticator getAuthenticator(final String user, final String password) {
 		try {
 			Authenticator auth = new Authenticator() {
 				/**
