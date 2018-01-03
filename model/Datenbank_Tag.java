@@ -15,7 +15,10 @@ import data.Tblock_Tag;
 import data.Mitarbeiter;
 import data.Schicht;
 
-//Klassenbeschreibung fehlt!
+/**
+ * @author Thomas Friesen, Anes Preljevic
+ * @info Die Klasse dient dazu, jegliche Abfragen und Änderung in der Datenbank im Bezug auf die Tabelle Tag zu verarbeiten.
+ */
 
 //Kommentare innerhalb der Methoden fehlen!
 
@@ -30,49 +33,45 @@ class Datenbank_Tag {
 	protected boolean addTag(Tag tag,String oeffnungszeit, String schließzeit, String hauptzeitbeginn, String hauptzeitende, Connection con) {	
 
 		boolean success = false;
-		String sqlStatement;
-		sqlStatement = "insert into Tag(tbez, wpnr, feiertag) values(?, ?, ?)";
-		PreparedStatement pstmt = null;
-		Statement checkInput = null;
-		ResultSet checkRS = null;
-		String tbez = null;
-		int wpnr = 0;
 		boolean feiertag = false;
+		int wpnr = 0;
+		PreparedStatement pstmt = null;
+		String tbez = null;
+		String sqlStatement  = "insert into Tag(tbez, wpnr, feiertag) values(?, ?, ?)";
+		Datenbank_Schicht dschicht= new Datenbank_Schicht();
 		
 		
 		try {
+			//Erstellen des prepared Statement Objektes
 			pstmt = con.prepareStatement(sqlStatement);
 
 			//Auslesen der als Parameter übergebenen Mitarbeiter-Schicht-Beziehung
 			tbez = tag.getTbez();
 			wpnr = tag.getWpnr();
 
+			//Überprüfung des PK-Constraints
 			if (checkTag(tbez,wpnr,con)) {
 				System.out.println("Dieser Tag existiert bereits in dem angegebenen Wochenplan!");
 			}
+			//Überprüfung des FK-Constraints
 			if (checkTagFK(wpnr,con) == false){
 				System.out.println("Die wpnr existiert nicht in der Wochenplan-Tabelle");
 			}
 			else{
 				//Es wurde sichergestellt, dass die PK- und FK-Check-Constraints nicht verletzt werden --> Der Datensatz kann erzeugt werden
-				
-				//Nein, siehe vorherige Klassen
-				
+								
 				//Prepared Statement füllen
 				pstmt.setString(1, tbez);
 				pstmt.setInt(2, wpnr);
 				pstmt.setBoolean(3, feiertag);
+				
+				//Ausführen der SQL-Anweisung
 				pstmt.execute();
 				
 				//Einfügen von Schichten in einen Tag
-				
-				//Funktioniert nur bei einer vorhandenen Haupt- und Normalzeit, sollte aber eigentlich kein Problem sein
-				Datenbank_Schicht dschicht= new Datenbank_Schicht();
 				dschicht.addSchicht(new Schicht(dschicht.getNewSchichtnr(con),tbez, wpnr,oeffnungszeit, hauptzeitbeginn),con);
 				dschicht.addSchicht(new Schicht(dschicht.getNewSchichtnr(con),tbez, wpnr,hauptzeitbeginn, hauptzeitende),con);
 				dschicht.addSchicht(new Schicht(dschicht.getNewSchichtnr(con),tbez, wpnr,hauptzeitende, schließzeit),con);
-				
-				
 					
 			}			
 			success = true;
@@ -94,16 +93,7 @@ class Datenbank_Tag {
 		} finally {
 			//Schließen der offen gebliebenen Statements & ResultSets
 			try {
-				
-				//siehe vorherige Klassen
-				if(checkRS != null){
-					checkRS.close();
-				}				
-				
-				if(checkInput != null){
-					checkInput.close();
-				}			
-				
+			
 				if (pstmt != null){
 					pstmt.close();
 				}			

@@ -16,7 +16,10 @@ import javax.swing.JFileChooser;
 
 import data.Standardeinstellungen;
 
-//Klassenbeschreibung fehlt!
+/**
+ * @author Anes Preljevic
+ * @info Die Klasse dient dazu, jegliche Abfragen und Änderung in der Datenbank im Bezug auf die Tabelle Standardeinstellungen zu verarbeiten.
+ */
 
 //Finally-Block bei getStandardeinstellungen fehlt!
 

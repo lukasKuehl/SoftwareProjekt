@@ -13,7 +13,10 @@ import data.Tag;
 import data.Tauschanfrage;
 import data.TerminBlockierung;
 
-//Klassenbeschreibung fehlt!
+/**
+ * @author Thomas Friesen, Anes Preljevic
+ * @info Die Klasse dient dazu, jegliche Abfragen und Änderung in der Datenbank im Bezug auf die Tabelle Schicht zu verarbeiten.
+ */
 
 //Kommentare innerhalb der Methoden fehlen!
 
@@ -21,26 +24,24 @@ import data.TerminBlockierung;
 
 class Datenbank_Schicht {
 
-
-
 	/**
 	 * @Thomas Friesen
 	 * @info Die Methode fügt einen Datensatz in die Schicht Tabelle hinzu.
 	 */
 	public boolean addSchicht(Schicht schicht,Connection con) {
+		
 		boolean success = false;
-		
-		
-		String sqlStatement = "insert into Schicht(schichtnr, tbez, wpnr, anfanguhrzeit, endeuhrzeit) values(?, ?, ?, ?, ?)";
-		PreparedStatement pstmt = null;
 		int schichtnr = 0;
-		String tbez = null;
 		int wpnr = 0;
+		PreparedStatement pstmt = null;
+		String tbez = null;
 		String anfanguhrzeit = null;
 		String endeuhrzeit = null;
+		String sqlStatement = "insert into Schicht(schichtnr, tbez, wpnr, anfanguhrzeit, endeuhrzeit) values(?, ?, ?, ?, ?)";
 		
 		
 		try {
+			//Erstellen eines prepared Statements
 			pstmt = con.prepareStatement(sqlStatement);
 
 			//Auslesen der als Parameter übergebenen Mitarbeiter-Schicht-Beziehung
@@ -51,10 +52,11 @@ class Datenbank_Schicht {
 			endeuhrzeit = schicht.getEndeuhrzeit();
 		
 
-			//Siehe obere Klassen!
+			//Überprüfung der PK-Constraints
 			if (checkSchicht(schichtnr,con)) {
 				System.out.println("Diese schichtnr existiert bereits in der Tabelle Schicht!");
 			}
+			//Überprüfung der FK-Constraints
 			if (checkSchichtFK(tbez,wpnr,con) == false){
 				System.out.println("Die übergebenen Parameter verletztn die Foreign-Key-Constraints der Schichttabelle");
 			}
@@ -67,9 +69,8 @@ class Datenbank_Schicht {
 				pstmt.setString(4, anfanguhrzeit);
 				pstmt.setString(5, endeuhrzeit);
 			
+				//Ausführen der SQL-Anweisung
 				pstmt.execute();
-				
-				
 			}			
 			
 			success = true;
@@ -77,7 +78,7 @@ class Datenbank_Schicht {
 			
 			
 		} catch (SQLException sql) {
-			//Die Ausgaben dienen zur Ursachensuche und sollten im späteren Programm entweder gar nicht oder vielleicht als Dialog(ausgelöst in der View weil der Rückgabewert false ist) angezeigt werden
+			//Die Ausgaben dienen zur Ursachensuche und sollten im späteren Programm entweder gar nicht oder vielleicht als Dialog angezeigt werden
 			System.out.println("Fehler beim Einfügen eines neuen Datensatzes in die Datenbank!");
 			System.out.println("Fehler beim Hinzufügen einer neuen Schicht:");
 			System.out.println("Parameter: schichtnr = " + schichtnr);
@@ -140,24 +141,19 @@ class Datenbank_Schicht {
 	 * @author Thomas Friesen
 	 * @info Die Methode prüft, ob die Foreign Keys der Tabelle Schicht eingehalten werden
 	 */
-	/**
-	 * @author Thomas Friesen
-	 * @info Die Methode prüft, ob die Foreign Keys der Tabelle Schicht eingehalten werden
-	 */
 	protected boolean checkSchichtFK(String tbez, int wpnr,Connection con) {
 		boolean result = false;
-		Statement[] stmt = new Statement[1];
-		ResultSet[] rs = new ResultSet[1];
-		String[] sqlQuery = new String[1]; 
-		sqlQuery[0] = "select tbez,wpnr from Tag where tbez = '"+ tbez + "' and wpnr =" +wpnr ;
-		//sqlQuery[1] = "select wpnr from Wochenplan where wpnr = " + wpnr;
+		Statement stmt = null;;
+		ResultSet rs = null;
+		String sqlQuery = "select tbez,wpnr from Tag where tbez = '"+ tbez + "' and wpnr =" +wpnr ;
 		
 		try {
-			for (int i=0;i<1;i++){
-				stmt[i] = con.createStatement();
-				rs[i] = stmt[i].executeQuery(sqlQuery[i]);
-			}
-			if ((rs[0].next()) == true){
+			// Erstellen des Statement- und Resultsetobjektes
+				stmt = con.createStatement();
+				rs = stmt.executeQuery(sqlQuery);
+			
+			//Überprüfung der FK-COnstraints
+			if ((rs.next()) == true){
 				result = true;
 			}else{
 				result = false;
@@ -168,16 +164,16 @@ class Datenbank_Schicht {
 			return false;
 			
 		} finally {
-			try {
-				for(int i=0;i<1;i++){
-					if(rs[i] != null){
-						rs[i].close();
+			//Schließen des offenen Statement- und Resultsetobjektes
+				try {
+					if(rs != null){
+						rs.close();
 					}
-					if(stmt[i] != null){
-						stmt[i].close();
+					if(stmt != null){
+						stmt.close();
 					}
 						
-				}
+				
 			} catch (SQLException e) {
 				System.err.println("Methode checkSchichtFK (finally) SQL-Fehler: " + e.getMessage());
 			}

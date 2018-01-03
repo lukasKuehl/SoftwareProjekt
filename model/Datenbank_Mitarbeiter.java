@@ -9,32 +9,25 @@ import java.util.LinkedList;
 
 import data.Mitarbeiter;
 
-//Klassenbeschreibung fehlt!
+/**
+ * @author Thomas Friesen, Anes Preljevic
+ * @info Die Klasse dient dazu, jegliche Abfragen und Änderung in der Datenbank im Bezug auf die Tabelle Mitarbeiter zu verarbeiten.
+ */
 
 //Bei fast allen Methoden fehlen Kommentare zu den einzelnen Anweisungen
 
 //Bei vielen Mehtoden von Anes fehlen die finally-Blöcke
 
 class Datenbank_Mitarbeiter {
-
 	
 	/**
 	 * @Thomas Friesen
 	 * @info Die Methode fügt einen Mitarbeiter in die Datenbank hinein
 	 */
 	public boolean addMitarbeiter(Mitarbeiter ma, Connection con) {
+		
 		boolean success = false;
-	
-		//Eine Anweisung
-		String sqlStatement;
-		sqlStatement = "insert into Mitarbeiter (benutzername, passwort, job, vorname, name, maxstunden, whname,email) values(?, ?, ?, ?, ?, ?, ?,?)";
-		
 		PreparedStatement pstmt = null;
-		
-		//Checks werden nicht benutzt! siehe DatenbankMa_Schicht
-		Statement checkInput = null;
-		ResultSet checkRS = null;
-		
 		String benutzername = null;
 		String passwort = null;
 		String job = null;
@@ -43,8 +36,10 @@ class Datenbank_Mitarbeiter {
 		int maxstunden = 0;
 		String whname = null;
 		String email = null;
+		String sqlStatement = "insert into Mitarbeiter (benutzername, passwort, job, vorname, name, maxstunden, whname,email) values(?, ?, ?, ?, ?, ?, ?,?)";
 		
 		try {
+			//Erstellen eines prepared Statements
 			pstmt = con.prepareStatement(sqlStatement);
 
 			//Auslesen der Parameter aus dem Mitarbeiterobjekt
@@ -57,18 +52,18 @@ class Datenbank_Mitarbeiter {
 			whname = ma.getWhname();
 			email = ma.getEmail();
 			
-			// Verhindert das Commit nach jeder Anweisung. Nicht zwangsläufig notwendig bei einem einzelnen SQL-Befehl
-			con.setAutoCommit(false);
 			
-			
+			//Überprüfung der PK-Constraints
 			if (checkMitarbeiter(benutzername,con)) {
 				System.out.println("Der Mitarbeiter wurde bereits in die Schicht eingeteilt!");
 			}
+			if (checkMitarbeiterFK(job,whname,con)){
+				System.out.println("Die Foreign-Key-Constraints der Mitarbeitertabelle wurden verletzt");
+			}
 			else{
 				//Es wurde sichergestellt, dass die PK- und FK-Check-Constraints nicht verletzt werden --> Der Datensatz kann erzeugt werden
-			
-				//Wieder nur PK_Check-Überprüfung! --> FK-Warenhaus, FK-Benuzerrolle/Job fehlt!
 				
+				//Ausfüllen des prepared Statements mit den Variabeln aus dem übergebenen Mitarbeiterobjekt
 				pstmt.setString(1, benutzername);
 				pstmt.setString(2, passwort);
 				pstmt.setString(3, job);
@@ -78,13 +73,16 @@ class Datenbank_Mitarbeiter {
 				pstmt.setString(7, whname);
 				pstmt.setString(8, email);
 			
+				//Ausführen der SQL-Anweisung
 				pstmt.execute();
+				//Übertragung der aktuellen Daten in die Datenbanktabelle Mitarbeiter
 				con.commit();	
+				
+				success = true;
 				
 			}			
 			
-			success = true;
-			con.setAutoCommit(true);
+			
 			
 			
 		} catch (SQLException sql) {
@@ -102,18 +100,9 @@ class Datenbank_Mitarbeiter {
 				System.err.println("Methode addMitarbeiter " + "- Rollback -  SQL-Fehler: " + sqlRollback.getMessage());
 			}
 		} finally {
-			//Schließen der offen gebliebenen Statements & ResultSets
+			//Schließen der offen gebliebenen Statements
 			try {
-				
-				//Beide checks wurden nicht benutzt und brauchen nicht geschlossen werden!
-				if(checkRS != null){
-					checkRS.close();
-				}				
-				
-				if(checkInput != null){
-					checkInput.close();
-				}			
-				
+			
 				if (pstmt != null){
 					pstmt.close();
 				}			
@@ -199,6 +188,58 @@ class Datenbank_Mitarbeiter {
 			}
 		}
 	}
+	
+	/**
+	 * @author Thomas Friesen
+	 * @info Die Methode prüft, ob die Foreign-Key-Constraints der Tabelle Mitarbeiter eingehalten werden
+	 */
+	protected boolean checkMitarbeiterFK(String job, String whname,Connection con) {
+		boolean result = false;
+		Statement[] stmt = new Statement[2];
+		ResultSet[] rs = new ResultSet[2];
+		String[] sqlQuery = new String[2]; 
+		sqlQuery[0] = "select job from Userrecht where job = "+ job ;
+		sqlQuery[1] = "select whname from Warenhaus where whname = '" + whname + "'";
+		
+		try {
+			//Erstellen der Statement- und Resultsetobjekte
+			for (int i=0;i<2;i++){
+				stmt[i] = con.createStatement();
+				rs[i] = stmt[i].executeQuery(sqlQuery[i]);
+			}
+			//Überprüfung, ob beide FK-Constraints eingehalten werden
+			if ((rs[0].next()) == true && (rs[1].next())== true){
+				result = true;
+			}else{
+				result = false;
+			}
+			
+		} catch (SQLException sql) {
+			System.err.println("Methode checkMitarbeiterFK SQL-Fehler: " + sql.getMessage());
+			return false;
+			
+		} finally {
+			//Schließen der offen gebliebenen Statements und Resultsets
+			try {
+				for(int i=0;i<2;i++){
+					if(rs[i] != null){
+						rs[i].close();
+					}
+					if(stmt[i] != null){
+						stmt[i].close();
+					}
+						
+				}
+				//Abfangen von Fehlern, beim Überprüfen der Datenbank
+			} catch (SQLException e) {
+				System.err.println("Methode checkMitarbeiterFK (finally) SQL-Fehler: " + e.getMessage());
+			}
+		}
+		return result;
+	}
+
+	
+	
 	/**
 	 * @author Anes Preljevic
 	 * @info Auslesen eines bestimmten Mitarbeiters aus der Datenbank und erzeugen eines Mitarbeiter Objektes,

@@ -9,7 +9,10 @@ import java.util.LinkedList;
 
 import data.Ma_Schicht;
 
-//Klassenbeschreibung fehlt!
+/**
+ * @author Thomas Friesen, Anes Preljevic
+ * @info Die Klasse dient dazu, jegliche Abfragen und Änderung in der Datenbank im Bezug auf die Tabelle Ma_Schicht zu verarbeiten.
+ */
 
 //Innerhalb fast aller Methoden ist kein einziger Kommentar zur Erklärung was ihr mit den einzelnen Anweisungen macht!
  
@@ -17,17 +20,16 @@ import data.Ma_Schicht;
 
  class Datenbank_Ma_Schicht {
 
-
 	 /**
 		 * @Thomas Friesen
 		 * @info Die Methode fügt einen Datensatz in die Ma_Schicht Tabelle ein.
 		 */
 		protected boolean addMa_Schicht(Ma_Schicht ma_schicht,Connection con) {
 			boolean success = false;
-			String sqlStatement = "insert into Ma_Schicht (Schichtnr,Benutzername) values(?, ?)";
-			PreparedStatement pstmt = null;		
 			int schichtnr = 0;
+			PreparedStatement pstmt = null;		
 			String benutzername = null;
+			String sqlStatement = "insert into Ma_Schicht (Schichtnr,Benutzername) values(?, ?)";
 			
 			
 			try {
@@ -37,11 +39,11 @@ import data.Ma_Schicht;
 				schichtnr = ma_schicht.getSchichtnr();
 				benutzername = ma_schicht.getBenutzername();		
 				
-				//Überprüfung, dass die PK-Check-Constrains nicht verletzt werden
+				//Überprüfung der PK-Check-Constrains
 				if (checkMa_Schicht(schichtnr, benutzername,con)) {
 					System.out.println("Der Mitarbeiter wurde bereits in die Schicht eingeteilt!");
 					
-				//Überprüfung, dass die FK-Check-Constraints nicht verletzt werden
+				//Überprüfung der FK-Check-Constraints
 				}if ((checkMa_SchichtFK(schichtnr,benutzername,con) == false)){
 					System.out.println("Der Foreign-Key Constraint  der Ma_Schicht Tabelle wurde verletzt!");
 				}
@@ -52,6 +54,8 @@ import data.Ma_Schicht;
 					pstmt.setInt(1, schichtnr);
 					pstmt.setString(2, benutzername);
 					pstmt.execute();
+					
+					//Übertragung der Daten in die Datenbank
 					con.commit();	
 					
 				}			
@@ -60,7 +64,7 @@ import data.Ma_Schicht;
 				
 				
 			} catch (SQLException sql) {
-				//Die Ausgaben dienen zur Ursachensuche und sollten im späteren Programm entweder gar nicht oder vielleicht als Dialog(ausgelöst in der View weil der Rückgabewert false ist) angezeigt werden
+				//Die Ausgaben dienen zur Ursachensuche und sollten im späteren Programm entweder gar nicht oder eventuell als Dialog angezeigt werden
 				System.out.println("Fehler beim Einfügen eines neuen Datensatzes in die Datenbank!");
 				System.out.println("Fehler bei der Zuordnung eines Mitarbeiters zu einer Schicht:");
 				System.out.println("Parameter: Schichtnr = " + schichtnr + " Mitarbeiter = " + benutzername);
@@ -74,7 +78,7 @@ import data.Ma_Schicht;
 					System.err.println("Methode addMa_Schicht " + "- Rollback -  SQL-Fehler: " + sqlRollback.getMessage());
 				}
 			} finally {
-				//Schließen der offen gebliebenen Statements & ResultSets
+				//Schließen der offen gebliebenen Statements
 				try {		
 					if (pstmt != null){
 						pstmt.close();
@@ -120,7 +124,7 @@ import data.Ma_Schicht;
 
 	/**
 	 * @author Thomas Friesen
-	 * @info Die Methode prüft, ob die Foreign Keys der Tabelle Ma_Schicht eingehalten werden
+	 * @info Die Methode prüft, ob die Foreign-Key-Constraints der Tabelle Ma_Schicht eingehalten werden
 	 */
 	protected boolean checkMa_SchichtFK(int schichtnr, String benutzername,Connection con) {
 		boolean result = false;
@@ -131,10 +135,12 @@ import data.Ma_Schicht;
 		sqlQuery[1] = "select benutzername from Mitarbeiter where benutzername = '" + benutzername + "'";
 		
 		try {
+			//Erstellen der Statement- und Resultsetobjekte
 			for (int i=0;i<2;i++){
 				stmt[i] = con.createStatement();
 				rs[i] = stmt[i].executeQuery(sqlQuery[i]);
 			}
+			//Überprüfung, ob beide FK-Constrains eingehaltenw werden
 			if ((rs[0].next()) == true && (rs[1].next())== true){
 				result = true;
 			}else{
@@ -146,6 +152,7 @@ import data.Ma_Schicht;
 			return false;
 			
 		} finally {
+			//Schließen der offen gebliebenen Statements und Resultsets
 			try {
 				for(int i=0;i<2;i++){
 					if(rs[i] != null){
@@ -156,6 +163,7 @@ import data.Ma_Schicht;
 					}
 						
 				}
+				//Abfangen von Fehlern, beim Überprüfen der Datenbank
 			} catch (SQLException e) {
 				System.err.println("Methode checkMa_SchichtFK (finally) SQL-Fehler: " + e.getMessage());
 			}

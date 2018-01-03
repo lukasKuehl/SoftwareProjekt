@@ -311,7 +311,7 @@ public boolean checkWochenplanFK(String benutzername) {
 			
 		}catch(Exception e){
 			System.out.println("Fehler innerhalb des Modells:");
-			System.out.println("Fehler beim Aufruf der Methode checkMa_Schicht:");
+			System.out.println("Fehler beim Aufruf der Methode checkMa_SchichtFK:");
 			e.printStackTrace();			
 		}
 		return result;
@@ -379,6 +379,20 @@ public boolean checkWochenplanFK(String benutzername) {
 		}
 		return result;
 	}
+	
+	public boolean checkMitarbeiterFK(String job, String whname) {
+		boolean result =false;
+		try{
+			result = this.dataMitarbeiter.checkMitarbeiterFK(job, whname,con);
+			
+		}catch(Exception e){
+			System.out.println("Fehler innerhalb des Modells:");
+			System.out.println("Fehler beim Aufruf der Methode checkMitarbeiterFK:");
+			e.printStackTrace();			
+		}
+		return result;
+	}
+	
 	public LinkedList<Schicht> getSchichten(){
 		
 		LinkedList<Schicht> result = null;;
