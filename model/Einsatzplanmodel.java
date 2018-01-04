@@ -830,6 +830,20 @@ public boolean checkWochenplanFK(String benutzername) {
 		return result;
 	}
 
+	public boolean checkTblock_TagFK(int tBlockNr, String tbez, int wpnr) {
+		boolean result = false;
+		try{
+			result =this.dataTblock_Tag.checkTblock_TagFK(tBlockNr,tbez,wpnr,con);
+			
+		}catch(Exception e){
+			System.out.println("Fehler innerhalb des Modells:");
+			System.out.println("Fehler beim Aufruf der Methode checkTblock_TagFK:");
+			e.printStackTrace();
+			return false;
+		}
+		return result;
+	}
+	
 	public boolean deleteTblock_Tag(int tblocknr) {
 		boolean result =false;
 		try{
@@ -858,18 +872,21 @@ public boolean checkWochenplanFK(String benutzername) {
 	}	
 		
 
-	public void addTerminBlockierung(TerminBlockierung terminblockierung){
-		
+	public boolean addTerminBlockierung(TerminBlockierung terminblockierung, int wpnr){
+		boolean result = false;
 		
 		try{
-			this.dataTerminBlockierung.addTerminBlockierung(terminblockierung,con);
+			this.dataTerminBlockierung.addTerminBlockierung(terminblockierung, wpnr,con);
+			result = true;
 			
 		}catch(Exception e){
 			System.out.println("Fehler innerhalb des Modells:");
 			System.out.println("Fehler beim Aufruf der Methode addTerminBlockierung:");
-			e.printStackTrace();			
+			e.printStackTrace();	
+			return false;
 		}
-		notifyObservers();		
+		notifyObservers();
+		return result;
 	}
 
 	public boolean checkTerminBlockierung(int tblocknr) {
@@ -891,10 +908,9 @@ public boolean checkWochenplanFK(String benutzername) {
 		try{
 			result = this.dataTerminBlockierung.checkTerminBlockierungFK(benutzername, con);
 			
-			
 		}catch(Exception e){
 			System.out.println("Fehler innerhalb des Modells:");
-			System.out.println("Fehler beim Aufruf der Methode checkMa_Schicht:");
+			System.out.println("Fehler beim Aufruf der Methode checkTerminBlockierungFK:");
 			e.printStackTrace();	
 			return false;
 		}

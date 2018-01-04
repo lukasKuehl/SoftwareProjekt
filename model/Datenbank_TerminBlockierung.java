@@ -10,7 +10,9 @@ import java.sql.Time;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.LinkedList;
+import java.util.TreeMap;
 
+import data.Tblock_Tag;
 import data.TerminBlockierung;
 
 
@@ -25,9 +27,12 @@ class Datenbank_TerminBlockierung {
 	 * @Thomas Friesen
 	 * @info  Fügt einen neuen Termin-Datensatz in die TerminBlockierung Tabelle hinzu.
 	 */
-
-	protected boolean addTerminBlockierung(TerminBlockierung terminBlockierung,Connection con) {
+	
+	protected boolean addTerminBlockierung(TerminBlockierung terminBlockierung, int wpnr, Connection con) {
 		boolean success = false;
+	
+		
+		String sqlStatement = "insert into Terminblockierung (tblocknr, benutzername, bbez, anfangzeitraum, endezeitraum, anfanguhrzeit, endeuhrzeit, grund) values(?, ?, ?, ?, ?, ?, ?, ?)";
 		PreparedStatement pstmt = null;
 		int tBlockNr = 0;
 		String benutzername = null;
@@ -37,13 +42,13 @@ class Datenbank_TerminBlockierung {
 		String anfanguhrzeit = null;
 		String endeuhrzeit = null;
 		String grund = null;
-		String sqlStatement = "insert into Terminblockierung (tblocknr, benutzername, bbez, anfangzeitraum, endezeitraum, anfanguhrzeit, endeuhrzeit, grund) values(?, ?, ?, ?, ?, ?, ?, ?)";
+		
+		
 		
 		try {
-			//Erstellen des prepared Statement Objektes
 			pstmt = con.prepareStatement(sqlStatement);
 
-			//Auslesen der Parameter des übergebenen TerminBlockierung-Objektes
+			
 			tBlockNr = terminBlockierung.getTblocknr();
 			benutzername = terminBlockierung.getBenutzername();	
 			bbez = terminBlockierung.getBbez();
@@ -53,21 +58,21 @@ class Datenbank_TerminBlockierung {
 			endeuhrzeit = terminBlockierung.getEndeuhrzeit();
 			grund = terminBlockierung.getGrund();
 			
-			// Da es sich um mehrere SQL-Anweisungen handelt, muss die Einstellung AutoCommit auf false gesetzt werden
+
 			con.setAutoCommit(false);
 
-			//Prüfung der PK-Constraints
 			if (checkTerminBlockierung(tBlockNr,con)) {
 				System.out.println("Der Termin wurde bereits in die TerminBlockierung-Tabelle eingetragen");
+				return false;
 			}
-			//Prüfung der FK-Constraints
 			if (checkTerminBlockierungFK(benutzername,con) == false){
 				System.out.println("Der Benutzername existiert nicht in der Mitarbeitertabelle");
 				return false;
 			}
 			else{
 				//Es wurde sichergestellt, dass die PK- und FK-Check-Constraints nicht verletzt werden --> Der Datensatz kann erzeugt werden
-				//Füllen des prepared Statement Objektes
+			
+				
 				pstmt.setInt(1, tBlockNr);
 				pstmt.setString(2, benutzername);
 				pstmt.setString(3, bbez);
@@ -77,15 +82,38 @@ class Datenbank_TerminBlockierung {
 				pstmt.setString(7, endeuhrzeit);
 				pstmt.setString(8, grund);
 			
-				//Ausführen der SQL-Anweisung
 				pstmt.execute();
 				
-				//Übertragung der Daten in die Datenbanktabelle TBlock_Tag und TerminBlockierung
-				con.commit();
+				Datenbank_Tblock_Tag dtblocktag = new Datenbank_Tblock_Tag();
+				//Zuordnung einer Nummer zu jedem Tag, um zu Überprüfen, wie viele Tage in die TerminBlock_Tag Tabelle hinzugefügt werden müssen
+				TreeMap<String, Integer> reihenfolgeTag1 = new TreeMap<String, Integer>();
+				reihenfolgeTag1.put("Montag", 1);
+				reihenfolgeTag1.put("Dienstag", 2);
+				reihenfolgeTag1.put("Mittwoch", 3);
+				reihenfolgeTag1.put("Donnerstag", 4);
+				reihenfolgeTag1.put("Freitag", 5);
+				reihenfolgeTag1.put("Samstag", 6);
+				reihenfolgeTag1.put("Sonntag", 7);
 				
+				// Zuordnung der Values aus der reihenfolgeTag1 Treemap zu den zugehörigenden Tagen
+				TreeMap<Integer, String> reihenfolgeTag2 = new TreeMap<Integer, String>();
+				reihenfolgeTag2.put(1, "Montag");
+				reihenfolgeTag2.put(2, "Dienstag");
+				reihenfolgeTag2.put(3,"Mittwoch");
+				reihenfolgeTag2.put(4,"Donnerstag");
+				reihenfolgeTag2.put(5,"Freitag");
+				reihenfolgeTag2.put(6,"Samstag");
+				reihenfolgeTag2.put(7,"Sonntag");
+				
+				//Hinzufügen der TBlock_Tage in die TBlock_Tage Tabelle
+				for (int i = reihenfolgeTag1.get(anfangzeitraum); i<= reihenfolgeTag1.get(endezeitraum);i++){
+					dtblocktag.addTblock_Tag(new Tblock_Tag(tBlockNr,reihenfolgeTag2.get(i), wpnr), con);
+				}
+				con.commit();
 				success = true;
 			}			
-			//AutoCommit Grundeinstellung wieder aktivieren
+			
+			
 			con.setAutoCommit(true);
 			
 			
@@ -166,11 +194,10 @@ class Datenbank_TerminBlockierung {
 		String sqlQuery = "select benutzername from Mitarbeiter where benutzername = '"+ benutzername +"'" ;
 		
 		try {
-			// Erstellen der Statement und Resultsetobjekte
+			
 				stmt = con.createStatement();
 				rs = stmt.executeQuery(sqlQuery);
 			
-			//Prüfung des FK-Constraints
 			if ((rs.next()) == true){
 				result = true;
 			}else{
@@ -183,7 +210,6 @@ class Datenbank_TerminBlockierung {
 			return false;
 			
 		} finally {
-			//Schließen der offenen Resultset- und Statementobjekte
 			try {
 					if(rs != null){
 						rs.close();

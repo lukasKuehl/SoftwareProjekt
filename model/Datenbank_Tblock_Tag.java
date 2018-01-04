@@ -26,47 +26,52 @@ class Datenbank_Tblock_Tag {
 	 */
 	protected boolean addTblock_Tag(Tblock_Tag tblock_tag,Connection con) {
 		boolean success = false;
-		int wpnr = 0;
-		int tBlockNr = 0;
+		
+		
+		String sqlStatement;
+		sqlStatement = "insert into Tblock_Tag (tblocknr, tbez, wpnr) values(?, ?, ?)";
 		PreparedStatement pstmt = null;
+			
+		int tBlockNr = 0;
 		String tbez = null;
-		String sqlStatement = "insert into Tblock_Tag (tblocknr, tbez, wpnr) values(?, ?, ?)";
+		int wpnr = 0;
+		
 		
 		try {
-			//Erstellen des prepared Statement Objektes
 			pstmt = con.prepareStatement(sqlStatement);
 
 			//Auslesen der als Parameter übergebenen TerminBlockierung-Tag Beziehung
 			tBlockNr = tblock_tag.getTblocknr();
 			tbez = tblock_tag.getTbez();
-			wpnr = tblock_tag.getTblocknr();
+			wpnr = tblock_tag.getWpnr();
 
 			//Die beiden Check-Methoden können auch in eins gemacht werden oder sollten zumindestens eindeutiger benannt werden --> Abfrage der selben Tabelle
 			
-			//Überprüfung der PK-Constraints
 			if (checkTblock_TagTB(tBlockNr,con)) {
 				System.out.println("Keine Beziehung von Terminblockierung zu Tagen!");
 			}
-			//Überprüfung der PK-Constraints
-			if (checkTblock_TagTA(tbez,wpnr,con)) {
+			if (checkTblock_TagTA(tbez,wpnr,con) == false) {
 				System.out.println("Keine Beziehung von Terminbezeichnung und Wochenplannummern zu Tagen vorhanden!");
 			}
 			//Überprüfung der FK-Constraints
 			if(checkTblock_TagFK(tBlockNr,tbez,wpnr,con) == false){
 				System.out.println("Die Foreign-Key-Constraints der Tabelle TBlock_Tag wurden verletzt" );
+				System.out.println(tBlockNr+ " " + tbez + " "+ wpnr);
 			}
 			else{
 				//Es wurde sichergestellt, dass die PK- und FK-Check-Constraints nicht verletzt werden --> Der Datensatz kann erzeugt werden
-				//Füllen des prepared Statement Objektes
+			
+				
 				pstmt.setInt(1, tBlockNr);
 				pstmt.setString(2, tbez);
 				pstmt.setInt(3, wpnr);
 			
-				//Ausführen der SQL-Anweisung
 				pstmt.execute();
+					
+				success = true;
 			}			
 			
-			success = true;
+			
 			
 			
 		} catch (SQLException sql) {
@@ -86,7 +91,6 @@ class Datenbank_Tblock_Tag {
 		} finally {
 			//Schließen der offen gebliebenen Statements & ResultSets
 			try {
-			
 				if (pstmt != null){
 					pstmt.close();
 				}			
@@ -98,6 +102,7 @@ class Datenbank_Tblock_Tag {
 		return success;
 	}
 	
+
 
 	/**
 	 * @author Anes Preljevic
@@ -172,7 +177,7 @@ class Datenbank_Tblock_Tag {
 	
 	/**
 	 * @author Thomas Friesen
-	 * @info Die Methode prüft, ob die Foreign Keys der Tabelle Ma_Schicht eingehalten werden
+	 * @info Die Methode prüft, ob die Foreign Keys der Tabelle Tblock_Tag eingehalten werden
 	 */
 	protected boolean checkTblock_TagFK(int tblocknr, String tbez, int wpnr,Connection con) {
 		
@@ -182,17 +187,21 @@ class Datenbank_Tblock_Tag {
 		String sqlQuery[] = new String[2];
 		sqlQuery[0] = "select tblocknr from TerminBlockierung where tblocknr = "+ tblocknr ;
 		sqlQuery[1] = "select tbez, wpnr from Tag where tbez = '" + tbez + "' and wpnr =" + wpnr;
-		
+		boolean checktblocknr =false;
+		boolean checktag = false;
 		
 	
 		try {
 			//Erstellen der Statement- und Resultsetobjekte
-			for (int i=0; i<=1;i++){
+			for (int i=0; i< 2;i++){
 				stmt[i] = con.createStatement();
 				rs[i] = stmt[i].executeQuery(sqlQuery[i]);
 			}
-			//Prüfung, ob alle FK-COnstraints eingehalten werden
-			if ((rs[0].next()) == true && (rs[1].next())== true){
+			checktblocknr = rs[0].next();
+			checktag = rs[1].next();
+			
+			//Prüfung, ob alle FK-Constraints eingehalten werden
+			if (checktblocknr == true & checktag == true){
 				result = true;
 			}else{
 				result = false;
@@ -219,8 +228,8 @@ class Datenbank_Tblock_Tag {
 			
 		}
 		return result;
+		
 	}
-
 	/**
 	 * @author Anes Preljevic
 	 * @info Auslesen aller Beziehungen von TerminBlockierungen zu Tagen  aus der Datenbank und erzeugen von Tblock_Tag Objekten.
