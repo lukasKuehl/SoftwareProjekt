@@ -71,10 +71,8 @@ class SchichtStrg {
 				//Prüfe, ob der Mitarbeiter im System vorhanden ist und somit eingeteilt werden kann
 				if(this.myModel.getMitarbeiter(s) != null){							
 					//Teile den Mitarbeiter in die gewünschte Schicht ein
-					this.myModel.addMa_Schicht(new Ma_Schicht(s, schichtNr));	
-					System.out.println("Eintrag hinzugefügt");
-				}
-				
+					this.myModel.addMa_Schicht(new Ma_Schicht(s, schichtNr));
+				}				
 			}		
 		}
 		
@@ -367,7 +365,9 @@ class SchichtStrg {
 			
 			
 		}catch(Exception e){
-			System.out.println("Fehler beim Bestimmen der Dauer von der Schicht: " + s.getSchichtnr());
+			
+			String fehler = "Fehler beim Bestimmen der Dauer von der Schicht: " + s.getSchichtnr() + "\n" + e.getMessage();
+			myController.printErrorMessage(fehler);				
 		}			
 		
 		return dauer;

@@ -300,7 +300,7 @@ class TerminStrg {
 		
 		//Übertrage die Termine im Format Terminbezeichnung - KW - Anfangstag - Endtag - Anfangsuhrzeit-Enduhrzeit in die RückgabeListe
 		for(TerminBlockierung tb : mitarbeiterTermine){
-			String temp = tb.getBbez() + " - KW" + mitarbeiterTerminZuordnungen.get(tb.getTblocknr()) + " - ";
+			String temp = tb.getTblocknr() + " - KW" + mitarbeiterTerminZuordnungen.get(tb.getTblocknr()) + " - ";
 			
 			//Falls es sich um einen eintägigen Termin handelt, wird der Anfangs- und Endtag zusammengefasst
 			if(tb.getAnfangzeitraum().equals(tb.getEndezeitraum())){
