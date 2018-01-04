@@ -311,13 +311,13 @@ public class KasseWochenView  {
 		tbleWochenplan.setSize(tbleWochenplan.getPreferredSize());
 		tbleWochenplan.setPreferredScrollableViewportSize(tbleWochenplan.getPreferredScrollableViewportSize());
 		tbleWochenplan.setFillsViewportHeight(true);
-		jsp = new JScrollPane(tbleWochenplan);	
+		jsp = new JScrollPane(tbleWochenplan);
 		jsp.setBounds(24, 81, 1439, 676);
 		System.out.println(currentKW);
 		frame.getContentPane().add(jsp);
 		
+		
 	}
-	
 	
 	
 }

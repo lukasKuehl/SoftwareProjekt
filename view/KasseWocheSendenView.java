@@ -108,8 +108,6 @@ public class KasseWocheSendenView extends JFrame {
 						}
 						
 					} else {
-						//Fehlermeldung überflüssig --> Benutzer hat abgebrochen
-						
 						
 					}
 				}
