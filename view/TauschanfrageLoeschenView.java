@@ -72,21 +72,17 @@ class TauschanfrageLoeschenView extends JFrame {
 		tl = myController.getTauschanfragen(myView.getUsername());
 		modelTauschanfrage = new DefaultListModel<String>();
 		for (String m : tl) {
-			String s = m;
-			String [] temp = m.split("->");
-			String sender =temp[0] ;
-			String empfaenger = temp [1];
-			modelTauschanfrage.addElement(sender + "\n" + empfaenger);
+			modelTauschanfrage.addElement(m);
 	
 		}
 		listTauschanfragen.setModel(modelTauschanfrage);
 		listTauschanfragen.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		listTauschanfragen.setBounds(62, 161, 831, 333);
+		listTauschanfragen.setBounds(62, 161, 860, 333);
 		panelTauschanfrage.add(listTauschanfragen);
 
 		btnBestaetigen = new JButton("Bestätigen");
 		btnBestaetigen.setFont(new Font("Verdana", Font.PLAIN, 15));
-		btnBestaetigen.setBounds(773, 515, 120, 25);
+		btnBestaetigen.setBounds(802, 531, 120, 25);
 		panelTauschanfrage.add(btnBestaetigen);
 		
 		JLabel label = new JLabel("Bitte ausw\u00E4hlen:");
@@ -117,26 +113,12 @@ class TauschanfrageLoeschenView extends JFrame {
 								JOptionPane.YES_NO_CANCEL_OPTION);
 						// weiter bei ja
 						if (eingabe == JOptionPane.YES_OPTION) {
-							String s = listTauschanfragen.getSelectedValue().toString().trim();
+							String s = listTauschanfragen.getSelectedValue().toString();
 							String[] temp = s.split("-");
-							System.out.println(temp[0]);
-							String tauschanfrageNrS = temp[0].substring(10); // substring länge bestimmen
-							System.out.println(tauschanfrageNrS);
-							int tauschanfrageNr = Integer.parseInt(tauschanfrageNrS);
-							String senderVorname = temp[1];
-							String senderName = temp[2];
-							String senderSchichtNr = temp[3];
-							String senderWpNr = temp[4];
-							String senderTbez = temp[5];
-							String senderAnfangsuhrzeit = temp[6];
-							String senderEnduhrzeit = temp[7];
-							String empfaengerVorname = temp[8];
-							String empfaengerName = temp[9];
-							String empfaengerSchichtNr = temp[10];
-							String empfaengerWpBez = temp[11];
-							String empfaengerTagBez = temp[12];
-							String empfaengerAnfangsuhrzeit = temp[13];
-							String emfaengerEnduhrzeit = temp[14];
+							 temp[0] = temp[0].substring(10); 
+							 String tauschanfrageNrS = temp[0].trim();
+							int tauschanfrageNr = Integer.parseInt(tauschanfrageNrS);	
+							
 							// Übergabe an den Controller
 							myController.entferneTauschanfrage(tauschanfrageNr);
 							JOptionPane.showConfirmDialog(null, "Tauschanfrage erfolgreich gelöscht", "",
