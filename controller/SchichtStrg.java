@@ -38,7 +38,7 @@ class SchichtStrg {
 	 */
 	protected boolean ausfüllenSchicht(int schichtNr, String[] mitarbeiter){
 
-		boolean success = false;		
+		boolean success = false;
 		
 		//Abruf der gesamten Schichteinteilung aus der Datenbank
 		LinkedList<Ma_Schicht> einteilung= this.myModel.getMa_Schicht();
@@ -54,8 +54,7 @@ class SchichtStrg {
 		}	
 		
 		//Gehe jeden eingetragenen Mitarbeiter durch und prüfe, ob dieser schon in einer Einteilung zu dieser Schicht auftaucht. Falls nein, wird ein neuer Eintrag erstellt.
-		for(String s: mitarbeiter){	
-			
+		for(String s: mitarbeiter){			
 			boolean checkEingeteilt = true;
 			
 			for(Ma_Schicht mas: schichtEinteilung){
