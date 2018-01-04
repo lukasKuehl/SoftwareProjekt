@@ -26,30 +26,28 @@ class Datenbank_Tblock_Tag {
 	 */
 	protected boolean addTblock_Tag(Tblock_Tag tblock_tag,Connection con) {
 		boolean success = false;
-		
-		
+		int wpnr = 0;
+		int tBlockNr = 0;
+		PreparedStatement pstmt = null;
+		String tbez = null;
 		String sqlStatement;
 		sqlStatement = "insert into Tblock_Tag (tblocknr, tbez, wpnr) values(?, ?, ?)";
-		PreparedStatement pstmt = null;
-			
-		int tBlockNr = 0;
-		String tbez = null;
-		int wpnr = 0;
 		
 		
 		try {
+			//Erstellen des prepared Statements
 			pstmt = con.prepareStatement(sqlStatement);
 
-			//Auslesen der als Parameter übergebenen TerminBlockierung-Tag Beziehung
+			//Auslesen der der Paramter aus der TerminBlockierung_Tag Objekt
 			tBlockNr = tblock_tag.getTblocknr();
 			tbez = tblock_tag.getTbez();
 			wpnr = tblock_tag.getWpnr();
-
-			//Die beiden Check-Methoden können auch in eins gemacht werden oder sollten zumindestens eindeutiger benannt werden --> Abfrage der selben Tabelle
 			
+			//Prüfung des PK-Constraints
 			if (checkTblock_TagTB(tBlockNr,con)) {
 				System.out.println("Keine Beziehung von Terminblockierung zu Tagen!");
 			}
+			//Prüfung des PK-Constraints
 			if (checkTblock_TagTA(tbez,wpnr,con) == false) {
 				System.out.println("Keine Beziehung von Terminbezeichnung und Wochenplannummern zu Tagen vorhanden!");
 			}
@@ -61,11 +59,12 @@ class Datenbank_Tblock_Tag {
 			else{
 				//Es wurde sichergestellt, dass die PK- und FK-Check-Constraints nicht verletzt werden --> Der Datensatz kann erzeugt werden
 			
-				
+				//Füllen des prepared Statements
 				pstmt.setInt(1, tBlockNr);
 				pstmt.setString(2, tbez);
 				pstmt.setInt(3, wpnr);
 			
+				// Ausführen der SQL-Anweisung
 				pstmt.execute();
 					
 				success = true;
@@ -197,6 +196,7 @@ class Datenbank_Tblock_Tag {
 				stmt[i] = con.createStatement();
 				rs[i] = stmt[i].executeQuery(sqlQuery[i]);
 			}
+			//Zuweisen, der boolschen Variabeln, ob die Resultsets gefüllt sind (gefüllt = true)
 			checktblocknr = rs[0].next();
 			checktag = rs[1].next();
 			

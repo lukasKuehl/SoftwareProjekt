@@ -30,11 +30,9 @@ class Datenbank_TerminBlockierung {
 	
 	protected boolean addTerminBlockierung(TerminBlockierung terminBlockierung, int wpnr, Connection con) {
 		boolean success = false;
-	
-		
-		String sqlStatement = "insert into Terminblockierung (tblocknr, benutzername, bbez, anfangzeitraum, endezeitraum, anfanguhrzeit, endeuhrzeit, grund) values(?, ?, ?, ?, ?, ?, ?, ?)";
-		PreparedStatement pstmt = null;
 		int tBlockNr = 0;
+		PreparedStatement pstmt = null;
+		Datenbank_Tblock_Tag dtblocktag = new Datenbank_Tblock_Tag();
 		String benutzername = null;
 		String bbez = null;
 		String anfangzeitraum = null;
@@ -42,13 +40,14 @@ class Datenbank_TerminBlockierung {
 		String anfanguhrzeit = null;
 		String endeuhrzeit = null;
 		String grund = null;
-		
+		String sqlStatement = "insert into Terminblockierung (tblocknr, benutzername, bbez, anfangzeitraum, endezeitraum, anfanguhrzeit, endeuhrzeit, grund) values(?, ?, ?, ?, ?, ?, ?, ?)";
 		
 		
 		try {
+			//Erstellen eines prepared Statement
 			pstmt = con.prepareStatement(sqlStatement);
 
-			
+			//Auslesen der Parameter aus dem TerminBlockierung-Objekt
 			tBlockNr = terminBlockierung.getTblocknr();
 			benutzername = terminBlockierung.getBenutzername();	
 			bbez = terminBlockierung.getBbez();
@@ -58,13 +57,15 @@ class Datenbank_TerminBlockierung {
 			endeuhrzeit = terminBlockierung.getEndeuhrzeit();
 			grund = terminBlockierung.getGrund();
 			
-
+			// Einstellung, welche verhindert, dass nach jeder SQL-Anweisung automatisch commitet wird
 			con.setAutoCommit(false);
 
+			//Prüfung des PK-Constraints
 			if (checkTerminBlockierung(tBlockNr,con)) {
 				System.out.println("Der Termin wurde bereits in die TerminBlockierung-Tabelle eingetragen");
 				return false;
 			}
+			//Prüfung des FK-Constraints
 			if (checkTerminBlockierungFK(benutzername,con) == false){
 				System.out.println("Der Benutzername existiert nicht in der Mitarbeitertabelle");
 				return false;
@@ -72,7 +73,7 @@ class Datenbank_TerminBlockierung {
 			else{
 				//Es wurde sichergestellt, dass die PK- und FK-Check-Constraints nicht verletzt werden --> Der Datensatz kann erzeugt werden
 			
-				
+				//Füllen des prepared Statements
 				pstmt.setInt(1, tBlockNr);
 				pstmt.setString(2, benutzername);
 				pstmt.setString(3, bbez);
@@ -82,9 +83,10 @@ class Datenbank_TerminBlockierung {
 				pstmt.setString(7, endeuhrzeit);
 				pstmt.setString(8, grund);
 			
+				//Ausführung der SQL-Anweisung
 				pstmt.execute();
 				
-				Datenbank_Tblock_Tag dtblocktag = new Datenbank_Tblock_Tag();
+				
 				//Zuordnung einer Nummer zu jedem Tag, um zu Überprüfen, wie viele Tage in die TerminBlock_Tag Tabelle hinzugefügt werden müssen
 				TreeMap<String, Integer> reihenfolgeTag1 = new TreeMap<String, Integer>();
 				reihenfolgeTag1.put("Montag", 1);
@@ -105,15 +107,16 @@ class Datenbank_TerminBlockierung {
 				reihenfolgeTag2.put(6,"Samstag");
 				reihenfolgeTag2.put(7,"Sonntag");
 				
-				//Hinzufügen der TBlock_Tage in die TBlock_Tage Tabelle
+				//Hinzufügen der TBlock_Tage in die TBlock_Tag Tabelle
 				for (int i = reihenfolgeTag1.get(anfangzeitraum); i<= reihenfolgeTag1.get(endezeitraum);i++){
 					dtblocktag.addTblock_Tag(new Tblock_Tag(tBlockNr,reihenfolgeTag2.get(i), wpnr), con);
 				}
+				//Übertragung der gesamten TBlock_Tage und TerminBlockierungen in die Datenbank
 				con.commit();
 				success = true;
 			}			
 			
-			
+			//Einstellung des Autocommit auf den Ursprungszustand zurücksetzen
 			con.setAutoCommit(true);
 			
 			
@@ -193,11 +196,12 @@ class Datenbank_TerminBlockierung {
 		ResultSet rs = null;
 		String sqlQuery = "select benutzername from Mitarbeiter where benutzername = '"+ benutzername +"'" ;
 		
+		//Erstellen der Statement- und Resultsetobjekte
 		try {
-			
 				stmt = con.createStatement();
 				rs = stmt.executeQuery(sqlQuery);
 			
+			//Überprüfung, ob das Resultset gefüllt ist und der FK-Constraint eingehalten worden ist
 			if ((rs.next()) == true){
 				result = true;
 			}else{
@@ -210,6 +214,7 @@ class Datenbank_TerminBlockierung {
 			return false;
 			
 		} finally {
+			//Schließen der offenen Statements und Resultsets
 			try {
 					if(rs != null){
 						rs.close();
