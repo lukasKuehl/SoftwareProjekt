@@ -94,15 +94,15 @@ class TauschanfrageStrg {
 	 */
 	protected boolean akzeptiereTauschanfrage(String empfaengerName, int tauschanfrageNr){	
 		boolean success = false;
-		boolean valid = false;
+		//boolean valid = false;
 
 		
-		LinkedList<Tauschanfrage> alleTauschanfragen=this.myModel.getTauschanfragen();
-				//Tauschanfragen nach der zu Bestätigenden
-				//for(Tauschanfrage ta: alleTauschanfragen){
+		//LinkedList<Tauschanfrage> alleTauschanfragen=this.myModel.getTauschanfragen();
+		//Tauschanfragen nach der zu Bestätigenden
+			//for(Tauschanfrage ta: alleTauschanfragen){
 				//if((ta.getTauschnr() == tauschanfrageNr) && (ta.getEmpfänger().equals(empfaengerName))){
 				//	valid = true;	
-			//	}
+			//}
 			//	}
 			
 		//if(valid){
@@ -114,16 +114,18 @@ class TauschanfrageStrg {
 			String fehler = "Controller: Fehler beim Bestätigen einer Tauschanfrage:\n" + e.getMessage();
 			myController.printErrorMessage(fehler);
 		}
+		
 		success=true;
-		//}
+		return success;
+		}
 		//else{
 			
-			//String fehler = "Tauschanfrage kann nicht bestätigt werden, User ist nicht der Empfänger oder Tauschanfrage nicht vorhanden. \n";
-			//myController.printErrorMessage(fehler);			
+		//	String fehler = "Tauschanfrage kann nicht bestätigt werden, User ist nicht der Empfänger oder Tauschanfrage nicht vorhanden. \n";
+		//	myController.printErrorMessage(fehler);			
 		//}
-		return success;
+		
 	
-	}
+	
 		
 	/**
 	 * @author Lukas Kühl
