@@ -57,7 +57,7 @@ public class EinsatzplanController {
 			result = this.benutzerSteuerung.benutzerAnmelden(username, pw);
 			
 		}catch(Exception e){
-		
+			e.printStackTrace();
 			String fehler = "Fehler innerhalb des Controllers:\n" + "Fehler beim Aufruf der Methode benutzerAnmelden:\n" + e.getMessage();
 			this.printErrorMessage(fehler);					
 		}	
@@ -77,6 +77,7 @@ public class EinsatzplanController {
 			result = this.benutzerSteuerung.benutzerAbmelden(username);
 			
 		}catch(Exception e){
+			e.printStackTrace();
 			
 			String fehler = "Fehler innerhalb des Controllers:\n" + "Fehler beim Aufruf der Methode benutzerAbmelden:\n" + e.getMessage();
 			this.printErrorMessage(fehler);				
@@ -96,7 +97,7 @@ public class EinsatzplanController {
 			result = this.benutzerSteuerung.benutzerErstellen(m);
 			
 		}catch(Exception e){
-			
+			e.printStackTrace();
 			String fehler = "Fehler innerhalb des Controllers:\n" + "Fehler beim Aufruf der Methode benutzerErstellen:\n" + e.getMessage();
 			this.printErrorMessage(fehler);					
 		}	
@@ -115,7 +116,7 @@ public class EinsatzplanController {
 			result = this.benutzerSteuerung.benutzerEntfernen(username);
 			
 		}catch(Exception e){
-		
+			e.printStackTrace();
 			String fehler = "Fehler innerhalb des Controllers:\n" + "Fehler beim Aufruf der Methode benutzerEntfernen:\n" + e.getMessage();
 			this.printErrorMessage(fehler);	
 			
@@ -135,7 +136,7 @@ public class EinsatzplanController {
 			result = this.benutzerSteuerung.benutzerRechteÄndern(username);
 			
 		}catch(Exception e){			
-
+			e.printStackTrace();
 			String fehler = "Fehler innerhalb des Controllers:\n" + "Fehler beim Aufruf der Methode benutzerRechteWechsel:\n" + e.getMessage();
 			this.printErrorMessage(fehler);					
 		}	
@@ -154,7 +155,7 @@ public class EinsatzplanController {
 			result = this.schichtSteuerung.ausfüllenSchicht(schichtNr, mitarbeiternamen);
 			
 		}catch(Exception e){
-			
+			e.printStackTrace();
 			String fehler = "Fehler innerhalb des Controllers:\n" + "Fehler beim Aufruf der Methode fülleSchicht:\n" + e.getMessage();
 			this.printErrorMessage(fehler);					
 		}	
@@ -174,7 +175,7 @@ public class EinsatzplanController {
 			result = this.tauschanfrageSteuerung.erstelleTauschanfrage(senderName, senderSchichtNr, empfaengerName, empfaengerSchichtNr);
 			
 		}catch(Exception e){			
-			
+			e.printStackTrace();
 			String fehler = "Fehler innerhalb des Controllers:\n" + "Fehler beim Aufruf der Methode erstelleTauschanfrage:\n" + e.getMessage();
 			this.printErrorMessage(fehler);						
 		}	
@@ -194,7 +195,7 @@ public class EinsatzplanController {
 			result = this.tauschanfrageSteuerung.entferneTauschanfrage(tauschanfrageNr);
 			
 		}catch(Exception e){			
-
+			e.printStackTrace();
 			String fehler = "Fehler innerhalb des Controllers:\n" + "Fehler beim Aufruf der Methode entferneTauschanfrage:\n" + e.getMessage();
 			this.printErrorMessage(fehler);					
 		}	
@@ -213,7 +214,7 @@ public class EinsatzplanController {
 			result = this.tauschanfrageSteuerung.akzeptiereTauschanfrage(empfaengerName, tauschanfrageNr);
 			
 		}catch(Exception e){			
-					
+			e.printStackTrace();
 			String fehler = "Fehler innerhalb des Controllers:\n" + "Fehler beim Aufruf der Methode akzeptiereTauschanfrage:\n" + e.getMessage();
 			this.printErrorMessage(fehler);							
 		}	
@@ -232,7 +233,7 @@ public class EinsatzplanController {
 			result = this.terminSteuerung.erstelleTermin(username, bez, zeitraum, grund);
 			
 		}catch(Exception e){			
-
+			e.printStackTrace();
 			String fehler = "Fehler innerhalb des Controllers:\n" + "Fehler beim Aufruf der Methode erstelleTermin:\n" + e.getMessage();
 			this.printErrorMessage(fehler);					
 		}	
@@ -251,7 +252,7 @@ public class EinsatzplanController {
 			result = this.terminSteuerung.entferneTermin(tblocknr, username);
 			
 		}catch(Exception e){			
-
+			e.printStackTrace();
 			String fehler = "Fehler innerhalb des Controllers:\n" + "Fehler beim Aufruf der Methode entferneTermin:\n" + e.getMessage();
 			this.printErrorMessage(fehler);					
 		}	
@@ -270,7 +271,7 @@ public class EinsatzplanController {
 			result = this.wochenplanSteuerung.generiereWochenplanView(wpbez);
 			
 		}catch(Exception e){
-			
+			e.printStackTrace();
 			String fehler = "Fehler innerhalb des Controllers:\n" + "Fehler beim Aufruf der Methode generiereWochenplanView:\n" + e.getMessage();
 			this.printErrorMessage(fehler);						
 		}	
@@ -289,7 +290,7 @@ public class EinsatzplanController {
 			success = this.wochenplanSteuerung.erstelleWochenplanCustom(username, wpbez, zeiten, besetzung);
 			
 		}catch(Exception e){
-			
+			e.printStackTrace();
 			String fehler = "Fehler innerhalb des Controllers:\n" + "Fehler beim Aufruf der Methode erstelleWochenplanCustom:\n" + e.getMessage();
 			this.printErrorMessage(fehler);				
 		}	
@@ -308,7 +309,7 @@ public class EinsatzplanController {
 			success = this.wochenplanSteuerung.erstelleWochenplanStandard(username, wpbez);
 			
 		}catch(Exception e){
-			
+			e.printStackTrace();
 			String fehler = "Fehler innerhalb des Controllers:\n" + "Fehler beim Aufruf der Methode erstelleWochenplanStandard:\n" + e.getMessage();
 			this.printErrorMessage(fehler);					
 		}	
@@ -327,7 +328,7 @@ public class EinsatzplanController {
 			result = this.wochenplanSteuerung.publishWochenplan(username, wpbez);
 			
 		}catch(Exception e){			
-			
+			e.printStackTrace();
 			String fehler = "Fehler innerhalb des Controllers:\n" + "Fehler beim Aufruf der Methode publishWochenplan:\n" + e.getMessage();
 			this.printErrorMessage(fehler);						
 		}	
@@ -346,7 +347,7 @@ public class EinsatzplanController {
 			result = this.wochenplanSteuerung.entferneWochenplan(username, wpbez);
 			
 		}catch(Exception e){
-			
+			e.printStackTrace();
 			String fehler = "Fehler innerhalb des Controllers:\n" + "Fehler beim Aufruf der Methode entferneWochenplan:\n" + e.getMessage();
 			this.printErrorMessage(fehler);					
 		}	
@@ -365,7 +366,7 @@ public class EinsatzplanController {
 			result = this.wochenplanSteuerung.verschickeWochenplan(username, wpbez, wochenplan, wochenplan.getTableHeader());
 			
 		}catch(Exception e){
-			
+			e.printStackTrace();
 			String fehler = "Fehler innerhalb des Controllers:\n" + "Fehler beim Aufruf der Methode verschickeWochenplan:\n" + e.getMessage();
 			this.printErrorMessage(fehler);						
 		}	
@@ -382,7 +383,7 @@ public class EinsatzplanController {
 		try{
 			rueckgabe = this.terminSteuerung.getAlleTermine(username);
 		}catch(Exception e){
-			
+			e.printStackTrace();
 			String fehler = "Fehler innerhalb des Controllers:\n" + "Fehler beim Aufruf der Methode getAlleTermine:\n" + e.getMessage();
 			this.printErrorMessage(fehler);						
 		}	
@@ -398,7 +399,7 @@ public class EinsatzplanController {
 		try{
 			rueckgabe = this.terminSteuerung.getMitarbeiterTermine(username);
 		}catch(Exception e){
-			
+			e.printStackTrace();
 			String fehler = "Fehler innerhalb des Controllers:\n" + "Fehler beim Aufruf der Methode getMitarbeiterTermine:\n" + e.getMessage();
 			this.printErrorMessage(fehler);						
 		}	
@@ -414,7 +415,7 @@ public class EinsatzplanController {
 		try{
 			rueckgabe = this.wochenplanSteuerung.getTage(wpbez);
 		}catch(Exception e){
-			
+			e.printStackTrace();
 			String fehler = "Fehler innerhalb des Controllers:\n" + "Fehler beim Aufruf der Methode getTage:\n" + e.getMessage();
 			this.printErrorMessage(fehler);							
 		}	
@@ -430,7 +431,7 @@ public class EinsatzplanController {
 		try{
 			rueckgabe = this.schichtSteuerung.getMitarbeiterSchichten(wpbez, tagbez, username);
 		}catch(Exception e){		
-			
+			e.printStackTrace();
 			String fehler = "Fehler innerhalb des Controllers:\n" + "Fehler beim Aufruf der Methode getMitarbeiterSchichten:\n" + e.getMessage();
 			this.printErrorMessage(fehler);						
 		}	
@@ -446,7 +447,7 @@ public class EinsatzplanController {
 		try{
 			rueckgabe = this.schichtSteuerung.getAndereMitarbeiterSchichten(wpbez, username, schichtNr);
 		}catch(Exception e){
-			
+			e.printStackTrace();
 			String fehler = "Fehler innerhalb des Controllers:\n" + "Fehler beim Aufruf der Methode getAndereMitarbeiterSchichten:\n" + e.getMessage();
 			this.printErrorMessage(fehler);				
 		}	
@@ -462,7 +463,7 @@ public class EinsatzplanController {
 		try{
 			rueckgabe = this.wochenplanSteuerung.getWochenplaene();
 		}catch(Exception e){
-			
+			e.printStackTrace();
 			String fehler = "Fehler innerhalb des Controllers:\n" + "Fehler beim Aufruf der Methode getWochenplaene:\n" + e.getMessage();
 			this.printErrorMessage(fehler);						
 		}	
@@ -480,7 +481,7 @@ public class EinsatzplanController {
 		try{
 			rueckgabe = this.schichtSteuerung.getTagesSchichten(wpbez, tagBez);
 		}catch(Exception e){
-			
+			e.printStackTrace();
 			String fehler = "Fehler innerhalb des Controllers:\n" + "Fehler beim Aufruf der Methode getTagesSchichten:\n" + e.getMessage();
 			this.printErrorMessage(fehler);							
 		}	
@@ -498,7 +499,7 @@ public class EinsatzplanController {
 		try{
 			rueckgabe = this.tauschanfrageSteuerung.getTauschanfragen(username);
 		}catch(Exception e){			
-
+			e.printStackTrace();
 			String fehler = "Fehler innerhalb des Controllers:\n" + "Fehler beim Aufruf der Methode getTauschanfragen:\n" + e.getMessage();
 			this.printErrorMessage(fehler);					
 		}	
@@ -516,7 +517,7 @@ public class EinsatzplanController {
 		try{
 			rueckgabe = this.schichtSteuerung.getVerfügbareMitarbeiter(schichtNr);
 		}catch(Exception e){
-			
+			e.printStackTrace();
 			String fehler = "Fehler innerhalb des Controllers:\n" + "Fehler beim Aufruf der Methode getVerfuegbareMitarbeiter:\n" + e.getMessage();
 			this.printErrorMessage(fehler);				
 		}	
