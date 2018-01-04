@@ -568,11 +568,13 @@ public boolean checkWochenplanFK(String benutzername) {
 		boolean result =false;
 		try{
 			result = this.dataTauschanfrage.checkTauschanfrageFK(senderName,senderSchichtNr,empfaengerName,empfaengerSchichtNr,con);
+			result = true;
 			
 		}catch(Exception e){
 			System.out.println("Fehler innerhalb des Modells:");
 			System.out.println("Fehler beim Aufruf der Methode checkTauschanfrage:");
-			e.printStackTrace();	
+			e.printStackTrace();
+			return false;
 		}
 		return result;
 	}
