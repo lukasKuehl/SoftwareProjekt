@@ -1,7 +1,8 @@
-package model;
+package data;
 import java.sql.*;
 import java.util.LinkedList;
 import data.*;
+import model.Einsatzplanmodel;
 
 //Testklasse --> Sollte nur zum Ausprobieren verwendet werden und muss später gelöscht werden
 
