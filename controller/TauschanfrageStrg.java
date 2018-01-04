@@ -23,7 +23,7 @@ class TauschanfrageStrg {
 	private JDialog myDialog = null;	
 	
 	/**
-	 * @author Lukas
+	 * @author Lukas Kühl
 	 * @info Erzeugen eines Objektes der Klasse TauschanfrageStrg. Setzen des allgemeinen EinsatzplanControllers als Parent. Die Variable myDialog wird erst bei jedem Methodenaufruf neu erzeugt und wird deshalb später zugewiesen.
 	 */
 	protected TauschanfrageStrg(EinsatzplanController myController, Einsatzplanmodel myModel){
@@ -50,7 +50,7 @@ class TauschanfrageStrg {
 		if(senderSchicht!=null && empfaengerSchicht!=null && sender!=null && empfaenger!=null){
 			valid=true;
 			for(Tauschanfrage ta: alleTauschanfragen){
-				if(ta.getEmpfänger()==empfaengerName && ta.getSender()==senderName && ta.getSchichtnrempfänger()==empfaengerSchichtNr && ta.getSchichtnrsender()==senderSchichtNr){
+				if(ta.getEmpfänger().equals(empfaengerName) && ta.getSender().equals(senderName) && ta.getSchichtnrempfänger()==empfaengerSchichtNr && ta.getSchichtnrsender()==senderSchichtNr){
 					valid=false;
 				}
 			}

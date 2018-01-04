@@ -156,7 +156,7 @@ class TerminStrg {
 			//Prüfe, ob die Daten in der richtigen Reihenfolge sind(Anfangszeit darf nicht hinter der Endzeit liegen)
 			if(anfangsUhrzeitDate.before(endUhrzeitDate) || anfangsUhrzeitDate.equals(endUhrzeitDate)){
 				
-				int newTbNr = this.myModel.getNewTblocknr();				
+				int newTbNr = this.myModel.getNewTblocknr();		
 				
 				//Erstelle eine neue TerminBlockierung und füge diese in die Datenbank ein
 				TerminBlockierung tb = new TerminBlockierung(newTbNr, username, bez, zeitraum.get("anfZeitraumTag"), zeitraum.get("endZeitraumTag"), anfangsUhrzeit, endUhrzeit, grund);
