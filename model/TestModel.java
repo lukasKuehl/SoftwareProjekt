@@ -130,23 +130,23 @@ public class TestModel {
 		for(Schicht scht:sch){
 			
 			System.out.println( scht.getAnfanguhrzeit() + "  " + scht.getEndeuhrzeit()+ "   " + scht.getSchichtnr());
-			LinkedList<Ma_Schicht> masch=scht.getLl_maschicht();
+			//LinkedList<Mitarbeiter> masch=scht.getLl_mitarbeiter();
 			
-			for(Ma_Schicht sch1:masch){
+			//for(Mitarbeiter sch1:masch){
 				
-				System.out.println( sch1.getSchichtnr()+" "+ sch1.getBenutzername());
+				//System.out.println( sch1.getEmail()+" "+ sch1.getBenutzername());
 			
-			}
+			//}
 		}
 		Schicht schicht0 =wps.getSchicht(ss);
 		System.out.println( schicht0.getAnfanguhrzeit() + "  " + schicht0.getEndeuhrzeit()+ "   " + schicht0.getSchichtnr());
-		LinkedList<Ma_Schicht> masch22=schicht0.getLl_maschicht();
+		//LinkedList<Mitarbeiter> masch22=schicht0.getLl_mitarbeiter();
 		
-		for(Ma_Schicht sch1:masch22){
+		//for(Mitarbeiter sch1:masch22){
 			
-			System.out.println( sch1.getSchichtnr()+" "+ sch1.getBenutzername());
+			//System.out.println( sch1.getEmail()+" "+ sch1.getBenutzername());
 		
-		}
+		//}
 		boolean test22 = wps.checkSchicht(ss);
 		if(test22==true){
 			System.out.println("success");
@@ -227,36 +227,24 @@ public class TestModel {
 			
 			System.out.println( tausch.getTauschnr() + "  " + tausch.getSender()+ "  " + tausch.getEmpfänger());
 			
-			LinkedList<Mitarbeiter> masend=tausch.getLl_Sender();
-			
-			for(Mitarbeiter masender:masend){
-				
+			Mitarbeiter masender=tausch.getMaSender();
+
 				System.out.println( masender.getEmail() + "  " + masender.getPasswort()+ "   " + masender.getBenutzername()
 				+ "  " + masender.getJob()+ "  " + masender.getMaxstunden());
 			
-			}
-			LinkedList<Mitarbeiter> masempf=tausch.getLl_Empfänger();
+			Mitarbeiter maempf=tausch.getMaEmpfänger();
+
+				System.out.println( maempf.getEmail() + "  " + maempf.getPasswort()+ "   " + maempf.getBenutzername()
+				+ "  " + maempf.getJob()+ "  " + maempf.getMaxstunden());
 			
-			for(Mitarbeiter masender:masempf){
-				
-				System.out.println( masender.getEmail() + "  " + masender.getPasswort()+ "   " + masender.getBenutzername()
-				+ "  " + masender.getJob()+ "  " + masender.getMaxstunden());
-			
-			}
-			LinkedList<Schicht> schichtsend=tausch.getLl_Schichtsender();
-			
-			for(Schicht scht:schichtsend){
-				
+		
+				Schicht scht=tausch.getSchtSchichtsender();
+
 				System.out.println(scht.getAnfanguhrzeit() + "  " + scht.getEndeuhrzeit()+ "   " + scht.getSchichtnr());
 			
-			}
-			LinkedList<Schicht> schichtempf=tausch.getLl_Schichtempfänger();
-			
-			for(Schicht scht:schichtempf){
-				
-				System.out.println(scht.getAnfanguhrzeit() + "  " + scht.getEndeuhrzeit()+ "   " + scht.getSchichtnr());
-			
-			}
+				Schicht scht1=tausch.getSchtSchichtempfänger();
+
+				System.out.println(scht1.getAnfanguhrzeit() + "  " + scht1.getEndeuhrzeit()+ "   " + scht1.getSchichtnr());
 		
 		}
 		int tauschnr223=100000;

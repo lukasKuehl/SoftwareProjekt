@@ -14,12 +14,10 @@ import data.Mitarbeiter;
  * @info Die Klasse dient dazu, jegliche Abfragen und Änderung in der Datenbank im Bezug auf die Tabelle Mitarbeiter zu verarbeiten.
  */
 
-//Bei fast allen Methoden fehlen Kommentare zu den einzelnen Anweisungen
-
-//Bei vielen Mehtoden von Anes fehlen die finally-Blöcke
 
 class Datenbank_Mitarbeiter {
-	
+
+
 	/**
 	 * @Thomas Friesen
 	 * @info Die Methode fügt einen Mitarbeiter in die Datenbank hinein
@@ -122,41 +120,49 @@ class Datenbank_Mitarbeiter {
 	 * Diese werden in eine LinkedList abgelegt und ausgegeben.
 	 */
 	protected LinkedList<Mitarbeiter> getAlleMitarbeiter(Connection con) {
-
+		Datenbank_Mitarbeiter mitarbeiter=new Datenbank_Mitarbeiter();
 		Statement stmt = null;
 		ResultSet rs = null;
 
-		//Select * hat den selben Effekt --> übersichtlicher
-		String sqlStatement = "select Benutzername, Passwort, Job, Vorname, Name, Maxstunden, Whname, Email  from Mitarbeiter";
+		//Benötigten Sql-Befehlt speichern
+		String sqlStatement = "select benutzername from Mitarbeiter";
 
 		try {
-			//zusätzliche Anweisungen für das Statement werden nie verwendet!
-			stmt = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			//Statement/Resultset wird erstellt, der Sql-Befehl wird ausgeführt und im Resultset gespeichert
+			stmt = con.createStatement();
 			rs = stmt.executeQuery(sqlStatement);
 
 			LinkedList<Mitarbeiter> mitarbeiterList = new LinkedList<>();
 
+			// Solange es einen "nächsten" Datensatz in dem Resultset gibt, mit den Daten des RS 
+			// ein neues Mitarbeiter-Objekt erzeugen. Dieses wird anschließend der Liste hinzugefügt.
 			while (rs.next()) {
 				
-				//Erzeugen eines neuen Mitarbeiter-Objektes überflüssig --> getMitarbeiter(benutzername, con) hat den selben Effekt und ist kürzer
-				Mitarbeiter m = new Mitarbeiter(rs.getString("Benutzername"), rs.getString("Passwort"),
-						rs.getString("Job"), rs.getString("Vorname"), rs.getString("Name"),
-						rs.getInt("Maxstunden"),rs.getString("Whname"),rs.getString("Email"));
+				Mitarbeiter m =mitarbeiter.getMitarbeiter(rs.getString("Benutzername"),con); 
 
 				mitarbeiterList.add(m);
 			}
 
-			rs.close();
-			stmt.close();
 
+			//Liste mit Mitarbeiter-Objekten zurückgeben
 			return mitarbeiterList;
 
 		} catch (SQLException sql) {
+			//Fehlerhandling, Ausgaben zur Ursachensuche und Rückgabewert auf null setzen
 			System.err.println("Methode getAlleMitarbeiter SQL-Fehler: " + sql.getMessage());
 			return null;
+		}finally {
+			//Schließen der offen gebliebenen Statements und Resultsets
+			try {
+				if (rs != null)
+					rs.close();
+				if (stmt != null)
+					stmt.close();
+			} catch (SQLException e) {
+				System.err.println("Methode getAlleMitarbeiter (finally) SQL-Fehler: " + e.getMessage());
+			}
 		}
-		
-		//Finally-Block fehlt!
+
 	}
 	/**
 	 * @author Anes Preljevic
@@ -167,17 +173,22 @@ class Datenbank_Mitarbeiter {
 	protected boolean checkMitarbeiter(String benutzername,Connection con) {
 		Statement stmt = null;
 		ResultSet rs = null;
+		//Benötigten Sql-Befehlt speichern
 		String sqlQuery = "select Benutzername from Mitarbeiter where benutzername = '"+benutzername+"'";
 
 		try {
+			//Statement, Resultset wird erstellt und Sql-Befehl wird ausgeführt, anschließend wird der 
+			//nächste Datensatz aus dem Resultset ausgegeben
 			stmt = con.createStatement();
 			rs = stmt.executeQuery(sqlQuery);
 			return rs.next();
 
 		} catch (SQLException sql) {
+			//Fehlerhandling, Ausgaben zur Ursachensuche und Rückgabewert auf false setzen
 			System.err.println("Methode checkMitarbeiter SQL-Fehler: " + sql.getMessage());
 			return false;
 		} finally {
+			//Schließen der offen gebliebenen Resultsets und Statements
 			try {
 				if (rs != null)
 					rs.close();
@@ -239,28 +250,32 @@ class Datenbank_Mitarbeiter {
 	}
 
 	
+
 	
+
 	/**
 	 * @author Anes Preljevic
 	 * @info Auslesen eines bestimmten Mitarbeiters aus der Datenbank und erzeugen eines Mitarbeiter Objektes,
 	 * welches anschließend ausgegeben wird.
 	 */
 	public Mitarbeiter getMitarbeiter(String benutzername, Connection con) {
+		//Prüfen ob der Mitarbeiter vorhanden ist
 		if (!checkMitarbeiter(benutzername, con)){
 			return null;
 		}
 		else{
 		Statement stmt = null;
 		ResultSet rs = null;
-
-		String sqlStatement = "select Benutzername, Passwort, Job, Vorname, Name, Maxstunden, Whname,Email  from Mitarbeiter where benutzername='"+benutzername+"'";
+		//Benötigten Sql-Befehlt speichern
+		String sqlStatement = "select * from Mitarbeiter where benutzername='"+benutzername+"'";
 
 		try {
-			//siehe oben
-			stmt = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			//Statement/Resultset wird erstellt, der Sql-Befehl wird ausgeführt und im Resultset gespeichert
+			stmt = con.createStatement();
 			rs = stmt.executeQuery(sqlStatement);
 
-			
+			//Auch wenn es voraussichtlich nur einen Datensatz gibt, den nächsten Datensatz abrufen,
+			//um 100% sicherheit zu haben
 				rs.next();
 			
 				Mitarbeiter m = new Mitarbeiter(rs.getString("Benutzername"),
@@ -269,66 +284,82 @@ class Datenbank_Mitarbeiter {
 						rs.getString("Whname"), rs.getString("Email"));
 
 
-			rs.close();
-			stmt.close();
-
+				//Mitarbeiter-Objekt zurückgeben
 			return m;
 
 		} catch (SQLException sql) {
+			//Fehlerhandling, Ausgaben zur Ursachensuche und Rückgabewert auf null setzen
 			System.err.println("Methode getMitarbeiter SQL-Fehler: " + sql.getMessage());
 			return null;
 		}finally {
+			//Schließen der offen gebliebenen Resultsets und Statements
 			try {
 				if (rs != null)
 					rs.close();
 				if (stmt != null)
 					stmt.close();
 			} catch (SQLException e) {
-				System.err.println("Methode deleteTblock_Tag (finally) SQL-Fehler: " + e.getMessage());
+				System.err.println("Methode getMitarbeiter (finally) SQL-Fehler: " + e.getMessage());
 			}
 		}
-		//Finally-Block fehlt!
+		
 	}
 	}
+	
+	/**
+	 * @author Anes Preljevic
+	 * @info Wechselt die Benutzerrolle eines Mitarbeiters der Job verändert wird.
+	 * 	Kassenbüro steht für die Admin Benutzerrolle und Kassierer für Mitarbeiter.
+	 */
 		protected void wechselBenutzerrolle(String benutzername, Connection con) {
 
-			Datenbank_Mitarbeiter ma = new Datenbank_Mitarbeiter();
-			Mitarbeiter m = ma.getMitarbeiter(benutzername,con);
+			Datenbank_Mitarbeiter mitarbeiter=new Datenbank_Mitarbeiter();
+			Mitarbeiter m = mitarbeiter.getMitarbeiter(benutzername,con);
 			Statement stmt = null;
-			String sqlStatement1;
-			String sqlStatement2;
+			String sqlStatement=null;
+			
 
 
 			try {
+				//Wenn aus der vorherigen Verbindung das AutoCommit noch auf true ist, auf false setzen
 				stmt = con.createStatement();
-				
-				//siehe oben!
-				con.setAutoCommit(false);
-				
-				//m könnte auch null sein --> Überprüfung notwendig!
+				if(con.getAutoCommit()!= false);
+				{
+					con.setAutoCommit(false);
+				}
+				//Wenn der Mitarbeiter existiert wechsel fortsetzen
+				if(m!=null){
+					
+				// Wenn der Job des Mitarbeiters Kassierer oder Information ist, wird dieser auf Kassenbüro gesetzt.
+				// Da dieser über die Benutzerrolle Admin verfügt und nicht Mitarbeiter.
+				// Trifft dieser Fall nicht ein wird der Job auf Kassierer gesetzt und die Rolle ändert sich
+				// von Admin auf Mitarbeiter.
 				if(m.getJob().equalsIgnoreCase("Kassierer")|| m.getJob().equalsIgnoreCase("Information")){
-					sqlStatement1 = "UPDATE Mitarbeiter SET Job = 'Kassenbüro' WHERE benutzername='"+benutzername+"'";
-				stmt.execute(sqlStatement1);
+					sqlStatement = "UPDATE Mitarbeiter SET Job = 'Kassenbüro' WHERE benutzername='"+benutzername+"'";
+				stmt.execute(sqlStatement);
 				}
 					else{
-						sqlStatement2="UPDATE Mitarbeiter SET Job = 'Kassierer' WHERE benutzername='"+benutzername+"'";
-						stmt.execute(sqlStatement2);
+						sqlStatement="UPDATE Mitarbeiter SET Job = 'Kassierer' WHERE benutzername='"+benutzername+"'";
+						stmt.execute(sqlStatement);
 					}	
 					
+				}
 
-				
+				//Connection Zustand bestätigen und somit fest in die Datenbank schreiben
 				con.commit();
-				con.setAutoCommit(true);
+				
 
 			} catch (SQLException sql) {
 				System.err.println("Methode wechselBenutzerrolle SQL-Fehler: " + sql.getMessage());
 				try {
+					//Zurücksetzen des Connection Zustandes auf den Ursprungszustand
 					con.rollback();
-					con.setAutoCommit(true);
+					
 				} catch (SQLException sqlRollback) {
 					System.err.println("Methode wechselBenutzerrolle " + "- Rollback -  SQL-Fehler: " + sqlRollback.getMessage());
 				}
 			} finally {
+				//Schließen der offen gebliebenen Statements
 				try {
 					if (stmt != null)
 						stmt.close();
@@ -339,38 +370,42 @@ class Datenbank_Mitarbeiter {
 		}
 		/**
 		 * @author Anes Preljevic
-		 * @info Löschen eines Wochenplans mit zugehörigen Tagen (schichten)  aus den Datenbank Tabellen 
-		 * Wochenplan, Tag, Schicht, Ma-Schicht ( Schicht und Ma-Schicht werden über die Tag/Schicht - deleteMethode gelöscht).
+		 * @info Löschen eines Mitarbeiters aus der Datenbanktabelle Mitarbeiter
 		 */
 		
 		protected boolean deleteMitarbeiter(String benutzername,Connection con) {
-
+			//Überprüfen ob der zu löschende Datensatz existiert
 			if (!checkMitarbeiter(benutzername, con)){
-				//wenn es den Mitarbeiter gar nicht gibt ist doch auch alles ok --> Rückgabewert sollte true sein. False nur wenn er/sie da ist und nicht gelöscht werden kann!
-				return false;
+				return true;
 			}
 			else{
 			Statement stmt = null;
-			ResultSet rs = null;
+
+			
+			//Benötigten Sql-Befehlt speichern
 			String sqlStatement = "DELETE FROM Mitarbeiter WHERE benutzername = " + benutzername;
 	
 			
-			try {	
-				
+			try {
+				//Wenn aus der vorherigen Verbindung das AutoCommit noch auf true ist, auf false setzen
+				if(con.getAutoCommit()!= false);
+				{
+					con.setAutoCommit(false);
+				}
+				//Sql-Statement ausführen
 				stmt = con.createStatement();
 				stmt.execute(sqlStatement);
+				
+				//Connection Zustand bestätigen und somit fest in die Datenbank schreiben
 				con.commit();
 
-				//AutoCommit ist schon true --> Anweisung überflüssig
-				con.setAutoCommit(true);
 				return true;
 				}
 				catch (SQLException sql) {
 				System.err.println("Methode deleteMitarbeiter SQL-Fehler: " + sql.getMessage());
 				try {
-					
+					//Zurücksetzen des Connection Zustandes auf den Ursprungszustand
 					con.rollback();
-					con.setAutoCommit(true);
 					return false;
 				} catch (SQLException sqlRollback) {
 						System.err.println("Methode deleteMitarbeiter " + "- Rollback -  SQL-Fehler: " + sqlRollback.getMessage());
@@ -379,8 +414,7 @@ class Datenbank_Mitarbeiter {
 			} 
 				finally {
 				try {
-					if (rs != null)
-						rs.close();
+					//Schließen der offen gebliebenen Statements
 					if (stmt != null)
 						stmt.close();
 				} catch (SQLException e) {
@@ -389,5 +423,4 @@ class Datenbank_Mitarbeiter {
 				}
 			}
 		}
-
 }

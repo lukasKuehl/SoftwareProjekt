@@ -21,11 +21,7 @@ import data.Standardeinstellungen;
  * @info Die Klasse dient dazu, jegliche Abfragen und Änderung in der Datenbank im Bezug auf die Tabelle Standardeinstellungen zu verarbeiten.
  */
 
-//Finally-Block bei getStandardeinstellungen fehlt!
-
-//Kommentare innerhalb der Methoden fehlen!
-
-//Klassenname Einstellungen wäre sinnvoller, die kann man ja vielleicht später mal ändern. Die Methode Eistellungen getStandardeinstellungen() ist ja aussagekräftig genug.
+//Klassenname Einstellungen 
 class Datenbank_Standardeinstellungen {
 
 
@@ -38,17 +34,17 @@ class Datenbank_Standardeinstellungen {
 
 		Statement stmt = null;
 		ResultSet rs = null;
-		//siehe vorherige Klassen!
-		String sqlStatement = "select Öffnungszeit, Schließzeit, Hauptzeitbeginn,"
-				+ " Hauptzeitende, Mehrbesetzung,"
-				+ "Minanzinfot, Minanzinfow, Minanzkasse from Standardeinstellung";
+		//Benötigten Sql-Befehlt speichern
+		String sqlStatement = "select * from Standardeinstellung";
 
 		try {
-			stmt = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			//Statement/Resultset wird erstellt, der Sql-Befehl wird ausgeführt und im Resultset gespeichert
+			stmt = con.createStatement();
 			rs = stmt.executeQuery(sqlStatement);
 
 
-
+			//Auch wenn es voraussichtlich nur einen Datensatz gibt, den nächsten Datensatz abrufen,
+			//um 100% sicherheit zu haben
 				rs.next();
 				Standardeinstellungen s = new Standardeinstellungen
 						(rs.getTime("Öffnungszeit").toString(),rs.getTime("SchließZeit").toString(),
@@ -56,18 +52,25 @@ class Datenbank_Standardeinstellungen {
 						rs.getInt("Mehrbesetzung"),rs.getInt("Minanzinfot"),
 						rs.getInt("Minanzinfow"),rs.getInt("Minanzkasse"));
 	
-				
-
-			rs.close();
-			stmt.close();
-
+				//Standardeinstellungen-Objekt zurückgeben
 			return s;
 
 		} catch (SQLException sql) {
+			//Fehlerhandling, Ausgaben zur Ursachensuche und Rückgabewert auf null setzen
 			System.err.println("Methode getStandardeinstellungen SQL-Fehler: " + sql.getMessage());
 			return null;
+		}finally {
+			//Schließen der offen gebliebenen Resultsets und Statements
+			try {
+				if (rs != null)
+					rs.close();
+				if (stmt != null)
+					stmt.close();
+			} catch (SQLException e) {
+				System.err.println("Methode getStandardeinstellungen (finally) SQL-Fehler: " + e.getMessage());
+			}
 		}
-		//finally-Block fehlt!
+	
 	}
 
 	/**
@@ -77,7 +80,7 @@ class Datenbank_Standardeinstellungen {
 	
 	
 	protected void updateStandardeinstellungen(Standardeinstellungen standardeinstellungen,Connection con) {
-
+		//Daten aus dem Standardeinstellungen-Objekt rauslesen
 		String  öffnungszeit  = standardeinstellungen.getÖffnungszeit();
 		String  schließzeit  = standardeinstellungen.getSchließzeit();
 		String  hauptzeitbeginn  = standardeinstellungen.getHauptzeitbeginn();
@@ -87,7 +90,7 @@ class Datenbank_Standardeinstellungen {
 		int minanzinfow=standardeinstellungen.getMinanzinfow();
 		int minanzkasse=standardeinstellungen.getMinanzkasse();
 		String sqlStatement;
-
+		//Benötigten Sql-Befehlt speichern
 		sqlStatement = "UPDATE Standardeinstellungen " + "SET Öffnungszeit = ?"
 				+ "SET Schließzeit= ?"+ "SET hauptzeitbeginn = ?"+ "SET hauptzeitende = ?"
 						+ "SET mehrbsetzung = ?"+ "SET minanzinfot = ?"+ "SET minanzinfow = ?"+ "SET minanzkasse = ?";
@@ -97,9 +100,12 @@ class Datenbank_Standardeinstellungen {
 
 			pstmt = con.prepareStatement(sqlStatement);
 
-			//siehe vorherige Klassen
-			con.setAutoCommit(false);
-			
+			//Wenn aus der vorherigen Verbindung das AutoCommit noch auf true ist, auf false setzen
+			if(con.getAutoCommit()!= false);
+			{
+				con.setAutoCommit(false);
+			}
+			//Preparedstatements füllen
 			pstmt.setString(1, öffnungszeit);
 			pstmt.setString(2,schließzeit );
 			pstmt.setString(3, hauptzeitbeginn);
@@ -113,18 +119,19 @@ class Datenbank_Standardeinstellungen {
 			pstmt.execute();
 			con.commit();
 
-			con.setAutoCommit(true);
 
 		} catch (SQLException sql) {
 			System.err.println("Methode updateStandardeinstellungen SQL-Fehler: " + sql.getMessage());
 			try {
+				//Zurücksetzen des Connection Zustandes auf den Ursprungszustand
 				con.rollback();
-				con.setAutoCommit(true);
+				
 			} catch (SQLException sqlRollback) {
 				System.err.println("Methode updateStandardeinstellungen " + "- Rollback -  SQL-Fehler: " + sqlRollback.getMessage());
 			}
 		} finally {
 			try {
+				//Schließen von offen gebliebenen Preparedstatements
 				if (pstmt != null)
 					pstmt.close();
 			} catch (SQLException e) {

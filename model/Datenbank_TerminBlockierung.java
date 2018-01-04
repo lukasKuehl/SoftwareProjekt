@@ -14,10 +14,6 @@ import data.TerminBlockierung;
 
 
 
-//Kommentare innerhalb der Methoden fehlen!
-
-//Finally Blöcke fehlen oft!
-
 /**
  * @author Thomas Friesen, Anes Preljevic
  * @info Die Klasse dient dazu, jegliche Abfragen und Änderung in der Datenbank im Bezug auf die Tabelle TerminBlockierung zu verarbeiten.
@@ -132,14 +128,18 @@ class Datenbank_TerminBlockierung {
 		String sqlQuery = "select tblocknr from TerminBlockierung where tblocknr = " + tblocknr;
 
 		try {
+			//Statement, Resultset wird erstellt und Sql-Befehl wird ausgeführt, schließend wird der 
+			//nächste Datensatz aus dem Resultset ausgegeben
 			stmt = con.createStatement();
 			rs = stmt.executeQuery(sqlQuery);
 			return rs.next();
 
 		} catch (SQLException sql) {
+			//Fehlerhandling, Ausgaben zur Ursachensuche und Rückgabewert auf false setzen
 			System.err.println("Methode checkTerminBlockierung SQL-Fehler: " + sql.getMessage());
 			return false;
 		} finally {
+			//Schließen der offen gebliebenen Resultsets und Statements
 			try {
 				if (rs != null)
 					rs.close();
@@ -206,26 +206,24 @@ class Datenbank_TerminBlockierung {
 
 		Statement stmt = null;
 		ResultSet rs = null;
-
-		String sqlStatement = "select Tblocknr, Benutzername, Bbez, Anfangzeitraum, Endezeitraum,Anfanguhrzeit, Endeuhrzeit, Grund from TerminBlockierung";
+		//Benötigten Sql-Befehlt speichern
+		String sqlStatement = "select * from TerminBlockierung";
 
 		try {
+			//Statement,Resultset wird erstellt, der Sql-Befehl wird ausgeführt und im Resultset gespeichert
 			stmt = con.createStatement();
 			rs = stmt.executeQuery(sqlStatement);
 
-			//LinkedList<TerminBlockierung>()!
-			LinkedList<TerminBlockierung> terminBlockierungList = new LinkedList<>();
-			
-			//Eine Information über das Datum des Termins ist überflüssig, da wir das mit keiner anderen Sache abgleichen können, der Abgleich über Woche + Tag reicht
-			
-			//DateFormat df = new SimpleDateFormat("DD-MM-YYYY");
+			//LinkedList erstellen, in dieser werden die  TerminBlockierung-Objekte gespeichert
+			LinkedList<TerminBlockierung> terminBlockierungList = new LinkedList<TerminBlockierung>();
+			// Solange es einen "nächsten" Datensatz in dem Resultset gibt, mit den Daten des RS 
+			// ein neues TerminBlockierung-Objekt erzeugen. Dieses wird anschließend der Liste hinzugefügt.
 			while (rs.next()) {
-				//Date anfangzeitraumsql = rs.getDate("Anfangzeitraum"); 
-				//Date endezeitraumsql = rs.getDate("Endezeitraum"); 
-				//String anfangzeitraum = df.format(anfangzeitraumsql);
-				//String endezeitraum = df.format(endezeitraumsql);
+				
+				//neues TerminBLockierung-Objekt erzeugen, Daten aus dem Resultset ziehen
 				TerminBlockierung tb = new TerminBlockierung(rs.getInt("Tblocknr"),rs.getString("Benutzername"), rs.getString("Bbez"),
-						rs.getString("Anfangzeitraum"), rs.getString("Endezeitraum"), rs.getTime("Anfanguhrzeit").toString(),rs.getTime("Endeuhrzeit").toString(),rs.getString("Grund") );
+						rs.getString("Anfangzeitraum"), rs.getString("Endezeitraum"),
+						rs.getTime("Anfanguhrzeit").toString(),rs.getTime("Endeuhrzeit").toString(),rs.getString("Grund") );
 
 				terminBlockierungList.add(tb);
 			}
@@ -245,23 +243,23 @@ class Datenbank_TerminBlockierung {
 				if (stmt != null)
 					stmt.close();
 			} catch (SQLException e) {
-				System.err.println("Methode deleteTblock_Tag (finally) SQL-Fehler: " + e.getMessage());
+				System.err.println("Methode getTerminBlockierung(finally) SQL-Fehler: " + e.getMessage());
 			}
 		}
-		
-		//Finally-Block fehlt!
+
 	}
 	/**
 	 * @author Anes Preljevic
 	 * @info Löschen der TerminBlockierung aus der Tabelle TerminBlockierung in der Datenbank,
-	 * welche die übergebene Tblocknr besitzt.
+	 * welche die übergebene Tblocknr besitzt. Sowie die zugehörigen child Datensätze Tblock_Tag.
 	 */
 	protected boolean deleteTerminBlockierung(int tblocknr,Connection con) {
 		Datenbank_Tblock_Tag tblock_tag = new Datenbank_Tblock_Tag();
 		
 		Statement stmt = null;
-		ResultSet rs = null;
+	
 		String sqlQuery = "DELETE FROM TerminBlockierung WHERE Tblocknr = "+tblocknr;
+		//Löschen der child Beziehungen
 		tblock_tag.deleteTblock_Tag(tblocknr,con);
 			
 		try {
@@ -269,19 +267,13 @@ class Datenbank_TerminBlockierung {
 			stmt.execute(sqlQuery);
 			return true;
 		} catch (SQLException sql) {
-			return false;
-		} finally {
-			try {
-				if (rs != null)
-					rs.close();
-				if (stmt != null)
-					stmt.close();
-			} catch (SQLException e) {
-				System.err.println("Methode deleteTerminBlockierung(finally) SQL-Fehler: " + e.getMessage());
+				//Fehlerhandling, Ausgaben zur Ursachensuche und Rückgabewert auf false setzen
+				System.err.println("Methode deleteTerminBlockierung(finally) SQL-Fehler: " + sql.getMessage());
+				return false;
 			}finally {
 				try {
-					if (rs != null)
-						rs.close();
+					//Schließen der offen gebliebenen Statements
+
 					if (stmt != null)
 						stmt.close();
 				} catch (SQLException e) {
@@ -289,7 +281,7 @@ class Datenbank_TerminBlockierung {
 				}
 			}
 		}
-	}
+	
 	/**
 	 * @author Anes Preljevic
 	 * @info Fragt die höchste Tblocknr ab und erhöht diese um 1, sodass bei neu Erstellung
@@ -299,31 +291,35 @@ class Datenbank_TerminBlockierung {
 	protected  int getNewTblocknr(Connection con) {
 		Statement stmt = null;
 		ResultSet rs = null;
+		//Benötigten Sql-Befehlt speichern
 		String sqlQuery = "select max(tblocknr)+1 from TerminBlockierung";
 
 		try {
+			//Resultset- und Statement-Objekt erzeugen
 			stmt = con.createStatement();
 			rs = stmt.executeQuery(sqlQuery);
 			rs.next();
+			//Speichern der nächsthöheren Tblocknr in maxTblocknr
 			int maxTblocknr = rs.getInt(1);
 			rs.close();
 			stmt.close();
+			//Ausgabe der neuen Tblocknr
 			return maxTblocknr;
 		} catch (SQLException sql) {
 			System.err.println("Methode getNewTblocknr SQL-Fehler: "
 					+ sql.getMessage());
 			return -1;
 		}finally {
+			//Schließen der offen gebliebenen Resultsets und Statements
 			try {
 				if (rs != null)
 					rs.close();
 				if (stmt != null)
 					stmt.close();
 			} catch (SQLException e) {
-				System.err.println("Methode deleteTblock_Tag (finally) SQL-Fehler: " + e.getMessage());
+				System.err.println("Methode getNewTblocknr (finally) SQL-Fehler: " + e.getMessage());
 			}
 		}
-		
-		//finally Block fehlt!
+
 	}
 }

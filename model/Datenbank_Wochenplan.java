@@ -16,15 +16,15 @@ import data.Tag;
 
 import data.Wochenplan;
 
-//Kommentare innerhalb der Methode fehlen!
 
-//Finally Blöcke fehlen!
 
 /**
  * @author Thomas Friesen, Anes Preljevic
  * @info Die Klasse dient dazu, jegliche Abfragen und Änderung in der Datenbank im Bezug auf die Tabelle Wochenplan zu verarbeiten.
  */
 class Datenbank_Wochenplan {
+	//Initialisierung der Instanzvariablen
+
 
 	/**
 	 * @Thomas Friesen
@@ -147,23 +147,27 @@ class Datenbank_Wochenplan {
 	/**
 	 * @author Anes Preljevic
 	 * @info Prüft ob es zu der eingegebenen Wochenplannr einen Wochenplan gibt,
-	 * bei existenz return true sonst false
+	 * bei Existenz return true sonst false
 	 */
 	
 	protected boolean checkWochenplan(int wpnr,Connection con) {
 		Statement stmt = null;
 		ResultSet rs = null;
+		//Benötigten Sql-Befehlt speichern
 		String sqlQuery = "select wpnr from Wochenplan where wpnr = " + wpnr;
-
+		//Statement, Resultset wird erstellt und Sql-Befehl wird ausgeführt, schließend wird der 
+		//nächste Datensatz aus dem Resultset ausgegeben
 		try {
 			stmt = con.createStatement();
 			rs = stmt.executeQuery(sqlQuery);
 			return rs.next();
 
 		} catch (SQLException sql) {
+			//Fehlerhandling, Ausgaben zur Ursachensuche und Rückgabewert auf false setzen
 			System.err.println("Methode checkWochenplan SQL-Fehler: " + sql.getMessage());
 			return false;
 		} finally {
+			//Schließen der offen gebliebenen Resultsets und Statements
 			try {
 				if (rs != null)
 					rs.close();
@@ -226,44 +230,48 @@ class Datenbank_Wochenplan {
 	 * @info Ändert den Öffentlichstatus auf den Wert der übergebenen Woche
 	 */	
 	protected void updateWochenplan(Wochenplan wochenplan,Connection con) {
-
-		int wpnr = wochenplan.getWpnr();
-		boolean öffentlichstatus = wochenplan.isÖffentlichstatus();
-
-		//Siehe vorherige Klassen!
+		
+		if(wochenplan!=null){
+			int wpnr = wochenplan.getWpnr();
+			boolean öffentlichstatus = wochenplan.isÖffentlichstatus();
 		String sqlStatement;
 		sqlStatement = "UPDATE WOCHENPLAN " + "SET Öffentlichkeitsstatus = ? WHERE Wpnr =" + wpnr;
 		
 		PreparedStatement pstmt = null;
 
 		try {
-
-			pstmt = con.prepareStatement(sqlStatement);
-
-			//Siehe vorherige Klassen!
-			con.setAutoCommit(false);
-			pstmt.setBoolean(1, öffentlichstatus);
+			//Wenn aus der vorherigen Verbindung das AutoCommit noch auf true ist, auf false setzen
 			
+			if(con.getAutoCommit()!= false);
+			{
+				con.setAutoCommit(false);
+			}
+			//Füllen und erzeugen des Preparedstatements
+			pstmt = con.prepareStatement(sqlStatement);
+			pstmt.setBoolean(1, öffentlichstatus);
+			//Ausführen des PSTMTS
 			pstmt.executeUpdate();
+			
+			//Connection Zustand bestätigen und somit fest in die Datenbank schreiben
 			con.commit();
-
-			con.setAutoCommit(true);
-
+		
 		} catch (SQLException sql) {
 			System.err.println("Methode updateWochenplan SQL-Fehler: " + sql.getMessage());
 			try {
+				//Zurücksetzen des Connection Zustandes auf den Ursprungszustand
 				con.rollback();
-				con.setAutoCommit(true);
 			} catch (SQLException sqlRollback) {
 				System.err.println("Methode updateWochenplan " + "- Rollback -  SQL-Fehler: " + sqlRollback.getMessage());
 			}
 		} finally {
 			try {
+				//Schließen der offen gebliebenen Statements
 				if (pstmt != null)
 					pstmt.close();
 			} catch (SQLException e) {
 				System.err.println("Methode updateWochenplan (finally) SQL-Fehler: " + e.getMessage());
 			}
+		}
 		}
 	}
 	/**
@@ -274,29 +282,36 @@ class Datenbank_Wochenplan {
 		
 		Statement stmt = null;
 		String sqlStatement;
-
+		
+		//SQL-Statement Öffentlichkeitsstatus wird auf true gesetzt
 		sqlStatement = "UPDATE WOCHENPLAN " + "SET Öffentlichkeitsstatus = true WHERE Wpnr =" + wpnr;
 				
 		try {
 
 			stmt = con.createStatement();
-
-			//Siehe vorherige Klassen!
-			con.setAutoCommit(false);
+			//Wenn aus der vorherigen Verbindung das AutoCommit noch auf true ist, auf false setzen
+			
+			if(con.getAutoCommit()!= false);
+			{
+				con.setAutoCommit(false);
+			}
+			// Ausführen des Preparedstatements
 			stmt.executeUpdate(sqlStatement);
+			//Connection Zustand bestätigen und somit fest in die Datenbank schreiben
 			con.commit();
 
-			con.setAutoCommit(true);
 
 		} catch (SQLException sql) {
+			//Connection Zustand bestätigen und somit fest in die Datenbank schreiben
 			System.err.println("Methode setzeÖffentlichstatustrue SQL-Fehler: " + sql.getMessage());
 			try {
 				con.rollback();
-				con.setAutoCommit(true);
+				//Zurücksetzen des Connection Zustandes auf den Ursprungszustand
 			} catch (SQLException sqlRollback) {
 				System.err.println("Methode setzeÖffentlichstatustrue " + "- Rollback -  SQL-Fehler: " + sqlRollback.getMessage());
 			}
 		} finally {
+			//Schließen der offen gebliebenen Statements
 			try {
 				if (stmt != null)
 					stmt.close();
@@ -314,30 +329,35 @@ class Datenbank_Wochenplan {
 		
 		Statement stmt = null;
 		String sqlStatement;
+		//SQL-Statement Öffentlichkeitsstatus wird auf false gesetzt
 		sqlStatement = "UPDATE WOCHENPLAN SET Öffentlichkeitsstatus = false WHERE Wpnr =" + wpnr;
 		
 		
 		try {
 
 			stmt = con.createStatement();
-
-			//Siehe vorherige Klassen!
-			con.setAutoCommit(false);
+			//Wenn aus der vorherigen Verbindung das AutoCommit noch auf true ist, auf false setzen
+			
+			if(con.getAutoCommit()!= false);
+			{
+				con.setAutoCommit(false);
+			}
 		
 			stmt.executeUpdate(sqlStatement);
+			//Connection Zustand bestätigen und somit fest in die Datenbank schreiben
 			con.commit();
-
-			con.setAutoCommit(true);
 
 		} catch (SQLException sql) {
 			System.err.println("Methode setzeÖffentlichstatusfalse SQL-Fehler: " + sql.getMessage());
 			try {
+				//Zurücksetzen des Connection Zustandes auf den Ursprungszustand
 				con.rollback();
-				con.setAutoCommit(true);
+				
 			} catch (SQLException sqlRollback) {
 				System.err.println("Methode setzeÖffentlichstatusfalse " + "- Rollback -  SQL-Fehler: " + sqlRollback.getMessage());
 			}
 		} finally {
+			//Schließen der offen gebliebenen Statements
 			try {
 				if (stmt != null)
 					stmt.close();
@@ -356,53 +376,46 @@ class Datenbank_Wochenplan {
 	 */
 	protected LinkedList<Wochenplan> getWochenplaene(Connection con) {
 
-		Datenbank_Tag tag = new Datenbank_Tag();
-		LinkedList<Tag> tageList = tag.getTage(con);;
-
+		Datenbank_Wochenplan wochenplan=new Datenbank_Wochenplan();
 		Statement stmt = null;
 		ResultSet rs = null;
 	
-		//Select *
-		String sqlStatement = "select Wpnr, Öffentlichkeitsstatus, Öffnungszeit, Schließzeit, Hauptzeitbeginn, Hauptzeitende, Benutzername,"
-				+ "Minanzinfot, Minanzinfow, Minanzkasse, Mehrbesetzung from Wochenplan";
-
+		//Benötigten Sql-Befehlt speichern
+		String sqlStatement = "select Wpnr from Wochenplan";
+		
 		try {
-			//Siehe vorherige Klassen!
-			stmt = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
-			
+			stmt = con.createStatement();
 			rs = stmt.executeQuery(sqlStatement);
 
 			LinkedList<Wochenplan> wochenplanList = new LinkedList<>();
-
+			// Solange es einen "nächsten" Datensatz in dem Resultset gibt, mit den Daten des RS 
+			// ein neues Wochenplan-Objekt erzeugen. Dieses wird anschließend der Liste hinzugefügt.
 			while (rs.next()) {
 				
-			//Warum wird nicht einfach die Methode getWochenplan(wpnr, con) verwendet? Die Zeilen stehen da zwei mal
-				Wochenplan wp = new Wochenplan(rs.getInt("Wpnr"),rs.getBoolean("Öffentlichkeitsstatus"),rs.getTime("Öffnungszeit").toString(),
-						rs.getTime("SchließZeit").toString(),rs.getTime("Hauptzeitbeginn").toString(),rs.getTime("Hauptzeitende").toString(),
-						rs.getString("Benutzername"),rs.getInt("Minanzinfot"),
-						rs.getInt("Minanzinfow"),rs.getInt("Minanzkasse"),rs.getInt("Mehrbesetzung"));
+				//Mit der Methode getWochenplan, für die ausgelesene wpnr Wochenplan-Objekte auslesen
+				Wochenplan wp = wochenplan.getWochenplan(rs.getInt("Wpnr"),con);
 				
-				//Siehe vorherige Klassen!
-				LinkedList<Tag> tagewp=new LinkedList<>();
-				for (Tag ta : tageList) {
-					if (ta.getWpnr() == wp.getWpnr()) {
-						tagewp.add(ta);
-					}
-				}
-				wp.setLinkedListTage(tagewp);
 				wochenplanList.add(wp);
 			
 			}
-			rs.close();
-			stmt.close();
 
 			return wochenplanList;
 
 		} catch (SQLException sql) {
 			System.err.println("Methode getWochenplaene SQL-Fehler: " + sql.getMessage());
 			return null;
+		}finally {
+			//Schließen der offen gebliebenen Resultsets und Statements
+			try {
+				if (rs != null)
+					rs.close();
+				if (stmt != null)
+					stmt.close();
+			} catch (SQLException e) {
+				System.err.println("Methode getWochenplaene (finally) SQL-Fehler: " + e.getMessage());
+			}
 		}
-		//Finally-Block fehlt!
+		
 		
 	}
 	/**
@@ -423,49 +436,60 @@ class Datenbank_Wochenplan {
 		Statement stmt = null;
 		ResultSet rs = null;
 	
-		//Siehe vorherige Klassen!
-		String sqlStatement = "select Wpnr, Öffentlichkeitsstatus, Öffnungszeit, Schließzeit, Hauptzeitbeginn, Hauptzeitende, Benutzername,"
-				+ "Minanzinfot, Minanzinfow, Minanzkasse, Mehrbesetzung from Wochenplan where Wpnr ="+wpnr;
+		
+		String sqlStatement = "select * from Wochenplan where Wpnr ="+wpnr;
 
 		try {
-			//Siehe vorherige Klassen!
-			stmt = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			
+			stmt = con.createStatement();
 			
 			rs = stmt.executeQuery(sqlStatement);
-	
+			//Auch wenn es voraussichtlich nur einen Datensatz gibt, den nächsten Datensatz abrufen,
+			//um 100% sicherheit zu haben
 			rs.next();
+			//Da Mehrbesetzung nicht not null, muss geprüft werden ob das Resultset null ist,
+			//damit kein Fehlerauftritt. Wenn Mehrb null ist wird automatisch der Wert 0 zugewiesen.
 			int mehrb=rs.getInt("Mehrbesetzung");
 			if (rs.wasNull())
 				mehrb = 0;
 				
-				//Siehe oben!
+				
 				Wochenplan wp = new Wochenplan(rs.getInt("Wpnr"),rs.getBoolean("Öffentlichkeitsstatus"),rs.getTime("Öffnungszeit").toString(),
 						rs.getTime("SchließZeit").toString(),rs.getTime("Hauptzeitbeginn").toString(),rs.getTime("Hauptzeitende").toString(),
 						rs.getString("Benutzername"),rs.getInt("Minanzinfot"),
 						rs.getInt("Minanzinfow"),rs.getInt("Minanzkasse"),mehrb);
 				
-				//Siehe vorherige Klassen!
-				LinkedList<Tag> tagewp=new LinkedList<>();
+				
+				LinkedList<Tag> tagewp=new LinkedList<Tag>();
 				for (Tag ta : tageList) {
 					if (ta.getWpnr() == wp.getWpnr()) {					
 						tagewp.add(ta);			
 					}
 				}
 				wp.setLinkedListTage(tagewp);
-			rs.close();
-			stmt.close();		
-
+				
 			return wp;
 		}
 		catch (SQLException sql) {
+			//Fehlerhandling, Ausgaben zur Ursachensuche und Rückgabewert auf null setzen
 			System.err.println("Methode getWochenplan SQL-Fehler: " + sql.getMessage());
-		}
 			return null;
+		}finally {
+			//Schließen der offen gebliebenen Resultsets und Statements
+			try {
+				if (rs != null)
+					rs.close();
+				if (stmt != null)
+					stmt.close();
+			} catch (SQLException e) {
+				System.err.println("Methode getWochenplan (finally) SQL-Fehler: " + e.getMessage());
+			}
 		}
 		
-		//Finally Block fehlt!
+			
 		}
-	//}
+		}
+	
 	/**
 	 * @author Anes Preljevic
 	 * @info Löschen eines Wochenplans mit zugehörigen Tagen (schichten)  aus den Datenbank Tabellen 
@@ -474,24 +498,25 @@ class Datenbank_Wochenplan {
 	
 	protected boolean deleteWochenplan(int wpnr,Connection con) {
 		Datenbank_Tag tag = new Datenbank_Tag();
-		
-
+		//Prüfen ob der Wochenplan existiert
 		if (!checkWochenplan(wpnr, con)){
-			//Siehe vorherige Klassen!
-			return false;
+			
+			return true;
 		}
 		else{
 		Statement stmt = null;
-		ResultSet rs = null;
+
 		String sqlStatement = "DELETE FROM WOCHENPLAN WHERE Wpnr = " + wpnr;
-		tag.deleteTag(wpnr,con);
+			//löscht alle Tage mit der Wpnr des zu löschenden Wochenplans, verhinderung von
+			//FK verletzung und Inkonsistenz.
+			tag.deleteTag(wpnr,con);
 			
-			
-		
 		try {
-			//Siehe vorherige Klassen!
-			con.setAutoCommit(false);
-			
+			//Wenn aus der vorherigen Verbindung das AutoCommit noch auf true ist, auf false setzen
+			if(con.getAutoCommit()!= false);
+			{
+				con.setAutoCommit(false);
+			}
 			stmt = con.createStatement();
 			stmt.execute(sqlStatement);
 			con.commit();
@@ -513,8 +538,8 @@ class Datenbank_Wochenplan {
 		} 
 			finally {
 			try {
-				if (rs != null)
-					rs.close();
+				//Schließen der offen gebliebenen Statements
+
 				if (stmt != null)
 					stmt.close();
 			} catch (SQLException e) {
@@ -523,13 +548,7 @@ class Datenbank_Wochenplan {
 			}
 		}
 	}
-	
-	//Code kann gelöscht werden!
 
-//	if(tmp[3].equalsIgnoreCase("null"))
-//		pstmt.setNull(4, java.sql.Types.INTEGER);
-//	else
-//		pstmt.setInt(4, Integer.parseInt(tmp[3]));
 	/**
 	 * @author Anes Preljevic
 	 * @info Fragt die höchste Wpnr ab und erhöht diese um 1, sodass bei neu Erstellung
@@ -542,17 +561,31 @@ class Datenbank_Wochenplan {
 		String sqlQuery = "select max(wpnr)+1 from Wochenplan";
 
 		try {
+			//Resultset- und Statement-Objekt erzeugen
 			stmt = con.createStatement();
 			rs = stmt.executeQuery(sqlQuery);
 			rs.next();
+			//Speichern der nächsthöheren Schichtnr in maxSchichtnr
 			int maxWpnr = rs.getInt(1);
 			rs.close();
 			stmt.close();
+			//Ausgabe der neuen Wochenplannr(höchste wpnr+1)
 			return maxWpnr;
 		} catch (SQLException sql) {
+			//Fehlerhandling, Ausgaben zur Ursachensuche und Rückgabewert auf -1 setzen
 			System.err.println("Methode getNewWpnr SQL-Fehler: "
 					+ sql.getMessage());
 			return -1;
+		}finally {
+			//Schließen der offen gebliebenen Statements und Resultsets
+			try {
+				if (rs != null)
+					rs.close();
+				if (stmt != null)
+					stmt.close();
+			} catch (SQLException e) {
+				System.err.println("Methode getNewWpnr (finally) SQL-Fehler: " + e.getMessage());
+			}
 		}
 	}
 }

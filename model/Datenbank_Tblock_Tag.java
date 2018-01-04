@@ -7,15 +7,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.LinkedList;
 
+import data.Schicht;
 import data.Tag;
 import data.TerminBlockierung;
 import data.Tblock_Tag;
 
-
-
-//Kommentare innerhalb der Methoden fehlen!
-
-//Finally Blöcke fehlen oft!
 
 /**
  * @author Thomas Friesen, Anes Preljevic
@@ -111,17 +107,23 @@ class Datenbank_Tblock_Tag {
 	protected boolean checkTblock_TagTB(int tblocknr, Connection con) {
 		Statement stmt = null;
 		ResultSet rs = null;
+		//Benötigten Sql-Befehlt speichern
 		String sqlQuery = "select tblocknr from Tblock_Tag where tblocknr = "+tblocknr;
 
 		try {
+			//Statement, Resultset wird erstellt und Sql-Befehl wird ausgeführt, anschließend wird der 
+			//nächste Datensatz aus dem Resultset ausgegeben
 			stmt = con.createStatement();
 			rs = stmt.executeQuery(sqlQuery);
+			//wenn rs.next() !=null ---> true somit ist der Datensatz vorhanden
 			return rs.next();
 
 		} catch (SQLException sql) {
+			//Fehlerhandling, Ausgaben zur Ursachensuche und Rückgabewert auf false setzen
 			System.err.println("Methode checkTblock_TagTB SQL-Fehler: " + sql.getMessage());
 			return false;
 		} finally {
+			//Schließen der offen gebliebenen Resultsets und Statements
 			try {
 				if (rs != null)
 					rs.close();
@@ -140,17 +142,23 @@ class Datenbank_Tblock_Tag {
 	protected boolean checkTblock_TagTA(String tbez, int wpnr, Connection con) {
 		Statement stmt = null;
 		ResultSet rs = null;
+		//Benötigten Sql-Befehlt speichern
 		String sqlQuery = "select tbez, wpnr from Tblock_Tag where tbez= '"+tbez+"'and wpnr ="+wpnr;
 
 		try {
+			//Statement, Resultset wird erstellt und Sql-Befehl wird ausgeführt, anschließend wird der 
+			//nächste Datensatz aus dem Resultset ausgegeben
 			stmt = con.createStatement();
 			rs = stmt.executeQuery(sqlQuery);
+			//wenn rs.next() !=null ---> true somit ist der Datensatz vorhanden
 			return rs.next();
 
 		} catch (SQLException sql) {
+			//Fehlerhandling, Ausgaben zur Ursachensuche und Rückgabewert auf false setzen
 			System.err.println("Methode checkTblock_TagTA SQL-Fehler: " + sql.getMessage());
 			return false;
 		} finally {
+			//Schließen der offen gebliebenen Resultsets und Statements
 			try {
 				if (rs != null)
 					rs.close();
@@ -218,56 +226,46 @@ class Datenbank_Tblock_Tag {
 	 * Diese und eine Liste mit zugehörigen TerminBlockierungen werden in eine LinkedList abgelegt und ausgegeben.
 	 */
 	protected LinkedList<Tblock_Tag> getAlleTblock_Tag(Connection con) {
-		Datenbank_TerminBlockierung terminblockierung = new Datenbank_TerminBlockierung();
-		LinkedList<TerminBlockierung> terminList = terminblockierung.getTerminBlockierungen(con);;
+
+		Datenbank_Tblock_Tag tblocktag= new Datenbank_Tblock_Tag();
+
 		Statement stmt = null;
 		ResultSet rs = null;
-
-		//Siehe vorherige Klassen
-		String sqlStatement = "select * from Tblock_Tag";
+		//Benötigten Sql-Befehlt speichern
+		String sqlStatement = "select Tblocknr from Tblock_Tag";
 
 		try {
+			//Statement/Resultset wird erstellt, der Sql-Befehl wird ausgeführt und im Resultset gespeichert
 			stmt = con.createStatement();
 			rs = stmt.executeQuery(sqlStatement);
 
-			LinkedList<Tblock_Tag> tblock_tagList = new LinkedList<>();
-
+			LinkedList<Tblock_Tag> tblock_tagList = new LinkedList<Tblock_Tag>();
+			// Solange es einen "nächsten" Datensatz in dem Resultset gibt, mit den Daten des RS 
+			// ein neues Tblock_Tag-Objekt erzeugen. Dieses wird anschließend der Liste hinzugefügt.
 			while (rs.next()) {
-				Tblock_Tag tbt = new Tblock_Tag(rs.getInt("Tblocknr"),rs.getString("Tbez"),rs.getInt("Wpnr"));
+				Tblock_Tag tbt = tblocktag.getTblock_TagTB(rs.getInt("Tblocknr"),con);
 
-				//Anweisung, dass sich in der LinkedList nur TerminBlockierungen befinden dürfen fehlt!
-				LinkedList<TerminBlockierung> tbtbt=new LinkedList<>();
-				
-				for (TerminBlockierung tb : terminList) {
-					if (tb.getTblocknr() == tbt.getTblocknr()) {
-						tbtbt.add(tb);
-					}
-					}
-				tbt.setLinkedList_termine(tbtbt);
 				
 				tblock_tagList.add(tbt);
 			}
-
-			rs.close();
-			stmt.close();
-
+			//Liste mit Mitarbeiter-Objekten zurückgeben
 			return tblock_tagList;
 
 		} catch (SQLException sql) {
+			//Fehlerhandling, Ausgaben zur Ursachensuche und Rückgabewert auf null setzen
 			System.err.println("Methode getAlleTblock_Tag SQL-Fehler: " + sql.getMessage());
 			return null;
 		}finally {
 			try {
+				//Schließen der offen gebliebenen Statements und Resultsets
 				if (rs != null)
 					rs.close();
 				if (stmt != null)
 					stmt.close();
 			} catch (SQLException e) {
-				System.err.println("Methode deleteTblock_Tag (finally) SQL-Fehler: " + e.getMessage());
+				System.err.println("Methode getAlleTblock_tag (finally) SQL-Fehler: " + e.getMessage());
 			}
 		}
-		
-		//finally Block fehlt!
 		
 	}
 	/**
@@ -276,8 +274,11 @@ class Datenbank_Tblock_Tag {
 	 * welches anschließend ausgegeben wird mit einer Liste zugehöriger TerminBlockierungen.
 	 */
 	protected Tblock_Tag getTblock_TagTB(int tblocknr,Connection con) {
-		Datenbank_TerminBlockierung terminblockierung = new Datenbank_TerminBlockierung();
-		LinkedList<TerminBlockierung> terminList = terminblockierung.getTerminBlockierungen(con);;
+		
+		Datenbank_TerminBlockierung tblocktag= new Datenbank_TerminBlockierung();
+
+		LinkedList<TerminBlockierung> terminList = tblocktag.getTerminBlockierungen(con);
+		//Prüfen ob der erwartete Datensatz existiert
 		if (!checkTblock_TagTB(tblocknr,con)){
 			return null;
 		}
@@ -292,10 +293,11 @@ class Datenbank_Tblock_Tag {
 			rs = stmt.executeQuery(sqlStatement);
 				rs.next();
 				Tblock_Tag tbt = new Tblock_Tag(rs.getInt("Tblocknr"), rs.getString("Tbez"),rs.getInt("Wpnr"));
-
-
-				//Selber Fehler wie in der vorherigen Methode
-				LinkedList<TerminBlockierung> tbtbt=new LinkedList<>();
+				
+				//Alle TerminBlockierung-Objekte durchsuchen, nach der selben tblocknr.
+				//Zugehörige TerminBlockierung-Objekte in Tblock_Tag-Objekten speichern um
+				// den Suchaufwand zu verringern
+				LinkedList<TerminBlockierung> tbtbt=new LinkedList<TerminBlockierung>();
 
 				for (TerminBlockierung tb : terminList) {
 					if (tb.getTblocknr() == tbt.getTblocknr()) {
@@ -304,25 +306,24 @@ class Datenbank_Tblock_Tag {
 					}
 				tbt.setLinkedList_termine(tbtbt);
 				
-			rs.close();
-			stmt.close();
-
+				//Tblock_Tag-Objekt zurückgeben
 			return tbt;
 
 		} catch (SQLException sql) {
+			//Fehlerhandling, Ausgaben zur Ursachensuche und Rückgabewert auf null setzen
 			System.err.println("Methode getTblock_TagTB SQL-Fehler: " + sql.getMessage());
 			return null;
 		}finally {
+			//Schließen der offen gebliebenen Resultsets und Statements
 			try {
 				if (rs != null)
 					rs.close();
 				if (stmt != null)
 					stmt.close();
 			} catch (SQLException e) {
-				System.err.println("Methode deleteTblock_Tag (finally) SQL-Fehler: " + e.getMessage());
+				System.err.println("Methode getTlock_TagTB (finally) SQL-Fehler: " + e.getMessage());
 			}
 		}
-			//Finally-Block fehlt!
 			
 		}
 	}
@@ -332,8 +333,10 @@ class Datenbank_Tblock_Tag {
 	 * welches anschließend ausgegeben wird mit einer Liste zugehöriger TerminBlockierungen.
 	 */
 	protected Tblock_Tag getTblock_TagT(String tbez, int wpnr,Connection con) {
-		Datenbank_TerminBlockierung terminblockierung = new Datenbank_TerminBlockierung();
-		LinkedList<TerminBlockierung> terminList = terminblockierung.getTerminBlockierungen(con);;
+		Datenbank_TerminBlockierung tblocktag= new Datenbank_TerminBlockierung();
+
+		LinkedList<TerminBlockierung> terminList = tblocktag.getTerminBlockierungen(con);
+		//Prüfen ob der erwartete Datensatz existiert
 		if (!checkTblock_TagTA(tbez, wpnr,con)){
 			return null;
 		}
@@ -348,9 +351,11 @@ class Datenbank_Tblock_Tag {
 			rs = stmt.executeQuery(sqlStatement);
 				rs.next();
 				Tblock_Tag tbt = new Tblock_Tag(rs.getInt("Tblocknr"), rs.getString("Tbez"),rs.getInt("Wpnr"));
-
-				//siehe oben
-				LinkedList<TerminBlockierung> tbtbt=new LinkedList<>();
+				
+				//Alle TerminBlockierung-Objekte durchsuchen, nach der selben tblocknr.
+				//Zugehörige TerminBlockierung-Objekte in Tblock_Tag-Objekten speichern um
+				// den Suchaufwand zu verringern
+				LinkedList<TerminBlockierung> tbtbt=new LinkedList<TerminBlockierung>();
 				for (TerminBlockierung tb : terminList) {
 					if (tb.getTblocknr() == tbt.getTblocknr()) {
 						tbtbt.add(tb);
@@ -358,25 +363,25 @@ class Datenbank_Tblock_Tag {
 					}
 				tbt.setLinkedList_termine(tbtbt);
 				
-			rs.close();
-			stmt.close();
 
+			//Tblock_Tag-Objekt zurückgeben
 			return tbt;
 
 		} catch (SQLException sql) {
+			//Fehlerhandling, Ausgaben zur Ursachensuche und Rückgabewert auf null setzen
 			System.err.println("Methode getTblock_TagT SQL-Fehler: " + sql.getMessage());
 			return null;
 		}finally {
+			//Schließen der offen gebliebenen Resultsets und Statements
 			try {
 				if (rs != null)
 					rs.close();
 				if (stmt != null)
 					stmt.close();
 			} catch (SQLException e) {
-				System.err.println("Methode deleteTblock_Tag (finally) SQL-Fehler: " + e.getMessage());
+				System.err.println("Methode getTblock_TagT (finally) SQL-Fehler: " + e.getMessage());
 			}
 		}
-		//finally Block fehlt
 		
 		}
 	}
@@ -391,15 +396,21 @@ class Datenbank_Tblock_Tag {
 
 		Statement stmt = null;
 		ResultSet rs = null;
+		//Benötigten Sql-Befehlt speichern
 		String sqlQuery = "DELETE FROM Tblock_Tag WHERE tblocknr = "+tblocknr;
 	
 		try {
+			//Sql-Statement erstellen und ausführen
 			stmt = con.createStatement();
 			stmt.execute(sqlQuery);
 			return true;
 		} catch (SQLException sql) {
+			//Fehlerhandling, Ausgaben zur Ursachensuche und Rückgabewert auf false setzen
+			System.err.println("Methode deleteTblock_Tag SQL-Fehler: " + sql.getMessage());
+			
 			return false;
 		} finally {
+			//Schließen der offen gebliebenen Statements
 			try {
 				if (rs != null)
 					rs.close();

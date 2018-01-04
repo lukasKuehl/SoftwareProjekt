@@ -13,15 +13,12 @@ import data.Tauschanfrage;
 import data.Tblock_Tag;
 
 
-
-//Kommentare innerhalb der Methoden fehlen!
-
-//Finally_Blöcke fehlen oft!
 /**
  * @author Thomas Friesen, Anes Preljevic
  * @info Die Klasse dient dazu, jegliche Abfragen und Änderung in der Datenbank im Bezug auf die Tabelle Tauschanfrage zu verarbeiten.
  */
 class Datenbank_Tauschanfrage {
+	
 
 	/**
 	 * @Thomas Friesen
@@ -98,20 +95,26 @@ class Datenbank_Tauschanfrage {
 	 * @info Prüft ob es zu der eingegebenen tauschnr eine Tauschtanfrage gibt, bei existenz return true sonst false.
 	 */
 	protected boolean checkTauschanfrage(int tauschnr,Connection con) {
+		
 		Statement stmt = null;
 		ResultSet rs = null;
+		//Benötigten Sql-Befehlt speichern
 		String sqlQuery = "select tauschnr from Tauschanfrage where tauschnr = " + tauschnr;
 
 		try {
+			//Statement, Resultset wird erstellt und Sql-Befehl wird ausgeführt, schließend wird der 
+			//nächste Datensatz aus dem Resultset ausgegeben
 			stmt = con.createStatement();
 			rs = stmt.executeQuery(sqlQuery);
 			return rs.next();
 
 		} catch (SQLException sql) {
+			//Fehlerhandling, Ausgaben zur Ursachensuche und Rückgabewert auf false setzen
 			System.err.println("Methode checkTauschanfrageSQL-Fehler: " + sql.getMessage());
 			return false;
 		} finally {
 			try {
+				//Schließen der offen gebliebenen Resultsets und Statements
 				if (rs != null)
 					rs.close();
 				if (stmt != null)
@@ -192,24 +195,32 @@ class Datenbank_Tauschanfrage {
 
 			pstmt = con.prepareStatement(sqlStatement);
 
-			//Siehe vorherige Klassen
-			con.setAutoCommit(false);
+			//Wenn aus der vorherigen Verbindung das AutoCommit noch auf true ist, auf false setzen
+			
+			if(con.getAutoCommit()!= false);
+			{
+				con.setAutoCommit(false);
+			}
+			//Preparedstatement füllen und ausführen
 			pstmt.setBoolean(1, bestätigungsstatus);
 			pstmt.executeUpdate();
+			
+			//Connection Zustand bestätigen und somit fest in die Datenbank schreiben
 			con.commit();
 
-			con.setAutoCommit(true);
 
 		} catch (SQLException sql) {
 			System.err.println("Methode updateTauschanfrage SQL-Fehler: " + sql.getMessage());
 			try {
+				//Zurücksetzen des Connection Zustandes auf den Ursprungszustand
 				con.rollback();			
-				con.setAutoCommit(true);
+				
 			} catch (SQLException sqlRollback) {
 				System.err.println("Methode updateTauschanfrage " + "- Rollback -  SQL-Fehler: " + sqlRollback.getMessage());
 			}
 		} finally {
 			try {
+				//Schließen der offen gebliebenen Preparedstatements
 				if (pstmt != null)
 					pstmt.close();
 			} catch (SQLException e) {
@@ -218,7 +229,7 @@ class Datenbank_Tauschanfrage {
 		}
 	}
 	/**
-	 * @Anes Preljevic
+	 * @author Anes Preljevic
 	 * @info Ändert den Bestätigungsstatus der übergebenen Tauschanfrage
 	 */
 	protected void bestätigeTauschanfrage(String empfänger , int tauschnr,Connection con) {
@@ -231,24 +242,27 @@ class Datenbank_Tauschanfrage {
 		try {
 
 			stmt = con.createStatement();
-			
-			//Siehe vorherige Klassen			
-			con.setAutoCommit(false);
-			
+			//Wenn aus der vorherigen Verbindung das AutoCommit noch auf true ist, auf false setzen
+			if(con.getAutoCommit()!= false);
+			{
+				con.setAutoCommit(false);
+			}
+			//Preparedstatement ausführen
 			stmt.executeUpdate(sqlStatement);
+			
+			//Connection Zustand bestätigen und somit fest in die Datenbank schreiben
 			con.commit();
-
-			con.setAutoCommit(true);
 
 		} catch (SQLException sql) {
 			System.err.println("Methode bestätigeTauschanfrage SQL-Fehler: " + sql.getMessage());
 			try {
+				//Zurücksetzen des Connection Zustandes auf den Ursprungszustand
 				con.rollback();
-				con.setAutoCommit(true);
 			} catch (SQLException sqlRollback) {
 				System.err.println("Methode bestätigeTauschanfrage " + "- Rollback -  SQL-Fehler: " + sqlRollback.getMessage());
 			}
 		} finally {
+			//Schließen der offen gebliebenen Statements
 			try {
 				if (stmt != null)
 					stmt.close();
@@ -264,206 +278,195 @@ class Datenbank_Tauschanfrage {
 	 * Es werden Mitarbeiter, Schicht Objekte welche dem Sender/Empfänger entsprechen für jede Tauschanfrage gespeichert.
 	 */
 	protected LinkedList<Tauschanfrage> getTauschanfragen(Connection con) {
-		Datenbank_Schicht schicht = new Datenbank_Schicht();
-		LinkedList<Schicht> schichtList = schicht.getSchichten(con);
-		Datenbank_Mitarbeiter mitarbeiter = new Datenbank_Mitarbeiter();
-		LinkedList<Mitarbeiter> mitarbeiterList = mitarbeiter.getAlleMitarbeiter(con);
+		Datenbank_Tauschanfrage tauschanfrage= new Datenbank_Tauschanfrage();
+
 			
 		Statement stmt = null;
 		ResultSet rs = null;
 
-		//Siehe vorherige Klassen
-		String sqlStatement = "select Empfänger, Sender, Bestätigungsstatus,"
-				+ " Schichtnrsender, Schichtnrempfänger, Tauschnr from Tauschanfrage";
+		//Benötigten Sql-Befehlt speichern
+		String sqlStatement = "select Tauschnr from Tauschanfrage";
 
 		try {
+			//Statement/Resultset wird erstellt, der Sql-Befehl wird ausgeführt und im Resultset gespeichert
 			stmt = con.createStatement();
 			rs = stmt.executeQuery(sqlStatement);
 
 			LinkedList<Tauschanfrage> tauschanfrageList = new LinkedList<>();
-
+			// Solange es einen "nächsten" Datensatz in dem Resultset gibt, mit den Daten des RS 
+			// ein neues Tauschanfrage-Objekt erzeugen. Dieses wird anschließend der Liste hinzugefügt.
 			while (rs.next()) {
-				Tauschanfrage tanf = new Tauschanfrage(rs.getString("Empfänger"),rs.getString("Sender"), rs.getBoolean("Bestätigungsstatus")
-						,rs.getInt("Schichtnrsender"), rs.getInt("Schichtnrempfänger"), rs.getInt("Tauschnr"));
-				
-				//Es kann doch nur einen Mitarbeiter als Sender geben, weil nach dem PK gesucht wird --> Liste hat nur einen Eintrag --> Variable?
-				LinkedList<Mitarbeiter> senderList = new LinkedList<>();			
-				
-				for (Mitarbeiter ma : mitarbeiterList) {
-					if (ma.getBenutzername().equals(tanf.getSender())) {
-						senderList.add(ma);	
-					}
-				}
-				tanf.setLinkedListSender(senderList);
-				
-				//Siehe oben
-				LinkedList<Mitarbeiter> empfängerList = new LinkedList<>();
-				for (Mitarbeiter ma : mitarbeiterList) {
-					if (ma.getBenutzername().equals(tanf.getEmpfänger())) {
-						empfängerList.add(ma);
-					}
-				}
-				tanf.setLinkedListEmpfänger(empfängerList);
-				
-				//Siehe oben
-				
-				LinkedList<Schicht> schichtnrSenderList = new LinkedList<>();
-				for (Schicht sch : schichtList) {
-					if (sch.getSchichtnr()==tanf.getSchichtnrsender()) {
-						schichtnrSenderList.add(sch);
-					}
-				}
-				tanf.setLinkedListSchichtensender(schichtnrSenderList);
-				
-				//Siehe oben
-				
-				LinkedList<Schicht> schichtnrEmpfängerList = new LinkedList<>();
-				for (Schicht sch : schichtList) {
-					if (sch.getSchichtnr() == tanf.getSchichtnrempfänger()) {
-						schichtnrEmpfängerList.add(sch);
-					}
-				}
-				tanf.setLinkedListSchichtenempfänger(schichtnrEmpfängerList);
+				Tauschanfrage tanf = tauschanfrage.getTauschanfrage(rs.getInt("Tauschnr"),con);
 
 				tauschanfrageList.add(tanf);
 			}
-
-			rs.close();
-			stmt.close();
-
+			//Liste Tauschanfrage-Objekten zurückgeben
 			return tauschanfrageList;
 
 		} catch (SQLException sql) {
+			//Fehlerhandling, Ausgaben zur Ursachensuche und Rückgabewert auf null setzen
 			System.err.println("Methode getTauschanfragen SQL-Fehler: " + sql.getMessage());
 			return null;
+		}finally {
+			//Schließen der offen gebliebenen Statements und Resultsets
+			try {
+				if (rs != null)
+					rs.close();
+				if (stmt != null)
+					stmt.close();
+			} catch (SQLException e) {
+				System.err.println("Methode getTauschanfragen (finally) SQL-Fehler: " + e.getMessage());
+			}
 		}
 	}
 	/**
 	 * @Anes Preljevic
-	 * @info Auslesen einer bestimmten Tauschanfragen aus der Datenbankl, Speicherung im Objekt Tauschanfrage welches den Ausgabewert darstellt.
+	 * @info Auslesen einer bestimmten Tauschanfragen aus der Datenbank, Speicherung im Objekt Tauschanfrage welches den Ausgabewert darstellt.
 	 * Diese beinhaltet die zugehörigen Mitarbeiter und Schichten der Sender und Empfänger.
 	 * Es werden Mitarbeiter, Schicht Objekte welche dem Sender/Empfänger entsprechen für jede Tauschanfrage gespeichert.
 	 */
 	protected Tauschanfrage getTauschanfrage(int tauschnr, Connection con ) {
-		Datenbank_Schicht schicht = new Datenbank_Schicht();
+		Datenbank_Schicht schicht= new Datenbank_Schicht();
+		Datenbank_Mitarbeiter mitarbeiter= new Datenbank_Mitarbeiter();
 		LinkedList<Schicht> schichtList = schicht.getSchichten(con);
-		Datenbank_Mitarbeiter mitarbeiter = new Datenbank_Mitarbeiter();
 		LinkedList<Mitarbeiter> mitarbeiterList = mitarbeiter.getAlleMitarbeiter(con);
 		
-		
+		//Prüfen ob der Tauschanfrage vorhanden ist
+		if (!checkTauschanfrage(tauschnr, con)){
+			return null;
+		}
+		else{
 		Statement stmt = null;
 		ResultSet rs = null;
 
-		//siehe vorherige Klassen
-		String sqlStatement = "select Empfänger, Sender, Bestätigungsstatus,"
-				+ " Schichtnrsender, Schichtnrempfänger, Tauschnr from Tauschanfrage WHERE tauschnr="+tauschnr;
+		//Benötigten Sql-Befehlt speichern
+		String sqlStatement = "select * from Tauschanfrage WHERE tauschnr="+tauschnr;
 
 		try {
+			//Statement/Resultset wird erstellt, der Sql-Befehl wird ausgeführt und im Resultset gespeichert
 			stmt = con.createStatement();
 			rs = stmt.executeQuery(sqlStatement);
 
 			
-
+			//Auch wenn es voraussichtlich nur einen Datensatz gibt, den nächsten Datensatz abrufen,
+			//um 100% sicherheit zu haben
 				rs.next();
 				Tauschanfrage tanf = new Tauschanfrage(rs.getString("Empfänger"),rs.getString("Sender"), rs.getBoolean("Bestätigungsstatus")
 						,rs.getInt("Schichtnrsender"), rs.getInt("Schichtnrempfänger"), rs.getInt("Tauschnr"));
-
-				//Ohne Kommentare nicht wirklich nachvollziehbar, keine Überprüfung nach doppelten Einträgen, auskommentierte Befehle entfernen
-				for (Mitarbeiter ma : mitarbeiterList) {
-					
-					if (ma.getBenutzername().equals(tanf.getSender())) {
-						LinkedList<Mitarbeiter> senderList = new LinkedList<>();
-						//System.out.println(ma.getBenutzername()+" "+ tanf.getSender());	
-						senderList.add(ma);
-						tanf.setLinkedListSender(senderList);
-						
-					}
-				}
 				
-				//siehe oben
-				for (Mitarbeiter ma : mitarbeiterList) {
-					if (ma.getBenutzername().equals(tanf.getEmpfänger())) {
-						
-						LinkedList<Mitarbeiter> empfängerList = new LinkedList<>();
-						empfängerList.add(ma);
-						tanf.setLinkedListEmpfänger(empfängerList);
+					//Durchsucht alle Mitarbeiter nach dem Sender, Mitarbeiter Objekt des Senders wird
+					// im Tauschanfrage Objekt gespeichert.
+					Mitarbeiter sender = null;
+					for (Mitarbeiter ma : mitarbeiterList) {
+						if (ma.getBenutzername().equals(tanf.getSender())) {
+							sender=ma;	
+						}
 					}
-				}
-		
-				//Der Bezug geht mittlerweile komplett verloren, jede For-Schleife sollte am besten einen Kommentar haben, warum du das machst, verstehe bei der unteren hier zum Beispiel absolut nicht, wozu die gut sein soll. 
-				//Kann gut sein, dass man dadurch nützliche Informationen bekommt, so ist es nur komplett unübersichtlich.
-								
-				for (Schicht sch : schichtList) {
-					LinkedList<Schicht> schichtnrSenderList = new LinkedList<>();
-					if (sch.getSchichtnr() == tanf.getSchichtnrsender()) {
-						tanf.setLinkedListSchichtensender(schichtnrSenderList);
+					tanf.setMaSender(sender);
+	
+					//Durchsucht alle Mitarbeiter nach dem Empfänger, Mitarbeiter Objekt des Empfängers wird
+					// im Tauschanfrage Objekt gespeichert.
+					Mitarbeiter empfänger = null ;
+					for (Mitarbeiter ma : mitarbeiterList) {
+						if (ma.getBenutzername().equals(tanf.getEmpfänger())) {
+							empfänger= ma;
+						}
 					}
-				}
-				for (Schicht sch : schichtList) {
-					LinkedList<Schicht> schichtnrEmpfängerList = new LinkedList<>();
-					if (sch.getSchichtnr() == tanf.getSchichtnrempfänger()) {
-						tanf.setLinkedListSchichtenempfänger(schichtnrEmpfängerList);
+					tanf.setMaEmpfänger(empfänger);
+	
+	
+					//Durchsucht alle Schichten nach der Schichtnrsender, das Schicht-Objekt mit der entsprechenden Schichtnr
+					// wird im Tauschanfrage Objekt gespeichert.
+					Schicht schichtnrSender = null;
+					for (Schicht sch : schichtList) {
+						if (sch.getSchichtnr()==tanf.getSchichtnrsender()) {
+							schichtnrSender =sch;
+						}
 					}
-				}
+					tanf.setSchtSchichtensender(schichtnrSender);
+	
+	
+					//Durchsucht alle Schichten nach der Schichtnrempfänger, das Schicht-Objekt mit der entsprechenden Schichtnr
+					// wird im Tauschanfrage Objekt gespeichert.
+					Schicht schichtnrEmpfänger = null;
+					for (Schicht sch : schichtList) {
+						if (sch.getSchichtnr() == tanf.getSchichtnrempfänger()) {
+							schichtnrEmpfänger= sch;
+						}
+					}
+					tanf.setSchtSchichtenempfänger(schichtnrEmpfänger);
+
 			
-
-			rs.close();
-			stmt.close();
-
+			//Tauschanfrage-Objekt zurückgeben
 			return tanf;
-
+		
 		} catch (SQLException sql) {
+			//Fehlerhandling, Ausgaben zur Ursachensuche und Rückgabewert auf null setzen
 			System.err.println("Methode getTauschanfrage SQL-Fehler: " + sql.getMessage());
 			return null;
+		}finally {
+			//Schließen der offen gebliebenen Statements und Resultsets
+			try {
+				if (rs != null)
+					rs.close();
+				if (stmt != null)
+					stmt.close();
+			} catch (SQLException e) {
+				System.err.println("Methode getTauschanfrage (finally) SQL-Fehler: " + e.getMessage());
+			}
+		}
 		}
 		
-		//Finally Block fehlt
 	}
 	/**
 	 * @Anes Preljevic
 	 * @info Löschen einer Tauschanfrage aus der Datenbank Tabelle Tauschanfrage
 	 */
 	protected boolean deleteTauschanfrage(int tauschnr, Connection con) {
-	if (checkTauschanfrage(tauschnr,con)==false){
-		//Siehe vorherige Klassen, keine Tauschanfrage da --> return true
-		//Tauschanfrage kann nicht gelöscht werden --> return false
-		System.out.println("Tauschanfrage kann nicht gelöscht werden, da nicht vorhanden");	
-		return false;
+		//Überprüfen ob der zu löschende Datensatz existiert
+		if (checkTauschanfrage(tauschnr,con)==false){
+
+		//System.out.println("Tauschanfrage kann nicht gelöscht werden, da nicht vorhanden");	
+		return true;
 		
 	}
 	else{
 		Statement stmt = null;
-		ResultSet rs = null;
+		
+		//Benötigten Sql-Befehlt speichern
 		String sqlStatement = "DELETE FROM Tauschanfrage WHERE Tauschnr= "+tauschnr;
 
 		try {
-			//Siehe vorherige Klassen
-			con.setAutoCommit(false);
-			
+			//Wenn aus der vorherigen Verbindung das AutoCommit noch auf true ist, auf false setzen
+			if(con.getAutoCommit()!= false);
+			{
+				con.setAutoCommit(false);
+			}
+			//Sql-Statement ausführen
 			stmt = con.createStatement();
 			stmt.execute(sqlStatement);
-			
+			//Connection Zustand bestätigen und somit fest in die Datenbank schreiben
 			con.commit();
 
-			con.setAutoCommit(true);
+		
 			
 		
 		return true;
 		}catch (SQLException sql) {
+			//Fehlerhandling, Ausgaben zur Ursachensuche und Rückgabewert auf false setzen
 			System.err.println("Methode deleteTauschanfrage SQL-Fehler: " + sql.getMessage());
 			try {
-				
+				//Zurücksetzen des Connection Zustandes auf den Ursprungszustand
 				con.rollback();
-				con.setAutoCommit(true);
+				
 				return false;
 			} catch (SQLException sqlRollback) {
 					System.err.println("Methode deleteTauschanfrage " + "- Rollback -  SQL-Fehler: " + sqlRollback.getMessage());
 					return false;
 				}
 		} finally {
+			//Schließen der offen gebliebenen Statements
 			try {
-				if (rs != null)
-					rs.close();
 				if (stmt != null)
 					stmt.close();
 			} catch (SQLException e) {
@@ -482,22 +485,35 @@ class Datenbank_Tauschanfrage {
 	protected  int getNewTauschnr(Connection con) {
 		Statement stmt = null;
 		ResultSet rs = null;
+		//Benötigten Sql-Befehlt speichern
 		String sqlQuery = "select max(tauschnr)+1 from Tauschanfrage";
 
 		try {
+			//Resultset- und Statement-Objekt erzeugen
 			stmt = con.createStatement();
 			rs = stmt.executeQuery(sqlQuery);
 			rs.next();
+			//Speichern der nächsthöheren Tauschnr in maxTauschnr
 			int maxTauschnr = rs.getInt(1);
 			rs.close();
 			stmt.close();
+			//Ausgabe der neuen Tauschnr
 			return maxTauschnr;
 		} catch (SQLException sql) {
-			System.err.println("Methode getNewEmpno SQL-Fehler: "
+			System.err.println("Methode getNewTauschnr SQL-Fehler: "
 					+ sql.getMessage());
 			return -1;
+		} finally {
+			//Schließen der offen gebliebenen Resultsets und Statements
+			try {
+				if (rs != null)
+					rs.close();
+				if (stmt != null)
+					stmt.close();
+			} catch (SQLException e) {
+				System.err.println("Methode getNewTauschnr (finally) SQL-Fehler: " + e.getMessage());
+			}
 		}
-		
-		//Finally-Block fehlt
+
 	}
 }

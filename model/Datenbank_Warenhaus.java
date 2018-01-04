@@ -11,15 +11,13 @@ import data.Schicht;
 import data.Warenhaus;
 
 
-//Finally Block bei getWarenhaus fehlt
-
-//Einzelne getWarenhaus-Methode fehlt!
 
 /**
  * @author Anes Preljevic
  * @info Die Klasse dient dazu, jegliche Abfragen und Änderung in der Datenbank im Bezug auf die Tabelle Warenhaus zu verarbeiten.
  */
 class Datenbank_Warenhaus {
+
 	
 	//Methodenbeschreibung fehlt!
 	protected void addWarenhaus(Warenhaus warenhaus, Connection con) {
@@ -61,6 +59,7 @@ class Datenbank_Warenhaus {
 				System.err.println("Methode addSchicht " + "- Rollback -  SQL-Fehler: " + sqlRollback.getMessage());
 			}
 		} finally {
+			//Schließen der offen gebliebenen Preparedstatements
 			try {
 				if (pstmt != null)
 					pstmt.close();
@@ -104,38 +103,87 @@ class Datenbank_Warenhaus {
 	 * Diese werden in eine LinkedList abgelegt und ausgegeben.
 	 */
 	protected LinkedList<Warenhaus> getWarenhaus(Connection con) {
+		Datenbank_Warenhaus wha=new Datenbank_Warenhaus();
+		Statement stmt = null;
+		ResultSet rs = null;
+
+		//Benötigten Sql-Befehlt speichern
+		String sqlStatement = "select whname from Warenhaus";
+
+		try {
+			//Statement/Resultset wird erstellt, der Sql-Befehl wird ausgeführt und im Resultset gespeichert
+			stmt = con.createStatement();
+			rs = stmt.executeQuery(sqlStatement);
+
+			
+			LinkedList<Warenhaus> warenhausList = new LinkedList<>();
+			// Solange es einen "nächsten" Datensatz in dem Resultset gibt, mit den Daten des RS 
+			// ein neues Warenhaus-Objekt erzeugen. Dieses wird anschließend der Liste hinzugefügt.
+			while (rs.next()) {
+				Warenhaus wh = wha.geteinWarenhaus(rs.getString("Whname"),con);
+				warenhausList.add(wh);
+			}
+
+		
+			//Liste mit Warenhaus-Objekten zurückgeben
+			return warenhausList;
+
+		} catch (SQLException sql) {
+			//Fehlerhandling, Ausgaben zur Ursachensuche und Rückgabewert auf null setzen
+			System.err.println("Methode getWarenhaus SQL-Fehler: " + sql.getMessage());
+			return null;
+		}finally {
+			//Schließen der offen gebliebenen Resultsets und Statements
+			try {
+				if (rs != null)
+					rs.close();
+				if (stmt != null)
+					stmt.close();
+			} catch (SQLException e) {
+				System.err.println("Methode getWarenhaus (finally) SQL-Fehler: " + e.getMessage());
+			}
+		}
+		
+	}
+	/**
+	 * @author Anes Preljevic
+	 * @info Auslesen eines bestimmten Warenhauses, erzeugen eines WH-Objektes und dieses ausgeben
+	 */
+	protected Warenhaus geteinWarenhaus(String whname, Connection con) {
 
 		Statement stmt = null;
 		ResultSet rs = null;
 
-		//Siehe vorherige Klassen!
-		String sqlStatement = "select Whname, anzkasse, anzinfo from Warenhaus";
+		//Benötigten Sql-Befehlt speichern
+		String sqlStatement = "select * from Warenhaus";
 
 		try {
-			//Siehe vorherige Klassen!
-			stmt = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
-			
+			//Statement/Resultset wird erstellt, der Sql-Befehl wird ausgeführt und im Resultset gespeichert
+			stmt = con.createStatement();
 			rs = stmt.executeQuery(sqlStatement);
 
-			//Siehe vorherige Klassen!
-			LinkedList<Warenhaus> warenhausList = new LinkedList<>();
-
-			while (rs.next()) {
+			
+			rs.next();
 				Warenhaus wh = new Warenhaus(rs.getString("Whname"),rs.getInt("Anzkasse"), rs.getInt("Anzinfo"));
-
-				warenhausList.add(wh);
-			}
-
-			rs.close();
-			stmt.close();
-
-			return warenhausList;
+			//Warenhaus-Objektzurückgeben
+			return wh;
 
 		} catch (SQLException sql) {
-			System.err.println("Methode getWarenhaus SQL-Fehler: " + sql.getMessage());
+			//Fehlerhandling, Ausgaben zur Ursachensuche und Rückgabewert auf null setzen
+			System.err.println("Methode geteinWarenhaus SQL-Fehler: " + sql.getMessage());
 			return null;
+		}finally {
+			//Schließen der offen gebliebenen Resultsets und Statements
+			try {
+				if (rs != null)
+					rs.close();
+				if (stmt != null)
+					stmt.close();
+			} catch (SQLException e) {
+				System.err.println("Methode geteinWarenhaus (finally) SQL-Fehler: " + e.getMessage());
+			}
 		}
-		//Finally-Block fehlt!
+		
 	}
 
 

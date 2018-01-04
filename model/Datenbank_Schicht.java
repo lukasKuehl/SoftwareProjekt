@@ -8,6 +8,7 @@ import java.sql.Statement;
 import java.util.LinkedList;
 
 import data.Ma_Schicht;
+import data.Mitarbeiter;
 import data.Schicht;
 import data.Tag;
 import data.Tauschanfrage;
@@ -18,11 +19,10 @@ import data.TerminBlockierung;
  * @info Die Klasse dient dazu, jegliche Abfragen und Änderung in der Datenbank im Bezug auf die Tabelle Schicht zu verarbeiten.
  */
 
-//Kommentare innerhalb der Methoden fehlen!
-
-//Bei vielen Methoden fehlen die Finally-Blöcke!
-
 class Datenbank_Schicht {
+	
+	//Initialisierung der Instanzvariablen
+	
 
 	/**
 	 * @Thomas Friesen
@@ -117,17 +117,22 @@ class Datenbank_Schicht {
 	protected boolean checkSchicht(int schichtnr,Connection con) {
 		Statement stmt = null;
 		ResultSet rs = null;
+		//Benötigten Sql-Befehlt speichern
 		String sqlQuery = "select schichtnr from Schicht where schichtnr = " + schichtnr;
 
 		try {
+			//Statement, Resultset wird erstellt und Sql-Befehl wird ausgeführt, schließend wird der 
+			//nächste Datensatz aus dem Resultset ausgegeben
 			stmt = con.createStatement();
 			rs = stmt.executeQuery(sqlQuery);
 			return rs.next();
 
 		} catch (SQLException sql) {
+			//Fehlerhandling, Ausgaben zur Ursachensuche und Rückgabewert auf false setzen
 			System.err.println("Methode checkSchicht SQL-Fehler: " + sql.getMessage());
 			return false;
 		} finally {
+			//Schließen der offen gebliebenen Resultsets und Statements
 			try {
 				if (rs != null)
 					rs.close();
@@ -188,51 +193,50 @@ class Datenbank_Schicht {
 	 * @author Anes Preljevic
 	 * @info Auslesen aller Schichten aus der Datenbank und Erzeugen von Schicht-Objekten.
 	 * Diese werden in einer LinkedList abgelegt und ausgegeben.
-	 * Die zugehörigen Mitarbeiter- und Schicht-Beziehungen werden als LinkedList in den Schichten gespeichert.
+	 * Die zugehörigen Mitarbeiter einer Schicht werden als LinkedList in den Schichten gespeichert.
 	 */
 	protected LinkedList<Schicht> getSchichten(Connection con) {
-		Datenbank_Ma_Schicht ma_schicht = new Datenbank_Ma_Schicht();
-		
-		//Eine LinkedList<Mitarbeiter> ist sinnvoller, die Benutzernamen an sich reichen für die meisten Sachen nicht aus!
-		LinkedList<Ma_Schicht> maschichtList = ma_schicht.getMa_Schicht(con);;
+		Datenbank_Schicht schicht= new Datenbank_Schicht();
 		Statement stmt = null;
 		ResultSet rs = null;
-
-		String sqlStatement = "select Schichtnr,Tbez, wpnr, Anfanguhrzeit, Endeuhrzeit from Schicht";
+		//Benötigten Sql-Befehlt speichern
+		String sqlStatement = "select schichtnr from Schicht";
 
 		try {
-			stmt = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			//Statement,Resultset wird erstellt, der Sql-Befehl wird ausgeführt und im Resultset gespeichert
+			stmt = con.createStatement();
 			rs = stmt.executeQuery(sqlStatement);
 
-			LinkedList<Schicht> schichtList = new LinkedList<>();
-
+			LinkedList<Schicht> schichtList = new LinkedList<Schicht>();
+			// Solange es einen "nächsten" Datensatz in dem Resultset gibt, mit den Daten des RS 
+			// ein neues Schicht-Objekt erzeugen. Dieses wird anschließend der Liste hinzugefügt.
 			while (rs.next()) {
-				Schicht s = new Schicht(rs.getInt("Schichtnr"), rs.getString("Tbez"),
-						rs.getInt("Wpnr"), rs.getString("Anfanguhrzeit").toString(),
-						rs.getString("Endeuhrzeit").toString());
-				
-				//Siehe Kommentar am Anfang der Methode
-				for (Ma_Schicht mas : maschichtList) {
-					
-					if (mas.getSchichtnr() == s.getSchichtnr()) {
-						LinkedList<Ma_Schicht> maschl= new LinkedList<>();
-						maschl.add(mas);
-						s.setLinkedListMa_Schicht(maschl);
-					}
-					}
+				Schicht s = schicht.getSchicht(rs.getInt("Schichtnr"),con);
+		
 				schichtList.add(s);
 			}
 
 			rs.close();
 			stmt.close();
-
+			//Liste mit Schicht-Objekten zurückgeben
 			return schichtList;
 
 		} catch (SQLException sql) {
-			System.err.println("Methode getSchicht SQL-Fehler: " + sql.getMessage());
+			//Fehlerhandling, Ausgaben zur Ursachensuche und Rückgabewert auf null setzen
+			System.err.println("Methode getSchichten SQL-Fehler: " + sql.getMessage());
 			return null;
 		}
-		//Finally-Block fehlt!
+		finally {
+			//Schließen der offen gebliebenen Statements und Resultsets
+			try {
+				if (rs != null)
+					rs.close();
+				if (stmt != null)
+					stmt.close();
+			} catch (SQLException e) {
+				System.err.println("Methode getSchichten(finally) SQL-Fehler: " + e.getMessage());
+			}
+		}
 		
 	}
 	
@@ -240,11 +244,14 @@ class Datenbank_Schicht {
 	 * @author Anes Preljevic
 	 * @info Auslesen einer bestimmten Schicht aus der Datenbank und erzeugen eines Schicht Objektes,
 	 * welches anschließend ausgegeben wird.
+	 *  Die zugehörigen Mitarbeiter einer Schicht werden als LinkedList in den Schichten gespeichert.
 	 */
 	protected Schicht getSchicht(int schichtnr,Connection con) {
 
-		Datenbank_Ma_Schicht ma_schicht = new Datenbank_Ma_Schicht();
-		LinkedList<Ma_Schicht> maschichtList = ma_schicht.getMa_Schicht(con);
+		Datenbank_Ma_Schicht maschicht= new Datenbank_Ma_Schicht();
+		Datenbank_Mitarbeiter mitarbeiter= new Datenbank_Mitarbeiter();
+		LinkedList<Ma_Schicht> maschichtList = maschicht.getMa_Schicht(con);
+		//Prüfen ob die Schicht vorhanden ist
 		if (!checkSchicht(schichtnr,con)){
 			return null;
 		}
@@ -252,77 +259,94 @@ class Datenbank_Schicht {
 		else{
 		Statement stmt = null;
 		ResultSet rs = null;
-
-		//select * --> übersichtlicher
-		String sqlStatement = "select Schichtnr,Tbez,Wpnr, Anfanguhrzeit, Endeuhrzeit from Schicht Where Schichtnr ="+schichtnr;
+		//Benötigten Sql-Befehlt speichern
+		
+		String sqlStatement = "select * from Schicht Where Schichtnr ="+schichtnr;
 
 		try {
 			
-			//siehe vorherige Klassen!
-			stmt = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			//Statement/Resultset wird erstellt, der Sql-Befehl wird ausgeführt und im Resultset gespeichert
+			stmt = con.createStatement();
 			rs = stmt.executeQuery(sqlStatement);
+			//Auch wenn es voraussichtlich nur einen Datensatz gibt, den nächsten Datensatz abrufen,
+			//um 100% sicherheit zu haben
 			rs.next();
 			Schicht s = new Schicht(rs.getInt("Schichtnr"), rs.getString("Tbez"),
 					rs.getInt("Wpnr"), rs.getString("Anfanguhrzeit").toString(),
 					rs.getString("Endeuhrzeit").toString());
 				
-				LinkedList<Ma_Schicht> maschl= new LinkedList<>();
+				//Alle Ma_Schicht Datensätze durchsuchen, welche zu der aktuellen Schicht gehören
+				//Über die Ma_Schicht beziehung den Benutzernamen des Mitarbeiters herausfinden
+				//Mit diesem Benutzernamen ein Mitarbeiter-Objekt erzeugen und dieses in der Mitarbeiterliste
+				//der Schicht speichern
+			LinkedList<Mitarbeiter> mal= new LinkedList<>();
 				for (Ma_Schicht mas : maschichtList) {
 					
 					if (mas.getSchichtnr() == s.getSchichtnr()) {
+						Mitarbeiter masch = mitarbeiter.getMitarbeiter(mas.getBenutzername(),con);
 						
-						maschl.add(mas);
-						
+						mal.add(masch);
+						s.setLl_mitarbeiter(mal);
 					}
 					}
-				s.setLinkedListMa_Schicht(maschl);
-			rs.close();
-			stmt.close();
 
+				//Schicht-Objekt zurückgeben
 			return s;
 
 		} catch (SQLException sql) {
+			//Fehlerhandling, Ausgaben zur Ursachensuche und Rückgabewert auf null setzen
 			System.err.println("Methode getSchicht SQL-Fehler: " + sql.getMessage());
 			return null;
-		}
-		//finally-Block fehlt!
-		}
+		}		finally {
+			//Schließen der offen gebliebenen Statements und Resultsets
+			try {
+				if (rs != null)
+					rs.close();
+				if (stmt != null)
+					stmt.close();
+			} catch (SQLException e) {
+				System.err.println("Methode getSchicht(finally) SQL-Fehler: " + e.getMessage());
+			}
+			}
+		}	
 	}
 
-	//MethodenName ist verwirrend die Methode löscht doch alle Schichten eines Wochenplanes --> deleteSchichten(wpnr, con)
+	
 	/**
 	 * @author Anes Preljevic
-	 * @info Löschen einer Schicht mit zugehörigen Ma_Schicht (Mitarbeitern in Schichten)aus den Datenbank Tabellen 
+	 * @info Löschen der Schichten eines Wochenplans mit zugehörigen Tauschanfragen und Ma_Schicht (Mitarbeitern in Schichten)aus den Datenbank Tabellen 
 	 * Schicht, Ma-Schicht.
 	 */
 	protected boolean deleteSchichtvonWp(int wpnr,Connection con) {
-		Datenbank_Tauschanfrage tauschanfrage = new Datenbank_Tauschanfrage();
+		Datenbank_Ma_Schicht maschicht= new Datenbank_Ma_Schicht();
+		Datenbank_Schicht schicht= new Datenbank_Schicht();
+		Datenbank_Tauschanfrage tauschanfrage= new Datenbank_Tauschanfrage();
 		LinkedList<Tauschanfrage> tauschList = tauschanfrage.getTauschanfragen(con);
-		Datenbank_Schicht schicht = new Datenbank_Schicht();
 		LinkedList<Schicht> schichtList = schicht.getSchichten(con);
-		Datenbank_Ma_Schicht masch = new Datenbank_Ma_Schicht();
-		LinkedList<Ma_Schicht> maschichtList = masch.getMa_Schicht(con);;
+		LinkedList<Ma_Schicht> maschichtList = maschicht.getMa_Schicht(con);;
 
 		Statement stmt = null;
-		ResultSet rs = null;
+		
 		String sqlStatement = "DELETE FROM Schicht WHERE wpnr= "+wpnr;
 		
-		//Ohne Kommentare und Einrückungen komplett unübersichtlich!!!		
-		
+			
+		//Löschen Aller child Datensätze um die Foreignkeys in der Datenbank nicht zu verletzen
+		//Alle Schichten durchsuchen, um die betroffenen Schichten herauszufinden
 		for (Schicht sch : schichtList) {
 			if (sch.getWpnr() == wpnr) {
-				
-		for (Tauschanfrage tausch : tauschList) {
-				if (tausch.getSchichtnrsender() == sch.getSchichtnr()||tausch.getSchichtnrempfänger() == sch.getSchichtnr()) {
-					tauschanfrage.deleteTauschanfrage(tausch.getTauschnr(),con);
+				//Alle Tauschanfragen die sich auf die Schicht bezogen haben werden gelöscht
+				for (Tauschanfrage tausch : tauschList) {
+					if (tausch.getSchichtnrsender() == sch.getSchichtnr()||tausch.getSchichtnrempfänger() == sch.getSchichtnr()) {
+						tauschanfrage.deleteTauschanfrage(tausch.getTauschnr(),con);
+					}
 				}
+				//Alle Ma_Schicht Datensätze mit der zu löschenden Schicht werden gelöscht
+				for (Ma_Schicht ms : maschichtList) {
+					if (ms.getSchichtnr() == sch.getSchichtnr()) {
+						maschicht.deleteMa_SchichtWochenplan(sch.getSchichtnr(),con);
+					}
 				}
-		for (Ma_Schicht ms : maschichtList) {
-			if (ms.getSchichtnr() == sch.getSchichtnr()) {
-				masch.deleteMa_SchichtWochenplan(sch.getSchichtnr(),con);
 			}
-			}
-		}
 		}	
 		try {
 			stmt = con.createStatement();
@@ -331,16 +355,16 @@ class Datenbank_Schicht {
 			
 			return true;
 		} catch (SQLException sql) {
-			System.err.println("Methode deleteSchicht SQL-Fehler: " + sql.getMessage());
+			//Fehlerhandling, Ausgaben zur Ursachensuche und Rückgabewert auf false setzen
+			System.err.println("Methode deleteSchichtvonwp SQL-Fehler: " + sql.getMessage());
 			return false;
 		} finally {
+			//Schließen der offen gebliebenen Statements
 			try {
-				if (rs != null)
-					rs.close();
 				if (stmt != null)
 					stmt.close();
 			} catch (SQLException e) {
-				System.err.println("Methode deleteSchicht (finally) SQL-Fehler: " + e.getMessage());
+				System.err.println("Methode deleteSchichtvonwp (finally) SQL-Fehler: " + e.getMessage());
 			}
 		}
 	}
@@ -352,21 +376,36 @@ class Datenbank_Schicht {
 	protected  int getNewSchichtnr(Connection con) {
 		Statement stmt = null;
 		ResultSet rs = null;
+		//Benötigten Sql-Befehlt speichern
 		String sqlQuery = "select max(schichtnr)+1 from Schicht";
 
 		try {
+			//Resultset- und Statement-Objekt erzeugen
 			stmt = con.createStatement();
 			rs = stmt.executeQuery(sqlQuery);
 			rs.next();
+			//Speichern der nächsthöheren Schichtnr in maxSchichtnr
 			int maxSchichtnr = rs.getInt(1);
 			rs.close();
 			stmt.close();
+			
+			//Ausgabe der neuen Schichtnr
 			return maxSchichtnr;
 		} catch (SQLException sql) {
 			System.err.println("Methode getNewSchichtnrSQL-Fehler: "
 					+ sql.getMessage());
 			return -1;
+		}finally {
+			//Schließen der offen gebliebenen Resultsets und Statements
+			try {
+				if (rs != null)
+					rs.close();
+				if (stmt != null)
+					stmt.close();
+			} catch (SQLException e) {
+				System.err.println("Methode getNewSchichtnr (finally) SQL-Fehler: " + e.getMessage());
+			}
 		}
-		//finally-Block fehlt!
+
 	}
 }
