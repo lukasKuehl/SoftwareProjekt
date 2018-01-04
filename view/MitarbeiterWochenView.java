@@ -247,6 +247,8 @@ public class MitarbeiterWochenView extends JFrame{
 		getContentPane().add(jsp);
 		
 	}
+	
+	
 
 	
 }

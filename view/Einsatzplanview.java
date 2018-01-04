@@ -52,7 +52,7 @@ public class Einsatzplanview implements Observer {
 	
 	
 	/**
-	 *@author Darius Panteli
+	 *@author Darius Pantelii
 	 *@Info Update Methode, sobald sich die Daten aus dem aktuellen geändert haben, wird ein neur Wochenplan generiert.
 	 */
 	public void update() {

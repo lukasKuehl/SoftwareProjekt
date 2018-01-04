@@ -300,6 +300,7 @@ public class KasseWochenView  {
 		generiereTabelle();
 		frame.setVisible(true);
 	}
+	//
 	
 	private void generiereTabelle(){
 		ArrayList<String> wochenplaene = myController.getWochenplaene();

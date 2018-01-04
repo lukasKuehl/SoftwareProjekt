@@ -26,6 +26,7 @@ import javax.swing.SwingConstants;
  * anzumelden
  */
 
+
 public class AnmeldungView extends JFrame{
 
 	private JPanel cpAnmeldung;

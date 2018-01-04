@@ -44,6 +44,7 @@ public class KasseWocheErstellenView extends JFrame {
 	private Einsatzplanmodel myModel = null;
 	private Einsatzplanview myView = null;
 
+	
 	//Siehe AnmeldungView!
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
