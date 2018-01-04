@@ -157,7 +157,7 @@ class TauschanfrageStrg {
 			temp = temp + sender.getVorname() + " " + sender.getName() + " - " + senderSchicht.getSchichtnr() + " - " + "KW" + senderSchicht.getWpnr() + " - " + senderSchicht.getTbez() + " - " + senderSchicht.getAnfanguhrzeit() + "-" + senderSchicht.getEndeuhrzeit() + "\n --> ";
 									
 			//Eintragen Empfänger-Informationen
-			temp = temp + empfaenger.getVorname() + " " + empfaenger.getName() + " - " + empfaengerSchicht.getSchichtnr() + " - " + "KW" + empfaengerSchicht.getWpnr() + " - " + empfaengerSchicht.getTbez() + " - " + empfaengerSchicht.getAnfanguhrzeit() + ":" + empfaengerSchicht.getEndeuhrzeit();
+			temp = temp + empfaenger.getBenutzername() + " - " + empfaengerSchicht.getSchichtnr() + " - " + "KW" + empfaengerSchicht.getWpnr() + " - " + empfaengerSchicht.getTbez() + " - " + empfaengerSchicht.getAnfanguhrzeit() + ":" + empfaengerSchicht.getEndeuhrzeit();
 			
 			rueckgabe.add(temp);			
 		}	

@@ -79,8 +79,9 @@ class WochenplanStrg {
 					Date temp = format.parse(zeitString);				
 					zeitenDate.put(key, temp);			
 					
-				}catch(Exception e){
-					System.out.println("Fehler beim Konvertieren einer Uhrzeit");					
+				}catch(Exception e){					
+					String fehler = "Fehler beim Konvertieren einer Uhrzeit! \n";
+					myController.printErrorMessage(fehler);										
 				}					
 			}
 			

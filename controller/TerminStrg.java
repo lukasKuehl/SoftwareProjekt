@@ -150,9 +150,9 @@ class TerminStrg {
 				endUhrzeitDate = sdf.parse(endUhrzeit);
 				
 			}catch(Exception e){
-				System.out.println("Fehler beim Erstellen eines neuen Termins:");				
-				System.out.println("Fehler beim Konvertieren der Öffnungs- und Schließzeiten");
-				e.printStackTrace();
+				
+				String fehler = "Fehler beim Erstellen eines neuen Termins:\n" + "Fehler beim Konvertieren der Öffnungs- und Schließzeiten! \n" + e.getMessage();
+				myController.printErrorMessage(fehler);					
 			}
 			
 			//Prüfe, ob die Daten in der richtigen Reihenfolge sind(Anfangszeit darf nicht hinter der Endzeit liegen)
@@ -223,12 +223,15 @@ class TerminStrg {
 				success = true;
 			}
 			else{
-				System.out.println("Die Anfangsuhrzeit liegt hinter der Enduhrzeit! Bitte Eingaben überprüfen.");
+				
+				String fehler = "Die Anfangsuhrzeit liegt hinter der Enduhrzeit! Bitte Eingaben überprüfen.\n";
+				myController.printErrorMessage(fehler);					
 			}
 			
 		}catch(Exception e){
-			System.out.println("Fehler beim Erstellen eines neuen Termins:");
-			e.printStackTrace();			
+			
+			String fehler = "Fehler beim Erstellen eines neuen Termins:\n" + e.getMessage();
+			myController.printErrorMessage(fehler);				
 		}	
 	
 		return success;
@@ -262,7 +265,8 @@ class TerminStrg {
 			success = true;
 		}
 		else{
-			System.out.println("Der Termin konnte nicht gelöscht werden!");		
+			String fehler = "Der Termin konnte nicht gelöscht werden!\n";
+			myController.printErrorMessage(fehler);					
 		}	
 		
 		return success;
@@ -363,9 +367,10 @@ class TerminStrg {
 			}		
 		}
 		else{			
-			System.out.println("Die notwendigen Berechtigungen sind nicht vorhanden, bitte wenden Sie sich an den Systemadministrator.");
-		}
-		
+			
+			String fehler = "Die notwendigen Berechtigungen sind nicht vorhanden, bitte wenden Sie sich an den Systemadministrator. \n";
+			myController.printErrorMessage(fehler);		
+		}		
 		
 		return rueckgabe;
 	}	
