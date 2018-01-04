@@ -109,18 +109,18 @@ class WochenplanStrg {
 					
 				}
 				else{
-					System.out.println("Fehler beim Erstellen eines neuen Wochenplanes:");
-					System.out.println("Die Besetzungsanzahl darf nicht negativ sein!");
+					String fehler = "Fehler beim Erstellen eines neuen Wochenplanes:\n" +"Die Besetzungsanzahl darf nicht negativ sein! \n";
+					myController.printErrorMessage(fehler);						
 				}						
 			}
-			else{
-				System.out.println("Fehler beim Erstellen eines neuen Wochenplanes:");
-				System.out.println("Die Angaben zu den Öffnungs- und Hauptzeiten sind fehlerhaft!");
+			else{				
+				String fehler = "Fehler beim Erstellen eines neuen Wochenplanes: \n" + "Die Angaben zu den Öffnungs- und Hauptzeiten sind fehlerhaft! \n";
+				myController.printErrorMessage(fehler);	
 			}					
 		}
-		else{
-			System.out.println("Fehler beim Erstellen eines neuen Wochenplanes:");
-			System.out.println("Der Benutzer verfügt nicht über die notwendigen Berechtigungen zum Anlegen eines neuen Einsatzplanes!");
+		else{	
+			String fehler = "Fehler beim Erstellen eines neuen Wochenplanes: \n" + "Der Benutzer verfügt nicht über die notwendigen Berechtigungen zum Anlegen eines neuen Einsatzplanes! \n";
+			myController.printErrorMessage(fehler);			
 		}	
 		
 	return success;
@@ -152,14 +152,15 @@ class WochenplanStrg {
 				}				
 				
 			}catch(Exception e){
-				System.out.println("Fehler beim Erstellen eines neuen Wochenplanes nach Standardeinstellungen:");
-				System.out.println("Die Standardeinstellungen wurden nicht richtig übernommen!");
-				e.printStackTrace();
+				
+				String fehler = "Fehler beim Erstellen eines neuen Wochenplanes nach Standardeinstellungen: \n" + "Die Standardeinstellungen wurden nicht richtig übernommen! \n" + e.getMessage();
+				myController.printErrorMessage(fehler);					
 			}			
 		}
 		else{
-			System.out.println("Fehler beim Erstellen eines neuen Wochenplanes:");
-			System.out.println("Der Benutzer verfügt nicht über die notwendigen Berechtigungen zum Anlegen eines neuen Einsatzplanes!");
+			
+			String fehler = "Fehler beim Erstellen eines neuen Wochenplanes nach Standardeinstellungen: \n" + "Der Benutzer verfügt nicht über die notwendigen Berechtigungen zum Anlegen eines neuen Einsatzplanes! \n";
+			myController.printErrorMessage(fehler);				
 		}		
 		
 		return success;
@@ -247,9 +248,10 @@ class WochenplanStrg {
 	                   return false;
 	               }				
 			};
-		}catch(Exception e){
-			System.out.println("Fehler beim Erstellen eines neuen JTables für den Wochenplan" + wpbez);
-			e.printStackTrace();
+		}catch(Exception e){			
+
+			String fehler = "Fehler beim Erstellen eines neuen JTables für den Wochenplan" + wpbez + "\n" + e.getMessage();
+			myController.printErrorMessage(fehler);			
 		}
 		
          return wochenplan;
@@ -408,7 +410,9 @@ class WochenplanStrg {
 				}			
 				
 			}catch(Exception e){
-				System.out.println("Fehler beim Veröffentlichen eines Wochenplanes");				
+				
+				String fehler = "Fehler beim Veröffentlichen eines Wochenplanes \n" + e.getMessage();
+				myController.printErrorMessage(fehler);								
 			}		
 		}	
 		
@@ -436,12 +440,15 @@ class WochenplanStrg {
 					success = true;
 				}			
 				
-			}catch(Exception e){
-				System.out.println("Fehler beim Löschen eines Wochenplanes");				
+			}catch(Exception e){				
+
+				String fehler = "Fehler beim Löschen eines Wochenplanes \n" + e.getMessage();
+				myController.printErrorMessage(fehler);									
 			}		
 		}	
 		else{
-			System.out.println("Sie verfügen nicht über die notwendigen Berechtigungen, zum Entfernen eines Wochenplanes. Bitte wenden Sie sich an den Systemadministrator.");
+			String fehler = "Sie verfügen nicht über die notwendigen Berechtigungen, zum Entfernen eines Wochenplanes. Bitte wenden Sie sich an den Systemadministrator.\n";
+			myController.printErrorMessage(fehler);			
 		}
 		
 		return success;
@@ -503,12 +510,13 @@ class WochenplanStrg {
 	            success = true;
 	        }catch(IOException ioe)
 	        {
-	        	System.out.println("Fehler beim Verschicken der Wochenpläne per E-Mail:");
-	        	ioe.printStackTrace();
+	        	String fehler = "Fehler beim Verschicken der Wochenpläne per E-Mail:\n" + ioe.getMessage();
+				myController.printErrorMessage(fehler);		        
 	        }              
         }
 		else{
-			System.out.println("Sie verfügen nicht über die notwendigen Berechtigungen zum Verschicken eines Wochenplanes, bitte wenden Sie sich an den Systemadministrator.");
+			String fehler = "Sie verfügen nicht über die notwendigen Berechtigungen zum Verschicken eines Wochenplanes, bitte wenden Sie sich an den Systemadministrator.\n";
+			myController.printErrorMessage(fehler);		
 		}
         
 		return success;
@@ -574,7 +582,8 @@ class WochenplanStrg {
 				result = true;
 				
 			}catch(Exception e){
-				System.out.println("Fehler beim Update der Standardeinstellungen");	
+				String fehler = "Fehler beim Update der Standardeinstellungen \n";
+				myController.printErrorMessage(fehler);				
 			}	
 			return result;
 		}	
