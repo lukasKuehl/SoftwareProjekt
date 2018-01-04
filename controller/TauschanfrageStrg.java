@@ -106,17 +106,11 @@ class TauschanfrageStrg {
 				}
 			
 		if(valid){
-		try{				
+				
 			myModel.bestätigeTauschanfrage(empfaengerName,tauschanfrageNr);
 			success=true;
-		}	
-		catch(Exception e){
 
-			String fehler = "Controller: Fehler beim Bestätigen einer Tauschanfrage:\n" + e.getMessage();
-			myController.printErrorMessage(fehler);
-		}
-		
-		}
+		}	
 		else{
 			
 			String fehler = "Tauschanfrage kann nicht bestätigt werden, User ist nicht der Empfänger oder Tauschanfrage nicht vorhanden. \n";
