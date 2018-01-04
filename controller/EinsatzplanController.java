@@ -442,7 +442,7 @@ public class EinsatzplanController {
 	 * @author Lukas Kühl
 	 * @info Weiterleitung einer Anfrage zum Ausgeben aller hinterlegten Schichten anderer Mitarbeiter innerhalb einer Woche (Aufzeigen von alternativen Schichten zum erstellen einer Tauschanfrage). Falls es keine anderen Schichteinteilungen innerhalb der übergebenen Woche gibt, wird eine leere ArrayList<String> zurück gegeben.
 	 */	
-	public ArrayList<String> getAndereMitarbeiterSchichten(String wpbez, String tagbez, String username, int schichtNr){
+	public ArrayList<String> getAndereMitarbeiterSchichten(String wpbez, String username, int schichtNr){
 		ArrayList<String> rueckgabe = null;
 		try{
 			rueckgabe = this.schichtSteuerung.getAndereMitarbeiterSchichten(wpbez, username, schichtNr);
