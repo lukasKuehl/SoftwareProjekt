@@ -125,7 +125,7 @@ class TerminStrg {
 			
 			
 			//Prüfe, ob Uhrzeiten mit übergeben wurden. Falls nicht, wird der Termin/ die Krankmeldung ganztägig eingetragen.
-			if(anfangsUhrzeit == null || endUhrzeit == null){				
+			if(anfangsUhrzeit.startsWith("") || endUhrzeit.startsWith("")){				
 				
 				//Überschreibe die nicht hinterlegten Anfangs- und Enduhrzeiten mit den Öffnungs- und Schließzeiten des Wochenplanes --> Abdeckung des gesamten Tages
 				if(wp != null){
