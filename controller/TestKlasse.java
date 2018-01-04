@@ -23,7 +23,7 @@ public class TestKlasse {
 		
 		//Testen der Fehlermeldung
 		
-		myController.printErrorMessage("Dies ist ein Testfehler!");
+		myController.printErrorMessage("Dies ist ein Testfehler!\n" + "2.Zeile");
 		
 		*/
 		
