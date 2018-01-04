@@ -124,7 +124,6 @@ class TauschanfrageAnzeigenView extends JFrame {
 						// weiter bei ja
 						if (eingabe == JOptionPane.YES_OPTION) {
 							String s = listTauschanfragen.getSelectedValue().toString();
-							System.out.println( s);
 							String[] temp = s.split("-");
 							 temp[0] = temp[0].substring(10); 
 							 String tauschanfrageNrS = temp[0].trim();
