@@ -48,6 +48,7 @@ class TauschanfrageAnzeigenView extends JFrame {
 	private EinsatzplanController myController = null;
 	private DefaultListModel<String> modelTauschanfrage = null;
 	private ArrayList<String> tl = null;
+	private String empfaengername = null;
 
 	/**
 	 * @author Ramona Gerke
@@ -77,7 +78,7 @@ class TauschanfrageAnzeigenView extends JFrame {
 			modelTauschanfrage.addElement(m);
 		}
 		listTauschanfragen.setModel(modelTauschanfrage);
-		listTauschanfragen.setBounds(62, 161, 831, 333);
+		listTauschanfragen.setBounds(62, 161, 860, 333);
 		contentPane.add(listTauschanfragen);
 
 		lblTauschanfrageAnzeigen = new JLabel("Tauschanfragen");
@@ -87,8 +88,13 @@ class TauschanfrageAnzeigenView extends JFrame {
 
 		btnAnnehmen = new JButton("Annehmen");
 		btnAnnehmen.setFont(new Font("Verdana", Font.PLAIN, 15));
-		btnAnnehmen.setBounds(614, 503, 127, 25);
+		btnAnnehmen.setBounds(802, 517, 127, 25);
 		contentPane.add(btnAnnehmen);
+		
+		JLabel label = new JLabel("Bitte auswählen:");
+		label.setFont(new Font("Verdana", Font.PLAIN, 14));
+		label.setBounds(62, 138, 147, 18);
+		contentPane.add(label);
 
 		setVisible(true);
 
@@ -117,25 +123,14 @@ class TauschanfrageAnzeigenView extends JFrame {
 								null, JOptionPane.YES_NO_CANCEL_OPTION);
 						// weiter bei ja
 						if (eingabe == JOptionPane.YES_OPTION) {
-							String s = listTauschanfragen.getSelectedValue().toString().trim();
+							String s = listTauschanfragen.getSelectedValue().toString();
 							String[] temp = s.split("-");
-							String tauschanfrageNrS = temp[0].substring(10); // substring länge bestimmen
-							int tauschanfrageNr = Integer.parseInt(tauschanfrageNrS);
-							String senderVorname = temp[1];
-							String senderName = temp[2];
-							String senderSchichtNr = temp[3];
-							String senderWpNr = temp[4];
-							String senderTbez = temp[5];
-							String senderAnfangsuhrzeit = temp[6];
-							String senderEnduhrzeit = temp[7];
-							String empfaengerVorname = temp[8];
-							String empfaengerName = temp[9];
-							String empfaengerSchichtNr = temp[10];
-							String empfaengerWpBez = temp[11];
-							String empfaengerTagBez = temp[12];
-							String empfaengerAnfangsuhrzeit = temp[13];
-							String emfaengerEnduhrzeit = temp[14];
-							myController.akzeptiereTauschanfrage(empfaengerName, tauschanfrageNr);
+							 temp[0] = temp[0].substring(10); 
+							 String tauschanfrageNrS = temp[0].trim();
+							int tauschanfrageNr = Integer.parseInt(tauschanfrageNrS);	
+							empfaengername = temp[8];
+							System.out.println(empfaengername);
+							myController.akzeptiereTauschanfrage(empfaengername, tauschanfrageNr);
 							JOptionPane.showConfirmDialog(null, "Tauschanfrage erfolgreich angenommen",  "", JOptionPane.INFORMATION_MESSAGE);
 							dispose();
 
