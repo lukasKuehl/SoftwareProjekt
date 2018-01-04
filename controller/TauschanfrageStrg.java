@@ -107,15 +107,14 @@ class TauschanfrageStrg {
 			
 		if(valid){
 		try{				
-			this.myModel.bestätigeTauschanfrage(empfaengerName,tauschanfrageNr);
+			myModel.bestätigeTauschanfrage(empfaengerName,tauschanfrageNr);
+			success=true;
 		}	
 		catch(Exception e){
 
 			String fehler = "Controller: Fehler beim Bestätigen einer Tauschanfrage:\n" + e.getMessage();
 			myController.printErrorMessage(fehler);
 		}
-		
-		success=true;
 		
 		}
 		else{
