@@ -176,8 +176,7 @@ class TauschanfrageErstellenView extends JFrame {
 		comboBoxSchichtAndererMA = new JComboBox<String>();
 		//  Ausgeben einer ArrayList mit allen Schichten in einer JComboBox
 		String s =(String) cmbBoxSchicht.getSelectedItem();
-		String zwi = s.trim();
-		 String [] temp =zwi.split("-");
+		 String [] temp =s.split("-");
 	// Fehler beim parsen - JComboBox leer?
 		int schichtNr = Integer.parseInt(temp[0]); 
 		String kw = temp [1];

@@ -47,7 +47,7 @@ class TauschanfrageLoeschenView extends JFrame {
 		setTitle("Tauschanfrage löschen");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(250, 250, 800, 600);
+		setBounds(250, 250, 1000, 700);
 
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -63,7 +63,7 @@ class TauschanfrageLoeschenView extends JFrame {
 
 		lblTauschanfrageLoeschen = new JLabel("Tauschanfrage loeschen:");
 		lblTauschanfrageLoeschen.setFont(new Font("Verdana", Font.BOLD, 20));
-		lblTauschanfrageLoeschen.setBounds(70, 89, 284, 26);
+		lblTauschanfrageLoeschen.setBounds(62, 89, 284, 26);
 		panelTauschanfrage.add(lblTauschanfrageLoeschen);
 
 		listTauschanfragen = new JList<String>();
@@ -72,16 +72,27 @@ class TauschanfrageLoeschenView extends JFrame {
 		tl = myController.getTauschanfragen(myView.getUsername());
 		modelTauschanfrage = new DefaultListModel<String>();
 		for (String m : tl) {
-			modelTauschanfrage.addElement(m);
+			String s = m;
+			String [] temp = m.split("->");
+			String sender =temp[0] ;
+			String empfaenger = temp [1];
+			modelTauschanfrage.addElement(sender + "\n" + empfaenger);
+	
 		}
 		listTauschanfragen.setModel(modelTauschanfrage);
 		listTauschanfragen.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		listTauschanfragen.setBounds(95, 126, 362, 399);
+		listTauschanfragen.setBounds(62, 161, 831, 333);
 		panelTauschanfrage.add(listTauschanfragen);
 
 		btnBestaetigen = new JButton("Bestätigen");
-		btnBestaetigen.setBounds(519, 483, 141, 35);
+		btnBestaetigen.setFont(new Font("Verdana", Font.PLAIN, 15));
+		btnBestaetigen.setBounds(773, 515, 120, 25);
 		panelTauschanfrage.add(btnBestaetigen);
+		
+		JLabel label = new JLabel("Bitte ausw\u00E4hlen:");
+		label.setFont(new Font("Verdana", Font.PLAIN, 14));
+		label.setBounds(62, 127, 147, 18);
+		panelTauschanfrage.add(label);
 
 		setVisible(true);
 
@@ -108,7 +119,9 @@ class TauschanfrageLoeschenView extends JFrame {
 						if (eingabe == JOptionPane.YES_OPTION) {
 							String s = listTauschanfragen.getSelectedValue().toString().trim();
 							String[] temp = s.split("-");
+							System.out.println(temp[0]);
 							String tauschanfrageNrS = temp[0].substring(10); // substring länge bestimmen
+							System.out.println(tauschanfrageNrS);
 							int tauschanfrageNr = Integer.parseInt(tauschanfrageNrS);
 							String senderVorname = temp[1];
 							String senderName = temp[2];

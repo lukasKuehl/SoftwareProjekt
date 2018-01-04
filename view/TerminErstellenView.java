@@ -279,7 +279,6 @@ class TerminErstellenView extends JFrame {
 							kontrolleMinuten(txtFldUhrzeitBisB);
 							kontrolleMinuten(txtFldUhrzeitBisB);
 							}
-							else {
 								zeitraum = new TreeMap<String, String>();
 								username = myView.getUsername();
 								String bez = comboBoxTerminGrund.getSelectedItem().toString();
@@ -297,7 +296,7 @@ class TerminErstellenView extends JFrame {
 								JOptionPane.showMessageDialog(null, "Termin erfolgreich angelegt!", "  ",
 										JOptionPane.INFORMATION_MESSAGE);
 								dispose();
-								}
+								
 						}
 					else {
 						JOptionPane.showMessageDialog(null, "Wählen Sie andere Daten aus!", "  ",
@@ -307,7 +306,7 @@ class TerminErstellenView extends JFrame {
 
 				catch (Exception e1) {
 					JOptionPane.showMessageDialog(null,
-							"Daten konnten nicht umgewandelt werden, da die Dateiformate nicht stimmen! -"
+							"Keine Eingabe der Uhrzeit. Geben Sie eine Uhrzeit ein.  -"
 									+ " Fehler: TerminErstellenView Zeile Button Bestätigen ActionPerformed",
 							"Error", JOptionPane.ERROR_MESSAGE);
 				}

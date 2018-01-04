@@ -104,7 +104,6 @@ class WochenplanLoeschenView extends JFrame {
 						if (eingabe == JOptionPane.YES_OPTION) {
 							String s = listWochenplaene.getSelectedValue().toString();
 							wpbez = s.substring(2);
-							System.out.println(wpbez);
 							// Übergabe an den Controller
 							myController.entferneWochenplan(myView.getUsername(), wpbez);
 							JOptionPane.showMessageDialog(null, "Wochenplan erfolgreich gelöscht", 

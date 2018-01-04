@@ -107,7 +107,7 @@ class KrankmeldungErstellenView extends JFrame {
 		// Ausgeben einer Arraylist der gesamten Mitarbeiter
 		ma = myModel.getAlleMitarbeiter();
 		for (Mitarbeiter m : ma) {
-			comboBoxMA.addItem(m.getBenutzername() + m.getVorname() + " " + m.getName());
+			comboBoxMA.addItem( m.getVorname() +" " + m.getName() + "-" +m.getBenutzername() );
 		}
 		comboBoxMA.setBounds(150, 229, 180, 20);
 		panelKrankmeldung.add(comboBoxMA);
@@ -169,16 +169,19 @@ class KrankmeldungErstellenView extends JFrame {
 						zeitraum = new TreeMap<String, String>();
 
 						// Username anpassen - substring
-						username = comboBoxMA.getSelectedItem().toString();
-						username.trim();
-						username.split("-");
-						username.substring(0);
+						String s = comboBoxMA.getSelectedItem().toString();
+						String temp [] = s.split("-");
+						String name = temp [0];
+						username = temp[1];
+						System.out.println(temp[1]);
 						String bez = "Krankheit";
 						String grund = txtGrund.getText().toString();
 						zeitraum.put("wpbez", comboBoxWochenplaene.getSelectedItem().toString());
 						zeitraum.put("anfZeitraumTag", comboBoxAnfang.getSelectedItem().toString());
 						zeitraum.put("endZeitraumTag", comboBoxEnd.getSelectedItem().toString());
-
+						zeitraum.put("anfangsUhrzeit", "  :  ");
+						zeitraum.put("endUhrzeit", "  :  ");
+						
 						// Übergabe an den Controller
 						myController.erstelleTermin(username, bez, zeitraum, grund);
 						JOptionPane.showMessageDialog(null, "Krankmeldung wurde erfolgreich erstellt!",  "", JOptionPane.INFORMATION_MESSAGE);

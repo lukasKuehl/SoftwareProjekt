@@ -46,7 +46,7 @@ class TauschanfrageAnzeigenView extends JFrame {
 	private Einsatzplanmodel myModel = null;
 	private Einsatzplanview myView = null;
 	private EinsatzplanController myController = null;
-	private DefaultListModel<Object> modelTauschanfrage = null;
+	private DefaultListModel<String> modelTauschanfrage = null;
 	private ArrayList<String> tl = null;
 
 	/**
@@ -62,7 +62,7 @@ class TauschanfrageAnzeigenView extends JFrame {
 		setTitle("Tauschanfrage annehmen");
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(250, 250, 800, 600);
+		setBounds(250, 250, 1000, 700);
 
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.WHITE);
@@ -72,8 +72,12 @@ class TauschanfrageAnzeigenView extends JFrame {
 
 		listTauschanfragen = new JList<String>();
 		tl = myController.getTauschanfragen(myView.getUsername());
-		modelTauschanfrage = new DefaultListModel<Object>();
-		listTauschanfragen.setBounds(72, 140, 315, 336);
+		modelTauschanfrage = new DefaultListModel<String>();
+		for (String m : tl) {
+			modelTauschanfrage.addElement(m);
+		}
+		listTauschanfragen.setModel(modelTauschanfrage);
+		listTauschanfragen.setBounds(62, 161, 831, 333);
 		contentPane.add(listTauschanfragen);
 
 		lblTauschanfrageAnzeigen = new JLabel("Tauschanfragen");
@@ -83,7 +87,7 @@ class TauschanfrageAnzeigenView extends JFrame {
 
 		btnAnnehmen = new JButton("Annehmen");
 		btnAnnehmen.setFont(new Font("Verdana", Font.PLAIN, 15));
-		btnAnnehmen.setBounds(500, 500, 127, 25);
+		btnAnnehmen.setBounds(614, 503, 127, 25);
 		contentPane.add(btnAnnehmen);
 
 		setVisible(true);
@@ -141,7 +145,6 @@ class TauschanfrageAnzeigenView extends JFrame {
 									JOptionPane.WARNING_MESSAGE);
 						}
 					}
-
 					catch (Exception a) {
 						JOptionPane.showMessageDialog(null,
 								"Die Liste konnte nicht übergeben werden. - Methode ActionPerformed (btnBestätigen, TerminLoeschen)",
