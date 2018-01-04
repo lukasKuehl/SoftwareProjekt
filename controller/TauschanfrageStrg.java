@@ -98,14 +98,14 @@ class TauschanfrageStrg {
 
 		
 		LinkedList<Tauschanfrage> alleTauschanfragen=this.myModel.getTauschanfragen();
-
-				for(Tauschanfrage ta: alleTauschanfragen){
-				if((ta.getTauschnr() == tauschanfrageNr) && (ta.getEmpfänger().equals(empfaengerName))){
-					valid = true;	
-				}
-				}
+				//Tauschanfragen nach der zu Bestätigenden
+				//for(Tauschanfrage ta: alleTauschanfragen){
+				//if((ta.getTauschnr() == tauschanfrageNr) && (ta.getEmpfänger().equals(empfaengerName))){
+				//	valid = true;	
+			//	}
+			//	}
 			
-		if(valid){
+		//if(valid){
 		try{				
 			this.myModel.bestätigeTauschanfrage(empfaengerName,tauschanfrageNr);
 		}	
@@ -115,12 +115,12 @@ class TauschanfrageStrg {
 			myController.printErrorMessage(fehler);
 		}
 		success=true;
-		}
-		else{
+		//}
+		//else{
 			
-			String fehler = "Tauschanfrage kann nicht bestätigt werden, User ist nicht der Empfänger oder Tauschanfrage nicht vorhanden. \n";
-			myController.printErrorMessage(fehler);			
-		}
+			//String fehler = "Tauschanfrage kann nicht bestätigt werden, User ist nicht der Empfänger oder Tauschanfrage nicht vorhanden. \n";
+			//myController.printErrorMessage(fehler);			
+		//}
 		return success;
 	
 	}

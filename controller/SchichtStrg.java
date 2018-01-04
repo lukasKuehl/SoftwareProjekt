@@ -327,7 +327,7 @@ class SchichtStrg {
 				//Betroffene Schichzuordnung gefunden, entnahme des Mitarbeiters zum Auslesen des Namens
 				if(s.getSchichtnr() == mas.getSchichtnr()){					
 					ma = this.myModel.getMitarbeiter(mas.getBenutzername());				
-					rueckgabe.add(temp + ma.getVorname() + " " + ma.getName());
+					rueckgabe.add(temp + ma.getBenutzername());
 				}		
 			}		
 		}
