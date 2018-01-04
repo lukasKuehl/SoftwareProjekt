@@ -272,35 +272,34 @@ class TerminErstellenView extends JFrame {
 
 					// weiter bei ja
 					if (eingabe == JOptionPane.YES_OPTION) {
-						try {
+						
+							if (chckbxGanztig.isSelected() == false) {
 							kontrolleStunden(txtFldUhrzeitBisA);
 							kontrolleStunden(txtFldUhrzeitTerminV);
 							kontrolleMinuten(txtFldUhrzeitBisB);
 							kontrolleMinuten(txtFldUhrzeitBisB);
+							}
+							else {
+								zeitraum = new TreeMap<String, String>();
+								username = myView.getUsername();
+								String bez = comboBoxTerminGrund.getSelectedItem().toString();
+								String grund = txtFldGrund.getText().toString();
+								zeitraum.put("wpbez", comboBoxWochenplaene.getSelectedItem().toString());
+								zeitraum.put("anfZeitraumTag", comboBoxAnfang.getSelectedItem().toString());
+								zeitraum.put("endZeitraumTag", comboBoxEnd.getSelectedItem().toString());
+								zeitraum.put("anfangsUhrzeit", txtFldUhrzeitTerminV.getText().toString() + ":"
+										+ txtFldUhrzeitTerminB.getText().toString());
+								zeitraum.put("endUhrzeit",
+										txtFldUhrzeitBisA.getText().toString() + ":" + txtFldUhrzeitBisB.getText().toString());
 
-						} catch (NumberFormatException ex) {
-							JOptionPane.showMessageDialog(null, "Die Eingabe der Uhrzeit konnte nicht geprüft werden!",
-									"Error", JOptionPane.ERROR_MESSAGE);
+								// Übergabe an den Controller
+								myController.erstelleTermin(username, bez, zeitraum, grund);
+								JOptionPane.showMessageDialog(null, "Termin erfolgreich angelegt!", "  ",
+										JOptionPane.INFORMATION_MESSAGE);
+								dispose();
+								}
 						}
-						zeitraum = new TreeMap<String, String>();
-
-						username = myView.getUsername();
-						String bez = comboBoxTerminGrund.getSelectedItem().toString();
-						String grund = txtFldGrund.getText().toString();
-						zeitraum.put("wpbez", comboBoxWochenplaene.getSelectedItem().toString());
-						zeitraum.put("anfZeitraumTag", comboBoxAnfang.getSelectedItem().toString());
-						zeitraum.put("endZeitraumTag", comboBoxEnd.getSelectedItem().toString());
-						zeitraum.put("anfangsUhrzeit", txtFldUhrzeitTerminV.getText().toString() + ":"
-								+ txtFldUhrzeitTerminB.getText().toString());
-						zeitraum.put("endUhrzeit",
-								txtFldUhrzeitBisA.getText().toString() + ":" + txtFldUhrzeitBisB.getText().toString());
-
-						// Übergabe an den Controller
-						myController.erstelleTermin(username, bez, zeitraum, grund);
-						JOptionPane.showMessageDialog(null, "Termin erfolgreich angelegt!", "  ",
-								JOptionPane.INFORMATION_MESSAGE);
-						dispose();
-					} else {
+					else {
 						JOptionPane.showMessageDialog(null, "Wählen Sie andere Daten aus!", "  ",
 								JOptionPane.INFORMATION_MESSAGE);
 					}
