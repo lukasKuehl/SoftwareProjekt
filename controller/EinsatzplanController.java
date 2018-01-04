@@ -213,7 +213,7 @@ public class EinsatzplanController {
 			result = this.tauschanfrageSteuerung.akzeptiereTauschanfrage(empfaengerName, tauschanfrageNr);
 			
 		}catch(Exception e){			
-
+					
 			String fehler = "Fehler innerhalb des Controllers:\n" + "Fehler beim Aufruf der Methode akzeptiereTauschanfrage:\n" + e.getMessage();
 			this.printErrorMessage(fehler);							
 		}	
