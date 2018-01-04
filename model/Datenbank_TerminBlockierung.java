@@ -24,6 +24,8 @@ class Datenbank_TerminBlockierung {
 	 * @Thomas Friesen
 	 * @info  Fügt einen neuen Termin-Datensatz in die TerminBlockierung Tabelle hinzu.
 	 */
+	private Einsatzplanmodel myModel = null;
+	
 	protected boolean addTerminBlockierung(TerminBlockierung terminBlockierung,Connection con) {
 		boolean success = false;
 		PreparedStatement pstmt = null;
@@ -59,8 +61,9 @@ class Datenbank_TerminBlockierung {
 				System.out.println("Der Termin wurde bereits in die TerminBlockierung-Tabelle eingetragen");
 			}
 			//Prüfung der FK-Constraints
-			if (checkTerminBlockierungFK(benutzername,con)){
+			if (myModel.getMitarbeiter(benutzername) == null){
 				System.out.println("Der Benutzername existiert nicht in der Mitarbeitertabelle");
+				return false;
 			}
 			else{
 				//Es wurde sichergestellt, dass die PK- und FK-Check-Constraints nicht verletzt werden --> Der Datensatz kann erzeugt werden
