@@ -73,7 +73,7 @@ class TerminLoeschenView extends JFrame {
 		contentPane.add(lblTerninLoeschen);
 
 		listTermin = new JList<String>();
-		listTermin.setFont(new Font("Verdana", Font.PLAIN, 21));
+		listTermin.setFont(new Font("Verdana", Font.PLAIN, 15));
 		// Ausgeben einer Arraylist für alle Termine des Mitarbeiters
 		tl = myController.getMitarbeiterTermine(myView.getUsername());
 		model = new DefaultListModel<String>();
@@ -86,7 +86,7 @@ class TerminLoeschenView extends JFrame {
 		listTermin.getModel();
 		contentPane.add(listTermin);
 
-		lblTerminAuswaehlen = new JLabel("Termin auswählen");
+		lblTerminAuswaehlen = new JLabel("Termin auswählen:");
 		lblTerminAuswaehlen.setFont(new Font("Verdana", Font.PLAIN, 13));
 		lblTerminAuswaehlen.setBounds(62, 120, 152, 14);
 		contentPane.add(lblTerminAuswaehlen);

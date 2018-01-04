@@ -233,14 +233,11 @@ class TauschanfrageErstellenView extends JFrame {
 				try {
 					schichtAndererMa = myController.getAndereMitarbeiterSchichten(cmbBoxWP.getSelectedItem().toString(),
 							 myView.getUsername(), senderSchichtnr);
-					String s = schichtAndererMa.toString(); System.out.println(s);
-					// String nach "," splitten und in zwei Strings speichern
-					String[] temp = s.split(",");
-					String sender = temp[0];
-					String empfaenger = temp[1];
-					// String empfaenger splittten für die Übergabe an den Controller und
+					for(String n : schichtAndererMa) {
+					String s = n.toString(); System.out.println(s);
+					// String empfaenger teilen für die Übergabe an den Controller und
 					// Aufbereitung der Parameter
-					String[] tempEmpfaenger = empfaenger.split("-");
+					String[] tempEmpfaenger = s.split("-");
 					String schichtNrsAMa = tempEmpfaenger[0].trim();
 					empfaengerSchichtNr = Integer.parseInt(schichtNrsAMa);
 					String kwAndererMa = tempEmpfaenger[1];
@@ -248,9 +245,10 @@ class TauschanfrageErstellenView extends JFrame {
 					String anfangszeitAndererMa = tempEmpfaenger[3];
 					String endzeitAndererMa = tempEmpfaenger[4];
 					String empfaengerName = tempEmpfaenger[5];
+					System.out.println(schichtNrsAMa + tagAndererMa +  anfangszeitAndererMa + endzeitAndererMa + empfaengerName);
 					comboBoxSchichtAndererMA.addItem(kwAndererMa + " " + tagAndererMa + " " + anfangszeitAndererMa + " "
 							+ endzeitAndererMa + " " + empfaengerName);
-					
+					}
 					comboBoxSchichtAndererMA.setEnabled(true);
 					labelSchichtAndererMA.setEnabled(true);
 				} catch (Exception a) {
