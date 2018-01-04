@@ -59,22 +59,22 @@ class KasseBenutzerrolleView extends JFrame {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setResizable(false);
 		setLocationRelativeTo(null);
-		setBounds(100, 100, 1538, 864);
+		setBounds(100, 100, 640, 480);
 		getContentPane().setLayout(null);
 
 		lblBenutzerZuweisen = new JLabel("Benutzer zuweisen");
-		lblBenutzerZuweisen.setFont(new Font("Tahoma", Font.BOLD, 30));
-		lblBenutzerZuweisen.setBounds(83, 124, 301, 73);
+		lblBenutzerZuweisen.setFont(new Font("Verdana", Font.BOLD, 30));
+		lblBenutzerZuweisen.setBounds(64, 71, 364, 73);
 		getContentPane().add(lblBenutzerZuweisen);
 
 		lblMitarbeiterAuswaehlen = new JLabel("Mitarbeiter ausw\u00E4hlen:");
-		lblMitarbeiterAuswaehlen.setFont(new Font("Tahoma", Font.BOLD, 18));
-		lblMitarbeiterAuswaehlen.setBounds(83, 262, 217, 39);
+		lblMitarbeiterAuswaehlen.setFont(new Font("Verdana", Font.BOLD, 18));
+		lblMitarbeiterAuswaehlen.setBounds(64, 192, 249, 39);
 		getContentPane().add(lblMitarbeiterAuswaehlen);
 
 		//ComboBox sollte Informationen darüber bekommen, welche Werte eingetragen werden können (z.B. JComboBox<String>)
 		cbMitarbeiter = new JComboBox();
-		cbMitarbeiter.setBounds(381, 274, 128, 20);
+		cbMitarbeiter.setBounds(360, 204, 128, 20);
 		LinkedList<Mitarbeiter> alleMitarbeiter = this.myModel.getAlleMitarbeiter();
 		
 		for(Mitarbeiter mitarbeiter: alleMitarbeiter){
@@ -97,7 +97,7 @@ class KasseBenutzerrolleView extends JFrame {
 				}
 			}
 		});
-		btnBestaetigen.setBounds(420, 390, 89, 23);
+		btnBestaetigen.setBounds(389, 264, 99, 23);
 		getContentPane().add(btnBestaetigen);
 		setVisible(true);
 

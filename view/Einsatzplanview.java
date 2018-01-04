@@ -57,8 +57,10 @@ public class Einsatzplanview implements Observer {
 	 */
 	public void update() {
 		
-		KasseWochenView.myFrame();
-		new KasseWochenView(myModel, myController, null);
+		//KasseWochenView.myFrame();
+		//new KasseWochenView(myModel, myController, null);
+		
+		
 		
 		//Muss noch ausgefüllt werden --> zu Programmstart die erste Woche in der Wochenliste, andernfalls die aktuelle die in dem Label in der jeweiligen Wochenview liegt
 		

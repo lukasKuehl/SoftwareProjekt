@@ -45,7 +45,7 @@ import model.Einsatzplanmodel;
 //Implementierung von ActionListener überflüssig, siehe vorherige Klassen!
 
 //Hilfsklassen sind nicht public!
-public class KasseWochenView  {
+public class KasseWochenView extends JFrame {
 
 	private JPanel contentPane, pnlMenuBar;
 	private JTable table;
@@ -65,13 +65,13 @@ public class KasseWochenView  {
 	private Einsatzplanview myView = null;
 	private JTable tbleWochenplan;
 
-	static JFrame frame;
+	//static JFrame frame;
 	//siehe AnmeldungView!
-	
+	/*
 	public static void myFrame(){
 		frame.dispose();
 	}
-	
+	*/
 	/**
 	 * Launch the application.
 	 */
@@ -107,19 +107,19 @@ public class KasseWochenView  {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		frame = new JFrame();
-		frame.setTitle("Einsatzplan Kassenbüro");
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setResizable(false);
-		frame.setLocationRelativeTo(null);
-		frame.setBounds(100, 100, 1538, 864);
+		//frame = new JFrame();
+		setTitle("Einsatzplan Kassenbüro");
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setResizable(false);
+		setLocationRelativeTo(null);
+		setBounds(100, 100, 1538, 864);
 
 		// MenuBar mit den ganzen Unterpunkten - Variablen sind public
 
 		menuBar = new JMenuBar();
 		menuBar.setMargin(new Insets(62, 0, 0, 0));
 		menuBar.setFont(new Font("Verdana", Font.PLAIN, 26));
-		frame.setJMenuBar(menuBar);
+		setJMenuBar(menuBar);
 
 		mnWoche = new JMenu("Wochenplan");
 		mnWoche.setFont(new Font("VerdanaI", Font.PLAIN, 26));
@@ -230,7 +230,7 @@ public class KasseWochenView  {
 		mntmBenutzerZuweisen.setHorizontalAlignment(SwingConstants.TRAILING);
 		mntmBenutzerZuweisen.setFont(new Font("Verdana", Font.PLAIN, 21));
 		mnBenutzerrolle.add(mntmBenutzerZuweisen);
-		frame.getContentPane().setLayout(null);
+		getContentPane().setLayout(null);
 
 		//Warum KW 1? Es gibt doch keine anderen Label in denen die KW steht
 		lblKW1 = new JLabel("");
@@ -238,7 +238,7 @@ public class KasseWochenView  {
 		lblKW1.setBounds(109, 11, 136, 30);
 		ArrayList<String> wochenplaene = myController.getWochenplaene();
 		lblKW1.setText(wochenplaene.get(0).toString());
-		frame.getContentPane().add(lblKW1);
+		getContentPane().add(lblKW1);
 
 		btnRechts = new JButton("");
 		btnRechts.setContentAreaFilled(false);
@@ -274,7 +274,7 @@ public class KasseWochenView  {
 				}
 			}
 		});
-		frame.getContentPane().add(btnRechts);
+		getContentPane().add(btnRechts);
 
 		btnLinks = new JButton("");
 		btnLinks.setBorderPainted(false);
@@ -296,9 +296,9 @@ public class KasseWochenView  {
 			}
 		});
 		
-		frame.getContentPane().add(btnLinks);
+		getContentPane().add(btnLinks);
 		generiereTabelle();
-		frame.setVisible(true);
+		setVisible(true);
 	}
 	//
 	
@@ -314,7 +314,7 @@ public class KasseWochenView  {
 		jsp = new JScrollPane(tbleWochenplan);
 		jsp.setBounds(24, 81, 1439, 676);
 		System.out.println(currentKW);
-		frame.getContentPane().add(jsp);
+		getContentPane().add(jsp);
 		
 		
 	}
