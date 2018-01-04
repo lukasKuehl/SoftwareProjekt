@@ -73,6 +73,7 @@ class TerminLoeschenView extends JFrame {
 		contentPane.add(lblTerninLoeschen);
 
 		listTermin = new JList<String>();
+		listTermin.setFont(new Font("Verdana", Font.PLAIN, 21));
 		// Ausgeben einer Arraylist für alle Termine des Mitarbeiters
 		tl = myController.getMitarbeiterTermine(myView.getUsername());
 		model = new DefaultListModel<String>();
@@ -81,7 +82,7 @@ class TerminLoeschenView extends JFrame {
 		}
 		listTermin.setModel(model);
 		listTermin.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		listTermin.setBounds(65, 145, 399, 355);
+		listTermin.setBounds(65, 145, 622, 355);
 		listTermin.getModel();
 		contentPane.add(listTermin);
 
@@ -119,14 +120,13 @@ class TerminLoeschenView extends JFrame {
 						if (eingabe == JOptionPane.YES_OPTION) {
 							String s =listTermin.getSelectedValue().toString();
 							String [] temp =s.split("-");
-							temp[0] = temp[0].trim();
-							temp[0] = temp [0].substring(5, temp[0].length());		
+							temp[0] = temp[0].trim();	
 							int terminnr = Integer.parseInt(temp[0]);
 							String wpbez = temp [1];
 							String date = temp[2];
 							String anfangsUhrzeit = temp[3];
 							String endUhrzeit = temp [4];
-							JOptionPane.showConfirmDialog(null, "Termin erfolgreich gelöscht", "", JOptionPane.INFORMATION_MESSAGE);
+							JOptionPane.showMessageDialog(null, "Termin erfolgreich gelöscht", "", JOptionPane.INFORMATION_MESSAGE);
 							dispose();
 							
 						} else {

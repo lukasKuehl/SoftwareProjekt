@@ -64,6 +64,7 @@ class KrankmeldungLoeschenView extends JFrame {
 		// Liste der Krankmeldungen wird einem DefaultListModel hinzugefügt und dann in
 		// einer ComboBox ausgegeben.
 		listKrankmeldung = new JList<String>();
+		listKrankmeldung.setFont(new Font("Verdana", Font.PLAIN, 21));
 		kl = myController.getAlleTermine(myView.getUsername());
 		model = new DefaultListModel<String>();
 		for (String m : kl) {
@@ -71,7 +72,7 @@ class KrankmeldungLoeschenView extends JFrame {
 		}
 		listKrankmeldung.setModel(model);
 		listKrankmeldung.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		listKrankmeldung.setBounds(62, 143, 395, 382);
+		listKrankmeldung.setBounds(62, 143, 575, 382);
 		listKrankmeldung.getModel();
 		contentPane.add(listKrankmeldung);
 
@@ -115,8 +116,7 @@ class KrankmeldungLoeschenView extends JFrame {
 						if (eingabe == JOptionPane.YES_OPTION) {
 							String s = listKrankmeldung.getSelectedValue().toString();
 							String [] temp =s.split("-");
-							temp[0] = temp[0].trim();
-							temp[0] = temp [0].substring(5, temp[0].length());		
+							temp[0] = temp[0].trim();	
 							int terminnr = Integer.parseInt(temp[0]);
 							String wpbez = temp [1];
 							String date = temp[2];
