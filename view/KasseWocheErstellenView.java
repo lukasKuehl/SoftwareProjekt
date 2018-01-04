@@ -331,6 +331,7 @@ public class KasseWocheErstellenView extends JFrame {
 				if (confirmed == JOptionPane.YES_OPTION) {
 					if (myController.erstelleWochenplanCustom(myView.getUsername(), gibWochenplanbezeichnung(),
 							gibOeffnungszeiten(), gibBesetzung())) {
+						myView.update();
 						dispose();
 					} else {
 						//Benutzer hat von sich aus abgebrochen --> Keine Fehlermeldung notwendig

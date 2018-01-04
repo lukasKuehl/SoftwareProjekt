@@ -1,9 +1,11 @@
 package view;
 
 import java.awt.EventQueue;
+import java.awt.Frame;
 import java.util.ArrayList;
 import java.util.TreeMap;
 
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import controller.EinsatzplanController;
@@ -50,12 +52,14 @@ public class Einsatzplanview implements Observer {
 	
 	
 	/**
-	 *@author Ramona Gerke
+	 *@author Darius Panteli
 	 *@Info Update Methode, sobald sich die Daten aus dem aktuellen geändert haben, wird ein neur Wochenplan generiert.
 	 */
 	public void update() {
 		
-
+		KasseWochenView.myFrame();
+		new KasseWochenView(myModel, myController, null);
+		
 		//Muss noch ausgefüllt werden --> zu Programmstart die erste Woche in der Wochenliste, andernfalls die aktuelle die in dem Label in der jeweiligen Wochenview liegt
 		
 		

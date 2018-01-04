@@ -45,9 +45,8 @@ public class MitarbeiterWochenView extends JFrame{
 	private Einsatzplanmodel myModel = null;
 	private EinsatzplanController myController = null;
 	private Einsatzplanview myView = null;
-
 	private int currentKW = 0;
-
+	private JScrollPane jsp;
 	//Siehe AnmeldungView
 	
 	public static void main(String[] args) {
@@ -237,17 +236,15 @@ public class MitarbeiterWochenView extends JFrame{
 		lblKW1.setText(wochenplaene.get(currentKW).toString());
 		
 		tbleWochenplan = myController.generiereWochenplanView(wochenplaene.get(currentKW));
-		tbleWochenplan.setBounds(24, 81, 1439, 676);
-
 		
-		/*tbleWochenplan.getTableHeader().setSize(tbleWochenplan.getTableHeader().getPreferredSize());
+		tbleWochenplan.getTableHeader().setSize(tbleWochenplan.getTableHeader().getPreferredSize());
 		tbleWochenplan.setSize(tbleWochenplan.getPreferredSize());
 		tbleWochenplan.setPreferredScrollableViewportSize(tbleWochenplan.getPreferredScrollableViewportSize());
 		tbleWochenplan.setFillsViewportHeight(true);
-		JScrollPane jsp = new JScrollPane(tbleWochenplan);	*/				
+		JScrollPane jsp = new JScrollPane(tbleWochenplan);			
+		jsp.setBounds(24, 81, 1439, 676);
 		
-		//getContentPane().add(jsp);
-		getContentPane().add(tbleWochenplan);
+		getContentPane().add(jsp);
 		
 	}
 
