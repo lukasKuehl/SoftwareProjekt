@@ -156,6 +156,7 @@ class Datenbank_Tauschanfrage {
 			
 		} catch (SQLException sql) {
 			System.err.println("Methode checkMa_SchichtFK SQL-Fehler: " + sql.getMessage());
+			return false;
 		
 		} finally {
 			try {

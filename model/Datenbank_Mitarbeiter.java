@@ -55,7 +55,7 @@ class Datenbank_Mitarbeiter {
 			if (checkMitarbeiter(benutzername,con)) {
 				System.out.println("Der Mitarbeiter wurde bereits in die Schicht eingeteilt!");
 			}
-			if (checkMitarbeiterFK(job,whname,con)){
+			if (checkMitarbeiterFK(job,whname,con) == false){
 				System.out.println("Die Foreign-Key-Constraints der Mitarbeitertabelle wurden verletzt");
 			}
 			else{

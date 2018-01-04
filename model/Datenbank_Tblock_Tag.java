@@ -200,6 +200,7 @@ class Datenbank_Tblock_Tag {
 			
 		} catch (SQLException sql) {
 			System.err.println("Methode checkTblock_TagFK SQL-Fehler: " + sql.getMessage());
+			return false;
 		
 		} finally {
 			try {

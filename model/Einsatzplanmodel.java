@@ -191,7 +191,8 @@ public boolean checkWochenplanFK(String benutzername) {
 	}catch(Exception e){
 		System.out.println("Fehler innerhalb des Modells:");
 		System.out.println("Fehler beim Aufruf der Methode checkWochenplanFK:");
-		e.printStackTrace();			
+		e.printStackTrace();
+		return false;
 	}
 	return result;
 }
@@ -272,11 +273,10 @@ public boolean checkWochenplanFK(String benutzername) {
 		}catch(Exception e){
 			System.out.println("Fehler innerhalb des Modells:");
 			System.out.println("Fehler beim Aufruf der Methode addMa_Schicht:");
-			e.printStackTrace();			
+			e.printStackTrace();
 		}
 		
 		notifyObservers();
-		
 	}
 	
 	public boolean checkMa_Schicht(int schichtnr, String benutzername) {
@@ -300,7 +300,8 @@ public boolean checkWochenplanFK(String benutzername) {
 		}catch(Exception e){
 			System.out.println("Fehler innerhalb des Modells:");
 			System.out.println("Fehler beim Aufruf der Methode checkMa_SchichtFK:");
-			e.printStackTrace();			
+			e.printStackTrace();	
+			return false;
 		}
 		return result;
 	}
@@ -376,7 +377,8 @@ public boolean checkWochenplanFK(String benutzername) {
 		}catch(Exception e){
 			System.out.println("Fehler innerhalb des Modells:");
 			System.out.println("Fehler beim Aufruf der Methode checkMitarbeiterFK:");
-			e.printStackTrace();			
+			e.printStackTrace();	
+			return false;
 		}
 		return result;
 	}
@@ -450,7 +452,8 @@ public boolean checkWochenplanFK(String benutzername) {
 		}catch(Exception e){
 			System.out.println("Fehler innerhalb des Modells:");
 			System.out.println("Fehler beim Aufruf der Methode checkSchichtFK:");
-			e.printStackTrace();	
+			e.printStackTrace();
+			return false;
 		}
 		return result;
 	}
@@ -694,7 +697,8 @@ public boolean checkWochenplanFK(String benutzername) {
 		}catch(Exception e){
 			System.out.println("Fehler innerhalb des Modells:");
 			System.out.println("Fehler beim Aufruf der Methode checkTagFK:");
-			e.printStackTrace();	
+			e.printStackTrace();
+			return false;
 		}
 		return result;
 	}
@@ -876,10 +880,12 @@ public boolean checkWochenplanFK(String benutzername) {
 		try{
 			result = this.dataTerminBlockierung.checkTerminBlockierungFK(benutzername, con);
 			
+			
 		}catch(Exception e){
 			System.out.println("Fehler innerhalb des Modells:");
 			System.out.println("Fehler beim Aufruf der Methode checkMa_Schicht:");
-			e.printStackTrace();			
+			e.printStackTrace();	
+			return false;
 		}
 		return result;
 	}
