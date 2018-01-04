@@ -81,7 +81,7 @@ public class KasseWocheErstellenView extends JFrame {
 
 		lblWochenplanErstellen = new JLabel("Wochenplan erstellen");
 		lblWochenplanErstellen.setFont(new Font("Verdana", Font.BOLD, 30));
-		lblWochenplanErstellen.setBounds(39, 127, 327, 52);
+		lblWochenplanErstellen.setBounds(39, 127, 370, 52);
 		getContentPane().add(lblWochenplanErstellen);
 
 		lblKalenderwocheKw = new JLabel("Kalenderwoche KW:");
@@ -142,7 +142,7 @@ public class KasseWocheErstellenView extends JFrame {
 		txtOeffnungAnfangB.setColumns(2);
 
 		lblBis = new JLabel("     bis");
-		lblBis.setFont(new Font("Tahoma", Font.BOLD, 13));
+		lblBis.setFont(new Font("Verdana", Font.BOLD, 13));
 		lblBis.setBounds(211, 474, 56, 16);
 		getContentPane().add(lblBis);
 
@@ -224,7 +224,7 @@ public class KasseWocheErstellenView extends JFrame {
 		txtHauptAnfangB.setColumns(2);
 
 		lblBis_1 = new JLabel("bis");
-		lblBis_1.setFont(new Font("Tahoma", Font.BOLD, 13));
+		lblBis_1.setFont(new Font("Verdana", Font.BOLD, 13));
 		lblBis_1.setBounds(222, 609, 56, 16);
 		getContentPane().add(lblBis_1);
 
@@ -303,7 +303,7 @@ public class KasseWocheErstellenView extends JFrame {
 		//
 		
 		lblKassen = new JLabel("Kassen:");
-		lblKassen.setFont(new Font("Tahoma", Font.BOLD, 15));
+		lblKassen.setFont(new Font("Verdana", Font.BOLD, 15));
 		lblKassen.setBounds(487, 626, 509, 16);
 		getContentPane().add(lblKassen);
 
@@ -336,8 +336,7 @@ public class KasseWocheErstellenView extends JFrame {
 						dispose();
 					} else {
 						//Benutzer hat von sich aus abgebrochen --> Keine Fehlermeldung notwendig
-						lblFehlermeldung
-								.setText("Fehler beim Erstellen des Wochenplans. Bitte überprüfen Sie Ihre Eingaben.");
+						lblFehlermeldung.setText("Fehler beim Erstellen des Wochenplans. Bitte überprüfen Sie Ihre Eingaben.");
 
 					}
 
@@ -407,27 +406,27 @@ public class KasseWocheErstellenView extends JFrame {
 		getContentPane().add(rdbtnStandardeinstellungen);
 
 		lblAnzahlZustzlicherMitarbeiter = new JLabel("Anzahl zus\u00E4tzlicher Mitarbeiter:");
-		lblAnzahlZustzlicherMitarbeiter.setFont(new Font("Tahoma", Font.BOLD, 15));
+		lblAnzahlZustzlicherMitarbeiter.setFont(new Font("Verdana", Font.BOLD, 15));
 		lblAnzahlZustzlicherMitarbeiter.setBounds(487, 575, 509, 16);
 		getContentPane().add(lblAnzahlZustzlicherMitarbeiter);
 
 		lblUhr = new JLabel("Uhr");
-		lblUhr.setFont(new Font("Tahoma", Font.BOLD, 13));
+		lblUhr.setFont(new Font("Verdana", Font.BOLD, 13));
 		lblUhr.setBounds(310, 442, 56, 16);
 		getContentPane().add(lblUhr);
 
 		lblUhr_1 = new JLabel("Uhr");
-		lblUhr_1.setFont(new Font("Tahoma", Font.BOLD, 13));
+		lblUhr_1.setFont(new Font("Verdana", Font.BOLD, 13));
 		lblUhr_1.setBounds(310, 503, 56, 16);
 		getContentPane().add(lblUhr_1);
 
 		lblUhr_2 = new JLabel("Uhr");
-		lblUhr_2.setFont(new Font("Tahoma", Font.BOLD, 13));
+		lblUhr_2.setFont(new Font("Verdana", Font.BOLD, 13));
 		lblUhr_2.setBounds(310, 575, 56, 16);
 		getContentPane().add(lblUhr_2);
 
 		lblUhr_3 = new JLabel("Uhr");
-		lblUhr_3.setFont(new Font("Tahoma", Font.BOLD, 13));
+		lblUhr_3.setFont(new Font("Verdana", Font.BOLD, 13));
 		lblUhr_3.setBounds(310, 641, 56, 16);
 		getContentPane().add(lblUhr_3);
 		setVisible(true);
@@ -459,7 +458,7 @@ public class KasseWocheErstellenView extends JFrame {
 	}
 
 	protected String gibWochenplanbezeichnung() {
-		return cbKW.getSelectedItem().toString();
+		return "KW" + cbKW.getSelectedItem().toString();
 	}
 
 	//Die beiden Mehtoden sind ohne Kommentare nicht wirklich nachvollziehbar!
