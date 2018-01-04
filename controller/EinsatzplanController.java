@@ -3,6 +3,8 @@ package controller;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.TreeMap;
+
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.JTableHeader;
 
@@ -565,4 +567,15 @@ public class EinsatzplanController {
 		}
 		return false;		
 	}	
+	
+	protected void printErrorMessage(String message){
+		
+		String info = "<html><font color=red>Fehlermeldung:</font></html>\n";
+		info = info + message;
+		
+		JOptionPane.showMessageDialog(null, info, "Error", JOptionPane.ERROR_MESSAGE);
+			
+	}
+	
+	
 }

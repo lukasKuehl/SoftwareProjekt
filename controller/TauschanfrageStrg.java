@@ -146,7 +146,7 @@ class TauschanfrageStrg {
 			Schicht empfaengerSchicht = this.myModel.getSchicht(t.getSchichtnrempfänger());			
 						
 			//Hinterlegen der individuellen Tausch-Nr
-			String temp = "Tausch-Nr: " + t.getTauschnr() + " - ";
+			String temp = "TauschNr: " + t.getTauschnr() + " - ";
 			
 			//Eintragen Sender-Informationen
 			temp = temp + sender.getVorname() + " " + sender.getName() + " - " + senderSchicht.getSchichtnr() + " - " + "KW" + senderSchicht.getWpnr() + " - " + senderSchicht.getTbez() + " - " + senderSchicht.getAnfanguhrzeit() + "-" + senderSchicht.getEndeuhrzeit() + "\n --> ";

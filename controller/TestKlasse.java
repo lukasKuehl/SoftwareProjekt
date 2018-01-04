@@ -19,6 +19,13 @@ public class TestKlasse {
 		myModel = new Einsatzplanmodel();			
 		myController = new EinsatzplanController(myModel);		
 		
+		/*
+		
+		//Testen der Fehlermeldung
+		
+		myController.printErrorMessage("Dies ist ein Testfehler!");
+		
+		*/
 		
 		/*
 		

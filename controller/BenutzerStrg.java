@@ -88,7 +88,7 @@ class BenutzerStrg {
 						success = true;
 					}
 					else{
-						System.out.println("Das eingegebene Passwort ist nicht korrekt!");
+						myController.printErrorMessage("Das eingegebene Passwort ist nicht korrekt!");					
 					}					
 				}
 				else{
@@ -96,8 +96,9 @@ class BenutzerStrg {
 				}				
 				
 			}catch(Exception e){
-				System.out.println("Fehler beim Anmelden des Users " + username + ", bitte Eingaben überprüfen :");
-				e.printStackTrace();
+				
+				String fehler = "Fehler beim Anmelden des Users " + username + ", bitte Eingaben überprüfen:\n" + e.getMessage();
+				myController.printErrorMessage(fehler);				
 			}		
 		}			
 		
@@ -116,8 +117,9 @@ class BenutzerStrg {
 				//Entferne die View aus der Liste der Observer beim Model.
 				this.myModel.removeObserver(this.myController.getView());		
 			}catch(Exception e){
-				System.out.println("Fehler beim Abmelden des Users " + username + " :");
-				e.printStackTrace();
+				
+				String fehler = "Fehler beim Abmelden des Users " + username + " :\n" + e.getMessage();
+				myController.printErrorMessage(fehler);					
 			}	
 		}				
 		return success;
@@ -136,8 +138,8 @@ class BenutzerStrg {
 				//Wechsel der Benutzerrolle des übergebenen Mitarbeiters.
 				this.myModel.wechselBenutzerrolle(username);				
 			}catch(Exception e){
-				System.out.println("Fehler beim Ändern der Rechte des Nutzers " + username + " :");
-				e.printStackTrace();
+				String fehler = "Fehler beim Ändern der Rechte des Nutzers " + username + " :\n" + e.getMessage();
+				myController.printErrorMessage(fehler);					
 			}			
 		}				
 		
