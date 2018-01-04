@@ -219,8 +219,16 @@ public class TestModel {
 		}
 		else{
 			System.out.println("failtauschanfrage");
+		}	
+		try{				
+			wps.bestätigeTauschanfrage(empfänger, tauschnr);
+		}	
+		catch(Exception e){
+
+			String fehler = "Controller: Fehler beim Bestätigen einer Tauschanfrage:\n" + e.getMessage();
+			
 		}
-		wps.bestätigeTauschanfrage(empfänger, tauschnr);
+		
 		
 		LinkedList<Tauschanfrage> tauschList =wps.getTauschanfragen();
 		for(Tauschanfrage tausch:tauschList){
@@ -312,7 +320,8 @@ public class TestModel {
 		LinkedList<TerminBlockierung> tblockList =wps.getTerminBlockierungen();
 		for(TerminBlockierung tb01:tblockList){
 			
-			System.out.println( tb01.getTblocknr() + "  " + tb01.getBenutzername()+ "  " + tb01.getAnfangzeitraum());
+			System.out.println( tb01.getTblocknr() + "  " + tb01.getBenutzername()+ "  " + tb01.getAnfangzeitraum()
+			+ "  " + tb01.getAnfanguhrzeit()+ "  " + tb01.getEndeuhrzeit());
 
 		
 		}

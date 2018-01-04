@@ -7,6 +7,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Time;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.LinkedList;
 import java.util.TreeMap;
 
@@ -45,11 +48,20 @@ class Datenbank_Standardeinstellungen {
 
 			//Auch wenn es voraussichtlich nur einen Datensatz gibt, den n‰chsten Datensatz abrufen,
 			//um 100% sicherheit zu haben
-				rs.next();
+			DateFormat df = new SimpleDateFormat("hh:mm");
+			rs.next();
+				//Das Uhrzeit Forman von hh:mm:ss.00 auf hh:mm ‰ndern
+				Time dbHauptzeitbeginn = rs.getTime("Hauptzeitbeginn");
+				Time dbHauptzeitende = rs.getTime("Hauptzeitende");			
+				String hauptzeitbeginn = df.format(dbHauptzeitbeginn);
+				String hauptzeitende =df.format(dbHauptzeitende);
+				Time db÷ffnungszeit = rs.getTime("÷ffnungszeit");
+				Time dbSchlieﬂzeit = rs.getTime("Schlieﬂzeit");			
+				String ˆffnungszeit = df.format(db÷ffnungszeit);
+				String schlieﬂzeit =df.format(dbSchlieﬂzeit);
+				
 				Standardeinstellungen s = new Standardeinstellungen
-						(rs.getTime("÷ffnungszeit").toString(),rs.getTime("SchlieﬂZeit").toString(),
-						rs.getTime("Hauptzeitbeginn").toString(),rs.getTime("Hauptzeitende").toString(),
-						rs.getInt("Mehrbesetzung"),rs.getInt("Minanzinfot"),
+						(ˆffnungszeit,schlieﬂzeit,hauptzeitbeginn,hauptzeitende,rs.getInt("Mehrbesetzung"),rs.getInt("Minanzinfot"),
 						rs.getInt("Minanzinfow"),rs.getInt("Minanzkasse"));
 	
 				//Standardeinstellungen-Objekt zur¸ckgeben

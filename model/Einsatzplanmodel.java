@@ -68,20 +68,31 @@ public class Einsatzplanmodel implements Observable {
 		this.dataWarenhaus=new Datenbank_Warenhaus();	
 		
 	}
+	/**
+	 * @author Anes Preljevic
+	 * @info Fügt einen neuen Observer in die Arraylist observers hinzu, für den Übergebenen Oberserver, benutzernamen und passwort
+	 */
 	public void register(Observer newViewobserver, String benutzername, String passwort) {
 		observers.add(newViewobserver);
 		
 	}
+	/**
+	 * @author Anes Preljevic
+	 * @info Entfernen eines Observers
+	 */
 	public void removeObserver(Observer deleteViewobserver) {
 		int observerIndex= observers.indexOf(deleteViewobserver);
 		System.out.println("Observer"+ (observerIndex+1)+"deleted");
 		observers.remove(observerIndex);
 	}
+	/**
+	 * @author Anes Preljevic
+	 * @info Alle Oberserver benachrichtigen
+	 */
 	public void notifyObservers() {
 		for(Observer observer: observers){
 			
-			//Muss das View-Team sich zu äußern, meiner Meinung nach muss da kein Parameter übergeben werden
-			observer.update();//provisorisch bis update methode bekannt ist aus der view
+			observer.update();
 		}
 	}
 

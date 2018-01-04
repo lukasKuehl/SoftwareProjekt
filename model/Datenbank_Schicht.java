@@ -5,6 +5,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Time;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.LinkedList;
 
 import data.Ma_Schicht;
@@ -270,10 +273,16 @@ class Datenbank_Schicht {
 			rs = stmt.executeQuery(sqlStatement);
 			//Auch wenn es voraussichtlich nur einen Datensatz gibt, den nächsten Datensatz abrufen,
 			//um 100% sicherheit zu haben
-			rs.next();
-			Schicht s = new Schicht(rs.getInt("Schichtnr"), rs.getString("Tbez"),
-					rs.getInt("Wpnr"), rs.getString("Anfanguhrzeit").toString(),
-					rs.getString("Endeuhrzeit").toString());
+			DateFormat df = new SimpleDateFormat("hh:mm");
+			rs.next() ;
+
+				Time dbanfangUhrzeit = rs.getTime("Anfanguhrzeit");
+				Time dbendUhrzeit = rs.getTime("Endeuhrzeit");			
+				String anfangUhrzeit = df.format(dbanfangUhrzeit);
+				String endUhrzeit =df.format(dbendUhrzeit);
+			
+				Schicht s = new Schicht(rs.getInt("Schichtnr"), rs.getString("Tbez"),
+					rs.getInt("Wpnr"), anfangUhrzeit,endUhrzeit);
 				
 				//Alle Ma_Schicht Datensätze durchsuchen, welche zu der aktuellen Schicht gehören
 				//Über die Ma_Schicht beziehung den Benutzernamen des Mitarbeiters herausfinden

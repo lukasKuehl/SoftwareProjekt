@@ -22,7 +22,7 @@ class Datenbank_Connection{
 		
 		try{
 			//Gibt die Datenbankverbindung wieder, welche über den angegebenen Link abgefragt wird(url,name,pw)
-			return  DriverManager.getConnection("jdbc:mysql://localhost:3306/DATENBANKNAME?autoReconnect=true&useSSL=false", "root", "PASSWORT");
+			return  DriverManager.getConnection("jdbc:mysql://localhost:3306/apreljevic?autoReconnect=true&useSSL=false", "root", "famasb0b12");
 
 		}catch(SQLException sqle){
 			//Fehlerhandling, Ausgaben zur Ursachensuche und Rückgabewert auf null setzen

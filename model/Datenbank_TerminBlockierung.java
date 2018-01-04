@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Time;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.LinkedList;
@@ -220,12 +221,18 @@ class Datenbank_TerminBlockierung {
 			LinkedList<TerminBlockierung> terminBlockierungList = new LinkedList<TerminBlockierung>();
 			// Solange es einen "nächsten" Datensatz in dem Resultset gibt, mit den Daten des RS 
 			// ein neues TerminBlockierung-Objekt erzeugen. Dieses wird anschließend der Liste hinzugefügt.
+			DateFormat df = new SimpleDateFormat("hh:mm");
 			while (rs.next()) {
+
+				Time dbanfangUhrzeit = rs.getTime("Anfanguhrzeit");
+				Time dbendUhrzeit = rs.getTime("Endeuhrzeit");			
+				String anfangUhrzeit = df.format(dbanfangUhrzeit);
+				String endUhrzeit =df.format(dbendUhrzeit);
 				
 				//neues TerminBLockierung-Objekt erzeugen, Daten aus dem Resultset ziehen
 				TerminBlockierung tb = new TerminBlockierung(rs.getInt("Tblocknr"),rs.getString("Benutzername"), rs.getString("Bbez"),
 						rs.getString("Anfangzeitraum"), rs.getString("Endezeitraum"),
-						rs.getTime("Anfanguhrzeit").toString(),rs.getTime("Endeuhrzeit").toString(),rs.getString("Grund") );
+						anfangUhrzeit,endUhrzeit,rs.getString("Grund") );
 
 				terminBlockierungList.add(tb);
 			}

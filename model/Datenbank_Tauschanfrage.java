@@ -235,10 +235,10 @@ class Datenbank_Tauschanfrage {
 	 */
 	protected void bestätigeTauschanfrage(String empfänger , int tauschnr,Connection con) {
 
-
+		Statement stmt = null;
 		String sqlStatement;
 		sqlStatement = "UPDATE Tauschanfrage SET Bestätigungsstatus = true WHERE empfänger='"+empfänger+"' and Tauschnr =" + tauschnr;
-		Statement stmt = null;
+		
 
 		try {
 

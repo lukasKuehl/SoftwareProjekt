@@ -1,6 +1,10 @@
 package data;
 
-//Klasse gehört in das Package data --> Allgemeine Klasse
+/** 
+ * @author Anes Preljevic
+ * @info Das Interface Observable stellt  Funktionen zur Verfügung, um den Oberserver(Beobachter--> View) zu benachrichtigen,
+ * registrieren und zu entfernen vom Beobachtbaren Objekt(Model).
+ */
 
 public interface Observable {
 	public void register(Observer view, String benutzername, String passwort);

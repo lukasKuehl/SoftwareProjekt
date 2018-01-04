@@ -46,16 +46,18 @@ class TauschanfrageStrg {
 		LinkedList<Tauschanfrage> alleTauschanfragen=this.myModel.getTauschanfragen();
 		
 		int tauschNr=this.myModel.getNewTauschnr();
-		
+		//Überprüfen ob die Übergebenen Variablen leer sind, wenn nicht weiterleiten an den nächsten Test und valid auf true setzen
 		if(senderSchicht!=null && empfaengerSchicht!=null && sender!=null && empfaenger!=null){
 			valid=true;
+			//Überprüfen ob es zu den Übergebenen Werten bereits eine Tauschanfrage gibt, wenn ja setze valid auf false
 			for(Tauschanfrage ta: alleTauschanfragen){
 				if(ta.getEmpfänger().equals(empfaengerName) && ta.getSender().equals(senderName) && ta.getSchichtnrempfänger()==empfaengerSchichtNr && ta.getSchichtnrsender()==senderSchichtNr){
 					valid=false;
 				}
 			}
 		}
-		
+		//Wenn die Tests erfolgreich waren und somit valid=true ist kann die Tauschanfrage hinzugefügt werden
+		//Werte nicht null und nicht bereits vorhanden
 		if(valid){
 		try{
 			this.myModel.addTauschanfrage(tauschNr, senderName, senderSchichtNr, empfaengerName, empfaengerSchichtNr);
@@ -65,8 +67,15 @@ class TauschanfrageStrg {
 			String fehler = "Controller: Fehler beim Erstellen einer Tauschanfrage:\n" + e.getMessage();
 			myController.printErrorMessage(fehler);				
 		}
+		}
+		//Fehlermeldung, dass die Werte entweder null oder die Tauschanfrage bereits existiert
+		else{
+			
+			String fehler = "Tauschanfrage kann nicht . \n";
+			myController.printErrorMessage(fehler);			
+		}
 		
-		}	
+			
 		return success;
 	}	
 	
@@ -76,12 +85,13 @@ class TauschanfrageStrg {
 	 */
 	protected boolean entferneTauschanfrage(int tauschanfrageNr){
 		
-		boolean success = false;		
+		boolean success = false;
+			//Ruft die deleteTauschanfrage- Methode aus dem Einsatzplanmodel auf, mit der Übergebenen 
+			// Tauschnr aus der View.
 			try{				
 				this.myModel.deleteTauschanfrage(tauschanfrageNr);
 				success = true;
 			}catch(Exception e){				
-
 				String fehler = "Controller: Fehler beim Entfernen einer Tauschanfrage aus der Datenbank:\n" + e.getMessage();
 				myController.printErrorMessage(fehler);
 			}		
@@ -98,19 +108,26 @@ class TauschanfrageStrg {
 
 		
 		LinkedList<Tauschanfrage> alleTauschanfragen=this.myModel.getTauschanfragen();
-		//Tauschanfragen nach der zu Bestätigenden
+		//Tauschanfragen nach der zu Bestätigenden Tauschanfrage durchsuchen.
+		//Falls die Tauschanfrage nicht vorhanden ist wird die Bestätigung über "valid" nicht gegeben, da es false bleibt
 			for(Tauschanfrage ta: alleTauschanfragen){
 				if((ta.getTauschnr() == tauschanfrageNr) && (ta.getEmpfänger().equals(empfaengerName))){
 					valid = true;	
 			}
 				}
-			
+		//Wenn im vorherigen Schritt die Tauschanfrage existiert hat, werden die Variablen übergeben und die Tauschanfrage bestätigt
 		if(valid){
-				
-			myModel.bestätigeTauschanfrage(empfaengerName,tauschanfrageNr);
+		try{				
+			this.myModel.bestätigeTauschanfrage(empfaengerName,tauschanfrageNr);
 			success=true;
-
+		}
+		catch(Exception e){
+			
+			String fehler = "Controller: Fehler beim Bestätigen einer Tauschanfrage:\n" + e.getMessage();
+			myController.printErrorMessage(fehler);
+		}
 		}	
+		//Fehlermeldung, dass es zu dem übergebenen Empfänger und der Tauschnr keine gültige Tauschanfrage gibt 
 		else{
 			
 			String fehler = "Tauschanfrage kann nicht bestätigt werden, User ist nicht der Empfänger oder Tauschanfrage nicht vorhanden. \n";
