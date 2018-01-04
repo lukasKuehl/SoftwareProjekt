@@ -128,16 +128,15 @@ class TauschanfrageAnzeigenView extends JFrame {
 							 temp[0] = temp[0].substring(10); 
 							 String tauschanfrageNrS = temp[0].trim();
 							int tauschanfrageNr = Integer.parseInt(tauschanfrageNrS);	
-							empfaengername = temp[8];
-							System.out.println(empfaengername);
+							String empfaengername = temp[8];
 							myController.akzeptiereTauschanfrage(empfaengername, tauschanfrageNr);
-							JOptionPane.showConfirmDialog(null, "Tauschanfrage erfolgreich angenommen",  "", JOptionPane.INFORMATION_MESSAGE);
+							JOptionPane.showMessageDialog(null, "Tauschanfrage erfolgreich angenommen",  "", JOptionPane.INFORMATION_MESSAGE);
 							dispose();
 
 						} else {
 							JOptionPane.showMessageDialog(null,
 									"Wählen Sie eine andere Tauschanfrage zum Annehmen aus!", "  ",
-									JOptionPane.WARNING_MESSAGE);
+									JOptionPane.INFORMATION_MESSAGE);
 						}
 					}
 					catch (Exception a) {
