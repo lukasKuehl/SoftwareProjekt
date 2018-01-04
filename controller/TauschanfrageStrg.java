@@ -60,9 +60,10 @@ class TauschanfrageStrg {
 		try{
 			this.myModel.addTauschanfrage(tauschNr, senderName, senderSchichtNr, empfaengerName, empfaengerSchichtNr);
 			success=true;
-		}catch(Exception e){
-			System.out.println("Controller: Fehler beim erstellen einer Tauschanfrage: ");
-			e.printStackTrace();
+		}catch(Exception e){			
+
+			String fehler = "Controller: Fehler beim Erstellen einer Tauschanfrage:\n" + e.getMessage();
+			myController.printErrorMessage(fehler);				
 		}
 		
 		}	
@@ -79,9 +80,10 @@ class TauschanfrageStrg {
 			try{				
 				this.myModel.deleteTauschanfrage(tauschanfrageNr);
 				success = true;
-			}catch(Exception e){
-				System.out.println("Controller: Fehler beim Entfernen einer Tauschanfrage aus der Datenbank: ");
-				e.printStackTrace();
+			}catch(Exception e){				
+
+				String fehler = "Controller: Fehler beim Entfernen einer Tauschanfrage aus der Datenbank:\n" + e.getMessage();
+				myController.printErrorMessage(fehler);
 			}		
 		return success;
 	}	
@@ -107,13 +109,16 @@ class TauschanfrageStrg {
 			this.myModel.bestätigeTauschanfrage(empfaengerName,tauschanfrageNr);
 		}	
 		catch(Exception e){
-			System.out.println("Controller: Fehler beim bestätigen einer Tauschanfrage: ");
-			e.printStackTrace();
+
+			String fehler = "Controller: Fehler beim Bestätigen einer Tauschanfrage:\n" + e.getMessage();
+			myController.printErrorMessage(fehler);
 		}
 		success=true;
 		}
 		else{
-			System.out.println("Tauschanfrage kann nicht bestätigt werden, User ist nicht der Empfänger oder Tauschanfrage nicht vorhanden ");
+			
+			String fehler = "Tauschanfrage kann nicht bestätigt werden, User ist nicht der Empfänger oder Tauschanfrage nicht vorhanden. \n";
+			myController.printErrorMessage(fehler);			
 		}
 		return success;
 	
