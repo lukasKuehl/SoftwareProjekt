@@ -544,6 +544,7 @@ public class EinsatzplanController {
 	    	return wpnr;
 			
 		}catch(NumberFormatException nfe){
+			this.printErrorMessage("Die Wpbez konnte nicht konvertiert werden!");			
 			return 0;
 		}	
 	}
