@@ -81,6 +81,36 @@ class SchichtStrg {
 		success = true;
 		
 		return success;
+	}	
+
+	/**
+	 * @author Lukas Kühl
+	 * @info Methode zum Ausgeben aller hinterlegten Schichten eines bestimmten Tages im Wochenplan.
+	 */
+	protected ArrayList<String> getTagesSchichten(String wpbez, String tagBez) {
+		
+		ArrayList<String> rueckgabe = new ArrayList<String>();
+		
+		//Konvertieren der übergebenen Wpbez in eine eindeutige Wpnr
+		int wpnr = this.myController.getWpnr(wpbez);
+		
+		LinkedList<Schicht> alleSchichten = this.myModel.getSchichten();
+		LinkedList<Schicht> tagesSchichten = new LinkedList<Schicht>();
+		
+		for(Schicht s: alleSchichten){
+			
+			//Prüfe, ob Tagbezeichnung und Wochenplan gleich sind. Wenn ja, wurde eine Schicht für den gesuchten Tag gefunden 
+			if((s.getWpnr() == wpnr) && (tagBez.equals(s.getTbez()))){				
+				tagesSchichten.add(s);				
+			}
+		}
+		
+		//Aufbereitung der Informationen aus der Schicht nach folgendem Muster Schichtnr - Zeitraum
+		for(Schicht s: tagesSchichten){			
+			rueckgabe.add(s.getSchichtnr() +" - " + s.getAnfanguhrzeit().substring(0, 5) + "-" + s.getEndeuhrzeit().substring(0, 5) +" Uhr");	
+		}		
+		
+		return rueckgabe;
 	}
 
 	/**
@@ -341,6 +371,5 @@ class SchichtStrg {
 		}			
 		
 		return dauer;
-	}
-	
+	}	
 }

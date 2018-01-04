@@ -468,6 +468,27 @@ public class EinsatzplanController {
 	
 	/**
 	 * @author Lukas Kühl
+	 * @info Weiterleitung einer Anfrage zum Ausgeben aller hinterlegten Schichten für einen bestimmten Tag innerhalb eines Wochenplanes.
+	 */
+	public ArrayList<String> getTagesSchichten(String wpbez, String tagBez){
+		
+		ArrayList<String> rueckgabe = null;
+		
+		try{
+			rueckgabe = this.schichtSteuerung.getTagesSchichten(wpbez, tagBez);
+		}catch(Exception e){
+			System.out.println("Fehler innerhalb des Controllers:");
+			System.out.println("Fehler beim Aufruf der Methode getTagesSchichten:");
+			e.printStackTrace();			
+		}	
+		
+		return rueckgabe;
+		
+		
+	}
+	
+	/**
+	 * @author Lukas Kühl
 	 * @info Weiterleitung einer Anfrage zum Ausgeben aller hinterlegten Tauschanfragen aus dem System, bei denen der übergebene Mitarbeiter als Empfänger eingetragen wurde. Falls es keine Tauschanfragen im System gibt, bei denen der übergebene Mitarbeiter als Empfänger eingetragen wurde, wird eine leere ArrayList<String> zurück gegeben.
 	 */
 	public ArrayList<String> getTauschanfragen(String username){
@@ -543,5 +564,5 @@ public class EinsatzplanController {
 			}			
 		}
 		return false;		
-	}
+	}	
 }
