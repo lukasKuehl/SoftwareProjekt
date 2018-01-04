@@ -117,7 +117,7 @@ public class KasseSchichtView extends JFrame {
 
 		// siehe oben (Füllen mit getTage)
 		cbTage = new JComboBox();
-		cbTage.setBounds(22, 354, 243, 22);
+		cbTage.setBounds(22, 354, 299, 22);
 		getContentPane().add(cbTage);
 		cbTage.setEnabled(false);
 

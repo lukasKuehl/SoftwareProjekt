@@ -121,10 +121,7 @@ public class MitarbeiterWochenView extends JFrame{
 		mntmTauschanfrageAnzeigen = new JMenuItem("Anzeigen");
 		mntmTauschanfrageAnzeigen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
-				//ActionPerformed Methode unvollständig --> Konstruktoraufruf
-				
-				// new TauschanfrageAnzeigenView();
+				new TauschanfrageAnzeigenView(myView, myModel, myController);
 			}
 		});
 		mntmTauschanfrageAnzeigen.setHorizontalAlignment(SwingConstants.TRAILING);
