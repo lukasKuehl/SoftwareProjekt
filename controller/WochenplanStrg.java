@@ -479,14 +479,27 @@ class WochenplanStrg {
 			
 		boolean success = false;				
 		
+		System.out.println(username);
+		System.out.println(wpbez);
+		
+		if(wochenplan == null){
+			System.out.println("Keine JTable übergeben!");
+		}
+		
+		wochenplan.getTableHeader().setSize(wochenplan.getTableHeader().getPreferredSize());
+		wochenplan.setSize(wochenplan.getPreferredSize());
+		wochenplan.setPreferredScrollableViewportSize(wochenplan.getPreferredScrollableViewportSize());
+		wochenplan.setFillsViewportHeight(true);
+		
+		
 		if(myController.isUserAdmin(username)){
 			
 			//Ermittle die benötigte Höhe und Breite für ein Bild, mit der übergebenen JTable
-			int w = Math.max(wochenplan.getWidth(), header.getWidth());
-	        int h = wochenplan.getHeight() + header.getHeight();
+			int weite = Math.max(wochenplan.getWidth(), header.getWidth());
+	        int hoehe = wochenplan.getHeight() + header.getHeight();
 	        
 	        //Erstelle eine Maske, in der die JTable eingefügt werden kann
-	        BufferedImage bi = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
+	        BufferedImage bi = new BufferedImage(weite, hoehe, BufferedImage.TYPE_INT_RGB);
 	        Graphics2D g2 = bi.createGraphics();
 	        header.paint(g2);
 	        g2.translate(0, header.getHeight());
@@ -499,7 +512,7 @@ class WochenplanStrg {
 	        try
 	        {
 	        	//Speichern des Bildes der übergebenen JTable auf dem Desktop des Benutzers
-	        	String filePath = System.getProperty("user.home") + "/Desktop/Kalenderwochenübersicht_" + wpbez +".png";
+	        	String filePath = System.getProperty("user.home") + "\\Desktop\\Kalenderwochenübersicht_" + wpbez +".png";
 	            ImageIO.write(bi, "png", new File(filePath));
 	            
 	            LinkedList<Mitarbeiter> alleMitarbeiter = this.myModel.getAlleMitarbeiter();
@@ -520,7 +533,7 @@ class WochenplanStrg {
 	            			"Mit freundlichen Grüßen,\n" +
 	            			"Team der Einsatzplanverwaltung";           	
 	            	
-	            	//Nutzung des Gruppenaccounts bei Web.de
+	            	//Nutzung des Gruppenaccounts bei Web.de	            
 	            	myMailController.sendMail(user, password, senderAddress, m.getEmail(), "Einsatzplan für " + wpbez, message, filePath);	
 	            	
 	            }

@@ -162,7 +162,7 @@ class TerminStrg {
 				
 				//Erstelle eine neue TerminBlockierung und füge diese in die Datenbank ein
 				TerminBlockierung tb = new TerminBlockierung(newTbNr, username, bez, zeitraum.get("anfZeitraumTag"), zeitraum.get("endZeitraumTag"), anfangsUhrzeit, endUhrzeit, grund);
-				this.myModel.addTerminBlockierung(tb);				
+				this.myModel.addTerminBlockierung(tb, wpnr);				
 				
 				//Da nun eine Terminblockierung vorliegt, muss überprüft werden, ob der Mitarbeiter nun für bereits eingeteilte Schichten nicht mehr zur Verfügung steht und somit aus der Zurodnung entfernt werden muss
 						

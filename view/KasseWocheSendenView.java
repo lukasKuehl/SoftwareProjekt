@@ -99,7 +99,7 @@ public class KasseWocheSendenView extends JFrame {
 						//Methode im Controller muss aufgerufen werden!
 						//Auﬂerdem muss kontrolliert werden, ob das Senden erfolgreich war, bevor das Fenster geschlossen wird
 					
-						if(myController.verschickeWochenplan(myView.getUsername(), gibWochenplan(), myController.generiereWochenplanView(gibWochenplan()))){
+						if(myController.verschickeWochenplan(myView.getUsername(), "KW" + gibWochenplan(), myController.generiereWochenplanView("KW" + gibWochenplan()))){
 							dispose();
 						}else{
 							//JLabel Fehlermeldung erstellen (siehe)
