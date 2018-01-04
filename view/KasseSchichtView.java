@@ -35,7 +35,7 @@ import java.awt.event.ActionEvent;
 
 // Hilfsklassen sind nicht public!
 public class KasseSchichtView extends JFrame {
-
+//
 	private EinsatzplanController myController = null;
 	private Einsatzplanmodel myModel = null;
 	private Einsatzplanview myView = null;

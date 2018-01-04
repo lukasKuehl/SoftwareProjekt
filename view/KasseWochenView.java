@@ -3,6 +3,7 @@ package view;
 import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.Frame;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -44,7 +45,7 @@ import model.Einsatzplanmodel;
 //Implementierung von ActionListener überflüssig, siehe vorherige Klassen!
 
 //Hilfsklassen sind nicht public!
-public class KasseWochenView extends JFrame {
+public class KasseWochenView  {
 
 	private JPanel contentPane, pnlMenuBar;
 	private JTable table;
@@ -56,6 +57,7 @@ public class KasseWochenView extends JFrame {
 	public JLabel lblKW1;
 	private String username;
 	private int currentKW = 0;
+	static JScrollPane jsp;
 	
 	private JButton btnRechts, btnLinks;
 	private Einsatzplanmodel myModel = null;
@@ -63,11 +65,18 @@ public class KasseWochenView extends JFrame {
 	private Einsatzplanview myView = null;
 	private JTable tbleWochenplan;
 
+	static JFrame frame;
 	//siehe AnmeldungView!
+	
+	public static void myFrame(){
+		frame.dispose();
+	}
 	
 	/**
 	 * Launch the application.
 	 */
+
+	
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -98,18 +107,19 @@ public class KasseWochenView extends JFrame {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		setTitle("Einsatzplan Kassenbüro");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setResizable(false);
-		setLocationRelativeTo(null);
-		setBounds(100, 100, 1538, 864);
+		frame = new JFrame();
+		frame.setTitle("Einsatzplan Kassenbüro");
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setResizable(false);
+		frame.setLocationRelativeTo(null);
+		frame.setBounds(100, 100, 1538, 864);
 
 		// MenuBar mit den ganzen Unterpunkten - Variablen sind public
 
 		menuBar = new JMenuBar();
 		menuBar.setMargin(new Insets(62, 0, 0, 0));
 		menuBar.setFont(new Font("Verdana", Font.PLAIN, 26));
-		setJMenuBar(menuBar);
+		frame.setJMenuBar(menuBar);
 
 		mnWoche = new JMenu("Wochenplan");
 		mnWoche.setFont(new Font("VerdanaI", Font.PLAIN, 26));
@@ -220,7 +230,7 @@ public class KasseWochenView extends JFrame {
 		mntmBenutzerZuweisen.setHorizontalAlignment(SwingConstants.TRAILING);
 		mntmBenutzerZuweisen.setFont(new Font("Verdana", Font.PLAIN, 21));
 		mnBenutzerrolle.add(mntmBenutzerZuweisen);
-		getContentPane().setLayout(null);
+		frame.getContentPane().setLayout(null);
 
 		//Warum KW 1? Es gibt doch keine anderen Label in denen die KW steht
 		lblKW1 = new JLabel("");
@@ -228,7 +238,7 @@ public class KasseWochenView extends JFrame {
 		lblKW1.setBounds(109, 11, 136, 30);
 		ArrayList<String> wochenplaene = myController.getWochenplaene();
 		lblKW1.setText(wochenplaene.get(0).toString());
-		getContentPane().add(lblKW1);
+		frame.getContentPane().add(lblKW1);
 
 		btnRechts = new JButton("");
 		btnRechts.setContentAreaFilled(false);
@@ -264,7 +274,7 @@ public class KasseWochenView extends JFrame {
 				}
 			}
 		});
-		getContentPane().add(btnRechts);
+		frame.getContentPane().add(btnRechts);
 
 		btnLinks = new JButton("");
 		btnLinks.setBorderPainted(false);
@@ -286,29 +296,28 @@ public class KasseWochenView extends JFrame {
 			}
 		});
 		
-		getContentPane().add(btnLinks);
+		frame.getContentPane().add(btnLinks);
 		generiereTabelle();
-		setVisible(true);
+		frame.setVisible(true);
 	}
+	//
 	
 	private void generiereTabelle(){
 		ArrayList<String> wochenplaene = myController.getWochenplaene();
 		lblKW1.setText(wochenplaene.get(currentKW).toString());
 		
-		tbleWochenplan = myController.generiereWochenplanView(wochenplaene.get(currentKW));
-		tbleWochenplan.setBounds(24, 81, 1439, 676);
-
-		
-		/*tbleWochenplan.getTableHeader().setSize(tbleWochenplan.getTableHeader().getPreferredSize());
+		tbleWochenplan = myController.generiereWochenplanView(wochenplaene.get(currentKW));		
+		tbleWochenplan.getTableHeader().setSize(tbleWochenplan.getTableHeader().getPreferredSize());
 		tbleWochenplan.setSize(tbleWochenplan.getPreferredSize());
 		tbleWochenplan.setPreferredScrollableViewportSize(tbleWochenplan.getPreferredScrollableViewportSize());
 		tbleWochenplan.setFillsViewportHeight(true);
-		JScrollPane jsp = new JScrollPane(tbleWochenplan);	*/				
-		
-		//getContentPane().add(jsp);
-		getContentPane().add(tbleWochenplan);
+		jsp = new JScrollPane(tbleWochenplan);	
+		jsp.setBounds(24, 81, 1439, 676);
+		System.out.println(currentKW);
+		frame.getContentPane().add(jsp);
 		
 	}
-
+	
+	
 	
 }

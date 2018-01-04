@@ -35,6 +35,7 @@ public class KasseWocheSendenView extends JFrame {
 	
 	//Siehe AnmeldungView!
 	
+	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {

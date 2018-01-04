@@ -30,6 +30,7 @@ class KasseBenutzerrolleView extends JFrame {
 	private Einsatzplanview myView = null;
 	private EinsatzplanController myController=null;
 	
+	
 /*	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {

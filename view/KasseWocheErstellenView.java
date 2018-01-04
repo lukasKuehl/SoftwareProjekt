@@ -44,6 +44,7 @@ public class KasseWocheErstellenView extends JFrame {
 	private Einsatzplanmodel myModel = null;
 	private Einsatzplanview myView = null;
 
+	
 	//Siehe AnmeldungView!
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -331,6 +332,7 @@ public class KasseWocheErstellenView extends JFrame {
 				if (confirmed == JOptionPane.YES_OPTION) {
 					if (myController.erstelleWochenplanCustom(myView.getUsername(), gibWochenplanbezeichnung(),
 							gibOeffnungszeiten(), gibBesetzung())) {
+						myView.update();
 						dispose();
 					} else {
 						//Benutzer hat von sich aus abgebrochen --> Keine Fehlermeldung notwendig

@@ -64,6 +64,9 @@ class WochenplanStrg {
 	protected boolean erstelleWochenplanCustom(String username, String wpbez, TreeMap<String, String> zeiten, TreeMap<String, Integer> besetzung){
 		boolean success = false;			
 		
+		//Generiere eine eindeutige Wochenplannummer aus der Wochenplanbezeichnung		
+		int wpnr = myController.getWpnr(wpbez);
+		
 		//Prüfe, ob der Benutzer über die notwendigen Berechtigungen zum Erstellen eines neuen Wochenplanes verfügt
 		if(myController.isUserAdmin(username)){		
 			
@@ -88,9 +91,8 @@ class WochenplanStrg {
 			//Prüfe, ob die Zeiten den Vorgaben entsprechen
 			if(checkZeitenWochenplan(zeitenDate)){
 					
-				boolean checkbesetzung = true;					
-			
-				//Überprüfung vllt. schon in der View					
+				boolean checkbesetzung = true;				
+									
 				//Prüfe, ob es negative Werte in der vorhandenen Besetzung-Map gibt
 				for(String s : besetzung.keySet()){
 					if(besetzung.get(s) < 0){
@@ -99,14 +101,22 @@ class WochenplanStrg {
 				}
 					
 				//Alle Anforderungen wurden erfüllt --> ein neuer Wochenplan kann im System hinterlegt werden
-				if(checkbesetzung){
-					Wochenplan wp = new Wochenplan(0, false, zeiten.get("Öffnungszeit"), zeiten.get("Schließzeit"), zeiten.get("HauptzeitBeginn"), zeiten.get("HauptzeitEnde"), username, besetzung.get("MinBesetzungInfoTechnik"), besetzung.get("MinBesetzungInfoWaren"), besetzung.get("MinBesetzungKasse"), besetzung.get("MehrbesetzungKasse"));
-					this.myModel.addWochenplan(wp);
+				if(checkbesetzung){					
 					
-					if(this.myModel.getWochenplan(wp.getWpnr()) != null){
-						success = true;
+					if(myModel.getWochenplan(wpnr) == null){
+						
+						Wochenplan wp = new Wochenplan(wpnr, false, zeiten.get("Öffnungszeit"), zeiten.get("Schließzeit"), zeiten.get("HauptzeitBeginn"), zeiten.get("HauptzeitEnde"), username, besetzung.get("MinBesetzungInfoTechnik"), besetzung.get("MinBesetzungInfoWaren"), besetzung.get("MinBesetzungKasse"), besetzung.get("MehrbesetzungKasse"));
+						this.myModel.addWochenplan(wp);
+						
+						if(this.myModel.getWochenplan(wp.getWpnr()) != null){
+							success = true;
+						}
 					}
-					
+					else{
+						String fehler = "Der ausgewählte Wochenplan wurde bereits erstellt! \n";
+						myController.printErrorMessage(fehler);	
+						
+					}					
 				}
 				else{
 					String fehler = "Fehler beim Erstellen eines neuen Wochenplanes:\n" +"Die Besetzungsanzahl darf nicht negativ sein! \n";
@@ -143,13 +153,20 @@ class WochenplanStrg {
 			try{
 				Standardeinstellungen settings = this.myModel.getStandardeinstellungen();				
 				
-				//Erstelle einen neuen Wochenplan mit den Daten der Standardeinstellung und hinterlege diesen in der Datenbank
-				Wochenplan wp = new Wochenplan(wpnr, false, settings.getÖffnungszeit(), settings.getSchließzeit(), settings.getHauptzeitbeginn(), settings.getHauptzeitende(), username, settings.getMinanzinfot(), settings.getMinanzinfow(), settings.getMinanzkasse(), settings.getMehrbesetzung());
-				this.myModel.addWochenplan(wp);
-				
-				if(this.myModel.getWochenplan(wp.getWpnr()) != null){
-					success = true;
-				}				
+				if(myModel.getWochenplan(wpnr) == null){
+					//Erstelle einen neuen Wochenplan mit den Daten der Standardeinstellung und hinterlege diesen in der Datenbank
+					Wochenplan wp = new Wochenplan(wpnr, false, settings.getÖffnungszeit(), settings.getSchließzeit(), settings.getHauptzeitbeginn(), settings.getHauptzeitende(), username, settings.getMinanzinfot(), settings.getMinanzinfow(), settings.getMinanzkasse(), settings.getMehrbesetzung());
+					this.myModel.addWochenplan(wp);	
+					
+					if(this.myModel.getWochenplan(wp.getWpnr()) != null){
+						success = true;
+					}	
+				}
+				else{
+					String fehler = "Der ausgewählte Wochenplan wurde bereits erstellt! \n";
+					myController.printErrorMessage(fehler);	
+					
+				}							
 				
 			}catch(Exception e){
 				
@@ -595,13 +612,14 @@ class WochenplanStrg {
 	 */
 	private boolean checkZeitenWochenplan(Map<String, Date> zeitenDate) {
 		
-		boolean datenVollstaendig = true;
+		boolean datenVollstaendig = true;	
 		
-		for(String s: zeitenDate.keySet()){
-			
+		for(String s: zeitenDate.keySet()){				
+						
 			if(zeitenDate.get(s) == null){
 				datenVollstaendig = false;
 			}
+		
 		}
 		
 		//Wenn die Daten vollständig eingetragen wurden, überprüfe die Reihenfolge

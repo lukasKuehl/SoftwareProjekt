@@ -96,10 +96,11 @@ class TauschanfrageStrg {
 		boolean success = false;
 		boolean valid = false;
 
+		
 		LinkedList<Tauschanfrage> alleTauschanfragen=this.myModel.getTauschanfragen();
 
 				for(Tauschanfrage ta: alleTauschanfragen){
-				if((ta.getTauschnr() == tauschanfrageNr) && ta.getEmpfänger().equals(empfaengerName)){
+				if((ta.getTauschnr() == tauschanfrageNr) && (ta.getEmpfänger().equals(empfaengerName))){
 					valid = true;	
 				}
 				}
