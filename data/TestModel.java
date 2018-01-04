@@ -23,7 +23,7 @@ public class TestModel {
 		for(Wochenplan d:wpnns){
 			
 			System.out.println(d.getWpnr()+" "+ d.get÷ffnungszeit() + "  " + d.getMinanzinfot()
-			+ "  " + d.getMehrbesetzung()+ "  " + d.getSchlieﬂzeit()+ "  " + d.getHauptzeitbeginn());
+			+ "  " + d.getMehrbesetzung()+ "  " + d.getSchlieﬂzeit()+ "  " + d.getHauptzeitbeginn()+ "  " + d.getHauptzeitende());
 			LinkedList<Tag> wptage=d.getLl_tag();
 			
 			for(Tag twp: wptage){
@@ -35,7 +35,7 @@ public class TestModel {
 		}
 		Wochenplan wp = wps.getWochenplan(testwp);
 		System.out.println(wp.getWpnr()+" "+ wp.get÷ffnungszeit() + "  " + wp.getMinanzinfot()
-		+ "  " + wp.getMehrbesetzung()+ "  " + wp.getSchlieﬂzeit()+ "  " + wp.getHauptzeitbeginn());
+		+ "  " + wp.getMehrbesetzung()+ "  " + wp.getSchlieﬂzeit()+ "  " + wp.getHauptzeitbeginn()+ "  " + wp.getHauptzeitende());
 		//wp.set÷ffentlichstatus(false);
 		int nextnr = wps.getNewWpnr();
 		System.out.println( nextnr);

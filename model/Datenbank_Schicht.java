@@ -271,9 +271,12 @@ class Datenbank_Schicht {
 			//Statement/Resultset wird erstellt, der Sql-Befehl wird ausgeführt und im Resultset gespeichert
 			stmt = con.createStatement();
 			rs = stmt.executeQuery(sqlStatement);
+
+			
+			//Datumsformat auf 0-23 und stunden:minuten setzen
+			DateFormat df = new SimpleDateFormat("HH:mm");
 			//Auch wenn es voraussichtlich nur einen Datensatz gibt, den nächsten Datensatz abrufen,
 			//um 100% sicherheit zu haben
-			DateFormat df = new SimpleDateFormat("hh:mm");
 			rs.next() ;
 
 				Time dbanfangUhrzeit = rs.getTime("Anfanguhrzeit");

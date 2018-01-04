@@ -46,9 +46,11 @@ class Datenbank_Standardeinstellungen {
 			rs = stmt.executeQuery(sqlStatement);
 
 
+
+			//Datumsformat auf 0-23 und stunden:minuten setzen
+			DateFormat df = new SimpleDateFormat("HH:mm");
 			//Auch wenn es voraussichtlich nur einen Datensatz gibt, den nächsten Datensatz abrufen,
 			//um 100% sicherheit zu haben
-			DateFormat df = new SimpleDateFormat("hh:mm");
 			rs.next();
 				//Das Uhrzeit Forman von hh:mm:ss.00 auf hh:mm ändern
 				Time dbHauptzeitbeginn = rs.getTime("Hauptzeitbeginn");

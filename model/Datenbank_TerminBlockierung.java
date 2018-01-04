@@ -250,9 +250,12 @@ class Datenbank_TerminBlockierung {
 
 			//LinkedList erstellen, in dieser werden die  TerminBlockierung-Objekte gespeichert
 			LinkedList<TerminBlockierung> terminBlockierungList = new LinkedList<TerminBlockierung>();
+			//Datumsformat auf 0-23 und stunden:minuten setzen
+			DateFormat df = new SimpleDateFormat("HH:mm");
 			// Solange es einen "nächsten" Datensatz in dem Resultset gibt, mit den Daten des RS 
 			// ein neues TerminBlockierung-Objekt erzeugen. Dieses wird anschließend der Liste hinzugefügt.
-			DateFormat df = new SimpleDateFormat("hh:mm");
+
+			
 			while (rs.next()) {
 
 				Time dbanfangUhrzeit = rs.getTime("Anfanguhrzeit");
