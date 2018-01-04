@@ -114,7 +114,8 @@ class TerminStrg {
 					}				
 				}
 				else{
-					System.out.println("Bitte die Zeitangaben überprüfen!");
+					String fehler = "Bitte die Zeitangaben überprüfen!\n";
+					myController.printErrorMessage(fehler);				
 				}
 				
 				//-->Der Zeitraum ist korrekt, da keine Exception geworfen wurde
@@ -132,8 +133,9 @@ class TerminStrg {
 					anfangsUhrzeit = wp.getÖffnungszeit().substring(0, 5);
 					endUhrzeit = wp.getSchließzeit().substring(0,5);			
 				}
-				else{
-					System.out.println("Der ausgewählte Wochenplan existiert nicht, bitte Eingaben überprüfen!");					
+				else{					
+					String fehler = "Der ausgewählte Wochenplan existiert nicht, bitte Eingaben überprüfen!\n";
+					myController.printErrorMessage(fehler);										
 				}			
 			}		
 			

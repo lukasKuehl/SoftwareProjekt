@@ -239,7 +239,13 @@ class WochenplanStrg {
 		
 		try{		
 			//Erzeuge eine neue JTable mit den erhobenen Daten, welche die Wochenübersicht in der View repräsentiert
-			wochenplan = new JTable(zeilen,spaltennamen);
+			wochenplan = new JTable(zeilen,spaltennamen){
+				
+				 public boolean isCellEditable(int data, int title)
+	               {
+	                   return false;
+	               }				
+			};
 		}catch(Exception e){
 			System.out.println("Fehler beim Erstellen eines neuen JTables für den Wochenplan" + wpbez);
 			e.printStackTrace();
