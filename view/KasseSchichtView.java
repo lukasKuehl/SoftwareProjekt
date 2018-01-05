@@ -234,16 +234,9 @@ public class KasseSchichtView extends JFrame {
 					String schichtnr = cbSchicht.getSelectedItem().toString();
 					schichtnr = schichtnr.substring(0, Math.min(schichtnr.length(), 5));
 					int schichtNr = Integer.parseInt(schichtnr);
-					ArrayList<String> mitarbeiterliste = myController.getVerfuegbareMitarbeiter(schichtNr);
+					String[] mitarbeiterArray = new String[] {cbMitarbeiter.getSelectedItem().toString().split(" ")[0]};
 					
-					String[] mitarbeiter = new String[mitarbeiterliste.size()];
-					
-					for(int i = 0; i<mitarbeiterliste.size();i++)
-					{
-						mitarbeiter[i] = mitarbeiterliste.get(i);
-					}
-					
-					if (myController.fülleSchicht(schichtNr, mitarbeiter)){
+					if (myController.fülleSchicht(Integer.valueOf(schichtnr), mitarbeiterArray)){
 						dispose();
 					}
 					// welche Methode soll hier ausgeführt werden?

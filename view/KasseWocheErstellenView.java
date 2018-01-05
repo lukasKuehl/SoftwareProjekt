@@ -33,19 +33,18 @@ public class KasseWocheErstellenView extends JFrame {
 	private JTextField txtOeffnungAnfangA, txtOeffnungAnfangB, txtOeffnungEndeA, txtOeffnungEndeB, txtHauptAnfangA,
 			txtHauptAnfangB, txtHauptEndeA, txtHauptEndeB;
 	private JComboBox cbMinTechInfo, cbMinHausInfo, cbMinHausKasse, cbExtraKassen, cbKW;
-	private JRadioButton rdbtnStandardeinstellungen;
+	private JRadioButton rdbtnStandardeinstellungen, rdbtnBenutzerdefiniert;
 	private JButton btnBesttigen;
 	private JLabel lblWochenplanErstellen, lblKalenderwocheKw, lblOeffnungszeiten, doppelpunkt, lblBis, doppelpunkt_1,
 			lblHauptzeiten, doppelpunkt_2, lblBis_1, doppelpunkt_3, lblMindestbesetzung,
 			lblMindestbesetzungFrLebensmittel, lblMindestbesetzungFrLebensmittel_1, lblKassen,
-			//Umlaute fehlen!
+			// Umlaute fehlen!
 			lblAnzahlZustzlicherMitarbeiter, lblUhr, lblUhr_1, lblUhr_2, lblUhr_3, lblFehlermeldung;
 	private EinsatzplanController myController = null;
 	private Einsatzplanmodel myModel = null;
 	private Einsatzplanview myView = null;
 
-	
-	//Siehe AnmeldungView!
+	// Siehe AnmeldungView!
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -59,8 +58,9 @@ public class KasseWocheErstellenView extends JFrame {
 		});
 	}
 	//
-	
-	public KasseWocheErstellenView(Einsatzplanmodel myModel, Einsatzplanview myView, EinsatzplanController myController) {
+
+	public KasseWocheErstellenView(Einsatzplanmodel myModel, Einsatzplanview myView,
+			EinsatzplanController myController) {
 		this.myController = myController;
 		this.myModel = myModel;
 		this.myView = myView;
@@ -330,16 +330,31 @@ public class KasseWocheErstellenView extends JFrame {
 						JOptionPane.YES_NO_OPTION);
 
 				if (confirmed == JOptionPane.YES_OPTION) {
-					if (myController.erstelleWochenplanCustom(myView.getUsername(), gibWochenplanbezeichnung(),
-							gibOeffnungszeiten(), gibBesetzung())) {
-						//myView.update();
-						dispose();
-					} else {
-						//Benutzer hat von sich aus abgebrochen --> Keine Fehlermeldung notwendig
-						lblFehlermeldung.setText("Fehler beim Erstellen des Wochenplans. Bitte überprüfen Sie Ihre Eingaben.");
+					if (rdbtnBenutzerdefiniert.isSelected()) {
+						if (myController.erstelleWochenplanCustom(myView.getUsername(), gibWochenplanbezeichnung(),
+								gibOeffnungszeiten(), gibBesetzung())) {
+							// myView.update();
+							dispose();
+						} else {
+							// Benutzer hat von sich aus abgebrochen --> Keine
+							// Fehlermeldung notwendig
+							lblFehlermeldung.setText(
+									"Fehler beim Erstellen des Wochenplans. Bitte überprüfen Sie Ihre Eingaben.");
 
+						}
 					}
+					if (rdbtnStandardeinstellungen.isSelected()) {
+						if (myController.erstelleWochenplanStandard(myView.getUsername(), gibWochenplanbezeichnung())) {
+							// myView.update();
+							dispose();
+						} else {
+							// Benutzer hat von sich aus abgebrochen --> Keine
+							// Fehlermeldung notwendig
+							lblFehlermeldung.setText(
+									"Fehler beim Erstellen des Wochenplans. Bitte überprüfen Sie Ihre Eingaben.");
 
+						}
+					}
 				}
 			}
 		});
@@ -347,7 +362,7 @@ public class KasseWocheErstellenView extends JFrame {
 		getContentPane().add(btnBesttigen);
 
 		ButtonGroup gruppe = new ButtonGroup();
-		JRadioButton rdbtnBenutzerdefiniert = new JRadioButton("Benutzerdefiniert");
+		rdbtnBenutzerdefiniert = new JRadioButton("Benutzerdefiniert");
 		rdbtnStandardeinstellungen = new JRadioButton("Standardeinstellungen");
 		gruppe.add(rdbtnBenutzerdefiniert);
 		gruppe.add(rdbtnStandardeinstellungen);
@@ -435,8 +450,8 @@ public class KasseWocheErstellenView extends JFrame {
 
 	protected TreeMap<String, String> gibOeffnungszeiten() {
 
-		//Auskommentierte Zeilen können weg --> nicht mehr notwendig
-		
+		// Auskommentierte Zeilen können weg --> nicht mehr notwendig
+
 		TreeMap<String, String> zeiten = new TreeMap<String, String>();
 		zeiten.put("Öffnungszeit", txtOeffnungAnfangA.getText() + ":" + txtOeffnungAnfangB.getText());
 		zeiten.put("Schließzeit", txtOeffnungEndeA.getText() + ":" + txtOeffnungEndeB.getText());
@@ -458,11 +473,12 @@ public class KasseWocheErstellenView extends JFrame {
 	}
 
 	protected String gibWochenplanbezeichnung() {
-		return "KW" + cbKW.getSelectedItem().toString(); //KW muss vorher stehen
+		return "KW" + cbKW.getSelectedItem().toString(); // KW muss vorher
+															// stehen
 	}
 
-	//Die beiden Mehtoden sind ohne Kommentare nicht wirklich nachvollziehbar!
-	
+	// Die beiden Mehtoden sind ohne Kommentare nicht wirklich nachvollziehbar!
+
 	protected String[] setField(int a, int b) {
 		String[] werte = new String[a];
 		for (int i = 0; i < werte.length; i++) {
