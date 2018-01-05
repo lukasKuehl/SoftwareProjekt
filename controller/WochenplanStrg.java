@@ -104,14 +104,10 @@ class WochenplanStrg {
 				//Alle Anforderungen wurden erf¸llt --> ein neuer Wochenplan kann im System hinterlegt werden
 				if(checkbesetzung){					
 					
-					if(myModel.getWochenplan(wpnr) == null){
-						
-						System.out.println(besetzung.get("MinBesetzungKasse"));
+					if(myModel.getWochenplan(wpnr) == null){					
 						
 						Wochenplan wp = new Wochenplan(wpnr, false, zeiten.get("÷ffnungszeit"), zeiten.get("Schlieﬂzeit"), zeiten.get("HauptzeitBeginn"), zeiten.get("HauptzeitEnde"), username, besetzung.get("MinBesetzungInfoTechnik"), besetzung.get("MinBesetzungInfoWaren"), besetzung.get("MinBesetzungKasse"), besetzung.get("MehrbesetzungKasse"));
-						
-						System.out.println(wp.getMinanzkasse());
-						
+												
 						this.myModel.addWochenplan(wp);
 						
 						if(this.myModel.getWochenplan(wp.getWpnr()) != null){
