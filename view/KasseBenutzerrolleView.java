@@ -16,10 +16,12 @@ import javax.swing.JOptionPane;
 import data.Mitarbeiter;
 import model.Einsatzplanmodel;
 import controller.EinsatzplanController;
+
 /**
  * @author Darius Panteli
- * @info Die Klasse KasseBenutzerrolleView dient dazu, dem Nutzer eine graphische Obefläche anzubieten, um die Rechte
- * eines Nutzers ändern zu können
+ * @info Die Klasse KasseBenutzerrolleView dient dazu, dem Nutzer eine
+ *       graphische Obefläche anzubieten, um die Rechte eines Nutzers ändern zu
+ *       können
  */
 
 class KasseBenutzerrolleView extends JFrame {
@@ -28,26 +30,22 @@ class KasseBenutzerrolleView extends JFrame {
 	private JLabel lblBenutzerZuweisen, lblMitarbeiterAuswaehlen;
 	private Einsatzplanmodel myModel = null;
 	private Einsatzplanview myView = null;
-	private EinsatzplanController myController=null;
-	
-	
-/*	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					KasseBenutzerrolleView kasseBenutzerrolleView = new KasseBenutzerrolleView(new Einsatzplanmodel(),
-							null, null);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});} */
-	
-	//Parameter myController fehlt --> in dem Fall bleibt der einfach null
-	public KasseBenutzerrolleView(Einsatzplanmodel myModel, Einsatzplanview myView, EinsatzplanController myController) {
+	private EinsatzplanController myController = null;
+
+	/*
+	 * public static void main(String[] args) { EventQueue.invokeLater(new
+	 * Runnable() { public void run() { try { KasseBenutzerrolleView
+	 * kasseBenutzerrolleView = new KasseBenutzerrolleView(new
+	 * Einsatzplanmodel(), null, null); } catch (Exception e) {
+	 * e.printStackTrace(); } } });}
+	 */
+
+	// Parameter myController fehlt --> in dem Fall bleibt der einfach null
+	public KasseBenutzerrolleView(Einsatzplanmodel myModel, Einsatzplanview myView,
+			EinsatzplanController myController) {
 		this.myView = myView;
 		this.myModel = myModel;
-		this.myController=myController;
+		this.myController = myController;
 		initialize();
 	}
 
@@ -72,14 +70,15 @@ class KasseBenutzerrolleView extends JFrame {
 		lblMitarbeiterAuswaehlen.setBounds(64, 192, 249, 39);
 		getContentPane().add(lblMitarbeiterAuswaehlen);
 
-		//ComboBox sollte Informationen darüber bekommen, welche Werte eingetragen werden können (z.B. JComboBox<String>)
+		// ComboBox sollte Informationen darüber bekommen, welche Werte
+		// eingetragen werden können (z.B. JComboBox<String>)
 		cbMitarbeiter = new JComboBox();
 		cbMitarbeiter.setBounds(360, 204, 128, 20);
 		LinkedList<Mitarbeiter> alleMitarbeiter = this.myModel.getAlleMitarbeiter();
-		
-		for(Mitarbeiter mitarbeiter: alleMitarbeiter){
-			cbMitarbeiter.addItem(mitarbeiter.getBenutzername()); 
-		}	
+
+		for (Mitarbeiter mitarbeiter : alleMitarbeiter) {
+			cbMitarbeiter.addItem(mitarbeiter.getBenutzername());
+		}
 		getContentPane().add(cbMitarbeiter);
 
 		btnBestaetigen = new JButton("Best\u00E4tigen");
@@ -89,11 +88,16 @@ class KasseBenutzerrolleView extends JFrame {
 						JOptionPane.YES_NO_OPTION);
 
 				if (confirmed == JOptionPane.YES_OPTION) {
-					
-				//Abfrage, ob der Prozess erfolgreich war fehlt --> Bei Misserfolg sollte man ja die Werte nochmal ändern und erneut probieren können
-				myController.benutzerRechteWechsel(gibAusgewaehltenMitarbeiter());
-				
-				dispose();
+
+					// Abfrage, ob der Prozess erfolgreich war fehlt --> Bei
+					// Misserfolg sollte man ja die Werte nochmal ändern und
+					// erneut probieren können
+					if (myController.benutzerRechteWechsel(gibAusgewaehltenMitarbeiter())) {
+						dispose();
+					} else {
+
+					}
+
 				}
 			}
 		});
@@ -103,7 +107,7 @@ class KasseBenutzerrolleView extends JFrame {
 
 	}
 
-	protected String gibAusgewaehltenMitarbeiter(){
+	protected String gibAusgewaehltenMitarbeiter() {
 		return cbMitarbeiter.getSelectedItem().toString();
-	}	
+	}
 }

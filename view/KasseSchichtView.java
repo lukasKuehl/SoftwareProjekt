@@ -36,7 +36,7 @@ import java.awt.event.ActionEvent;
 
 // Hilfsklassen sind nicht public!
 public class KasseSchichtView extends JFrame {
-//
+	//
 	private EinsatzplanController myController = null;
 	private Einsatzplanmodel myModel = null;
 	private Einsatzplanview myView = null;
@@ -45,7 +45,7 @@ public class KasseSchichtView extends JFrame {
 			lblSchichtBearbeiten = null;
 
 	private JComboBox cbTage, cbWochenplan, cbMitarbeiter, cbSchicht = null;
-	private JButton btnPlanBestaetigen, btnTagAuswahl, btnSchichtAuswahl, btnMitarbeiterBestaetigen,btnReset = null;
+	private JButton btnPlanBestaetigen, btnTagAuswahl, btnSchichtAuswahl, btnMitarbeiterBestaetigen, btnReset = null;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -98,27 +98,27 @@ public class KasseSchichtView extends JFrame {
 		btnPlanBestaetigen.setFont(new Font("Verdana", Font.PLAIN, 13));
 		btnPlanBestaetigen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Wochenplan wochenplan = myModel.getWochenplan(Integer.valueOf(cbWochenplan.getSelectedItem().toString().split(" ")[1]));
-				//LinkedList<Tag> tage = wochenplan.getLinkedListTage();
-			
-				String wochenplanBez = "KW"+wochenplan.getWpnr();
+				Wochenplan wochenplan = myModel
+						.getWochenplan(Integer.valueOf(cbWochenplan.getSelectedItem().toString().split(" ")[1]));
+				// LinkedList<Tag> tage = wochenplan.getLinkedListTage();
+
+				String wochenplanBez = "KW" + wochenplan.getWpnr();
 				ArrayList<String> tagesliste = myController.getTage(wochenplanBez);
-				
+
 				cbTage.removeAllItems();
-				
-				for(int i = 0;i<tagesliste.size();i++)
-				{
+
+				for (int i = 0; i < tagesliste.size(); i++) {
 					cbTage.addItem(tagesliste.get(i));
 				}
-				
-			/*	for(Tag tag : tage){
-					cbTage.addItem(tag.getTbez());
-				} */
+
+				/*
+				 * for(Tag tag : tage){ cbTage.addItem(tag.getTbez()); }
+				 */
 				cbTage.setEnabled(true);
 				btnTagAuswahl.setEnabled(true);
 			}
 		});
-		btnPlanBestaetigen.setBounds(93,240, 125, 25);
+		btnPlanBestaetigen.setBounds(93, 240, 125, 25);
 		getContentPane().add(btnPlanBestaetigen);
 
 		lblBitteDenTag = new JLabel("Bitte den Tag ausw\u00E4hlen:");
@@ -137,19 +137,19 @@ public class KasseSchichtView extends JFrame {
 		btnTagAuswahl.setFont(new Font("Verdana", Font.PLAIN, 13));
 		btnTagAuswahl.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				String tag =  cbTage.getSelectedItem().toString();
-				
-				Wochenplan wochenplan =  myModel.getWochenplan(Integer.valueOf(cbWochenplan.getSelectedItem().toString().split(" ")[1]));
-				String wochenplanBez = "KW"+wochenplan.getWpnr();
+				String tag = cbTage.getSelectedItem().toString();
+
+				Wochenplan wochenplan = myModel
+						.getWochenplan(Integer.valueOf(cbWochenplan.getSelectedItem().toString().split(" ")[1]));
+				String wochenplanBez = "KW" + wochenplan.getWpnr();
 				ArrayList<String> schichten = myController.getTagesSchichten(wochenplanBez, tag);
-				
+
 				cbSchicht.removeAllItems();
-				
-				for(int i = 0;i<schichten.size();i++)
-				{
+
+				for (int i = 0; i < schichten.size(); i++) {
 					cbSchicht.addItem(schichten.get(i));
 				}
-				
+
 				cbSchicht.setEnabled(true);
 				btnSchichtAuswahl.setEnabled(true);
 			}
@@ -167,12 +167,11 @@ public class KasseSchichtView extends JFrame {
 		// Siehe oben!
 		cbSchicht = new JComboBox();
 		cbSchicht.setBounds(414, 181, 243, 22);
-	/*
-		LinkedList<Schicht> alleSchichten = this.myModel.getSchichten();
-		alleSchichten.forEach((temp) -> {
-			cbSchicht.addItem("Schicht " + temp.getSchichtnr());
-		});
-		*/
+		/*
+		 * LinkedList<Schicht> alleSchichten = this.myModel.getSchichten();
+		 * alleSchichten.forEach((temp) -> { cbSchicht.addItem("Schicht " +
+		 * temp.getSchichtnr()); });
+		 */
 		getContentPane().add(cbSchicht);
 		cbSchicht.setEnabled(false);
 		//
@@ -182,21 +181,20 @@ public class KasseSchichtView extends JFrame {
 		btnSchichtAuswahl.setFont(new Font("Verdana", Font.PLAIN, 13));
 		btnSchichtAuswahl.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+
 				String schichtnr = cbSchicht.getSelectedItem().toString();
 				schichtnr = schichtnr.substring(0, Math.min(schichtnr.length(), 5));
-				//aktuell wg. Testdaten Wert auf 5
-				
+				// aktuell wg. Testdaten Wert auf 5
+
 				int schichtNr = Integer.parseInt(schichtnr);
 				ArrayList<String> mitarbeiterliste = myController.getVerfuegbareMitarbeiter(schichtNr);
-				
+
 				cbMitarbeiter.removeAllItems();
-				
-				for(int i = 0;i<mitarbeiterliste.size();i++)
-				{
+
+				for (int i = 0; i < mitarbeiterliste.size(); i++) {
 					cbMitarbeiter.addItem(mitarbeiterliste.get(i));
 				}
-				
+
 				cbMitarbeiter.setEnabled(true);
 				btnMitarbeiterBestaetigen.setEnabled(true);
 			}
@@ -214,10 +212,12 @@ public class KasseSchichtView extends JFrame {
 		// Siehe oben!
 		cbMitarbeiter = new JComboBox();
 		cbMitarbeiter.setBounds(414, 354, 243, 22);
-	/*	LinkedList<Mitarbeiter> alleMitarbeiter = this.myModel.getAlleMitarbeiter();//ändern zu verfügbare mitarbeiter
-		alleMitarbeiter.forEach((temp) -> {
-			cbMitarbeiter.addItem(temp.getBenutzername());
-		});*/
+		/*
+		 * LinkedList<Mitarbeiter> alleMitarbeiter =
+		 * this.myModel.getAlleMitarbeiter();//ändern zu verfügbare mitarbeiter
+		 * alleMitarbeiter.forEach((temp) -> {
+		 * cbMitarbeiter.addItem(temp.getBenutzername()); });
+		 */
 		getContentPane().add(cbMitarbeiter);
 		cbMitarbeiter.setEnabled(false);
 		//
@@ -230,13 +230,14 @@ public class KasseSchichtView extends JFrame {
 						JOptionPane.YES_NO_OPTION);
 
 				if (confirmed == JOptionPane.YES_OPTION) {
-					
+
 					String schichtnr = cbSchicht.getSelectedItem().toString();
 					schichtnr = schichtnr.substring(0, Math.min(schichtnr.length(), 5));
 					int schichtNr = Integer.parseInt(schichtnr);
-					String[] mitarbeiterArray = new String[] {cbMitarbeiter.getSelectedItem().toString().split(" ")[0]};
-					
-					if (myController.fülleSchicht(Integer.valueOf(schichtnr), mitarbeiterArray)){
+					String[] mitarbeiterArray = new String[] {
+							cbMitarbeiter.getSelectedItem().toString().split(" ")[0] };
+
+					if (myController.fülleSchicht(Integer.valueOf(schichtnr), mitarbeiterArray)) {
 						dispose();
 					}
 					// welche Methode soll hier ausgeführt werden?
@@ -244,7 +245,6 @@ public class KasseSchichtView extends JFrame {
 					// --> EinsatzplanController.fülleSchicht(int schichtNr,
 					// String[] mitarbeiter)
 
-					
 				} else {
 					// Fehlermeldung überflüssig, da der Benutzer abgebrochen
 					// hat
@@ -266,9 +266,24 @@ public class KasseSchichtView extends JFrame {
 		lblSchichtBearbeiten.setFont(new Font("Verdana", Font.BOLD, 30));
 		lblSchichtBearbeiten.setBounds(22, 13, 315, 58);
 		getContentPane().add(lblSchichtBearbeiten);
-		
+
 		btnReset = new JButton("Reset");
 		btnReset.setBounds(305, 471, 97, 25);
+		btnReset.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				cbMitarbeiter.removeAllItems();
+				cbMitarbeiter.setEnabled(false);
+				cbSchicht.removeAllItems();
+				cbSchicht.setEnabled(false);
+				cbTage.removeAllItems();
+				cbTage.setEnabled(false);
+				cbWochenplan.setSelectedIndex(0);
+
+			}
+		});
 		getContentPane().add(btnReset);
 	}
 
