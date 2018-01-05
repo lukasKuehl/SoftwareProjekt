@@ -2,6 +2,7 @@ package controller;
 
 import java.awt.GridLayout;
 import java.util.ArrayList;
+import java.util.TreeMap;
 
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
@@ -18,6 +19,33 @@ public class TestKlasse {
 		
 		myModel = new Einsatzplanmodel();			
 		myController = new EinsatzplanController(myModel);		
+		
+		
+		/*
+		
+		//Testen Erstellen eines Wochenplanes nach benutzerdefinierten Einstellungen
+		
+		 TreeMap<String, String> zeiten = new TreeMap<String, String>();
+		 TreeMap<String, Integer> besetzung = new TreeMap<String, Integer>();
+		 
+		 zeiten.put("Öffnungszeit", "08:00");
+		 zeiten.put("HauptzeitBeginn", "10:00");
+		 zeiten.put("HauptzeitEnde", "18:00");
+		 zeiten.put("Schließzeit", "20:00");
+		 
+		 besetzung.put("MinBesetzungKasse", 3);
+		 besetzung.put("MinBesetzungInfoWaren", 1);
+		 besetzung.put("MinBesetzungInfoTechnik", 1);
+		 besetzung.put("MehrbesetzungKasse", 2);
+		 
+		 
+
+				
+		myController.erstelleWochenplanCustom("Dgöring", "KW1020", zeiten, besetzung);
+		
+		//myController.entferneWochenplan("Dgöring", "KW1020");			
+		
+		*/		
 		
 		/*
 		

@@ -41,6 +41,7 @@ public class Wochenplan {
 		this.benutzername=benutzername;
 		this.minanzinfot=minanzinfot;
 		this.minanzinfow=minanzinfow;
+		this.minanzkasse=minanzkasse;
 		this.mehrbesetzung=mehrbesetzung;
 		
 	}
