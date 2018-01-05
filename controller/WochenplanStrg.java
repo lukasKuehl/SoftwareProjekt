@@ -23,6 +23,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
 
 import com.sun.org.apache.xerces.internal.util.SynchronizedSymbolTable;
 
@@ -260,16 +261,17 @@ class WochenplanStrg {
 			//Erzeuge eine neue JTable mit den erhobenen Daten, welche die Wochenübersicht in der View repräsentiert
 			wochenplan = new JTable(zeilen,spaltennamen){
 				
+				//Zellen lassen sich nicht bearbeiten --> Änderungen nur über System und Datenbank
 				 public boolean isCellEditable(int data, int title)
 	               {
 	                   return false;
-	               }				
+	               }				 
 			};
 		}catch(Exception e){			
 
 			String fehler = "Fehler beim Erstellen eines neuen JTables für den Wochenplan" + wpbez + "\n" + e.getMessage();
 			myController.printErrorMessage(fehler);			
-		}
+		}	
 		
          return wochenplan;
 	}	
@@ -477,20 +479,12 @@ class WochenplanStrg {
 	 */
 	protected boolean verschickeWochenplan(String username ,String wpbez, JTable wochenplan, JTableHeader header){
 			
-		boolean success = false;				
-		
-		System.out.println(username);
-		System.out.println(wpbez);
-		
-		if(wochenplan == null){
-			System.out.println("Keine JTable übergeben!");
-		}
+		boolean success = false;		
 		
 		wochenplan.getTableHeader().setSize(wochenplan.getTableHeader().getPreferredSize());
 		wochenplan.setSize(wochenplan.getPreferredSize());
 		wochenplan.setPreferredScrollableViewportSize(wochenplan.getPreferredScrollableViewportSize());
-		wochenplan.setFillsViewportHeight(true);
-		
+		wochenplan.setFillsViewportHeight(true);				
 		
 		if(myController.isUserAdmin(username)){
 			
@@ -533,8 +527,15 @@ class WochenplanStrg {
 	            			"Mit freundlichen Grüßen,\n" +
 	            			"Team der Einsatzplanverwaltung";           	
 	            	
-	            	//Nutzung des Gruppenaccounts bei Web.de	            
-	            	myMailController.sendMail(user, password, senderAddress, m.getEmail(), "Einsatzplan für " + wpbez, message, filePath);	
+	            	//Nutzung des Gruppenaccounts bei Web.de	
+	            	
+	            	//Demoversion zum vermeiden von Spam
+	            	if(m.getBenutzername().equals("Hmustermann")){       	
+	            		//System.out.println("Mail senden");
+	            		myMailController.sendMail(user, password, senderAddress, m.getEmail(), "Einsatzplan für " + wpbez, message, filePath);	
+	            		
+	            	}
+	            		
 	            	
 	            }
 	            success = true;

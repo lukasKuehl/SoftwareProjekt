@@ -101,8 +101,8 @@ class MailStrg {
 			multipart.addBodyPart(getAttachment(iconPath));
 
 			// Text und Attachment zur Nachricht hinzufügen
-			msg.setContent(multipart);
-
+			msg.setContent(multipart);	
+			
 			// Senden der Nachricht
 			Transport.send(msg);
 
