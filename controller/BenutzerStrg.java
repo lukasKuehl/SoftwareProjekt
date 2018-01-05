@@ -136,7 +136,8 @@ class BenutzerStrg {
 		if(this.myModel.getMitarbeiter(username) != null){
 			try{
 				//Wechsel der Benutzerrolle des übergebenen Mitarbeiters.
-				this.myModel.wechselBenutzerrolle(username);				
+				this.myModel.wechselBenutzerrolle(username);	
+				success = true;
 			}catch(Exception e){
 				String fehler = "Fehler beim Ändern der Rechte des Nutzers " + username + " :\n" + e.getMessage();
 				myController.printErrorMessage(fehler);					
