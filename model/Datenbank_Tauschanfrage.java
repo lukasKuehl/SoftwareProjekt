@@ -34,6 +34,8 @@ class Datenbank_Tauschanfrage {
 			//Erstellen des prepared Statement Objektes
 			pstmt = con.prepareStatement(sqlStatement);
 			
+			con.setAutoCommit(false);
+			
 			//Überprüfen des PK-Check-Constraints
 			if (checkTauschanfrage(tauschNr, con)) {
 				System.out.println("Die Tauschnummer befindet sich bereits in der Datenbank!");
@@ -59,7 +61,7 @@ class Datenbank_Tauschanfrage {
 				con.commit();	
 				
 				success = true;
-				
+				con.setAutoCommit(true);
 			}			
 			
 			

@@ -124,18 +124,22 @@ public class Einsatzplanmodel implements Observable {
 		
 		return result;
 	}
+	/**
+	 * @author Thomas Friesen
+	 * @info Hinzufügen eines Wochenplans in die Datenbank
+	 */
 	public boolean addWochenplan(Wochenplan wochenplan){
 			
 			boolean result = false;
 			try{
-				this.dataWochenplan.addWochenplan(wochenplan,con);
-				result = true;
+				result = this.dataWochenplan.addWochenplan(wochenplan,con);
+				
 				
 			}catch(Exception e){
 				System.out.println("Fehler innerhalb des Modells:");
 				System.out.println("Fehler beim Aufruf der Methode addWochenplan:");
 				e.printStackTrace();
-				result = false;
+				return false;
 			}
 			notifyObservers();
 			return result;
@@ -194,6 +198,10 @@ public class Einsatzplanmodel implements Observable {
 		return result;
 	}
 
+	/**
+	 * @author Thomas Friesen
+	 * @info Überprüfen der Foreign-Key-Constrains der WochenplanTabelle
+	 */
 public boolean checkWochenplanFK(String benutzername) {
 	boolean result =false;
 	try{
@@ -274,20 +282,25 @@ public boolean checkWochenplanFK(String benutzername) {
 		return result;
 	}	
 		
-
-	public void addMa_Schicht(Ma_Schicht ma_schicht){
+	/**
+	 * @author Thomas Friesen
+	 * @info Hinzufügen  eines Ma_Schicht-Datensatzes in die Datenbank
+	 */
+	public boolean addMa_Schicht(Ma_Schicht ma_schicht){
 		
-		
+		boolean result = false;
 		try{
-			this.dataMa_Schicht.addMa_Schicht(ma_schicht,con);
+			result = this.dataMa_Schicht.addMa_Schicht(ma_schicht,con);
 			
 		}catch(Exception e){
 			System.out.println("Fehler innerhalb des Modells:");
 			System.out.println("Fehler beim Aufruf der Methode addMa_Schicht:");
 			e.printStackTrace();
+			return false;
 		}
 		
 		notifyObservers();
+		return result;
 	}
 	
 	public boolean checkMa_Schicht(int schichtnr, String benutzername) {
@@ -302,7 +315,10 @@ public boolean checkWochenplanFK(String benutzername) {
 		}
 		return result;
 	}
-	
+	/**
+	 * @author Thomas Friesen
+	 * @info Überprüfen der FK-Constraints der Ma-Schicht-Tabelle
+	 */
 	public boolean checkMa_SchichtFK(int schichtnr, String benutzername) {
 		boolean result =false;
 		try{
@@ -380,6 +396,10 @@ public boolean checkWochenplanFK(String benutzername) {
 		return result;
 	}
 	
+	/**
+	 * @author Thomas Friesen
+	 * @info Überprüfen der FK-Constraints der Mitarbeiter-Tabelle
+	 */
 	public boolean checkMitarbeiterFK(String job, String whname) {
 		boolean result =false;
 		try{
@@ -423,11 +443,15 @@ public boolean checkWochenplanFK(String benutzername) {
 		
 		return result;
 	}
+	/**
+	 * @author Thomas Friesen
+	 * @info Hinzufügen eines Schicht-Datensatzes in die Datenbank
+	 */
 	public boolean addSchicht(Schicht schicht){
-		
-		
+			
+		boolean result = false;
 		try{
-			this.dataSchicht.addSchicht(schicht,con);
+			result = this.dataSchicht.addSchicht(schicht,con);
 			
 		}catch(Exception e){
 			System.out.println("Fehler innerhalb des Modells:");
@@ -437,7 +461,7 @@ public boolean checkWochenplanFK(String benutzername) {
 		}
 		
 		notifyObservers();
-		return true;
+		return result;
 		
 		
 	}
@@ -455,6 +479,10 @@ public boolean checkWochenplanFK(String benutzername) {
 		return result;
 	}
 	
+	/**
+	 * @author Thomas Friesen
+	 * @info Überprüfen der FK-Constraints der Schicht-Tabelle
+	 */
 	public boolean checkSchichtFK(String tbez, int wpnr) {
 		boolean result =false;
 		try{
@@ -546,12 +574,15 @@ public boolean checkWochenplanFK(String benutzername) {
 		return result;
 	}	
 		
-	
+	/**
+	 * @author Thomas Friesen
+	 * @info Hinzufügen eines Tauschanfrage-Datensatzes in die Datenbank
+	 */
 	public boolean addTauschanfrage(int tauschNr, String senderName, int senderSchichtNr, String empfaengerName, int empfaengerSchichtNr){
-		
+		boolean result = false;
 		
 		try{
-			this.dataTauschanfrage.addTauschanfrage(tauschNr, senderName, senderSchichtNr,  empfaengerName,empfaengerSchichtNr, con);
+			result = this.dataTauschanfrage.addTauschanfrage(tauschNr, senderName, senderSchichtNr,  empfaengerName,empfaengerSchichtNr, con);
 			
 		}catch(Exception e){
 			System.out.println("Fehler innerhalb des Modells:");
@@ -561,7 +592,7 @@ public boolean checkWochenplanFK(String benutzername) {
 		}
 		
 		notifyObservers();
-		return true;
+		return result;
 		
 	}
 
@@ -578,6 +609,10 @@ public boolean checkWochenplanFK(String benutzername) {
 		return result;
 	}
 	
+	/**
+	 * @author Thomas Friesen
+	 * @info Überprüfen der FK-Constraints der Tauschanfrage-Tabelle
+	 */
 	public boolean checkTauschanfrageFK(String senderName, int senderSchichtNr, String empfaengerName, int empfaengerSchichtNr) {
 		boolean result =false;
 		try{
@@ -586,7 +621,7 @@ public boolean checkWochenplanFK(String benutzername) {
 			
 		}catch(Exception e){
 			System.out.println("Fehler innerhalb des Modells:");
-			System.out.println("Fehler beim Aufruf der Methode checkTauschanfrage:");
+			System.out.println("Fehler beim Aufruf der Methode checkTauschanfrageFK:");
 			e.printStackTrace();
 			return false;
 		}
@@ -669,11 +704,15 @@ public boolean checkWochenplanFK(String benutzername) {
 		return result;
 	}
 	
+	/**
+	 * @author Thomas Friesen
+	 * @info Hinzufügen eines Tag-Datensatzes in die Datenbank
+	 */
 	public boolean addTag(Tag tag,String oeffnungszeit, String schließzeit, String hauptzeitbeginn, String hauptzeitende){
 		
-		
+		boolean result = false;
 		try{
-			this.dataTag.addTag(tag,oeffnungszeit,schließzeit,hauptzeitbeginn, hauptzeitende,con);
+			result = this.dataTag.addTag(tag,oeffnungszeit,schließzeit,hauptzeitbeginn, hauptzeitende,con);
 			
 		}catch(Exception e){
 			System.out.println("Fehler innerhalb des Modells:");
@@ -683,7 +722,7 @@ public boolean checkWochenplanFK(String benutzername) {
 		}
 		
 		notifyObservers();
-		return true;
+		return result;
 	}
 
 	public boolean checkTag(String tbez, int wpnr) {
@@ -699,6 +738,10 @@ public boolean checkWochenplanFK(String benutzername) {
 		return result;
 	}
 	
+	/**
+	 * @author Thomas Friesen
+	 * @info Überprüfen der FK-Constraints der Tagt-Tabelle
+	 */
 	public boolean checkTagFK(int wpnr) {
 		boolean result =false;
 		
@@ -790,6 +833,10 @@ public boolean checkWochenplanFK(String benutzername) {
 		}
 		return result;
 	}
+	/**
+	 * @author Thomas Friesen
+	 * @info Hinzufügen eines Tblock_Tag-Datensatzes in die Datenbank
+	 */
 	public void addTblock_Tag(Tblock_Tag tblocktag){
 		
 		
@@ -830,6 +877,10 @@ public boolean checkWochenplanFK(String benutzername) {
 		return result;
 	}
 
+	/**
+	 * @author Thomas Friesen
+	 * @info Überprüfen der FK-Constraints der Tblock_Tag-Tabelle
+	 */
 	public boolean checkTblock_TagFK(int tBlockNr, String tbez, int wpnr) {
 		boolean result = false;
 		try{
@@ -871,13 +922,16 @@ public boolean checkWochenplanFK(String benutzername) {
 		return result;
 	}	
 		
-
+	/**
+	 * @author Thomas Friesen
+	 * @info Hinzufügen eines Terminblockierung-Datensatzes in die Datenbank
+	 */
 	public boolean addTerminBlockierung(TerminBlockierung terminblockierung, int wpnr){
 		boolean result = false;
 		
 		try{
-			this.dataTerminBlockierung.addTerminBlockierung(terminblockierung, wpnr,con);
-			result = true;
+			result = this.dataTerminBlockierung.addTerminBlockierung(terminblockierung, wpnr,con);
+			
 			
 		}catch(Exception e){
 			System.out.println("Fehler innerhalb des Modells:");
@@ -902,7 +956,10 @@ public boolean checkWochenplanFK(String benutzername) {
 		return result;
 	}
 	
-	
+	/**
+	 * @author Thomas Friesen
+	 * @info Überprüfen der FK-Constraints der Terminblockierung-Tabelle
+	 */
 	public boolean checkTerminBlockierungFK(String benutzername) {
 		boolean result =false;
 		try{
@@ -967,7 +1024,10 @@ public boolean checkWochenplanFK(String benutzername) {
 		return result;
 	}	
 		
-		
+	/**
+	 * @author Thomas Friesen
+	 * @info Hinzufügen eines Warenhaus-Datensatzes in die Datenbank
+	 */
 	public void addWarenhaus(Warenhaus warenhaus){
 		
 		
@@ -981,22 +1041,25 @@ public boolean checkWochenplanFK(String benutzername) {
 		}	
 		notifyObservers();
 	}
+	/**
+	 * @author Thomas Friesen
+	 * @info Hinzufügen eines Mitarbeiter-Datensatzes in die Datenbank
+	 */
 public boolean addMitarbeiter(Mitarbeiter mitarbeiter){
 		
-		boolean sucess = false;
+		boolean result = false;
+		
 		try{
-			this.dataMitarbeiter.addMitarbeiter(mitarbeiter,con);
-			
-			sucess = true;
+			result = this.dataMitarbeiter.addMitarbeiter(mitarbeiter,con);
 			
 		}catch(Exception e){
 			System.out.println("Fehler innerhalb des Modells:");
 			System.out.println("Fehler beim Aufruf der Methode addMitarbeiter:");
 			e.printStackTrace();	
-			sucess = false;
+			return false;
 		}	
 		notifyObservers();
-		return sucess;
+		return result;
 		
 	}
 	public void wechselBenutzerrolle(String benutzername) {

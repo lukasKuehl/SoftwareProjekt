@@ -17,7 +17,6 @@ import data.Mitarbeiter;
 
 class Datenbank_Mitarbeiter {
 
-
 	/**
 	 * @Thomas Friesen
 	 * @info Die Methode fügt einen Mitarbeiter in die Datenbank hinein
@@ -50,6 +49,7 @@ class Datenbank_Mitarbeiter {
 			whname = ma.getWhname();
 			email = ma.getEmail();
 			
+			con.setAutoCommit(false);
 			
 			//Überprüfung der PK-Constraints
 			if (checkMitarbeiter(benutzername,con)) {
@@ -80,7 +80,7 @@ class Datenbank_Mitarbeiter {
 				
 			}			
 			
-			
+			con.setAutoCommit(true);
 			
 			
 		} catch (SQLException sql) {
@@ -88,7 +88,8 @@ class Datenbank_Mitarbeiter {
 			System.out.println("Fehler beim Einfügen eines neuen Datensatzes in die Datenbank!");
 			System.out.println("Fehler bei der Hinzufügen eines Mitarbeiters:");
 			System.out.println("Parameter: benutzername = " + benutzername);
-			sql.printStackTrace();		
+			sql.printStackTrace();	
+			
 			
 			try {
 				//Zurücksetzen des Connection Zustandes auf den Ursprungszustand
@@ -96,6 +97,7 @@ class Datenbank_Mitarbeiter {
 				con.setAutoCommit(true);
 			} catch (SQLException sqlRollback) {
 				System.err.println("Methode addMitarbeiter " + "- Rollback -  SQL-Fehler: " + sqlRollback.getMessage());
+				return false;
 			}
 		} finally {
 			//Schließen der offen gebliebenen Statements
@@ -209,7 +211,7 @@ class Datenbank_Mitarbeiter {
 		Statement[] stmt = new Statement[2];
 		ResultSet[] rs = new ResultSet[2];
 		String[] sqlQuery = new String[2]; 
-		sqlQuery[0] = "select job from Userrecht where job = "+ job ;
+		sqlQuery[0] = "select job from Userrecht where job = '"+ job +"'" ;
 		sqlQuery[1] = "select whname from Warenhaus where whname = '" + whname + "'";
 		
 		try {

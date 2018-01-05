@@ -34,7 +34,9 @@ import data.Ma_Schicht;
 
 				//Auslesen der als Parameter übergebenen Mitarbeiter-Schicht-Beziehung
 				schichtnr = ma_schicht.getSchichtnr();
-				benutzername = ma_schicht.getBenutzername();		
+				benutzername = ma_schicht.getBenutzername();	
+				
+				con.setAutoCommit(false);
 				
 				//Überprüfung der PK-Check-Constrains
 				if (checkMa_Schicht(schichtnr, benutzername,con)) {
@@ -58,7 +60,7 @@ import data.Ma_Schicht;
 					
 				}			
 				
-				
+				con.setAutoCommit(true);
 				
 				
 			} catch (SQLException sql) {
