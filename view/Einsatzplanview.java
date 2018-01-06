@@ -52,20 +52,17 @@ public class Einsatzplanview implements Observer {
 	
 	
 	/**
-	 *@author Darius Pantelii
+	 *@author Darius Panteli
 	 *@Info Update Methode, sobald sich die Daten aus dem aktuellen geändert haben, wird ein neur Wochenplan generiert.
 	 */
 	public void update() {
 		
-		//KasseWochenView.myFrame();
-		//new KasseWochenView(myModel, myController, null);
-		
-		
-		
-		//Muss noch ausgefüllt werden --> zu Programmstart die erste Woche in der Wochenliste, andernfalls die aktuelle die in dem Label in der jeweiligen Wochenview liegt
-		
-		
-		
+		if (myModel.getMitarbeiter(username).getJob().equalsIgnoreCase("chef")
+				|| myModel.getMitarbeiter(username).getJob().equalsIgnoreCase("kassenbüro")){
+			new KasseWochenView(myModel, myController, null);
+		}else{
+			new MitarbeiterWochenView(myModel, myController, null);
+		}
 	}
 
 

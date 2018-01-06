@@ -46,6 +46,7 @@ import model.Einsatzplanmodel;
 
 //Hilfsklassen sind nicht public!
 public class KasseWochenView extends JFrame {
+	
 
 	private JPanel contentPane, pnlMenuBar;
 	private JTable table;
@@ -76,21 +77,10 @@ public class KasseWochenView extends JFrame {
 	 * Launch the application.
 	 */
 
+	//protected void closeWindow(){
+	//	this.closeWindow();
+	//}
 	
-
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					KasseWochenView window = new KasseWochenView(new Einsatzplanmodel(), 
-							new EinsatzplanController(new Einsatzplanmodel()), null);
-					// window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 	//
 	
 	/**
