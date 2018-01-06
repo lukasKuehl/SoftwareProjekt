@@ -20,6 +20,32 @@ public class TestKlasse {
 		myModel = new Einsatzplanmodel();			
 		myController = new EinsatzplanController(myModel);		
 		
+		/*
+		
+		//Testen der Methode erstelleTermin
+		
+		TreeMap<String, String> zeitraum = new TreeMap<String, String>();
+		
+		zeitraum.put("wpbez", "KW1000");
+		zeitraum.put("anfZeitraumTag", "Montag");
+		zeitraum.put("endZeitraumTag", "Mittwoch");
+		zeitraum.put("anfangsUhrzeit", null);
+		zeitraum.put("endUhrzeit", null);
+		 
+		myController.erstelleTermin("Fhimmelmann", "Test-Termin", zeitraum, "Testen");
+		
+		*/
+		
+		/*
+		
+		//Testen hinzufügen einer Mitarbeitergruppe zu einer Schicht
+		
+		String[] mitarbeiter = {"Fhimmelmann","Gschmidt","Hmüller"};
+		int schichtNr = 10000;
+		
+		myController.fülleSchicht(schichtNr, mitarbeiter);
+		
+		*/
 		
 		/*
 		

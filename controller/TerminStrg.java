@@ -107,7 +107,7 @@ class TerminStrg {
 				
 				//Prüfe, ob die Tage den Vorgaben entsprechen
 				if((anfZeitraum != null) && (endZeitraum != null)){				
-					
+										
 					//Prüfe, ob der Anfangstag nach dem Endtag liegt
 					if(checkTage.get(anfZeitraum) > checkTage.get(endZeitraum)){
 						throw new Exception(reihenfolgeFehlermeldung);
@@ -121,17 +121,24 @@ class TerminStrg {
 				//-->Der Zeitraum ist korrekt, da keine Exception geworfen wurde
 			}
 			
-			String anfangsUhrzeit = zeitraum.get("anfangsUhrzeit");
-			String endUhrzeit = zeitraum.get("endUhrzeit");	
+			String anfangsUhrzeit = null;
+			String endUhrzeit = null;
+			
+			if(zeitraum.get("anfangsUhrzeit") != null && zeitraum.get("endUhrzeit") != null){
+
+				anfangsUhrzeit = zeitraum.get("anfangsUhrzeit");
+				endUhrzeit = zeitraum.get("endUhrzeit");	
+			}
 			
 			
 			//Prüfe, ob Uhrzeiten mit übergeben wurden. Falls nicht, wird der Termin/ die Krankmeldung ganztägig eingetragen.
-			if(anfangsUhrzeit.startsWith("") || endUhrzeit.startsWith("")){				
+			if((anfangsUhrzeit == null && endUhrzeit == null)){				
 				
 				//Überschreibe die nicht hinterlegten Anfangs- und Enduhrzeiten mit den Öffnungs- und Schließzeiten des Wochenplanes --> Abdeckung des gesamten Tages
 				if(wp != null){
 					anfangsUhrzeit = wp.getÖffnungszeit().substring(0, 5);
-					endUhrzeit = wp.getSchließzeit().substring(0,5);			
+					endUhrzeit = wp.getSchließzeit().substring(0,5);
+					
 				}
 				else{					
 					String fehler = "Der ausgewählte Wochenplan existiert nicht, bitte Eingaben überprüfen!\n";
@@ -147,7 +154,7 @@ class TerminStrg {
 			//Konvertierung der übergebenen Uhrzeiten ins Date-Format 
 			try{
 				anfangsUhrzeitDate = sdf.parse(anfangsUhrzeit);
-				endUhrzeitDate = sdf.parse(endUhrzeit);
+				endUhrzeitDate = sdf.parse(endUhrzeit);		
 				
 			}catch(Exception e){
 				
@@ -157,7 +164,7 @@ class TerminStrg {
 			
 			//Prüfe, ob die Daten in der richtigen Reihenfolge sind(Anfangszeit darf nicht hinter der Endzeit liegen)
 			if(anfangsUhrzeitDate.before(endUhrzeitDate) || anfangsUhrzeitDate.equals(endUhrzeitDate)){
-				
+									
 				int newTbNr = this.myModel.getNewTblocknr();		
 				
 				//Erstelle eine neue TerminBlockierung und füge diese in die Datenbank ein
