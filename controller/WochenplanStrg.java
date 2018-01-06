@@ -44,8 +44,7 @@ class WochenplanStrg {
 	
 	//Initialisierung der Instanzvariablen
 	private EinsatzplanController myController = null;
-	private Einsatzplanmodel myModel = null;
-	private JDialog myDialog = null;
+	private Einsatzplanmodel myModel = null;	
 	
 	/**
 	 * @author Lukas Kühl
@@ -456,8 +455,7 @@ class WochenplanStrg {
 			try{
 				//Prüfe, ob der Wochenplan noch in der Datenbank vorhanden ist
 				if(myModel.getWochenplan(wpnr) != null){
-					this.myModel.deleteWochenplan(wpnr);
-					success = true;
+					success = this.myModel.deleteWochenplan(wpnr);					
 				}			
 				
 			}catch(Exception e){				
@@ -517,7 +515,7 @@ class WochenplanStrg {
 	            
 	            //Parameter E-Mail-Account der Einsatzplanverwaltung
 	            final String user = "einsatzplan.team";
-	            final String password = "FHBIEinsatzplanteam";
+	            final String password = "";
 	            final String senderAddress = "einsatzplan.team@web.de";           
 	            
 	            for(Mitarbeiter m: alleMitarbeiter){
@@ -531,15 +529,11 @@ class WochenplanStrg {
 	            	//Nutzung des Gruppenaccounts bei Web.de	
 	            	
 	            	//Demoversion zum vermeiden von Spam
-	            	if(m.getBenutzername().equals("Hmustermann")){       	
-	            		//System.out.println("Mail senden");
-	            		myMailController.sendMail(user, password, senderAddress, m.getEmail(), "Einsatzplan für " + wpbez, message, filePath);	
-	            		
-	            	}
-	            		
-	            	
+	            	if(m.getBenutzername().equals("Hmustermann")){     	            	
+	            		success = myController.sendMail(user, password, senderAddress, m.getEmail(), "Einsatzplan für die " + wpbez, message, filePath);
+	            	}            	
 	            }
-	            success = true;
+	          
 	        }catch(IOException ioe)
 	        {
 	        	String fehler = "Fehler beim Verschicken der Wochenpläne per E-Mail:\n" + ioe.getMessage();

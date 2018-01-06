@@ -28,6 +28,7 @@ public class EinsatzplanController {
 	private TauschanfrageStrg tauschanfrageSteuerung = null;
 	private TerminStrg terminSteuerung = null;
 	private WochenplanStrg wochenplanSteuerung = null;
+	private MailStrg mailSteuerung = null;
 		
 	
 	/**
@@ -43,6 +44,7 @@ public class EinsatzplanController {
 		this.tauschanfrageSteuerung = new TauschanfrageStrg(this, this.model);
 		this.terminSteuerung = new TerminStrg(this, this.model);
 		this.wochenplanSteuerung = new WochenplanStrg(this, this.model);
+		this.mailSteuerung = new MailStrg();
 		
 	}	
 	
@@ -373,6 +375,30 @@ public class EinsatzplanController {
 		
 		return result;			
 	}
+
+	/**
+	 * @author Lukas Kühl
+	 * @info Hilfsmethode zur Weiterleitung einer Anfrage von der Wochenplansteuerung an die MailSteuerung zum Versenden eines Wochenplanes an alle betroffenen Mitarbeiter per E-Mail. Rückmeldung an die Wochenplansteuerung über Erfolg/Misserfolg.
+	 */
+	protected boolean sendMail(String user, String password, String senderAddress, String email, String subject, String message, String filePath){		
+
+		boolean result = false;
+		try{
+			
+			this.mailSteuerung.sendMail(user, password, senderAddress, email, subject, message, filePath);
+			result = true;
+			
+		}catch(Exception e){
+			e.printStackTrace();
+			String fehler = "Fehler innerhalb des Controllers:\n" + "Fehler beim Aufruf der Methode verschickeWochenplan:\n" + e.getMessage();
+			this.printErrorMessage(fehler);						
+		}	
+		
+		return result;	
+		
+	}
+	
+	
 	
 	/**
 	 * @author Lukas Kühl

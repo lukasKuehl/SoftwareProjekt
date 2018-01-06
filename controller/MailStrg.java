@@ -147,8 +147,7 @@ class MailStrg {
 
 			// Anhang hinzufügen
 			// Datei in Fileobjekt speichern
-			String filename= iconPath;
-			System.out.println(filename + " wird gesendet...");
+			String filename= iconPath;			
 			File file = new File(filename);
 			
 			// Datenquelle verknüpfen/registrieren
