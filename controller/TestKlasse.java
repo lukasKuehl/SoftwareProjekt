@@ -150,8 +150,8 @@ public class TestKlasse {
 		frame.pack();
 		frame.setVisible(true);	
 		
-		
 		*/
+		
 		
 		/*
 		ArrayList<String> mitarbeiterTermine = myController.getMitarbeiterTermine("Oenns");

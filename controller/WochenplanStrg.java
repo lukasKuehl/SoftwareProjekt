@@ -285,7 +285,7 @@ class WochenplanStrg {
     	//Symbolisiert eine Mitarbeiterzeile in der Wochenplantabelle
     	String[] rueckgabe = new String[wochenTage.length];      	  	
     	
-    	//Abfrage der gesamten Zuordnung und Suche nach den Schichten, die dem übergebenen Mitarbeiter zugeordet sind
+    	//Abfrage der gesamten Zuordnung und Suche nach den Schichten, die dem übergebenen Mitarbeiter innerhalb der angefragten Woche zugeordet sind
     	LinkedList<Ma_Schicht> einteilung = this.myModel.getMa_Schicht();
     	LinkedList<Ma_Schicht> mitarbeiterEinteilung = new LinkedList<Ma_Schicht>();
     			
@@ -301,13 +301,18 @@ class WochenplanStrg {
 		LinkedList<Schicht> mitarbeiterSchichten =new LinkedList<Schicht>();
 		
 		for(Schicht s: alleSchichten){
-			
-			for(Ma_Schicht mas: mitarbeiterEinteilung){
+		
+			if(s.getWpnr() == wpnr){
 				
-				if(s.getSchichtnr() == mas.getSchichtnr()){
-					mitarbeiterSchichten.add(s);
-				}			
-			}		
+				for(Ma_Schicht mas: mitarbeiterEinteilung){				
+					if(s.getSchichtnr() == mas.getSchichtnr()){
+						mitarbeiterSchichten.add(s);
+					}			
+				}	
+				
+			}
+			
+				
 		}    	
     	
 		//Map zur Speicherung aller vorhandenen Schichten zu einem bestimmten Tag aus dem Wochenplan um den gesamten Tageszeitraum, in dem der Mitarbeiter eingeteilt ist abzubilden
