@@ -71,7 +71,7 @@ class TauschanfrageLoeschenView extends JFrame {
 		contentPane.add(panelTauschanfrage);
 		panelTauschanfrage.setLayout(null);
 
-		lblTauschanfrageLoeschen = new JLabel("Tauschanfrage loeschen:");
+		lblTauschanfrageLoeschen = new JLabel("Tauschanfrage löschen:");
 		lblTauschanfrageLoeschen.setFont(new Font("Verdana", Font.BOLD, 20));
 		lblTauschanfrageLoeschen.setBounds(51, 55, 284, 26);
 		panelTauschanfrage.add(lblTauschanfrageLoeschen);
@@ -90,16 +90,16 @@ class TauschanfrageLoeschenView extends JFrame {
 		listTauschanfragen.setBounds(51, 127, 860, 333);
 		panelTauschanfrage.add(listTauschanfragen);
 
-		btnBestaetigen = new JButton("Bestätigen");
+		btnBestaetigen = new JButton("Lösschen");
 		btnBestaetigen.setHorizontalAlignment(SwingConstants.LEFT);
 		btnBestaetigen.setFont(new Font("Verdana", Font.PLAIN, 15));
 		btnBestaetigen.setBounds(802, 531, 111, 25);
 		panelTauschanfrage.add(btnBestaetigen);
 		
-		JLabel label = new JLabel("Bitte auswähen:");
-		label.setFont(new Font("Verdana", Font.PLAIN, 14));
-		label.setBounds(51, 93, 147, 18);
-		panelTauschanfrage.add(label);
+		JLabel lblBitteAuswhlen = new JLabel("Bitte ausw\u00E4hlen:");
+		lblBitteAuswhlen.setFont(new Font("Verdana", Font.PLAIN, 14));
+		lblBitteAuswhlen.setBounds(51, 93, 147, 18);
+		panelTauschanfrage.add(lblBitteAuswhlen);
 
 		setVisible(true);
 
