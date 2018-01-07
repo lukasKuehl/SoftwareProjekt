@@ -92,22 +92,22 @@ class TauschanfrageAnzeigenView extends JFrame {
 			modelTauschanfrage.addElement(m);
 		}
 		listTauschanfragen.setModel(modelTauschanfrage);
-		listTauschanfragen.setBounds(62, 161, 860, 333);
+		listTauschanfragen.setBounds(51, 127, 860, 333);
 		contentPane.add(listTauschanfragen);
 
 		lblTauschanfrageAnzeigen = new JLabel("Tauschanfragen");
 		lblTauschanfrageAnzeigen.setFont(new Font("Verdana", Font.BOLD, 21));
-		lblTauschanfrageAnzeigen.setBounds(62, 91, 198, 26);
+		lblTauschanfrageAnzeigen.setBounds(51, 55, 198, 26);
 		contentPane.add(lblTauschanfrageAnzeigen);
 
 		btnAnnehmen = new JButton("Annehmen");
 		btnAnnehmen.setFont(new Font("Verdana", Font.PLAIN, 15));
-		btnAnnehmen.setBounds(802, 517, 127, 25);
+		btnAnnehmen.setBounds(784, 509, 127, 25);
 		contentPane.add(btnAnnehmen);
 
 		JLabel label = new JLabel("Bitte auswählen:");
 		label.setFont(new Font("Verdana", Font.PLAIN, 14));
-		label.setBounds(62, 138, 147, 18);
+		label.setBounds(51, 93, 147, 18);
 		contentPane.add(label);
 
 		setVisible(true);

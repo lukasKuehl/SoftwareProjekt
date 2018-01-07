@@ -82,7 +82,7 @@ class TerminErstellenView extends JFrame {
 
 		labelTerminErstellen = new JLabel("Termin erstellen");
 		labelTerminErstellen.setBounds(64, 43, 200, 28);
-		labelTerminErstellen.setFont(new Font("Verdana", Font.PLAIN, 22));
+		labelTerminErstellen.setFont(new Font("Verdana", Font.BOLD, 21));
 		panelTermin.add(labelTerminErstellen);
 
 		// Verwendung von Maskformatter für die Eingrenzung der Eingabe von max. zwei

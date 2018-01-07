@@ -74,7 +74,7 @@ class KrankmeldungLoeschenView extends JFrame {
 		// Liste der Krankmeldungen einem DefaultListModel hinzufügen und einer
 		// JComboBox zuweisen
 		listKrankmeldung = new JList<String>();
-		listKrankmeldung.setFont(new Font("Verdana", Font.PLAIN, 21));
+		listKrankmeldung.setFont(new Font("Verdana", Font.PLAIN, 13));
 		kl = myController.getAlleTermine(myView.getUsername()); 
 		model = new DefaultListModel<String>();
 		for (String m : kl) {
@@ -82,14 +82,14 @@ class KrankmeldungLoeschenView extends JFrame {
 		}
 		listKrankmeldung.setModel(model);
 		listKrankmeldung.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		listKrankmeldung.setBounds(62, 143, 575, 382);
+		listKrankmeldung.setBounds(62, 143, 659, 302);
 		listKrankmeldung.getModel();
 		contentPane.add(listKrankmeldung);
 
-		btnBestaetigen = new JButton("bestätigen");
+		btnBestaetigen = new JButton("Best\u00E4tigen");
 		btnBestaetigen.setHorizontalAlignment(SwingConstants.LEFT);
 		btnBestaetigen.setFont(new Font("Verdana", Font.PLAIN, 15));
-		btnBestaetigen.setBounds(647, 496, 109, 25);
+		btnBestaetigen.setBounds(647, 507, 111, 25);
 		contentPane.add(btnBestaetigen);
 
 		lblBitteAuswaehlen = new JLabel("Bitte auswählen:");

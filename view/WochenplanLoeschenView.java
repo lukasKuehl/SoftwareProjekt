@@ -65,8 +65,8 @@ class WochenplanLoeschenView extends JFrame {
 		addWindowListener(windowListener);
 
 		lblWochenplanLoeschen = new JLabel("Wochenplan löschen");
-		lblWochenplanLoeschen.setFont(new Font("Verdana", Font.PLAIN, 21));
-		lblWochenplanLoeschen.setBounds(51, 40, 243, 27);
+		lblWochenplanLoeschen.setFont(new Font("Verdana", Font.BOLD, 21));
+		lblWochenplanLoeschen.setBounds(51, 55, 243, 27);
 		contentPane.add(lblWochenplanLoeschen);
 
 		listWochenplaene = new JList<String>();
@@ -78,19 +78,20 @@ class WochenplanLoeschenView extends JFrame {
 			model.addElement(m);
 		}
 		listWochenplaene.setModel(model);
-		listWochenplaene.setBorder(new LineBorder(new Color(0, 0, 0)));
+		listWochenplaene.setBorder(new EmptyBorder(0, 0, 0, 0));
 		listWochenplaene.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		listWochenplaene.setBounds(51, 126, 362, 399);
+		listWochenplaene.setBounds(51, 127, 362, 399);
 		contentPane.add(listWochenplaene);
 
-		btnLoeschen = new JButton("löschen");
+		btnLoeschen = new JButton("L\u00F6schen");
+		btnLoeschen.setHorizontalAlignment(SwingConstants.LEFT);
 		btnLoeschen.setFont(new Font("Verdana", Font.PLAIN, 15));
-		btnLoeschen.setBounds(500, 500, 110, 25);
+		btnLoeschen.setBounds(500, 500, 93, 25);
 		contentPane.add(btnLoeschen);
 
-		lblBitteAusaewhlen = new JLabel("Bitte auswählen");
+		lblBitteAusaewhlen = new JLabel("Wochenplan ausw\u00E4hlen");
 		lblBitteAusaewhlen.setFont(new Font("Verdana", Font.PLAIN, 15));
-		lblBitteAusaewhlen.setBounds(51, 90, 143, 26);
+		lblBitteAusaewhlen.setBounds(51, 93, 205, 26);
 		contentPane.add(lblBitteAusaewhlen);
 
 		/**

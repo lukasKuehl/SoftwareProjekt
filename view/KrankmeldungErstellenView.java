@@ -123,7 +123,7 @@ class KrankmeldungErstellenView extends JFrame {
 		for (Mitarbeiter m : ma) {
 			comboBoxMA.addItem( m.getVorname() +" " + m.getName() + "-" +m.getBenutzername() );
 		}
-		comboBoxMA.setBounds(150, 229, 180, 20);
+		comboBoxMA.setBounds(150, 229, 188, 20);
 		panelKrankmeldung.add(comboBoxMA);
 
 		txtGrund = new JTextField();

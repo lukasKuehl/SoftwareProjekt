@@ -82,11 +82,11 @@ class TerminLoeschenView extends JFrame {
 
 		lblTerninLoeschen = new JLabel("Termin löschen");
 		lblTerninLoeschen.setFont(new Font("Verdana", Font.BOLD, 21));
-		lblTerninLoeschen.setBounds(60, 83, 199, 26);
+		lblTerninLoeschen.setBounds(51, 55, 199, 26);
 		contentPane.add(lblTerninLoeschen);
 
 		listTermin = new JList<String>();
-		listTermin.setFont(new Font("Verdana", Font.PLAIN, 15));
+		listTermin.setFont(new Font("Verdana", Font.PLAIN, 13));
 		// Ausgeben einer Arraylist für alle Termine des Mitarbeiters
 		tl = myController.getMitarbeiterTermine(myView.getUsername());
 		model = new DefaultListModel<String>();
@@ -95,19 +95,19 @@ class TerminLoeschenView extends JFrame {
 		}
 		listTermin.setModel(model);
 		listTermin.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		listTermin.setBounds(65, 145, 622, 355);
+		listTermin.setBounds(51, 127, 622, 343);
 		listTermin.getModel();
 		contentPane.add(listTermin);
 
 		lblTerminAuswaehlen = new JLabel("Termin auswählen:");
-		lblTerminAuswaehlen.setFont(new Font("Verdana", Font.PLAIN, 13));
-		lblTerminAuswaehlen.setBounds(62, 120, 152, 14);
+		lblTerminAuswaehlen.setFont(new Font("Verdana", Font.PLAIN, 15));
+		lblTerminAuswaehlen.setBounds(51, 93, 152, 14);
 		contentPane.add(lblTerminAuswaehlen);
 
 		btnBestaetigen = new JButton("Best\u00E4tigen");
 		btnBestaetigen.setHorizontalAlignment(SwingConstants.LEFT);
 		btnBestaetigen.setFont(new Font("Verdana", Font.PLAIN, 15));
-		btnBestaetigen.setBounds(500, 500, 117, 25);
+		btnBestaetigen.setBounds(570, 499, 117, 25);
 		contentPane.add(btnBestaetigen);
 
 		/**

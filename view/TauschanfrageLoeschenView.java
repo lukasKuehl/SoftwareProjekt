@@ -73,7 +73,7 @@ class TauschanfrageLoeschenView extends JFrame {
 
 		lblTauschanfrageLoeschen = new JLabel("Tauschanfrage loeschen:");
 		lblTauschanfrageLoeschen.setFont(new Font("Verdana", Font.BOLD, 20));
-		lblTauschanfrageLoeschen.setBounds(62, 89, 284, 26);
+		lblTauschanfrageLoeschen.setBounds(51, 55, 284, 26);
 		panelTauschanfrage.add(lblTauschanfrageLoeschen);
 
 		listTauschanfragen = new JList<String>();
@@ -87,7 +87,7 @@ class TauschanfrageLoeschenView extends JFrame {
 		}
 		listTauschanfragen.setModel(modelTauschanfrage);
 		listTauschanfragen.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		listTauschanfragen.setBounds(62, 161, 860, 333);
+		listTauschanfragen.setBounds(51, 127, 860, 333);
 		panelTauschanfrage.add(listTauschanfragen);
 
 		btnBestaetigen = new JButton("Bestätigen");
@@ -98,7 +98,7 @@ class TauschanfrageLoeschenView extends JFrame {
 		
 		JLabel label = new JLabel("Bitte auswähen:");
 		label.setFont(new Font("Verdana", Font.PLAIN, 14));
-		label.setBounds(62, 127, 147, 18);
+		label.setBounds(51, 93, 147, 18);
 		panelTauschanfrage.add(label);
 
 		setVisible(true);

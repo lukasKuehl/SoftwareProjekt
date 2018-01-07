@@ -85,15 +85,15 @@ class TauschanfrageErstellenView extends JFrame {
 		};
 		addWindowListener(windowListener);
 
-		lblTauschanfrageStellen = new JLabel("Tauschanfrage stellen");
+		lblTauschanfrageStellen = new JLabel("Tauschanfrage erstellen");
 		lblTauschanfrageStellen.setFont(new Font("Verdana", Font.BOLD, 21));
-		lblTauschanfrageStellen.setBounds(62, 91, 385, 26);
+		lblTauschanfrageStellen.setBounds(62, 55, 385, 26);
 		contentPane.add(lblTauschanfrageStellen);
 
 		btnErstellen = new JButton("Erstellen");
 		btnErstellen.setHorizontalAlignment(SwingConstants.LEFT);
 		btnErstellen.setFont(new Font("Verdana", Font.PLAIN, 15));
-		btnErstellen.setBounds(653, 503, 95, 25);
+		btnErstellen.setBounds(653, 503, 100, 25);
 		contentPane.add(btnErstellen);
 
 		cmbBoxWP = new JComboBox<String>();
