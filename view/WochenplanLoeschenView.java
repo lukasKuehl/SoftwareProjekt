@@ -70,6 +70,7 @@ class WochenplanLoeschenView extends JFrame {
 		contentPane.add(lblWochenplanLoeschen);
 
 		listWochenplaene = new JList<String>();
+		listWochenplaene.setFont(new Font("Verdana", Font.PLAIN, 13));
 		// Ausgeben einer ArrayList mit allen Wochenplänen und in einer JComboBox
 		// hinterlegen
 		wpl = myController.getWochenplaene();
@@ -89,7 +90,7 @@ class WochenplanLoeschenView extends JFrame {
 		btnLoeschen.setBounds(500, 500, 101, 25);
 		contentPane.add(btnLoeschen);
 
-		lblBitteAusaewhlen = new JLabel("Wochenplan ausw\u00E4hlen");
+		lblBitteAusaewhlen = new JLabel("Wochenplan ausw\u00E4hlen:");
 		lblBitteAusaewhlen.setFont(new Font("Verdana", Font.PLAIN, 15));
 		lblBitteAusaewhlen.setBounds(51, 93, 205, 26);
 		contentPane.add(lblBitteAusaewhlen);

@@ -95,7 +95,7 @@ class TerminLoeschenView extends JFrame {
 		}
 		listTermin.setModel(model);
 		listTermin.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		listTermin.setBounds(51, 127, 622, 343);
+		listTermin.setBounds(51, 118, 622, 343);
 		listTermin.getModel();
 		contentPane.add(listTermin);
 
@@ -107,7 +107,7 @@ class TerminLoeschenView extends JFrame {
 		btnBestaetigen = new JButton("Löschen");
 		btnBestaetigen.setHorizontalAlignment(SwingConstants.LEFT);
 		btnBestaetigen.setFont(new Font("Verdana", Font.PLAIN, 15));
-		btnBestaetigen.setBounds(570, 499, 117, 25);
+		btnBestaetigen.setBounds(570, 499, 95, 25);
 		contentPane.add(btnBestaetigen);
 
 		/**

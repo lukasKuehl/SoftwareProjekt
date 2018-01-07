@@ -86,10 +86,10 @@ class KrankmeldungLoeschenView extends JFrame {
 		listKrankmeldung.getModel();
 		contentPane.add(listKrankmeldung);
 
-		btnBestaetigen = new JButton("Best\u00E4tigen");
+		btnBestaetigen = new JButton("Löschen");
 		btnBestaetigen.setHorizontalAlignment(SwingConstants.LEFT);
 		btnBestaetigen.setFont(new Font("Verdana", Font.PLAIN, 15));
-		btnBestaetigen.setBounds(647, 507, 120, 25);
+		btnBestaetigen.setBounds(668, 507, 99, 25);
 		contentPane.add(btnBestaetigen);
 
 		lblBitteAuswaehlen = new JLabel("Bitte auswählen:");
