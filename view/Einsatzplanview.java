@@ -14,13 +14,9 @@ import model.Einsatzplanmodel;
 
 /**
  * 
- * @author 
+ * @author Ramona Gerke & Darius Panteli
  * @Info 
  */
-
-//Kommentare innerhalb der Methoden fehlen!
-
-//Update-Methode wurde noch nicht ausgefüllt!(siehe Beschreibung in der Methode)
 
 public class Einsatzplanview implements Observer {
 
@@ -29,13 +25,6 @@ public class Einsatzplanview implements Observer {
 	private String username = null;
 	private static Einsatzplanmodel epm = new Einsatzplanmodel();
 
-	
-	//Die main Methode muss raus --> Nur eine main-Methode im gesamten Programm möglich und Einsatzplanview kann erst nach dem Model erzeugt werden
-	
-	
-
-
-	
 	public Einsatzplanview(EinsatzplanController einsatzplanController, Einsatzplanmodel model) {
 		this.myController = einsatzplanController;
 		this.myModel = model;		
@@ -53,7 +42,8 @@ public class Einsatzplanview implements Observer {
 	
 	/**
 	 *@author Darius Panteli
-	 *@Info Update Methode, sobald sich die Daten aus dem aktuellen geändert haben, wird ein neur Wochenplan generiert.
+	 *@Info Update Methode, um die View auf den aktuellen Stand zu halten sofern sich Daten gändert haben
+	 *(z.B. Neuer Wochenplan)
 	 */
 	public void update() {
 		

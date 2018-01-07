@@ -27,7 +27,7 @@ import controller.EinsatzplanController;
  *       können
  */
 
-class KasseBenutzerrolleView extends JFrame {
+    class KasseBenutzerrolleView extends JFrame {
 	private JComboBox<String> cbMitarbeiter;
 	private JButton btnBestaetigen;
 	private JLabel lblBenutzerZuweisen, lblMitarbeiterAuswaehlen;
@@ -56,6 +56,8 @@ class KasseBenutzerrolleView extends JFrame {
 		setBounds(100, 100, 640, 480);
 		getContentPane().setLayout(null);
 		
+		//Falls der Benutzer das Fenster über den "X" Button schließen sollte, wird die vorherhige View wieder
+		//geöffnet
 		windowListener = new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
@@ -75,9 +77,7 @@ class KasseBenutzerrolleView extends JFrame {
 		lblMitarbeiterAuswaehlen.setBounds(64, 192, 249, 39);
 		getContentPane().add(lblMitarbeiterAuswaehlen);
 
-		// ComboBox sollte Informationen darüber bekommen, welche Werte
-		// eingetragen werden können (z.B. JComboBox<String>)
-		cbMitarbeiter = new JComboBox();
+		cbMitarbeiter = new JComboBox<String>();
 		cbMitarbeiter.setBounds(360, 204, 128, 20);
 		LinkedList<Mitarbeiter> alleMitarbeiter = this.myModel.getAlleMitarbeiter();
 
@@ -91,12 +91,10 @@ class KasseBenutzerrolleView extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				int confirmed = JOptionPane.showConfirmDialog(null, "Sind Sie sicher?", "Warnung",
 						JOptionPane.YES_NO_OPTION);
-
+				//Wenn der Benutzer auf "Ja"klickt, wird die ausgewählte Person ausder ComboBox übergeben.
+				//Im Controller selbst wird dann überprüft welche Art von Benutzerrolle die ausgewählte
+				//Person hat und dementsprechend geändert
 				if (confirmed == JOptionPane.YES_OPTION) {
-
-					// Abfrage, ob der Prozess erfolgreich war fehlt --> Bei
-					// Misserfolg sollte man ja die Werte nochmal ändern und
-					// erneut probieren können
 					if (myController.benutzerRechteWechsel(gibAusgewaehltenMitarbeiter())) {
 						dispose();
 					} else {

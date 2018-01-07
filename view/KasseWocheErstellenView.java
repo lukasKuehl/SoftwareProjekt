@@ -31,8 +31,7 @@ import java.awt.event.WindowListener;
 
 //Autoren der einzelnen Methoden fehlen!
 
-//Hilfsklassen sind nicht public!
-public class KasseWocheErstellenView extends JFrame {
+	class KasseWocheErstellenView extends JFrame {
 	private JTextField txtOeffnungAnfangA, txtOeffnungAnfangB, txtOeffnungEndeA, txtOeffnungEndeB, txtHauptAnfangA,
 			txtHauptAnfangB, txtHauptEndeA, txtHauptEndeB;
 	private JComboBox cbMinTechInfo, cbMinHausInfo, cbMinHausKasse, cbExtraKassen, cbKW;
@@ -310,10 +309,6 @@ public class KasseWocheErstellenView extends JFrame {
 		lblFehlermeldung.setBounds(487, 626, 509, 16);
 		getContentPane().add(lblFehlermeldung);
 
-		// Farbe rot ändern, Position anpassen
-		// Geht über HTML(JLabel.setText("<html> Fehlermeldung: <font
-		// color='red'>Hier den Fehlermeldungstext rein</font></html>"))
-
 		// siehe vorherige Klassen!
 		cbExtraKassen = new JComboBox();
 		cbExtraKassen.setBounds(1040, 624, 50, 22);
@@ -448,8 +443,6 @@ public class KasseWocheErstellenView extends JFrame {
 	}
 
 	protected TreeMap<String, String> gibOeffnungszeiten() {
-
-		// Auskommentierte Zeilen können weg --> nicht mehr notwendig
 
 		TreeMap<String, String> zeiten = new TreeMap<String, String>();
 		zeiten.put("Öffnungszeit", txtOeffnungAnfangA.getText() + ":" + txtOeffnungAnfangB.getText());
