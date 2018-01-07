@@ -86,7 +86,7 @@ class WochenplanLoeschenView extends JFrame {
 		btnLoeschen = new JButton("L\u00F6schen");
 		btnLoeschen.setHorizontalAlignment(SwingConstants.LEFT);
 		btnLoeschen.setFont(new Font("Verdana", Font.PLAIN, 15));
-		btnLoeschen.setBounds(500, 500, 93, 25);
+		btnLoeschen.setBounds(500, 500, 101, 25);
 		contentPane.add(btnLoeschen);
 
 		lblBitteAusaewhlen = new JLabel("Wochenplan ausw\u00E4hlen");
