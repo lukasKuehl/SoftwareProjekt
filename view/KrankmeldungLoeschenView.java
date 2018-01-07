@@ -75,7 +75,7 @@ class KrankmeldungLoeschenView extends JFrame {
 		// JComboBox zuweisen
 		listKrankmeldung = new JList<String>();
 		listKrankmeldung.setFont(new Font("Verdana", Font.PLAIN, 21));
-		kl = myController.getAlleTermine(myView.getUsername());
+		kl = myController.getAlleTermine(myView.getUsername()); 
 		model = new DefaultListModel<String>();
 		for (String m : kl) {
 			model.addElement(m);
