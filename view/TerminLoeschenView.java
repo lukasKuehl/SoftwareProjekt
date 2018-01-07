@@ -104,10 +104,10 @@ class TerminLoeschenView extends JFrame {
 		lblTerminAuswaehlen.setBounds(62, 120, 152, 14);
 		contentPane.add(lblTerminAuswaehlen);
 
-		btnBestaetigen = new JButton("best\u00E4tigen");
+		btnBestaetigen = new JButton("Best\u00E4tigen");
 		btnBestaetigen.setHorizontalAlignment(SwingConstants.LEFT);
 		btnBestaetigen.setFont(new Font("Verdana", Font.PLAIN, 15));
-		btnBestaetigen.setBounds(500, 500, 110, 25);
+		btnBestaetigen.setBounds(500, 500, 117, 25);
 		contentPane.add(btnBestaetigen);
 
 		/**
