@@ -33,6 +33,7 @@ class TauschanfrageLoeschenView extends JFrame {
 	private EinsatzplanController myController = null;
 	private Einsatzplanmodel myModel = null;
 	private int tauschanfrageNr = 0;
+	private WindowListener windowListener;
 
 	/**
 	 * @ author Ramona Gerke
@@ -53,6 +54,15 @@ class TauschanfrageLoeschenView extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
+		
+		windowListener = new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				myView.update();
+				dispose();
+			}
+		};
+		addWindowListener(windowListener);
 
 		panelTauschanfrage = new JPanel();
 		panelTauschanfrage.setBackground(Color.WHITE);

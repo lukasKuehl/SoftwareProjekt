@@ -43,6 +43,7 @@ class TerminErstellenView extends JFrame {
 	private Einsatzplanmodel myModel = null;
 	private Einsatzplanview myView = null;
 	private EinsatzplanController myController = null;
+	private WindowListener windowListener;
 
 	/**
 	 * @ author Ramona Gerke
@@ -62,6 +63,15 @@ class TerminErstellenView extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
+		
+		windowListener = new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				myView.update();
+				dispose();
+			}
+		};
+		addWindowListener(windowListener);
 
 		panelTermin = new JPanel();
 		panelTermin.setBounds(29, 30, 1188, 728);

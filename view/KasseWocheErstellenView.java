@@ -21,6 +21,9 @@ import java.awt.event.ActionEvent;
 import javax.swing.JRadioButton;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
 //Klassenbeschreibung fehlt!
 
@@ -43,21 +46,9 @@ public class KasseWocheErstellenView extends JFrame {
 	private EinsatzplanController myController = null;
 	private Einsatzplanmodel myModel = null;
 	private Einsatzplanview myView = null;
+	private WindowListener windowListener;
 
 	// Siehe AnmeldungView!
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					KasseWocheErstellenView kasseWocheErstellenView = new KasseWocheErstellenView(
-							new Einsatzplanmodel(), null, null);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-	//
 
 	public KasseWocheErstellenView(Einsatzplanmodel myModel, Einsatzplanview myView,
 			EinsatzplanController myController) {
@@ -79,6 +70,15 @@ public class KasseWocheErstellenView extends JFrame {
 		setBounds(100, 100, 1538, 864);
 		getContentPane().setLayout(null);
 
+		windowListener = new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				myView.update();
+				dispose();
+			}
+		};
+		addWindowListener(windowListener);
+
 		lblWochenplanErstellen = new JLabel("Wochenplan erstellen");
 		lblWochenplanErstellen.setFont(new Font("Verdana", Font.BOLD, 30));
 		lblWochenplanErstellen.setBounds(39, 127, 370, 52);
@@ -89,23 +89,22 @@ public class KasseWocheErstellenView extends JFrame {
 		lblKalenderwocheKw.setBounds(39, 358, 160, 16);
 		getContentPane().add(lblKalenderwocheKw);
 
-		
-		//siehe vorherige Klassen!
+		// siehe vorherige Klassen!
 		cbKW = new JComboBox();
 		cbKW.setBounds(211, 356, 50, 22);
 		getContentPane().add(cbKW);
 		String[] werte1 = setField(52, 1);
 		setComboBox(cbKW, werte1);
 		//
-		
+
 		lblOeffnungszeiten = new JLabel("\u00D6ffnungszeiten:");
 		lblOeffnungszeiten.setFont(new Font("Verdana", Font.BOLD, 15));
 		lblOeffnungszeiten.setBounds(39, 441, 160, 16);
 		getContentPane().add(lblOeffnungszeiten);
 
 		txtOeffnungAnfangA = new JTextField();
-		
-		//Solltest du erklären können falls dich wer fragt!!!
+
+		// Solltest du erklären können falls dich wer fragt!!!
 		txtOeffnungAnfangA.addKeyListener(new KeyAdapter() {
 			@Override
 
@@ -128,7 +127,7 @@ public class KasseWocheErstellenView extends JFrame {
 		txtOeffnungAnfangB = new JTextField();
 		txtOeffnungAnfangB.addKeyListener(new KeyAdapter() {
 			@Override
-			//siehe oben!
+			// siehe oben!
 			public void keyTyped(KeyEvent arg0) {
 				char vchar = arg0.getKeyChar();
 				if (!(Character.isDigit(vchar)) || (vchar == KeyEvent.VK_BACK_SPACE) || (vchar == KeyEvent.VK_DELETE)) {
@@ -149,7 +148,7 @@ public class KasseWocheErstellenView extends JFrame {
 		txtOeffnungEndeA = new JTextField();
 		txtOeffnungEndeA.addKeyListener(new KeyAdapter() {
 			@Override
-			//siehe oben!
+			// siehe oben!
 			public void keyTyped(KeyEvent arg0) {
 				char vchar = arg0.getKeyChar();
 				if (!(Character.isDigit(vchar)) || (vchar == KeyEvent.VK_BACK_SPACE) || (vchar == KeyEvent.VK_DELETE)) {
@@ -169,7 +168,7 @@ public class KasseWocheErstellenView extends JFrame {
 		txtOeffnungEndeB = new JTextField();
 		txtOeffnungEndeB.addKeyListener(new KeyAdapter() {
 			@Override
-			//siehe Oben, für die späteren KeyEvents ebenfalls :)
+			// siehe Oben, für die späteren KeyEvents ebenfalls :)
 			public void keyTyped(KeyEvent arg0) {
 				char vchar = arg0.getKeyChar();
 				if (!(Character.isDigit(vchar)) || (vchar == KeyEvent.VK_BACK_SPACE) || (vchar == KeyEvent.VK_DELETE)) {
@@ -281,14 +280,13 @@ public class KasseWocheErstellenView extends JFrame {
 		lblMindestbesetzungFrLebensmittel_1.setBounds(487, 524, 509, 16);
 		getContentPane().add(lblMindestbesetzungFrLebensmittel_1);
 
-		//siehe vorherige Klassen!
+		// siehe vorherige Klassen!
 		cbMinTechInfo = new JComboBox();
 		cbMinTechInfo.setBounds(1040, 428, 50, 22);
 		getContentPane().add(cbMinTechInfo);
 		String[] werte2 = setField(10, 0);
 		setComboBox(cbMinTechInfo, werte2);
-		
-		
+
 		cbMinHausInfo = new JComboBox();
 		cbMinHausInfo.setBounds(1040, 471, 50, 22);
 		getContentPane().add(cbMinHausInfo);
@@ -301,7 +299,7 @@ public class KasseWocheErstellenView extends JFrame {
 		String[] werte4 = setField(10, 0);
 		setComboBox(cbMinHausKasse, werte4);
 		//
-		
+
 		lblKassen = new JLabel("Kassen:");
 		lblKassen.setFont(new Font("Verdana", Font.BOLD, 15));
 		lblKassen.setBounds(487, 626, 509, 16);
@@ -311,18 +309,19 @@ public class KasseWocheErstellenView extends JFrame {
 		lblFehlermeldung.setFont(new Font("Verdana", Font.BOLD, 15));
 		lblFehlermeldung.setBounds(487, 626, 509, 16);
 		getContentPane().add(lblFehlermeldung);
-		
+
 		// Farbe rot ändern, Position anpassen
-		//Geht über HTML(JLabel.setText("<html> Fehlermeldung: <font color='red'>Hier den Fehlermeldungstext rein</font></html>"))
-				
-		//siehe vorherige Klassen!
+		// Geht über HTML(JLabel.setText("<html> Fehlermeldung: <font
+		// color='red'>Hier den Fehlermeldungstext rein</font></html>"))
+
+		// siehe vorherige Klassen!
 		cbExtraKassen = new JComboBox();
 		cbExtraKassen.setBounds(1040, 624, 50, 22);
 		getContentPane().add(cbExtraKassen);
 		String[] werte5 = setField(10, 0);
 		setComboBox(cbExtraKassen, werte5);
 		//
-		
+
 		btnBesttigen = new JButton("best\u00E4tigen");
 		btnBesttigen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -477,8 +476,8 @@ public class KasseWocheErstellenView extends JFrame {
 															// stehen
 	}
 
-	// Die beiden Mehtoden sind ohne Kommentare nicht wirklich nachvollziehbar!
-
+	// Erstellt einen String Array für einen Wertebereich int a und int b
+	// (Beispiel: Von 0 - 4)
 	protected String[] setField(int a, int b) {
 		String[] werte = new String[a];
 		for (int i = 0; i < werte.length; i++) {
@@ -488,6 +487,7 @@ public class KasseWocheErstellenView extends JFrame {
 		return werte;
 	}
 
+	// Befüllt die ComboBoxen
 	protected void setComboBox(JComboBox cb, String[] werte) {
 		for (int i = 0; i < werte.length; i++) {
 			cb.addItem(werte[i]);

@@ -23,6 +23,9 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import java.awt.Color;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.TreeMap;
@@ -49,6 +52,7 @@ class TauschanfrageAnzeigenView extends JFrame {
 	private DefaultListModel<String> modelTauschanfrage = null;
 	private ArrayList<String> tl = null;
 	private String empfaengername = null;
+	private WindowListener windowListener;
 
 	/**
 	 * @author Ramona Gerke
@@ -70,6 +74,16 @@ class TauschanfrageAnzeigenView extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		
+		windowListener = new WindowAdapter() {
+
+			@Override
+			public void windowClosing(WindowEvent e) {
+				myView.update();
+				dispose();
+			}
+		};
+		addWindowListener(windowListener);
 
 		listTauschanfragen = new JList<String>();
 		tl = myController.getTauschanfragen(myView.getUsername());

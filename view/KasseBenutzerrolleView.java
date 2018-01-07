@@ -7,6 +7,9 @@ import javax.swing.JLabel;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.util.LinkedList;
 
 import javax.swing.JComboBox;
@@ -31,16 +34,9 @@ class KasseBenutzerrolleView extends JFrame {
 	private Einsatzplanmodel myModel = null;
 	private Einsatzplanview myView = null;
 	private EinsatzplanController myController = null;
-
-	/*
-	 * public static void main(String[] args) { EventQueue.invokeLater(new
-	 * Runnable() { public void run() { try { KasseBenutzerrolleView
-	 * kasseBenutzerrolleView = new KasseBenutzerrolleView(new
-	 * Einsatzplanmodel(), null, null); } catch (Exception e) {
-	 * e.printStackTrace(); } } });}
-	 */
-
-	// Parameter myController fehlt --> in dem Fall bleibt der einfach null
+	private WindowAdapter windowListener;
+	
+	
 	public KasseBenutzerrolleView(Einsatzplanmodel myModel, Einsatzplanview myView,
 			EinsatzplanController myController) {
 		this.myView = myView;
@@ -59,7 +55,16 @@ class KasseBenutzerrolleView extends JFrame {
 		setLocationRelativeTo(null);
 		setBounds(100, 100, 640, 480);
 		getContentPane().setLayout(null);
-
+		
+		windowListener = new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				myView.update();
+				dispose();
+			}
+		};
+		addWindowListener(windowListener);
+		
 		lblBenutzerZuweisen = new JLabel("Benutzer zuweisen");
 		lblBenutzerZuweisen.setFont(new Font("Verdana", Font.BOLD, 30));
 		lblBenutzerZuweisen.setBounds(64, 71, 364, 73);

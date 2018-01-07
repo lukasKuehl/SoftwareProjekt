@@ -22,6 +22,9 @@ import javax.swing.ListSelectionModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
@@ -46,6 +49,7 @@ class TerminLoeschenView extends JFrame {
 	private Einsatzplanview myView = null;
 	private EinsatzplanController myController = null;
 	private JButton btnBestaetigen = null;
+	private WindowListener windowListener;
 
 	/**
 	 * @ author Ramona Gerke
@@ -66,6 +70,15 @@ class TerminLoeschenView extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		
+		windowListener = new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				myView.update();
+				dispose();
+			}
+		};
+		addWindowListener(windowListener);
 
 		lblTerninLoeschen = new JLabel("Termin löschen");
 		lblTerninLoeschen.setFont(new Font("Verdana", Font.BOLD, 21));

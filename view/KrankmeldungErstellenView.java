@@ -6,6 +6,9 @@ import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.TreeMap;
@@ -40,6 +43,7 @@ class KrankmeldungErstellenView extends JFrame {
 	private TreeMap<String, String> zeitraum = null;
 	private ArrayList<String> wp = null;
 	private LinkedList<Mitarbeiter> ma = null;
+	private WindowListener windowListener;
 
 	/**
 	 * 
@@ -57,6 +61,16 @@ class KrankmeldungErstellenView extends JFrame {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(250, 250, 800, 600);
 
+		windowListener = new WindowAdapter() {
+
+			@Override
+			public void windowClosing(WindowEvent e) {
+				myView.update();
+				dispose();
+			}
+		};
+		addWindowListener(windowListener);
+		
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));

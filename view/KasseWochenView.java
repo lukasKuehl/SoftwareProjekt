@@ -66,22 +66,12 @@ public class KasseWochenView extends JFrame {
 	private Einsatzplanview myView = null;
 	private JTable tbleWochenplan;
 
-	//static JFrame frame;
 	//siehe AnmeldungView!
-	/*
-	public static void myFrame(){
-		frame.dispose();
-	}
-	*/
+
 	/**
 	 * Launch the application.
 	 */
 
-	//protected void closeWindow(){
-	//	this.closeWindow();
-	//}
-	
-	//
 	
 	/**
 	 * Create the application.
@@ -97,7 +87,6 @@ public class KasseWochenView extends JFrame {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		//frame = new JFrame();
 		setTitle("Einsatzplan Kassenbüro");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setResizable(false);
@@ -118,7 +107,9 @@ public class KasseWochenView extends JFrame {
 		mntmWocheErstellen = new JMenuItem("Erstellen");
 		mntmWocheErstellen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
 				new KasseWocheErstellenView(myModel, myView, myController);
+				dispose();
 			}
 		});
 		mntmWocheErstellen.setHorizontalAlignment(SwingConstants.TRAILING);
@@ -129,6 +120,7 @@ public class KasseWochenView extends JFrame {
 		mntmWocheLoeschen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				new WochenplanLoeschenView(myView, myModel, myController);
+				dispose();
 			}
 		});
 		mntmWocheLoeschen.setHorizontalAlignment(SwingConstants.TRAILING);
@@ -139,6 +131,7 @@ public class KasseWochenView extends JFrame {
 		mntmWocheVerschicken.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				new KasseWocheSendenView(myModel, myView, myController);
+				dispose();
 			}
 		});
 		mntmWocheVerschicken.setHorizontalAlignment(SwingConstants.TRAILING);
@@ -153,6 +146,7 @@ public class KasseWochenView extends JFrame {
 		mntmSchichtBearbeiten.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				new KasseSchichtView(myModel, myView, myController);
+				dispose();
 			}
 		});
 		mntmSchichtBearbeiten.setHorizontalAlignment(SwingConstants.TRAILING);
@@ -167,6 +161,7 @@ public class KasseWochenView extends JFrame {
 		mntmTerminErstellen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				new TerminErstellenView(myView, myModel, myController);
+				dispose();
 			}
 		});
 		mntmTerminErstellen.setHorizontalAlignment(SwingConstants.TRAILING);
@@ -177,6 +172,7 @@ public class KasseWochenView extends JFrame {
 		mntmTerminLoeschen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				new TerminLoeschenView(myView, myModel, myController);
+				dispose();
 			}
 		});
 		mntmTerminLoeschen.setHorizontalAlignment(SwingConstants.TRAILING);
@@ -191,6 +187,7 @@ public class KasseWochenView extends JFrame {
 		mntmKrankErstellen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				new KrankmeldungErstellenView(myView, myModel, myController);
+				dispose();
 			}
 		});
 		mntmKrankErstellen.setHorizontalAlignment(SwingConstants.TRAILING);
@@ -201,6 +198,7 @@ public class KasseWochenView extends JFrame {
 		mntmKrankLoeschen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				new KrankmeldungLoeschenView(myView, myModel, myController);
+				dispose();
 			}
 		});
 		mntmKrankLoeschen.setHorizontalAlignment(SwingConstants.TRAILING);
@@ -215,6 +213,7 @@ public class KasseWochenView extends JFrame {
 		mntmBenutzerZuweisen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				new KasseBenutzerrolleView(myModel, myView, myController);
+				dispose();
 			}
 		});
 		mntmBenutzerZuweisen.setHorizontalAlignment(SwingConstants.TRAILING);
@@ -245,22 +244,6 @@ public class KasseWochenView extends JFrame {
 					currentKW--;
 				}else{
 					generiereTabelle();
-					/*lblKW1.setText(wochenplaene.get(currentKW).toString());
-					
-					getContentPane().remove(tbleWochenplan);
-					tbleWochenplan = myController.generiereWochenplanView(wochenplaene.get(currentKW));
-					tbleWochenplan.setBounds(24, 81, 1439, 676);
-					
-					//folgende Anweisungen fehlen um die columns etc. anzuzeigen
-										
-					/*tbleWochenplan.getTableHeader().setSize(tbleWochenplan.getTableHeader().getPreferredSize());
-					tbleWochenplan.setSize(tbleWochenplan.getPreferredSize());
-					tbleWochenplan.setPreferredScrollableViewportSize(tbleWochenplan.getPreferredScrollableViewportSize());
-					tbleWochenplan.setFillsViewportHeight(true);
-					JScrollPane jsp = new JScrollPane(tbleWochenplan);	*/					
-					
-					//getContentPane().add(jsp);
-					//getContentPane().add(tbleWochenplan);
 				}
 			}
 		});
@@ -295,16 +278,16 @@ public class KasseWochenView extends JFrame {
 	private void generiereTabelle(){
 		ArrayList<String> wochenplaene = myController.getWochenplaene();
 		lblKW1.setText(wochenplaene.get(currentKW).toString());
-		
-		tbleWochenplan = myController.generiereWochenplanView(wochenplaene.get(currentKW));		
+		tbleWochenplan = myController.generiereWochenplanView(wochenplaene.get(currentKW));	
 		tbleWochenplan.getTableHeader().setSize(tbleWochenplan.getTableHeader().getPreferredSize());
 		tbleWochenplan.setSize(tbleWochenplan.getPreferredSize());
 		tbleWochenplan.setPreferredScrollableViewportSize(tbleWochenplan.getPreferredScrollableViewportSize());
 		tbleWochenplan.setFillsViewportHeight(true);
 		jsp = new JScrollPane(tbleWochenplan);
 		jsp.setBounds(24, 81, 1439, 676);
-		System.out.println(currentKW);
+		//System.out.println(currentKW);
 		getContentPane().add(jsp);
+		//getContentPane().repaint();
 		
 		
 	}

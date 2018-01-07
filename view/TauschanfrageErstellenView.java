@@ -20,6 +20,9 @@ import javax.swing.JButton;
 import javax.swing.SwingConstants;
 import java.awt.Color;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
@@ -49,6 +52,7 @@ class TauschanfrageErstellenView extends JFrame {
 	private Schicht mySchicht = null;
 	private String empfaengerName, sendername = null;
 	private int senderSchichtnr, empfaengerSchichtNr = 0;
+	private WindowListener windowListener;
 
 	/**
 	 * @author Ramona Gerke
@@ -70,6 +74,16 @@ class TauschanfrageErstellenView extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		
+		windowListener = new WindowAdapter() {
+
+			@Override
+			public void windowClosing(WindowEvent e) {
+				myView.update();
+				dispose();
+			}
+		};
+		addWindowListener(windowListener);
 
 		lblTauschanfrageStellen = new JLabel("Tauschanfrage stellen");
 		lblTauschanfrageStellen.setFont(new Font("Verdana", Font.BOLD, 21));

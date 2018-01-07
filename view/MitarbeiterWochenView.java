@@ -49,19 +49,6 @@ public class MitarbeiterWochenView extends JFrame{
 	private JScrollPane jsp;
 	//Siehe AnmeldungView
 	
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					MitarbeiterWochenView window = new MitarbeiterWochenView(new Einsatzplanmodel(), 
-							new EinsatzplanController(new Einsatzplanmodel()), null);
-					// window.frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 	//
 	
 	/**
@@ -97,6 +84,7 @@ public class MitarbeiterWochenView extends JFrame{
 		mntmTerminErstellen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				new TerminErstellenView(myView, myModel, myController);
+				dispose();
 			}
 		});
 		mntmTerminErstellen.setHorizontalAlignment(SwingConstants.TRAILING);
@@ -107,6 +95,7 @@ public class MitarbeiterWochenView extends JFrame{
 		mntmTerminLoeschen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				new TerminLoeschenView(myView, myModel, myController);
+				dispose();
 			}
 		});
 		mntmTerminLoeschen.setHorizontalAlignment(SwingConstants.TRAILING);
@@ -121,6 +110,7 @@ public class MitarbeiterWochenView extends JFrame{
 		mntmTauschanfrageAnzeigen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				new TauschanfrageAnzeigenView(myView, myModel, myController);
+				dispose();
 			}
 		});
 		mntmTauschanfrageAnzeigen.setHorizontalAlignment(SwingConstants.TRAILING);
@@ -131,6 +121,7 @@ public class MitarbeiterWochenView extends JFrame{
 		mntmTauschanfrageErstellen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				new TauschanfrageErstellenView(myModel, myView, myController);
+				dispose();
 			}
 		});
 		mntmTauschanfrageErstellen.setHorizontalAlignment(SwingConstants.TRAILING);
@@ -141,6 +132,7 @@ public class MitarbeiterWochenView extends JFrame{
 		mntmTauschanfrageLoeschen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				new TauschanfrageLoeschenView(myView, myModel, myController);
+				dispose();
 			}
 		});
 		mntmTauschanfrageLoeschen.setHorizontalAlignment(SwingConstants.TRAILING);
@@ -170,12 +162,6 @@ public class MitarbeiterWochenView extends JFrame{
 					currentKW--;
 				} else {
 					generiereTabelle();
-					/*lblKW1.setText(wochenplaene.get(currentKW).toString());
-
-					getContentPane().remove(tbleWochenplan);
-					tbleWochenplan = myController.generiereWochenplanView(wochenplaene.get(currentKW));
-					tbleWochenplan.setBounds(24, 81, 1439, 676);
-					getContentPane().add(tbleWochenplan);*/
 				}
 			}
 		});
@@ -195,40 +181,12 @@ public class MitarbeiterWochenView extends JFrame{
 					currentKW++;
 				} else {
 					generiereTabelle();
-					/*lblKW1.setText(wochenplaene.get(currentKW).toString());
-
-					getContentPane().remove(tbleWochenplan);
-					tbleWochenplan = myController.generiereWochenplanView(wochenplaene.get(currentKW));
-					tbleWochenplan.setBounds(24, 81, 1439, 676);
-					
-					tbleWochenplan.getTableHeader().setSize(tbleWochenplan.getTableHeader().getPreferredSize());
-					tbleWochenplan.setSize(tbleWochenplan.getPreferredSize());
-					tbleWochenplan.setPreferredScrollableViewportSize(tbleWochenplan.getPreferredScrollableViewportSize());
-					tbleWochenplan.setFillsViewportHeight(true);
-					JScrollPane jsp = new JScrollPane(tbleWochenplan);						
-					
-					getContentPane().add(jsp);*/
 				}
 
 			}
 		});
 		getContentPane().add(btnLinks);
-		generiereTabelle();
-		/*tbleWochenplan = myController.generiereWochenplanView(wochenplaene.get(currentKW));
-		tbleWochenplan.setBounds(24, 81, 1439, 676);
-		
-		tbleWochenplan = myController.generiereWochenplanView(wochenplaene.get(currentKW));
-		tbleWochenplan.setBounds(24, 81, 1439, 676);
-		
-		tbleWochenplan.getTableHeader().setSize(tbleWochenplan.getTableHeader().getPreferredSize());
-		tbleWochenplan.setSize(tbleWochenplan.getPreferredSize());
-		tbleWochenplan.setPreferredScrollableViewportSize(tbleWochenplan.getPreferredScrollableViewportSize());
-		tbleWochenplan.setFillsViewportHeight(true);
-		JScrollPane jsp = new JScrollPane(tbleWochenplan);						
-		
-		//setContentPane(jsp);
-		*/
-		
+		generiereTabelle();		
 		setVisible(true);
 	}
 	private void generiereTabelle(){

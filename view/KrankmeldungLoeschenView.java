@@ -33,6 +33,7 @@ class KrankmeldungLoeschenView extends JFrame {
 	private ArrayList<String> kl = null;
 	private DefaultListModel<String> model = null;
 	private int tblocknr = 0;
+	private WindowListener windowListener;
 
 	/**
 	 * @author RamonaGerke
@@ -55,6 +56,16 @@ class KrankmeldungLoeschenView extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		
+		windowListener = new WindowAdapter() {
+
+			@Override
+			public void windowClosing(WindowEvent e) {
+				myView.update();
+				dispose();
+			}
+		};
+		addWindowListener(windowListener);
 
 		lblKrankmeldungLoeschen = new JLabel("Krankmeldung löschen");
 		lblKrankmeldungLoeschen.setFont(new Font("Verdana", Font.BOLD, 21));

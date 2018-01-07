@@ -9,6 +9,9 @@ import java.awt.Font;
 
 import javax.swing.border.LineBorder;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import controller.EinsatzplanController;
@@ -29,6 +32,7 @@ class WochenplanLoeschenView extends JFrame {
 	private ArrayList<String> wpl = null;
 	private ArrayList<String> wpli = null;
 	private String wpbez = null;
+	private WindowListener windowListener;
 
 	/**
 	 * 
@@ -50,6 +54,15 @@ class WochenplanLoeschenView extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		
+		windowListener = new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				myView.update();
+				dispose();
+			}
+		};
+		addWindowListener(windowListener);
 
 		lblWochenplanLoeschen = new JLabel("Wochenplan löschen");
 		lblWochenplanLoeschen.setFont(new Font("Verdana", Font.PLAIN, 21));

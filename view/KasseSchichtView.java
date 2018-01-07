@@ -18,6 +18,9 @@ import model.Einsatzplanmodel;
 import javax.swing.JComboBox;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.awt.event.ActionEvent;
@@ -46,18 +49,8 @@ public class KasseSchichtView extends JFrame {
 
 	private JComboBox cbTage, cbWochenplan, cbMitarbeiter, cbSchicht = null;
 	private JButton btnPlanBestaetigen, btnTagAuswahl, btnSchichtAuswahl, btnMitarbeiterBestaetigen, btnReset = null;
+	private WindowListener windowListener;
 
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					KasseSchichtView kasseSchichtView = new KasseSchichtView(new Einsatzplanmodel(), null, null);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
 	protected KasseSchichtView(Einsatzplanmodel myModel, Einsatzplanview myView, EinsatzplanController myController) {
 		this.myView = myView;
@@ -77,6 +70,16 @@ public class KasseSchichtView extends JFrame {
 		setBounds(100, 100, 800, 600);
 		getContentPane().setLayout(null);
 		setVisible(true);
+		
+		windowListener = new WindowAdapter() {
+
+			@Override
+			public void windowClosing(WindowEvent e) {
+				myView.update();
+				dispose();
+			}
+		};
+		addWindowListener(windowListener);
 
 		lblBitteWochenplanAuswaehlen = new JLabel("Bitte Wochenplan ausw\u00E4hlen:");
 		lblBitteWochenplanAuswaehlen.setFont(new Font("Verdana", Font.BOLD, 15));
@@ -142,7 +145,7 @@ public class KasseSchichtView extends JFrame {
 				Wochenplan wochenplan = myModel
 						.getWochenplan(Integer.valueOf(cbWochenplan.getSelectedItem().toString().split(" ")[1]));
 				String wochenplanBez = "KW" + wochenplan.getWpnr();
-				ArrayList<String> schichten = myController.getTagesSchichten(wochenplanBez, tag);
+				ArrayList<String> schichten = myController.getTagesSchichten(wochenplanBez,tag);
 
 				cbSchicht.removeAllItems();
 

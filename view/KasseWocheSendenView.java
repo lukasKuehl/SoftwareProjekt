@@ -13,6 +13,9 @@ import model.Einsatzplanmodel;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.util.LinkedList;
 
 import javax.swing.JComboBox;
@@ -32,21 +35,9 @@ public class KasseWocheSendenView extends JFrame {
 	private EinsatzplanController myController = null;
 	private Einsatzplanmodel myModel = null;
 	private Einsatzplanview myView = null;
+	private WindowListener windowListener;
 	
 	//Siehe AnmeldungView!
-	
-	
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					KasseWocheSendenView kasseWocheSendenView = new KasseWocheSendenView(new Einsatzplanmodel(), null, null);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 	//
 
 
@@ -68,6 +59,16 @@ public class KasseWocheSendenView extends JFrame {
 		setLocationRelativeTo(null);
 		setBounds(100, 100, 600,480);
 		getContentPane().setLayout(null);
+		
+		windowListener = new WindowAdapter() {
+
+			@Override
+			public void windowClosing(WindowEvent e) {
+				myView.update();
+				dispose();
+			}
+		};
+		addWindowListener(windowListener);
 		
 		lblWochenplanVersenden = new JLabel("Wochenplan versenden");
 		lblWochenplanVersenden.setFont(new Font("Tahoma", Font.BOLD, 30));

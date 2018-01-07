@@ -59,7 +59,10 @@ public class Einsatzplanview implements Observer {
 		
 		if (myModel.getMitarbeiter(username).getJob().equalsIgnoreCase("chef")
 				|| myModel.getMitarbeiter(username).getJob().equalsIgnoreCase("kassenbüro")){
+			
 			new KasseWochenView(myModel, myController, null);
+			
+			
 		}else{
 			new MitarbeiterWochenView(myModel, myController, null);
 		}
