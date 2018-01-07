@@ -74,7 +74,7 @@ class TauschanfrageErstellenView extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
+
 		windowListener = new WindowAdapter() {
 
 			@Override
@@ -91,8 +91,9 @@ class TauschanfrageErstellenView extends JFrame {
 		contentPane.add(lblTauschanfrageStellen);
 
 		btnErstellen = new JButton("Erstellen");
+		btnErstellen.setHorizontalAlignment(SwingConstants.LEFT);
 		btnErstellen.setFont(new Font("Verdana", Font.PLAIN, 15));
-		btnErstellen.setBounds(638, 503, 110, 25);
+		btnErstellen.setBounds(653, 503, 95, 25);
 		contentPane.add(btnErstellen);
 
 		cmbBoxWP = new JComboBox<String>();
@@ -183,10 +184,10 @@ class TauschanfrageErstellenView extends JFrame {
 		contentPane.add(comboBoxSchichtAndererMA);
 		/**
 		 * @author Ramona Gerke
-		 * @Info Action Performed Methoden, die die Sichtbarkeit der ComboBoxen ändert.
+		 * @Info Action Performed Methode der JComboBox Wochenpläne . Diese ändert nach
+		 *       Auswahl des Wochenplans die Sichtbarkeit der ComboBox Tag und des
+		 *       Labels Tag .
 		 */
-
-		// ACTION PERFORMED METHODEN
 		cmbBoxWP.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				cmbBoxTag.setEnabled(true);
@@ -197,24 +198,26 @@ class TauschanfrageErstellenView extends JFrame {
 
 		/**
 		 * @author Ramona Gerke
-		 * @info Action Performed Methode für die JcomboBox Tag auswählen. @ info nach
-		 * dem Auswählen des Tages, wird die ComboBox Schicht sichtbar und füllt diese
-		 * mit der Schicht für den Mitarbeiter.
+		 * @info Action Performed Methode für die JcomboBox Tag auswählen. Nach dem
+		 *       Auswählen des Tages, wird die ComboBox Schicht sichtbar und füllt diese
+		 *       mit der Schicht des Mitarbeiters
 		 */
 		cmbBoxTag.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// Auslesen einer Array List mit den Schichten
 				try {
+
+					// Ausgabe einer ArrayList mit den Schichten des Mitarbeiters
 					schichtMa = myController.getMitarbeiterSchichten(cmbBoxWP.getSelectedItem().toString(),
 							cmbBoxTag.getSelectedItem().toString(), myView.getUsername());
-					
-					 String s = schichtMa.toString(); System.out.println(s);
-					// String nach "," splitten und in zwei Strings speichern
+					// Aufbereitung der ArrayList für die JComboBox Schicht des Mitarbeiters und die
+					// Übergabe an den Controller
+					String s = schichtMa.toString();
+					System.out.println(s);
 					String[] temp = s.split(",");
 					String sender = temp[0];
 					String empfaenger = temp[1];
-					// String sender splitt für die Übergabe am Controller und Aufbereitung der
-					// Parameter
+
 					String[] tempSender = sender.split("-");
 					String schichtNrsMa = tempSender[0].substring(1, 6);
 					senderSchichtnr = Integer.parseInt(schichtNrsMa);
@@ -223,8 +226,11 @@ class TauschanfrageErstellenView extends JFrame {
 					String anfangszeit = tempSender[3];
 					String endzeit = tempSender[4];
 					sendername = tempSender[5];
+					// Notwendigen Parameter für die Anzeige der Schicht des Mitarbeiters der
+					// JComboBox hinzufügen
 					cmbBoxSchicht.addItem(kw + " " + tag + " " + anfangszeit + " " + endzeit + " ");
-					
+
+					// Sichtbarkeit der JComboBx Schicht und Label Schicht des Mitarbeiters ändern
 					cmbBoxSchicht.setEnabled(true);
 					lblSchichtAuswaehlen.setEnabled(true);
 				} catch (Exception a) {
@@ -234,7 +240,11 @@ class TauschanfrageErstellenView extends JFrame {
 				}
 			}
 		});
-
+		/**
+		 * @author Ramona Gerke
+		 * @Info Action Performed Methode - Ändert die Sichtbarkeit der ComboBox Tag und
+		 *       des Labels Tag des auszuwählenden Mitarbeiters
+		 */
 		cmbBoxSchicht.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				comboBoxTagAndererMA.setEnabled(true);
@@ -242,27 +252,39 @@ class TauschanfrageErstellenView extends JFrame {
 			}
 
 		});
+		/**
+		 * @author Ramona Gerke
+		 * @info Action Performed Methode für die JcomboBox Tag des anderen
+		 *       Mitarbeiters. Nach dem Auswählen des Tages, wird die ComboBox Schicht
+		 *       sichtbar und füllt diese mit der Schicht des anderen Mitarbeiters.
+		 */
 		comboBoxTagAndererMA.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
+					// Ausgabe einer ArrayList für die Schichten des anderen Mitarbeiters
 					schichtAndererMa = myController.getAndereMitarbeiterSchichten(cmbBoxWP.getSelectedItem().toString(),
-							 myView.getUsername(), senderSchichtnr);
-					for(String n : schichtAndererMa) {
-					String s = n.toString(); System.out.println(s);
-					// String empfaenger teilen für die Übergabe an den Controller und
-					// Aufbereitung der Parameter
-					String[] tempEmpfaenger = s.split("-");
-					String schichtNrsAMa = tempEmpfaenger[0].trim();
-					empfaengerSchichtNr = Integer.parseInt(schichtNrsAMa);
-					String kwAndererMa = tempEmpfaenger[1];
-					String tagAndererMa = tempEmpfaenger[2];
-					String anfangszeitAndererMa = tempEmpfaenger[3];
-					String endzeitAndererMa = tempEmpfaenger[4];
-					String empfaengerName = tempEmpfaenger[5];
-					System.out.println(schichtNrsAMa + tagAndererMa +  anfangszeitAndererMa + endzeitAndererMa + empfaengerName);
-					comboBoxSchichtAndererMA.addItem(kwAndererMa + " " + tagAndererMa + " " + anfangszeitAndererMa + " "
-							+ endzeitAndererMa + " " + empfaengerName);
+							myView.getUsername(), senderSchichtnr);
+					// Schleife für die Anzeige die möglichen Mitarbeiter aus der ArrayList
+					for (String n : schichtAndererMa) {
+						// Aufbereitung der ArrayList für die JComboBox Schicht des anderen Mitarbeiters
+						// und die Übergabe an den Controller
+						String s = n.toString();
+						System.out.println(s);
+						String[] tempEmpfaenger = s.split("-");
+						String schichtNrsAMa = tempEmpfaenger[0].trim();
+						empfaengerSchichtNr = Integer.parseInt(schichtNrsAMa);
+						String kwAndererMa = tempEmpfaenger[1];
+						String tagAndererMa = tempEmpfaenger[2];
+						String anfangszeitAndererMa = tempEmpfaenger[3];
+						String endzeitAndererMa = tempEmpfaenger[4];
+						String empfaengerName = tempEmpfaenger[5];
+						// Notwendigen Parameter für die Anzeige der Schicht des anderen Mitarbeiters
+						// der JComboBox hinzufügen
+						comboBoxSchichtAndererMA.addItem(kwAndererMa + " " + tagAndererMa + " " + anfangszeitAndererMa
+								+ " " + endzeitAndererMa + " " + empfaengerName);
 					}
+
+					// Sichtbarkeit der Schicht des anderen Mitarbeiters ändern
 					comboBoxSchichtAndererMA.setEnabled(true);
 					labelSchichtAndererMA.setEnabled(true);
 				} catch (Exception a) {
@@ -295,6 +317,7 @@ class TauschanfrageErstellenView extends JFrame {
 						// Übergabe an den Controller
 						myController.erstelleTauschanfrage(myView.getUsername(), senderSchichtnr, empfaengerName,
 								empfaengerSchichtNr);
+						// Erfolgsmeldung
 						JOptionPane.showConfirmDialog(null, "Tauschanfrage erfolgreich erstellt", "",
 								JOptionPane.PLAIN_MESSAGE);
 						dispose();

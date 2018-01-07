@@ -1,6 +1,5 @@
 package view;
 
-
 import java.awt.*;
 
 import javax.swing.*;
@@ -56,7 +55,7 @@ class KrankmeldungLoeschenView extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
+
 		windowListener = new WindowAdapter() {
 
 			@Override
@@ -72,8 +71,8 @@ class KrankmeldungLoeschenView extends JFrame {
 		lblKrankmeldungLoeschen.setBounds(62, 74, 395, 26);
 		contentPane.add(lblKrankmeldungLoeschen);
 
-		// Liste der Krankmeldungen wird einem DefaultListModel hinzugefügt und dann in
-		// einer ComboBox ausgegeben.
+		// Liste der Krankmeldungen einem DefaultListModel hinzufügen und einer
+		// JComboBox zuweisen
 		listKrankmeldung = new JList<String>();
 		listKrankmeldung.setFont(new Font("Verdana", Font.PLAIN, 21));
 		kl = myController.getAlleTermine(myView.getUsername());
@@ -102,20 +101,23 @@ class KrankmeldungLoeschenView extends JFrame {
 
 		/**
 		 * @author Ramona Gerke
-		 * @Info Die ActionPerformed Methode wird nach dem drücken des Buttons
+		 * @Info Die ActionPerformed Methode wird nach dem Dücken des Buttons
 		 *       "bestätigen" ausgeführt. Diese fragt den Nutzer, ob die Daten korrekt
-		 *       sind und liest eine ArrayList aus und wandelt die benötigten Werte für
-		 *       die Methode myController.entferneTermin um.
+		 *       sind und wandelt das ausgewählte Element aus der Liste für die Übergabe
+		 *       an den Controller um.
+		 * 
 		 */
 
 		// ACTION PERFROMED METHODE
 		btnBestaetigen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					// Abfrage, ob ein Element ausgewäjlt worden ist
+					// Abfrage, ob ein Element ausgewählt worden ist
+					// weiter bei ja
 					if (listKrankmeldung.isSelectionEmpty()) {
 						JOptionPane.showMessageDialog(null, "Es wurde keine Eingabe getätigt", "Error",
 								JOptionPane.ERROR_MESSAGE);
+						// weiter bei nein
 					} else {
 						// Meldung, ob die Daten wirklich gelöscht werden soll ( Ja, Nein , Abbrechen
 						// Abfrage)
@@ -125,21 +127,25 @@ class KrankmeldungLoeschenView extends JFrame {
 
 						// weiter bei ja
 						if (eingabe == JOptionPane.YES_OPTION) {
+							// ausgwählte Element wird für die Übergabe an den Controller aufbereitet
 							String s = listKrankmeldung.getSelectedValue().toString();
-							String [] temp =s.split("-");
-							temp[0] = temp[0].trim();	
+							String[] temp = s.split("-");
+							temp[0] = temp[0].trim();
 							int terminnr = Integer.parseInt(temp[0]);
-							String wpbez = temp [1];
+							String wpbez = temp[1];
 							String date = temp[2];
 							String anfangsUhrzeit = temp[3];
-							String endUhrzeit = temp [4];
+							String endUhrzeit = temp[4];
 
 							// Übergabe an den Controller
 							myController.entferneTermin(tblocknr, myView.getUsername());
-							JOptionPane.showMessageDialog(null, "Krankmeldung erfolgreich gelöscht!", "", JOptionPane.INFORMATION_MESSAGE);
+							// Erfolgsmeldung
+							JOptionPane.showMessageDialog(null, "Krankmeldung erfolgreich gelöscht!", "",
+									JOptionPane.INFORMATION_MESSAGE);
 							dispose();
 						} else {
-							JOptionPane.showMessageDialog(null, "Wählen Sie eine andere Krankmeldug aus!", "", JOptionPane.INFORMATION_MESSAGE);
+							JOptionPane.showMessageDialog(null, "Wählen Sie eine andere Krankmeldug aus!", "",
+									JOptionPane.INFORMATION_MESSAGE);
 						}
 					}
 				} catch (Exception a) {

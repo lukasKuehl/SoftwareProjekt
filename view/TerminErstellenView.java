@@ -63,7 +63,7 @@ class TerminErstellenView extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
-		
+
 		windowListener = new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
@@ -85,6 +85,8 @@ class TerminErstellenView extends JFrame {
 		labelTerminErstellen.setFont(new Font("Verdana", Font.PLAIN, 22));
 		panelTermin.add(labelTerminErstellen);
 
+		// Verwendung von Maskformatter für die Eingrenzung der Eingabe von max. zwei
+		// Zahlen
 		try {
 			txtFldUhrzeitTerminV = new JFormattedTextField(new MaskFormatter("##"));
 		} catch (ParseException eUhrzeitTerminV) {
@@ -98,7 +100,8 @@ class TerminErstellenView extends JFrame {
 		txtFldUhrzeitTerminV.setColumns(10);
 		panelTermin.add(txtFldUhrzeitTerminV);
 
-		// try und catch Block - Umwandlungsexception
+		// Verwendung von Maskformatter für die Eingrenzung der Eingabe von max. zwei
+		// Zahlen
 		try {
 			txtFldUhrzeitTerminB = new JFormattedTextField(new MaskFormatter("##"));
 		} catch (ParseException eUhrzeitTerminB) {
@@ -114,7 +117,7 @@ class TerminErstellenView extends JFrame {
 
 		comboBoxTerminGrund = new JComboBox<String>();
 		comboBoxTerminGrund.setBackground(Color.WHITE);
-		comboBoxTerminGrund.setBounds(255, 264, 157, 20);
+		comboBoxTerminGrund.setBounds(255, 264, 157, 28);
 		comboBoxTerminGrund.setFont(new Font("Verdana", Font.PLAIN, 14));
 		comboBoxTerminGrund
 				.setModel(new DefaultComboBoxModel<String>(new String[] { "privater Termin", "Krankheit", "Urlaub" }));
@@ -152,7 +155,8 @@ class TerminErstellenView extends JFrame {
 		lblVon.setBounds(64, 267, 46, 14);
 		panelTermin.add(lblVon);
 
-		// try und catch Block - Umwandlungsexception
+		// Verwendung von Maskformatter für die Eingrenzung der Eingabe von max. zwei
+		// Zahlen
 		try {
 			txtFldUhrzeitBisA = new JFormattedTextField(new MaskFormatter("##"));
 		} catch (ParseException eUhrzeitBisB) {
@@ -200,7 +204,8 @@ class TerminErstellenView extends JFrame {
 		comboBoxEnd.setBounds(162, 167, 110, 20);
 		panelTermin.add(comboBoxEnd);
 
-		// try und catch Block - Umwandlungsexception
+		// Verwendung von Maskformatter für die Eingrenzung der Eingabe von max. zwei
+		// Zahlen
 
 		try {
 			txtFldUhrzeitBisB = new JFormattedTextField(new MaskFormatter("##"));
@@ -223,11 +228,13 @@ class TerminErstellenView extends JFrame {
 		chckbxGanztig.setBackground(Color.WHITE);
 		chckbxGanztig.setBounds(64, 225, 97, 23);
 		chckbxGanztig.addActionListener(new ActionListener() {
+
 			/**
 			 * @author RamonaGerke
-			 * @Info Eine ActionPerformedMethode, welche bei betätigen der Checkbox
-			 *       ganztägig ausgeführt wird. @ info Diese setzt bei ganztägigem Termin
-			 *       die Uhrzeit inkl. Labels auf nicht sichtbar.
+			 * @Info Eine ActionPerformedMethode, welche beim Betätigen der Checkbox
+			 *       "ganztägig" ausgeführt wird. Diese setzt bei einem ganztägigen Termin
+			 *       die Uhrzeit und Labels auf nicht sichtbar. Bei keinem ganztägigen
+			 *       Termin setzt die Methode die Uhrzeit und die Labels auf sichtbar.
 			 */
 			public void actionPerformed(ActionEvent arg0) {
 				if (chckbxGanztig.isSelected()) {
@@ -258,18 +265,19 @@ class TerminErstellenView extends JFrame {
 		panelTermin.add(chckbxGanztig);
 
 		btnErstellen = new JButton("Erstellen");
+		btnErstellen.setHorizontalAlignment(SwingConstants.LEFT);
 		btnErstellen.setFont(new Font("Verdana", Font.PLAIN, 15));
-		btnErstellen.setBounds(500, 500, 110, 25);
+		btnErstellen.setBounds(500, 500, 97, 25);
 		panelTermin.add(btnErstellen);
 
 		setVisible(true);
 
 		/**
 		 * @author Ramona Gerke
-		 * @Info Die ActionPerformed Methode wird nach dem drücken des Buttons
-		 *       "bestätigen" ausgeführt. Diese fragt den Nutzer, ob die Daten korrekt
-		 *       sind und liest eine ArrayList aus und wandelt die benötigten Werte für
-		 *       die Methode myController.erstelleTermin um.
+		 * @Info Die ActionPerformed Methode wird nach dem Drücken des Buttons
+		 *       "bestätigen" ausgeführt wird. Diese fragt den Nutzer, ob die Daten
+		 *       korrekt sind und liest eine ArrayList aus. Sie bereitet die benötigten
+		 *       Parameter für die Übergabe an den Controller auf.
 		 */
 
 		btnErstellen.addActionListener(new ActionListener() {
@@ -282,33 +290,36 @@ class TerminErstellenView extends JFrame {
 
 					// weiter bei ja
 					if (eingabe == JOptionPane.YES_OPTION) {
-						
-							if (chckbxGanztig.isSelected() == false) {
+						// Abfrage, ob die Checkbox "ganztägig" ausgewählt worden ist
+						// bei ja ; Überprüfung der Zeit Eingabe mit der Methode kontolleStunde und
+						// kontrolleMinuten
+						if (chckbxGanztig.isSelected() == false) {
 							kontrolleStunden(txtFldUhrzeitBisA);
 							kontrolleStunden(txtFldUhrzeitTerminV);
 							kontrolleMinuten(txtFldUhrzeitBisB);
 							kontrolleMinuten(txtFldUhrzeitBisB);
-							}
-								zeitraum = new TreeMap<String, String>();
-								username = myView.getUsername();
-								String bez = comboBoxTerminGrund.getSelectedItem().toString();
-								String grund = txtFldGrund.getText().toString();
-								zeitraum.put("wpbez", comboBoxWochenplaene.getSelectedItem().toString());
-								zeitraum.put("anfZeitraumTag", comboBoxAnfang.getSelectedItem().toString());
-								zeitraum.put("endZeitraumTag", comboBoxEnd.getSelectedItem().toString());
-								zeitraum.put("anfangsUhrzeit", txtFldUhrzeitTerminV.getText().toString() + ":"
-										+ txtFldUhrzeitTerminB.getText().toString());
-								zeitraum.put("endUhrzeit",
-										txtFldUhrzeitBisA.getText().toString() + ":" + txtFldUhrzeitBisB.getText().toString());
-
-								// Übergabe an den Controller
-								myController.erstelleTermin(username, bez, zeitraum, grund);
-								JOptionPane.showMessageDialog(null, "Termin erfolgreich angelegt!", "  ",
-										JOptionPane.INFORMATION_MESSAGE);
-								dispose();
-								
 						}
-					else {
+						// Erzeugen einer TreeMap für die Übergabe des Zeitraums
+						zeitraum = new TreeMap<String, String>();
+						username = myView.getUsername();
+						String bez = comboBoxTerminGrund.getSelectedItem().toString();
+						String grund = txtFldGrund.getText().toString();
+						zeitraum.put("wpbez", comboBoxWochenplaene.getSelectedItem().toString());
+						zeitraum.put("anfZeitraumTag", comboBoxAnfang.getSelectedItem().toString());
+						zeitraum.put("endZeitraumTag", comboBoxEnd.getSelectedItem().toString());
+						zeitraum.put("anfangsUhrzeit", txtFldUhrzeitTerminV.getText().toString() + ":"
+								+ txtFldUhrzeitTerminB.getText().toString());
+						zeitraum.put("endUhrzeit",
+								txtFldUhrzeitBisA.getText().toString() + ":" + txtFldUhrzeitBisB.getText().toString());
+
+						// Übergabe an den Controller
+						myController.erstelleTermin(username, bez, zeitraum, grund);
+						//Erfolgsmeldung
+						JOptionPane.showMessageDialog(null, "Termin erfolgreich angelegt!", "  ",
+								JOptionPane.INFORMATION_MESSAGE);
+						dispose();
+
+					} else {
 						JOptionPane.showMessageDialog(null, "Wählen Sie andere Daten aus!", "  ",
 								JOptionPane.INFORMATION_MESSAGE);
 					}
@@ -324,8 +335,10 @@ class TerminErstellenView extends JFrame {
 			}
 		});
 	}
-
-	// KONTROLLE DER MINUTEN UND STUNDEN FÜR DIE UHRZEITEINGABE
+	/**
+	 * @author Ramona Gerke
+	 * @Info Überprüfung der Eingabe der Stunden (0 bis 24 Stunden)
+	 */
 
 	public void kontrolleStunden(JFormattedTextField txtFldUhrzeitBisA) {
 		this.txtFldUhrzeitBisA = txtFldUhrzeitBisA;
@@ -338,7 +351,10 @@ class TerminErstellenView extends JFrame {
 		}
 
 	}
-
+	/**
+	 * @author Ramona Gerke
+	 * @Info Überprüfung der Eingabe auf die Minuteneingabe von 0 bis 60 Minuten
+	 */
 	public void kontrolleMinuten(JFormattedTextField txtFldUhrzeitBisB) {
 		this.txtFldUhrzeitBisB = txtFldUhrzeitBisB;
 		int i = Integer.parseInt(txtFldUhrzeitBisB.getText().toString());

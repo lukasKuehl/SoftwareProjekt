@@ -89,7 +89,7 @@ class KrankmeldungErstellenView extends JFrame {
 		panelKrankmeldung.add(labelKrankmeldungErstellen);
 
 		comboBoxWochenplaene = new JComboBox<String>();
-		// Ausgeben einer ArrayListe für die gesamten Wochenpläne
+		// Ausgeben einer ArrayListe für alle vorhandenen Wochenpläne
 		wp = myController.getWochenplaene();
 		for (String m : wp) {
 			comboBoxWochenplaene.addItem(m);
@@ -182,7 +182,7 @@ class KrankmeldungErstellenView extends JFrame {
 						// Treemap für den Zeitraum
 						zeitraum = new TreeMap<String, String>();
 
-						// Username anpassen - substring
+						// ausgewählte Element wird für die Übergabe an den Controller vorbereitet
 						String s = comboBoxMA.getSelectedItem().toString();
 						String temp [] = s.split("-");
 						String name = temp [0];
@@ -198,6 +198,7 @@ class KrankmeldungErstellenView extends JFrame {
 						
 						// Übergabe an den Controller
 						myController.erstelleTermin(username, bez, zeitraum, grund);
+						//Erfolgsmeldung
 						JOptionPane.showMessageDialog(null, "Krankmeldung wurde erfolgreich erstellt!",  "", JOptionPane.INFORMATION_MESSAGE);
 						dispose();
 					} else {

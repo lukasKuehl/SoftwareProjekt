@@ -54,7 +54,7 @@ class TerminLoeschenView extends JFrame {
 	/**
 	 * @ author Ramona Gerke
 	 * 
-	 * @Info Der Konstruktor der View Termin loeschen..
+	 * @Info Der Konstruktor der View Termin loeschen.
 	 */
 	public TerminLoeschenView(Einsatzplanview myView, Einsatzplanmodel myModel, EinsatzplanController myController) {
 		this.myView = myView;
@@ -112,17 +112,19 @@ class TerminLoeschenView extends JFrame {
 
 		/**
 		 * @author Ramona Gerke
-		 * @Info Action Performed Methode die nach dem bestätigen des Buttons
-		 *       "bestätigen", dass das ausgewählte Element anhand der Termin Nr und
-		 *       dessen Usernamen gelöscht.
+		 * @Info Action Performed Methode die nach dem Betätigen des Buttons
+		 *       "bestätigen" das ausgewählte Element anhand der Termin Nr und
+		 *       dessen Usernamen löscht.
 		 */
 		// ACTION PERFROMED Methode
 		btnBestaetigen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// Abfrage, ob kein Element in der Liste ausgewählt ist
+				// weiter bei ja 
 				if (listTermin.isSelectionEmpty()) {
 					JOptionPane.showMessageDialog(null, "Es wurde keine Eingabe getätigt", "Error",
 							JOptionPane.ERROR_MESSAGE);
+					//weiter bei nein 
 				} else {
 					try {
 						// Meldung, ob die Daten wirklich gelöscht werden soll ( Ja, Nein , Abbrechen
@@ -131,6 +133,7 @@ class TerminLoeschenView extends JFrame {
 								JOptionPane.YES_NO_CANCEL_OPTION);
 						// weiter bei ja
 						if (eingabe == JOptionPane.YES_OPTION) {
+							// ausgewähltes Element für die Übergabe an den Controller aufbereiten
 							String s =listTermin.getSelectedValue().toString();
 							String [] temp =s.split("-");
 							temp[0] = temp[0].trim();	
@@ -139,6 +142,9 @@ class TerminLoeschenView extends JFrame {
 							String date = temp[2];
 							String anfangsUhrzeit = temp[3];
 							String endUhrzeit = temp [4];
+							//Übergabe an den Controller 
+							myController.entferneTermin(terminnr, myView.getUsername());
+							//Erfolgsmeldung
 							JOptionPane.showMessageDialog(null, "Termin erfolgreich gelöscht", "", JOptionPane.INFORMATION_MESSAGE);
 							dispose();
 							

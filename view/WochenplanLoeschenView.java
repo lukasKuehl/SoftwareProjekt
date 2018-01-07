@@ -54,7 +54,7 @@ class WochenplanLoeschenView extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
+
 		windowListener = new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
@@ -95,17 +95,19 @@ class WochenplanLoeschenView extends JFrame {
 
 		/**
 		 * @author Ramona Gerke
-		 * @Info Action Performed Methode die nach dem bestätigen des Buttons
-		 *       "bestätigen", dass das ausgewählte Element anhand der dessen Usernamen
-		 *       und Wochenplanbez gelöscht.
+		 * @Info Action Performed Methode die nach dem Bestätigen des Buttons
+		 *       "bestätigen", dass ausgewählte Element anhand dem Username und der
+		 *       Wochenplanbez löscht..
 		 */
 		// ACTION PERFROMED Methode
 		btnLoeschen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// Abfrage, ob die Liste leer ist
+				// Abfrage, ob kein Element ausgewähl ist
+				// weiter bei ja
 				if (listWochenplaene.isSelectionEmpty()) {
 					JOptionPane.showMessageDialog(null, "Es wurde keine Eingabe getätigt", "Error",
 							JOptionPane.ERROR_MESSAGE);
+					// weiter bei nein
 				} else {
 					try {
 						// Meldung, ob die Daten wirklich gelöscht werden soll ( Ja, Nein , Abbrechen
@@ -115,12 +117,14 @@ class WochenplanLoeschenView extends JFrame {
 								JOptionPane.YES_NO_CANCEL_OPTION);
 						// weiter bei ja
 						if (eingabe == JOptionPane.YES_OPTION) {
+							// ausgewähltes Element für die Übergabe an den Controller vorbereiten
 							String s = listWochenplaene.getSelectedValue().toString();
 							wpbez = s.substring(2);
 							// Übergabe an den Controller
 							myController.entferneWochenplan(myView.getUsername(), wpbez);
-							JOptionPane.showMessageDialog(null, "Wochenplan erfolgreich gelöscht", 
-								 "  ", JOptionPane.INFORMATION_MESSAGE);
+							// Erfolgsmeldung
+							JOptionPane.showMessageDialog(null, "Wochenplan erfolgreich gelöscht", "  ",
+									JOptionPane.INFORMATION_MESSAGE);
 							dispose();
 						} else {
 							JOptionPane.showMessageDialog(null, "Wählen Sie einen anderen Wochenplan aus!", "  ",

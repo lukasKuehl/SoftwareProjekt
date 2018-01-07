@@ -74,7 +74,7 @@ class TauschanfrageAnzeigenView extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
-		
+
 		windowListener = new WindowAdapter() {
 
 			@Override
@@ -104,7 +104,7 @@ class TauschanfrageAnzeigenView extends JFrame {
 		btnAnnehmen.setFont(new Font("Verdana", Font.PLAIN, 15));
 		btnAnnehmen.setBounds(802, 517, 127, 25);
 		contentPane.add(btnAnnehmen);
-		
+
 		JLabel label = new JLabel("Bitte auswählen:");
 		label.setFont(new Font("Verdana", Font.PLAIN, 14));
 		label.setBounds(62, 138, 147, 18);
@@ -124,27 +124,32 @@ class TauschanfrageAnzeigenView extends JFrame {
 
 		btnAnnehmen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// Ausgabe der Fehlermeldung bei leerer Liste
+				// Abfrage, ob kein Element aus der List ausgewählt worden ist
+				// weiter bei ja
 				if (listTauschanfragen.isSelectionEmpty()) {
 					JOptionPane.showMessageDialog(null,
 							"Es wurde keine Tauschanfrage ausgewählt. Bitte wählen Sie eine Tauschanfrage aus.",
 							"Error", JOptionPane.ERROR_MESSAGE);
+					// weiter bei nein
 				} else {
-					// Meldung, ob die Daten wirklich gelöscht werden soll ( Ja, Nein , Abbrechen
-					// Abfrage)
+					// Meldung, ob die Daten wirklich gelöscht werden soll
 					try {
 						int eingabe = JOptionPane.showConfirmDialog(null, "Wollen Sie die Tauschanfrage annehmen?",
 								null, JOptionPane.YES_NO_CANCEL_OPTION);
 						// weiter bei ja
 						if (eingabe == JOptionPane.YES_OPTION) {
+							// das gewählte Element für die Übergabe an den Controller vorbereiten
 							String s = listTauschanfragen.getSelectedValue().toString();
 							String[] temp = s.split("-");
-							 temp[0] = temp[0].substring(10); 
-							 String tauschanfrageNrS = temp[0].trim();
-							int tauschanfrageNr = Integer.parseInt(tauschanfrageNrS);	
-							String empfaengername = temp[8].substring(2,9);
+							temp[0] = temp[0].substring(10);
+							String tauschanfrageNrS = temp[0].trim();
+							int tauschanfrageNr = Integer.parseInt(tauschanfrageNrS);
+							String empfaengername = temp[8].substring(2, 9);
+							// Übergabe an den Controller
 							myController.akzeptiereTauschanfrage(empfaengername, tauschanfrageNr);
-							JOptionPane.showMessageDialog(null, "Tauschanfrage erfolgreich angenommen",  "", JOptionPane.INFORMATION_MESSAGE);
+							// Erfolgsmeldung
+							JOptionPane.showMessageDialog(null, "Tauschanfrage erfolgreich angenommen", "",
+									JOptionPane.INFORMATION_MESSAGE);
 							dispose();
 
 						} else {
@@ -152,8 +157,7 @@ class TauschanfrageAnzeigenView extends JFrame {
 									"Wählen Sie eine andere Tauschanfrage zum Annehmen aus!", "  ",
 									JOptionPane.INFORMATION_MESSAGE);
 						}
-					}
-					catch (Exception a) {
+					} catch (Exception a) {
 						JOptionPane.showMessageDialog(null,
 								"Die Liste konnte nicht übergeben werden. - Methode ActionPerformed (btnBestätigen, TerminLoeschen)",
 								"Error", JOptionPane.ERROR_MESSAGE);

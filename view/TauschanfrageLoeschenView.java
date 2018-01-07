@@ -91,11 +91,12 @@ class TauschanfrageLoeschenView extends JFrame {
 		panelTauschanfrage.add(listTauschanfragen);
 
 		btnBestaetigen = new JButton("Bestätigen");
+		btnBestaetigen.setHorizontalAlignment(SwingConstants.LEFT);
 		btnBestaetigen.setFont(new Font("Verdana", Font.PLAIN, 15));
-		btnBestaetigen.setBounds(802, 531, 120, 25);
+		btnBestaetigen.setBounds(802, 531, 111, 25);
 		panelTauschanfrage.add(btnBestaetigen);
 		
-		JLabel label = new JLabel("Bitte ausw\u00E4hlen:");
+		JLabel label = new JLabel("Bitte auswähen:");
 		label.setFont(new Font("Verdana", Font.PLAIN, 14));
 		label.setBounds(62, 127, 147, 18);
 		panelTauschanfrage.add(label);
@@ -121,7 +122,7 @@ class TauschanfrageLoeschenView extends JFrame {
 						// Abfrage)
 						int eingabe = JOptionPane.showConfirmDialog(null, "Wollen Sie die Auswahl bestätigen?", null,
 								JOptionPane.YES_NO_CANCEL_OPTION);
-						// weiter bei ja
+						// Weiter bei ja und das gewählte Element aus der Liste wird für die Übergabe an den Controller vorbereitet
 						if (eingabe == JOptionPane.YES_OPTION) {
 							String s = listTauschanfragen.getSelectedValue().toString();
 							String[] temp = s.split("-");
@@ -131,6 +132,7 @@ class TauschanfrageLoeschenView extends JFrame {
 							
 							// Übergabe an den Controller
 							myController.entferneTauschanfrage(tauschanfrageNr);
+							//Erfolgsmeldung
 							JOptionPane.showConfirmDialog(null, "Tauschanfrage erfolgreich gelöscht", "",
 									JOptionPane.INFORMATION_MESSAGE);
 							dispose();
