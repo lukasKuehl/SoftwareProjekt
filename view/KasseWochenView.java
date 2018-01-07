@@ -44,8 +44,7 @@ import model.Einsatzplanmodel;
 
 //Implementierung von ActionListener überflüssig, siehe vorherige Klassen!
 
-//Hilfsklassen sind nicht public!
-public class KasseWochenView extends JFrame {
+	class KasseWochenView extends JFrame {
 	
 
 	private JPanel contentPane, pnlMenuBar;

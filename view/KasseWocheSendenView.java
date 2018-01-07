@@ -26,9 +26,7 @@ import javax.swing.JButton;
 //Autoren der einzelnen Methoden fehlen!
 
 //Kommentare innerhalb der Methoden fehlen!
-
-//Hilfsklassen sind nicht public!
-public class KasseWocheSendenView extends JFrame {
+	class KasseWocheSendenView extends JFrame {
 	private JComboBox cbWochenplaene;
 	private JLabel lblWochenplanVersenden,lblAuswahl;
 	private JButton btnBesttigen;

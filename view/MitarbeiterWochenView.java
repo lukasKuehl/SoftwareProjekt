@@ -29,9 +29,7 @@ import model.Einsatzplanmodel;
 
 //Autoren der einzelnen Methoden fehlen!
 
-//Klasse braucht das implements ActionListener nicht --> kann weg
-//Hilfsklassen sind nicht public!
-public class MitarbeiterWochenView extends JFrame{
+	class MitarbeiterWochenView extends JFrame{
 
 	private JPanel contentPane, pnlMenuBar;
 	private JTable tbleWochenplan;
