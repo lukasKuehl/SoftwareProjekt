@@ -27,7 +27,7 @@ public class Einsatzplanview implements Observer {
 
 	public Einsatzplanview(EinsatzplanController einsatzplanController, Einsatzplanmodel model) {
 		this.myController = einsatzplanController;
-		this.myModel = model;		
+		this.myModel = model;
 		AnmeldungView anmeldungView = new AnmeldungView(einsatzplanController, model, this);
 	}
 	
@@ -50,11 +50,11 @@ public class Einsatzplanview implements Observer {
 		if (myModel.getMitarbeiter(username).getJob().equalsIgnoreCase("chef")
 				|| myModel.getMitarbeiter(username).getJob().equalsIgnoreCase("kassenbüro")){
 			
-			new KasseWochenView(myModel, myController, null);
+			new KasseWochenView(myModel, myController, this);
 			
 			
 		}else{
-			new MitarbeiterWochenView(myModel, myController, null);
+			new MitarbeiterWochenView(myModel, myController, this);
 		}
 	}
 
