@@ -193,8 +193,6 @@ class KrankmeldungErstellenView extends JFrame {
 						zeitraum.put("wpbez", comboBoxWochenplaene.getSelectedItem().toString());
 						zeitraum.put("anfZeitraumTag", comboBoxAnfang.getSelectedItem().toString());
 						zeitraum.put("endZeitraumTag", comboBoxEnd.getSelectedItem().toString());
-						zeitraum.put("anfangsUhrzeit", "  :  ");
-						zeitraum.put("endUhrzeit", "  :  ");
 						
 						// Übergabe an den Controller
 						myController.erstelleTermin(username, bez, zeitraum, grund);
