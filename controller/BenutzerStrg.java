@@ -1,6 +1,7 @@
 package controller;
 
 import data.Mitarbeiter;
+import data.Userrecht;
 import model.Einsatzplanmodel;
 import view.Einsatzplanview;
 
@@ -33,8 +34,7 @@ class BenutzerStrg {
 		
 		//Prüfe, ob der Mitarbeiter bereits vorhanden ist. Falls nein, wird ein neuer Mitarbeiter in die Datenbank eingefügt.
 		if(this.myModel.getMitarbeiter(m.getBenutzername()) == null){
-			this.myModel.addMitarbeiter(m);			
-			success = true;
+			success = this.myModel.addMitarbeiter(m);			
 		}		
 		
 		return success;
@@ -53,8 +53,7 @@ class BenutzerStrg {
 		if(this.myModel.getMitarbeiter(username) != null){
 			
 			try{				
-				this.myModel.entferneMitarbeiter(username);
-				success = true;
+				success = this.myModel.entferneMitarbeiter(username);				
 			}catch(Exception e){
 				System.out.println("Controller: Fehler beim Entfernen eines Mitarbeiters aus der Datenbank: ");
 				e.printStackTrace();
@@ -115,7 +114,8 @@ class BenutzerStrg {
 		if(this.myModel.getMitarbeiter(username) != null){
 			try{
 				//Entferne die View aus der Liste der Observer beim Model.
-				this.myModel.removeObserver(this.myController.getView());		
+				this.myModel.removeObserver(this.myController.getView());
+				success = true;
 			}catch(Exception e){
 				
 				String fehler = "Fehler beim Abmelden des Users " + username + " :\n" + e.getMessage();
@@ -134,10 +134,18 @@ class BenutzerStrg {
 		
 		//Prüfe, ob der Mitarbeiter einen Eintrag in der Mitarbeitertabelle besitzt und somit eine aktuelle Berechtigung besitzt.
 		if(this.myModel.getMitarbeiter(username) != null){
+			
+			Userrecht alt = this.myModel.getUserrecht(this.myModel.getMitarbeiter(username).getJob());
+					
 			try{
 				//Wechsel der Benutzerrolle des übergebenen Mitarbeiters.
 				this.myModel.wechselBenutzerrolle(username);	
-				success = true;
+			
+				Userrecht neu = this.myModel.getUserrecht(this.myModel.getMitarbeiter(username).getJob());
+				
+				if(!alt.getBenutzerrolle().equals(neu.getBenutzerrolle())){
+					success = true;
+				}		
 			}catch(Exception e){
 				String fehler = "Fehler beim Ändern der Rechte des Nutzers " + username + " :\n" + e.getMessage();
 				myController.printErrorMessage(fehler);					

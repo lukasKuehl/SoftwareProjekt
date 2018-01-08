@@ -107,11 +107,7 @@ class WochenplanStrg {
 						
 						Wochenplan wp = new Wochenplan(wpnr, false, zeiten.get("÷ffnungszeit"), zeiten.get("Schlieﬂzeit"), zeiten.get("HauptzeitBeginn"), zeiten.get("HauptzeitEnde"), username, besetzung.get("MinBesetzungInfoTechnik"), besetzung.get("MinBesetzungInfoWaren"), besetzung.get("MinBesetzungKasse"), besetzung.get("MehrbesetzungKasse"));
 												
-						this.myModel.addWochenplan(wp);
-						
-						if(this.myModel.getWochenplan(wp.getWpnr()) != null){
-							success = true;
-						}
+						success = this.myModel.addWochenplan(wp);					
 					}
 					else{
 						String fehler = "Der ausgew‰hlte Wochenplan wurde bereits erstellt! \n";
@@ -157,11 +153,8 @@ class WochenplanStrg {
 				if(myModel.getWochenplan(wpnr) == null){
 					//Erstelle einen neuen Wochenplan mit den Daten der Standardeinstellung und hinterlege diesen in der Datenbank
 					Wochenplan wp = new Wochenplan(wpnr, false, settings.get÷ffnungszeit(), settings.getSchlieﬂzeit(), settings.getHauptzeitbeginn(), settings.getHauptzeitende(), username, settings.getMinanzinfot(), settings.getMinanzinfow(), settings.getMinanzkasse(), settings.getMehrbesetzung());
-					this.myModel.addWochenplan(wp);	
 					
-					if(this.myModel.getWochenplan(wp.getWpnr()) != null){
-						success = true;
-					}	
+					success = this.myModel.addWochenplan(wp);				
 				}
 				else{
 					String fehler = "Der ausgew‰hlte Wochenplan wurde bereits erstellt! \n";

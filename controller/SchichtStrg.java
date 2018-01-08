@@ -71,11 +71,14 @@ class SchichtStrg {
 				if(this.myModel.getMitarbeiter(s) != null){							
 					//Teile den Mitarbeiter in die gewünschte Schicht ein
 					this.myModel.addMa_Schicht(new Ma_Schicht(s, schichtNr));
+					success = true;
 				}				
-			}		
-		}
-		
-		success = true;
+			}	
+			else{
+				String fehler = "Der Mitarbeiter " + s + "wurde bereits in der Schicht mit der Nummer " + schichtNr + " eingeteilt!";
+				myController.printErrorMessage(fehler);			
+			}
+		}	
 		
 		return success;
 	}	

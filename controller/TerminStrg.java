@@ -267,9 +267,8 @@ class TerminStrg {
 			this.myModel.deleteTerminBlockierung(tblocknr);			
 			
 			if(this.myModel.getTblock_TagTB(tblocknr) != null){
-				this.myModel.deleteTblock_Tag(tblocknr);			
-			}		
-			success = true;
+				success = this.myModel.deleteTblock_Tag(tblocknr);			
+			}			
 		}
 		else{
 			String fehler = "Der Termin konnte nicht gelöscht werden!\n";
