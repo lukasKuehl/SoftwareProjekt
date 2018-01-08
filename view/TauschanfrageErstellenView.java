@@ -110,6 +110,7 @@ class TauschanfrageErstellenView extends JFrame {
 		// Ausgeben der ArrayListe für die Tage der Wochenpläne und in einer JComboBox
 		// hinterlegen
 		tagMa = myController.getTage(cmbBoxWP.getSelectedItem().toString());
+		
 		for (String s : tagMa) {
 			cmbBoxTag.addItem(s);
 		}
@@ -192,7 +193,7 @@ class TauschanfrageErstellenView extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				cmbBoxTag.setEnabled(true);
 				lblTagAuswaehlen.setEnabled(true);
-
+				aktualisieren(cmbBoxTag);
 			}
 		});
 
@@ -283,7 +284,6 @@ class TauschanfrageErstellenView extends JFrame {
 						comboBoxSchichtAndererMA.addItem(kwAndererMa + " " + tagAndererMa + " " + anfangszeitAndererMa
 								+ " " + endzeitAndererMa + " " + empfaengerName);
 					}
-
 					// Sichtbarkeit der Schicht des anderen Mitarbeiters ändern
 					comboBoxSchichtAndererMA.setEnabled(true);
 					labelSchichtAndererMA.setEnabled(true);
@@ -338,5 +338,17 @@ class TauschanfrageErstellenView extends JFrame {
 
 		setVisible(true);
 
+	}
+	
+	public void aktualisieren (J) {
+		cmbBoxWP.removeAll();
+		if(cmbBoxTag.getSelectedItem() != null){
+			tagMa = myController.getTage(cmbBoxWP.getSelectedItem().toString());
+			
+			
+			for (String s : tagMa) {
+				cmbBoxTag.addItem(s);
+			}
+		}
 	}
 }
