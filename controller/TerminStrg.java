@@ -354,7 +354,7 @@ class TerminStrg {
 					//Terminblockierung und Terminblockierungszuordnung sind gleich --> zusätzliche Informationen zum zugehörigen Wochenplan sind verfügbar
 					if(tbt.getTblocknr() == tb.getTblocknr()){
 						
-						String temp = tb.getBbez() + " - " + this.myModel.getMitarbeiter(tb.getBenutzername()).getVorname() + " " + this.myModel.getMitarbeiter(tb.getBenutzername()).getName() +" - KW" + tbt.getWpnr() + " - ";
+						String temp = tb.getTblocknr() + " - " + this.myModel.getMitarbeiter(tb.getBenutzername()).getVorname() + " " + this.myModel.getMitarbeiter(tb.getBenutzername()).getName() +" - KW" + tbt.getWpnr() + " - ";
 						
 						//Falls es sich um einen eintägigen Termin handelt, wird der Anfangs- und Endtag zusammengefasst
 						if(tb.getAnfangzeitraum().equals(tb.getEndezeitraum())){
