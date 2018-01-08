@@ -307,11 +307,19 @@ class TerminErstellenView extends JFrame {
 						zeitraum.put("wpbez", comboBoxWochenplaene.getSelectedItem().toString());
 						zeitraum.put("anfZeitraumTag", comboBoxAnfang.getSelectedItem().toString());
 						zeitraum.put("endZeitraumTag", comboBoxEnd.getSelectedItem().toString());
-						zeitraum.put("anfangsUhrzeit", txtFldUhrzeitTerminV.getText().toString() + ":"
-								+ txtFldUhrzeitTerminB.getText().toString());
-						zeitraum.put("endUhrzeit",
-								txtFldUhrzeitBisA.getText().toString() + ":" + txtFldUhrzeitBisB.getText().toString());
-
+						
+						if(chckbxGanztig.isSelected() == false){
+							
+							zeitraum.put("anfangsUhrzeit", txtFldUhrzeitTerminV.getText().toString() + ":"
+									+ txtFldUhrzeitTerminB.getText().toString());
+							zeitraum.put("endUhrzeit",
+									txtFldUhrzeitBisA.getText().toString() + ":" + txtFldUhrzeitBisB.getText().toString());
+						}
+						else{
+							zeitraum.put("anfangsUhrzeit", null);
+							zeitraum.put("endUhrzeit", null);						
+						}					
+						
 						// Übergabe an den Controller
 						myController.erstelleTermin(username, bez, zeitraum, grund);
 						//Erfolgsmeldung
