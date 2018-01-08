@@ -20,6 +20,7 @@ import java.util.LinkedList;
 
 import javax.swing.JComboBox;
 import javax.swing.JButton;
+import java.awt.Color;
 
 //Klassenbeschreibung fehlt!
 
@@ -40,6 +41,7 @@ import javax.swing.JButton;
 
 
 	public KasseWocheSendenView(Einsatzplanmodel myModel, Einsatzplanview myView, EinsatzplanController myController) {
+		getContentPane().setBackground(Color.WHITE);
 		this.myView = myView;
 		this.myModel = myModel;
 		this.myController = myController;

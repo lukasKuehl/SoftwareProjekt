@@ -24,6 +24,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.awt.Color;
 
 //Klassenbeschreibung fehlt!
 
@@ -51,6 +52,7 @@ import java.awt.event.WindowListener;
 
 	public KasseWocheErstellenView(Einsatzplanmodel myModel, Einsatzplanview myView,
 			EinsatzplanController myController) {
+		getContentPane().setBackground(Color.WHITE);
 		this.myController = myController;
 		this.myModel = myModel;
 		this.myView = myView;

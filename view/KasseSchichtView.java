@@ -24,6 +24,7 @@ import java.awt.event.WindowListener;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.awt.event.ActionEvent;
+import java.awt.Color;
 
 /**
  * @author Darius Panteli
@@ -51,6 +52,7 @@ import java.awt.event.ActionEvent;
 
 
 	protected KasseSchichtView(Einsatzplanmodel myModel, Einsatzplanview myView, EinsatzplanController myController) {
+		getContentPane().setBackground(Color.WHITE);
 		this.myView = myView;
 		this.myModel = myModel;
 		this.myController = myController;

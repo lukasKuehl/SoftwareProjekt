@@ -22,6 +22,7 @@ import javax.swing.SwingConstants;
 
 import controller.EinsatzplanController;
 import model.Einsatzplanmodel;
+import java.awt.Color;
 
 //Klassendokumentation fehlt!
 
@@ -53,6 +54,7 @@ import model.Einsatzplanmodel;
 	 * Create the application.
 	 */
 	public MitarbeiterWochenView(Einsatzplanmodel myModel, EinsatzplanController myController, Einsatzplanview myView) {
+		getContentPane().setBackground(Color.WHITE);
 		this.myController = myController;
 		this.myModel = myModel;
 		this.myView = myView;

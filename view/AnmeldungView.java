@@ -56,7 +56,7 @@ public class AnmeldungView extends JFrame{
 
 		lblAnmeldung = new JLabel("Anmeldung");
 		lblAnmeldung.setFont(new Font("Verdana", Font.BOLD, 30));
-		lblAnmeldung.setBounds(12, 25, 190, 37);
+		lblAnmeldung.setBounds(86, 71, 190, 37);
 		cpAnmeldung.add(lblAnmeldung);
 
 		lblBenutzername = new JLabel("Benutzername:");

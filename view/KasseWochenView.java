@@ -76,6 +76,7 @@ import model.Einsatzplanmodel;
 	 * Create the application.
 	 */
 	public KasseWochenView(Einsatzplanmodel myModel, EinsatzplanController myController, Einsatzplanview myView) {
+		getContentPane().setBackground(Color.WHITE);
 		this.myController = myController;
 		this.myModel = myModel;
 		this.myView = myView;

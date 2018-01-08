@@ -19,6 +19,7 @@ import javax.swing.JOptionPane;
 import data.Mitarbeiter;
 import model.Einsatzplanmodel;
 import controller.EinsatzplanController;
+import java.awt.Color;
 
 /**
  * @author Darius Panteli
@@ -39,6 +40,7 @@ import controller.EinsatzplanController;
 	
 	public KasseBenutzerrolleView(Einsatzplanmodel myModel, Einsatzplanview myView,
 			EinsatzplanController myController) {
+		getContentPane().setBackground(Color.WHITE);
 		this.myView = myView;
 		this.myModel = myModel;
 		this.myController = myController;
