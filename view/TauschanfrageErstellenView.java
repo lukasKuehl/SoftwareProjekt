@@ -191,9 +191,10 @@ class TauschanfrageErstellenView extends JFrame {
 		 */
 		cmbBoxWP.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+//				aktualisieren(cmbBoxTag);
 				cmbBoxTag.setEnabled(true);
 				lblTagAuswaehlen.setEnabled(true);
-				aktualisieren(cmbBoxTag);
+		
 			}
 		});
 
@@ -339,16 +340,16 @@ class TauschanfrageErstellenView extends JFrame {
 		setVisible(true);
 
 	}
-	
-	public void aktualisieren (J) {
-		cmbBoxWP.removeAll();
-		if(cmbBoxTag.getSelectedItem() != null){
-			tagMa = myController.getTage(cmbBoxWP.getSelectedItem().toString());
-			
-			
-			for (String s : tagMa) {
-				cmbBoxTag.addItem(s);
-			}
-		}
-	}
+//	
+//	public void aktualisieren (JComboBox cmbBoxWp) {
+//		cmbBoxWP.removeAll();
+//		if(cmbBoxTag.getSelectedItem() != null){
+//			tagMa = myController.getTage(cmbBoxWP.getSelectedItem().toString());
+//			
+//			
+//			for (String s : tagMa) {
+//				cmbBoxTag.addItem(s);
+//			}
+//		}
+//	}
 }
