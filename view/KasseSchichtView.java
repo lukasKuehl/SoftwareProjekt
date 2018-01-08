@@ -109,7 +109,11 @@ import java.awt.Color;
 				ArrayList<String> tagesliste = myController.getTage(wochenplanBez);
 
 				cbTage.removeAllItems();
-
+				cbMitarbeiter.removeAllItems();
+				cbSchicht.removeAllItems();
+				cbMitarbeiter.removeAllItems();
+				btnMitarbeiterBestaetigen.setEnabled(false);
+				btnSchichtAuswahl.setEnabled(false);
 				for (int i = 0; i < tagesliste.size(); i++) {
 					cbTage.addItem(tagesliste.get(i));
 				}
@@ -150,6 +154,8 @@ import java.awt.Color;
 
 				cbSchicht.setEnabled(true);
 				btnSchichtAuswahl.setEnabled(true);
+				cbMitarbeiter.removeAllItems();
+				btnMitarbeiterBestaetigen.setEnabled(false);
 			}
 		});
 		btnTagAuswahl.setBounds(93, 389, 125, 25);
@@ -258,6 +264,9 @@ import java.awt.Color;
 				cbTage.removeAllItems();
 				cbTage.setEnabled(false);
 				cbWochenplan.setSelectedIndex(0);
+				btnMitarbeiterBestaetigen.setEnabled(false);
+				btnSchichtAuswahl.setEnabled(false);
+				btnTagAuswahl.setEnabled(false);
 
 			}
 		});
