@@ -4,12 +4,11 @@ import java.awt.*;
 
 import javax.swing.*;
 import javax.swing.border.*;
-import javafx.scene.control.RadioButton;
 import model.Einsatzplanmodel;
 import controller.EinsatzplanController;
 import java.awt.event.*;
 import java.util.ArrayList;
-import java.util.TreeMap;
+
 
 /**
  * 
@@ -24,7 +23,7 @@ class KrankmeldungLoeschenView extends JFrame {
 	private JPanel contentPane, panelKrankmeldung = null;
 	private JList<String> listKrankmeldung = null;
 	private JButton btnBestaetigen = null;
-	private String username = null;
+	private String mitarbeitername = null;
 	private JLabel lblBitteAuswaehlen, lblKrankmeldungLoeschen = null;
 	private Einsatzplanview myView = null;
 	private Einsatzplanmodel myModel = null;
@@ -129,19 +128,25 @@ class KrankmeldungLoeschenView extends JFrame {
 						if (eingabe == JOptionPane.YES_OPTION) {
 							// ausgwählte Element wird für die Übergabe an den Controller aufbereitet
 							String s = listKrankmeldung.getSelectedValue().toString();
+							System.out.println(s);
 							String[] temp = s.split("-");
-							temp[0] = temp[0].trim();
-							int terminnr = Integer.parseInt(temp[0]);
-							String wpbez = temp[1];
-							String date = temp[2];
-							String anfangsUhrzeit = temp[3];
-							String endUhrzeit = temp[4];
+							String nr = temp[0];
+							nr = nr.trim();
+							int tblocknr = Integer.parseInt(nr);
+							String grund = temp[1];
+							mitarbeitername = temp[2].trim();
+							String kw = temp[3];
+							String tag = temp[4];
+							String anfangsUhrzeit = temp[5];
+							String endUhrzeit = temp[6];
 
 							// Übergabe an den Controller
-							myController.entferneTermin(tblocknr, myView.getUsername());
+							myController.entferneTermin(tblocknr,mitarbeitername);
 							// Erfolgsmeldung
+							if (myController.entferneTermin(tblocknr,mitarbeitername)!= false) {
 							JOptionPane.showMessageDialog(null, "Krankmeldung erfolgreich gelöscht!", "",
 									JOptionPane.INFORMATION_MESSAGE);
+							}
 							dispose();
 						} else {
 							JOptionPane.showMessageDialog(null, "Wählen Sie eine andere Krankmeldug aus!", "",
