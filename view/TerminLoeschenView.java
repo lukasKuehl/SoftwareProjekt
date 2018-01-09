@@ -1,6 +1,5 @@
 package view;
 
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.EventQueue;
@@ -9,8 +8,6 @@ import java.awt.Font;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
 import controller.EinsatzplanController;
@@ -25,7 +22,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.awt.event.ActionEvent;
 import javax.swing.SwingConstants;
@@ -145,7 +141,9 @@ class TerminLoeschenView extends JFrame {
 							//Übergabe an den Controller 
 							myController.entferneTermin(terminnr, myView.getUsername());
 							//Erfolgsmeldung
+							if (myController.entferneTermin(terminnr, myView.getUsername())!= false){
 							JOptionPane.showMessageDialog(null, "Termin erfolgreich gelöscht", "", JOptionPane.INFORMATION_MESSAGE);
+							}
 							dispose();
 							
 						} else {

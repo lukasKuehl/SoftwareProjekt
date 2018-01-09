@@ -1,13 +1,10 @@
 package view;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.EventQueue;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.Font;
 
-import javax.swing.border.LineBorder;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -125,8 +122,10 @@ class WochenplanLoeschenView extends JFrame {
 							// Übergabe an den Controller
 							myController.entferneWochenplan(myView.getUsername(), s);
 							// Erfolgsmeldung
+							if (myController.entferneWochenplan(myView.getUsername(), s) != false) {
 							JOptionPane.showMessageDialog(null, "Wochenplan erfolgreich gelöscht", "  ",
 									JOptionPane.INFORMATION_MESSAGE);
+							}
 							dispose();
 						} else {
 							JOptionPane.showMessageDialog(null, "Wählen Sie einen anderen Wochenplan aus!", "  ",

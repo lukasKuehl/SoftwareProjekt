@@ -54,7 +54,7 @@ class TauschanfrageLoeschenView extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
-		
+
 		windowListener = new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
@@ -83,7 +83,7 @@ class TauschanfrageLoeschenView extends JFrame {
 		modelTauschanfrage = new DefaultListModel<String>();
 		for (String m : tl) {
 			modelTauschanfrage.addElement(m);
-	
+
 		}
 		listTauschanfragen.setModel(modelTauschanfrage);
 		listTauschanfragen.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -95,7 +95,7 @@ class TauschanfrageLoeschenView extends JFrame {
 		btnBestaetigen.setFont(new Font("Verdana", Font.PLAIN, 15));
 		btnBestaetigen.setBounds(802, 531, 111, 25);
 		panelTauschanfrage.add(btnBestaetigen);
-		
+
 		JLabel lblBitteAuswhlen = new JLabel("Bitte ausw\u00E4hlen:");
 		lblBitteAuswhlen.setFont(new Font("Verdana", Font.PLAIN, 14));
 		lblBitteAuswhlen.setBounds(51, 93, 147, 18);
@@ -122,19 +122,22 @@ class TauschanfrageLoeschenView extends JFrame {
 						// Abfrage)
 						int eingabe = JOptionPane.showConfirmDialog(null, "Wollen Sie die Auswahl bestätigen?", null,
 								JOptionPane.YES_NO_CANCEL_OPTION);
-						// Weiter bei ja und das gewählte Element aus der Liste wird für die Übergabe an den Controller vorbereitet
+						// Weiter bei ja und das gewählte Element aus der Liste wird für die Übergabe an
+						// den Controller vorbereitet
 						if (eingabe == JOptionPane.YES_OPTION) {
 							String s = listTauschanfragen.getSelectedValue().toString();
 							String[] temp = s.split("-");
-							 temp[0] = temp[0].substring(10); 
-							 String tauschanfrageNrS = temp[0].trim();
-							int tauschanfrageNr = Integer.parseInt(tauschanfrageNrS);	
-							
+							temp[0] = temp[0].substring(10);
+							String tauschanfrageNrS = temp[0].trim();
+							int tauschanfrageNr = Integer.parseInt(tauschanfrageNrS);
+
 							// Übergabe an den Controller
 							myController.entferneTauschanfrage(tauschanfrageNr);
-							//Erfolgsmeldung
-							JOptionPane.showConfirmDialog(null, "Tauschanfrage erfolgreich gelöscht", "",
-									JOptionPane.INFORMATION_MESSAGE);
+							// Erfolgsmeldung
+							if (myController.entferneTauschanfrage(tauschanfrageNr) != false) {
+								JOptionPane.showConfirmDialog(null, "Tauschanfrage erfolgreich gelöscht", "",
+										JOptionPane.INFORMATION_MESSAGE);
+							}
 							dispose();
 						} else {
 							JOptionPane.showConfirmDialog(null, "Wählen Sie eine andere Tauschanfrage", "",

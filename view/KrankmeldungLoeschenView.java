@@ -132,7 +132,7 @@ class KrankmeldungLoeschenView extends JFrame {
 							String[] temp = s.split("-");
 							String nr = temp[0];
 							nr = nr.trim();
-							int tblocknr = Integer.parseInt(nr);
+							tblocknr = Integer.parseInt(nr);
 							String grund = temp[1];
 							mitarbeitername = temp[2].trim();
 							String kw = temp[3];

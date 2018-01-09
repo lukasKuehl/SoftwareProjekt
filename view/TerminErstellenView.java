@@ -4,13 +4,11 @@ import java.awt.*;
 
 import javax.swing.*;
 import javax.swing.border.*;
-import javax.swing.text.DateFormatter;
 import javax.swing.text.MaskFormatter;
 
 import controller.EinsatzplanController;
 
 import java.awt.event.*;
-import java.io.IOException;
 import java.text.*;
 import java.util.*;
 import model.Einsatzplanmodel;
@@ -323,8 +321,10 @@ class TerminErstellenView extends JFrame {
 						// Übergabe an den Controller
 						myController.erstelleTermin(username, bez, zeitraum, grund);
 						//Erfolgsmeldung
-						JOptionPane.showMessageDialog(null, "Termin erfolgreich angelegt!", "  ",
+						if (myController.erstelleTermin(username, bez, zeitraum, grund)!= false) {
+								JOptionPane.showMessageDialog(null, "Termin erfolgreich angelegt!", "  ",
 								JOptionPane.INFORMATION_MESSAGE);
+						}
 						dispose();
 
 					} else {

@@ -1,8 +1,5 @@
 package view;
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -23,10 +20,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.TreeMap;
 import java.awt.event.ActionEvent;
 
 import controller.EinsatzplanController;
@@ -165,21 +159,24 @@ class TauschanfrageErstellenView extends JFrame {
 		contentPane.add(btnOKwochenplan);
 
 		btnOKTagMa = new JButton("OK");
+		btnOKTagMa.setEnabled(false);
 		btnOKTagMa.setFont(new Font("Verdana", Font.PLAIN, 10));
 		btnOKTagMa.setBounds(406, 187, 59, 26);
 		contentPane.add(btnOKTagMa);
 
 		btnOKTagAndererMa = new JButton("OK");
+		btnOKTagAndererMa.setEnabled(false);
 		btnOKTagAndererMa.setFont(new Font("Verdana", Font.PLAIN, 10));
 		btnOKTagAndererMa.setBounds(714, 281, 59, 26);
 		contentPane.add(btnOKTagAndererMa);
 
 		btnOkSchichtAndererMa = new JButton("OK");
+		btnOkSchichtAndererMa.setEnabled(false);
 		btnOkSchichtAndererMa.setFont(new Font("Verdana", Font.PLAIN, 10));
 		btnOkSchichtAndererMa.setBounds(714, 422, 59, 26);
 		contentPane.add(btnOkSchichtAndererMa);
 
-		lblBitteAuswhlen = new JLabel("Bitte ausw\u00E4hlen");
+		lblBitteAuswhlen = new JLabel("Bitte auswählen");
 		lblBitteAuswhlen.setFont(new Font("Verdana", Font.PLAIN, 15));
 		lblBitteAuswhlen.setBounds(62, 93, 222, 26);
 		contentPane.add(lblBitteAuswhlen);
@@ -202,10 +199,19 @@ class TauschanfrageErstellenView extends JFrame {
 				for (int i = 0; i < tagesliste.size(); i++) {
 					cmbBoxTag.addItem(tagesliste.get(i));
 				}
-
+				
+				lblSchichtAuswaehlen.setEnabled(false);
+				labelSchichtAndererMA.setEnabled(false);
+				cmbBoxTag.setEnabled(false);
+				cmbBoxSchicht.setEnabled(false);
+				comboBoxSchichtAndererMA.setEnabled(false);
+				btnOKTagMa.setEnabled(true);
+				btnOkSchichtAndererMa.setEnabled(false);
+				btnOKTagAndererMa.setEnabled(false);
 				cmbBoxTag.setEnabled(true);
 				lblTagAuswaehlen.setEnabled(true);
-
+			
+				
 			}
 		});
 
@@ -216,7 +222,10 @@ class TauschanfrageErstellenView extends JFrame {
 		 *       mit der Schicht des Mitarbeiters
 		 */
 		btnOKTagMa.addActionListener(new ActionListener() {
+			
 			public void actionPerformed(ActionEvent e) {
+				cmbBoxSchicht.removeAllItems();
+				comboBoxSchichtAndererMA.removeAllItems();
 				// Auslesen einer Array List mit den Schichten
 				try {
 					// Ausgabe einer ArrayList mit den Schichten des Mitarbeiters
@@ -231,7 +240,6 @@ class TauschanfrageErstellenView extends JFrame {
 					String[] tempSender = sender.split("-");
 					String schichtNrsMa = tempSender[0].substring(1, 6);
 					senderSchichtnr = Integer.parseInt(schichtNrsMa);
-					System.out.println(senderSchichtnr);
 					String kw = tempSender[1];
 					String tag = tempSender[2];
 					String anfangszeit = tempSender[3];
@@ -241,7 +249,9 @@ class TauschanfrageErstellenView extends JFrame {
 					// JComboBox hinzufügen
 					cmbBoxSchicht.addItem(kw + " " + tag + " " + anfangszeit + " " + endzeit + " ");
 
-					// Sichtbarkeit der JComboBx Schicht und Label Schicht des Mitarbeiters ändern
+					// Sichtbarkeit der JComboBoxen und Labels ändern
+					comboBoxSchichtAndererMA.setEnabled(false);
+					btnOKTagAndererMa.setEnabled(true);
 					cmbBoxSchicht.setEnabled(true);
 					lblSchichtAuswaehlen.setEnabled(true);
 				} catch (Exception a) {
@@ -250,13 +260,7 @@ class TauschanfrageErstellenView extends JFrame {
 							JOptionPane.ERROR_MESSAGE);
 				}
 			}
-		});
-		/**
-		 * @author Ramona Gerke
-		 * @Info Action Performed Methode - Ändert die Sichtbarkeit der ComboBox Tag und
-		 *       des Labels Tag des auszuwählenden Mitarbeiters
-		 */
-	
+		});	
 		/**
 		 * @author Ramona Gerke
 		 * @info Action Performed Methode für die JcomboBox Schicht des anderen
@@ -265,9 +269,8 @@ class TauschanfrageErstellenView extends JFrame {
 		 */
 		btnOKTagAndererMa.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-
+				comboBoxSchichtAndererMA.removeAllItems();
 				try {
-					comboBoxSchichtAndererMA.removeAllItems();
 					// Ausgabe einer ArrayList für die Schichten des anderen Mitarbeiters
 
 					schichtAndererMa = myController.getAndereMitarbeiterSchichten(cmbBoxWP.getSelectedItem().toString(),
@@ -292,9 +295,10 @@ class TauschanfrageErstellenView extends JFrame {
 						comboBoxSchichtAndererMA.addItem(empfaengerSchichtNr +"-"+ kwAndererMa + "- " + tagAndererMa + "-" + anfangszeitAndererMa
 								+ "-" + endzeitAndererMa + "-" + empfaengerName);
 					}
-					// Sichtbarkeit der Schicht des anderen Mitarbeiters ändern
+					// Sichtbarkeit der JComboBox und Labels ändern
 					comboBoxSchichtAndererMA.setEnabled(true);
 					labelSchichtAndererMA.setEnabled(true);
+					btnOkSchichtAndererMa.setEnabled(true);
 				} catch (Exception a) {
 					JOptionPane.showMessageDialog(null,
 							"Kein Mitarbeiter zum Wechseln der Schicht vorhanden. Wählen Sie einen anderen Tag!",

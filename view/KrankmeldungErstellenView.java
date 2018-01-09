@@ -196,8 +196,10 @@ class KrankmeldungErstellenView extends JFrame {
 						
 						// Übergabe an den Controller
 						myController.erstelleTermin(username, bez, zeitraum, grund);
+						if(myController.erstelleTermin(username, bez, zeitraum, grund)!=false) {
 						//Erfolgsmeldung
 						JOptionPane.showMessageDialog(null, "Krankmeldung wurde erfolgreich erstellt!",  "", JOptionPane.INFORMATION_MESSAGE);
+						}
 						dispose();
 					} else {
 						JOptionPane.showMessageDialog(null, "Daten können geändert werden.",  "", JOptionPane.INFORMATION_MESSAGE);
