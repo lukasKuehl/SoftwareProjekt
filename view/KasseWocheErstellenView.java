@@ -25,32 +25,30 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.Color;
-
-//Klassenbeschreibung fehlt!
-
-//Kommentare innerhalb der Methoden fehlen!
-
-//Autoren der einzelnen Methoden fehlen!
+/**
+ * @author Darius Panteli
+ * @info Die Klasse KasseWocheErstellen dient dazu, dem Nutzer eine graphische
+ *       Obefläche anzubieten, um einen Wochenplan nach beliebigen Vorgaben
+ *       zu erstellen ( Benutzerdefiniert, als auch nach vordefinierten
+ *       Standardeinstellungen)
+ */
 
 	class KasseWocheErstellenView extends JFrame {
 	private JTextField txtOeffnungAnfangA, txtOeffnungAnfangB, txtOeffnungEndeA, txtOeffnungEndeB, txtHauptAnfangA,
 			txtHauptAnfangB, txtHauptEndeA, txtHauptEndeB;
 	private JComboBox cbMinTechInfo, cbMinHausInfo, cbMinHausKasse, cbExtraKassen, cbKW;
 	private JRadioButton rdbtnStandardeinstellungen, rdbtnBenutzerdefiniert;
-	private JButton btnBesttigen;
-	private JLabel lblWochenplanErstellen, lblKalenderwocheKw, lblOeffnungszeiten, doppelpunkt, lblBis, doppelpunkt_1,
+	private JButton btnBestaetigen;
+	private JLabel lblWochenplanErstellen, lblKalenderwocheKW, lblOeffnungszeiten, doppelpunkt, lblBis, doppelpunkt_1,
 			lblHauptzeiten, doppelpunkt_2, lblBis_1, doppelpunkt_3, lblMindestbesetzung,
-			lblMindestbesetzungFrLebensmittel, lblMindestbesetzungFrLebensmittel_1, lblKassen,
-			// Umlaute fehlen!
-			lblAnzahlZustzlicherMitarbeiter, lblUhr, lblUhr_1, lblUhr_2, lblUhr_3, lblFehlermeldung;
+			lblMindestbesetzungFuerLebensmittel, lblMindestbesetzungFuerLebensmittel_1, lblKassen,
+			lblAnzahlZusaetzlicherMitarbeiter, lblUhr, lblUhr_1, lblUhr_2, lblUhr_3, lblFehlermeldung;
 	private EinsatzplanController myController = null;
 	private Einsatzplanmodel myModel = null;
 	private Einsatzplanview myView = null;
 	private WindowListener windowListener;
 
-	// Siehe AnmeldungView!
-
-	public KasseWocheErstellenView(Einsatzplanmodel myModel, Einsatzplanview myView,
+	protected KasseWocheErstellenView(Einsatzplanmodel myModel, Einsatzplanview myView,
 			EinsatzplanController myController) {
 		getContentPane().setBackground(Color.WHITE);
 		this.myController = myController;
@@ -59,9 +57,7 @@ import java.awt.Color;
 		initialize();
 	}
 
-	/**
-	 * Initialize the contents of the frame.
-	 */
+
 	private void initialize() {
 
 		setTitle("Wochenplan Erstellen");
@@ -70,7 +66,8 @@ import java.awt.Color;
 		setLocationRelativeTo(null);
 		setBounds(100, 100, 1538, 864);
 		getContentPane().setLayout(null);
-
+		//Falls der Benutzer das Fenster über den "X" Button schließen sollte, wird eine neue KasseWochenView
+		//geöffnet
 		windowListener = new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
@@ -85,18 +82,16 @@ import java.awt.Color;
 		lblWochenplanErstellen.setBounds(39, 127, 370, 52);
 		getContentPane().add(lblWochenplanErstellen);
 
-		lblKalenderwocheKw = new JLabel("Kalenderwoche KW:");
-		lblKalenderwocheKw.setFont(new Font("Verdana", Font.BOLD, 15));
-		lblKalenderwocheKw.setBounds(39, 358, 160, 16);
-		getContentPane().add(lblKalenderwocheKw);
+		lblKalenderwocheKW = new JLabel("Kalenderwoche KW:");
+		lblKalenderwocheKW.setFont(new Font("Verdana", Font.BOLD, 15));
+		lblKalenderwocheKW.setBounds(39, 358, 160, 16);
+		getContentPane().add(lblKalenderwocheKW);
 
-		// siehe vorherige Klassen!
-		cbKW = new JComboBox();
+		cbKW = new JComboBox<String>();
 		cbKW.setBounds(211, 356, 50, 22);
 		getContentPane().add(cbKW);
-		String[] werte1 = setField(52, 1);
+		String[] werte1 = setField(52, 1); // Da es nur 52 Kalenderwochen gibt, geht es von 1 - 52
 		setComboBox(cbKW, werte1);
-		//
 
 		lblOeffnungszeiten = new JLabel("\u00D6ffnungszeiten:");
 		lblOeffnungszeiten.setFont(new Font("Verdana", Font.BOLD, 15));
@@ -105,7 +100,7 @@ import java.awt.Color;
 
 		txtOeffnungAnfangA = new JTextField();
 
-		// Solltest du erklären können falls dich wer fragt!!!
+		// Es wird sichergestellt, dass keine Buchstaben sondern nur Zahlen eingetragen werden können
 		txtOeffnungAnfangA.addKeyListener(new KeyAdapter() {
 			@Override
 
@@ -128,7 +123,7 @@ import java.awt.Color;
 		txtOeffnungAnfangB = new JTextField();
 		txtOeffnungAnfangB.addKeyListener(new KeyAdapter() {
 			@Override
-			// siehe oben!
+			// Es wird sichergestellt, dass keine Buchstaben sondern nur Zahlen eingetragen werden können
 			public void keyTyped(KeyEvent arg0) {
 				char vchar = arg0.getKeyChar();
 				if (!(Character.isDigit(vchar)) || (vchar == KeyEvent.VK_BACK_SPACE) || (vchar == KeyEvent.VK_DELETE)) {
@@ -149,7 +144,7 @@ import java.awt.Color;
 		txtOeffnungEndeA = new JTextField();
 		txtOeffnungEndeA.addKeyListener(new KeyAdapter() {
 			@Override
-			// siehe oben!
+			// Es wird sichergestellt, dass keine Buchstaben sondern nur Zahlen eingetragen werden können
 			public void keyTyped(KeyEvent arg0) {
 				char vchar = arg0.getKeyChar();
 				if (!(Character.isDigit(vchar)) || (vchar == KeyEvent.VK_BACK_SPACE) || (vchar == KeyEvent.VK_DELETE)) {
@@ -169,7 +164,7 @@ import java.awt.Color;
 		txtOeffnungEndeB = new JTextField();
 		txtOeffnungEndeB.addKeyListener(new KeyAdapter() {
 			@Override
-			// siehe Oben, für die späteren KeyEvents ebenfalls :)
+			// Es wird sichergestellt, dass keine Buchstaben sondern nur Zahlen eingetragen werden können
 			public void keyTyped(KeyEvent arg0) {
 				char vchar = arg0.getKeyChar();
 				if (!(Character.isDigit(vchar)) || (vchar == KeyEvent.VK_BACK_SPACE) || (vchar == KeyEvent.VK_DELETE)) {
@@ -190,7 +185,7 @@ import java.awt.Color;
 		txtHauptAnfangA = new JTextField();
 		txtHauptAnfangA.addKeyListener(new KeyAdapter() {
 			@Override
-
+			// Es wird sichergestellt, dass keine Buchstaben sondern nur Zahlen eingetragen werden können
 			public void keyTyped(KeyEvent arg0) {
 				char vchar = arg0.getKeyChar();
 				if (!(Character.isDigit(vchar)) || (vchar == KeyEvent.VK_BACK_SPACE) || (vchar == KeyEvent.VK_DELETE)) {
@@ -210,7 +205,7 @@ import java.awt.Color;
 		txtHauptAnfangB = new JTextField();
 		txtHauptAnfangB.addKeyListener(new KeyAdapter() {
 			@Override
-
+			// Es wird sichergestellt, dass keine Buchstaben sondern nur Zahlen eingetragen werden können
 			public void keyTyped(KeyEvent arg0) {
 				char vchar = arg0.getKeyChar();
 				if (!(Character.isDigit(vchar)) || (vchar == KeyEvent.VK_BACK_SPACE) || (vchar == KeyEvent.VK_DELETE)) {
@@ -231,7 +226,7 @@ import java.awt.Color;
 		txtHauptEndeA = new JTextField();
 		txtHauptEndeA.addKeyListener(new KeyAdapter() {
 			@Override
-
+			// Es wird sichergestellt, dass keine Buchstaben sondern nur Zahlen eingetragen werden können
 			public void keyTyped(KeyEvent arg0) {
 				char vchar = arg0.getKeyChar();
 				if (!(Character.isDigit(vchar)) || (vchar == KeyEvent.VK_BACK_SPACE) || (vchar == KeyEvent.VK_DELETE)) {
@@ -251,7 +246,7 @@ import java.awt.Color;
 		txtHauptEndeB = new JTextField();
 		txtHauptEndeB.addKeyListener(new KeyAdapter() {
 			@Override
-
+			// Es wird sichergestellt, dass keine Buchstaben sondern nur Zahlen eingetragen werden können
 			public void keyTyped(KeyEvent arg0) {
 				char vchar = arg0.getKeyChar();
 				if (!(Character.isDigit(vchar)) || (vchar == KeyEvent.VK_BACK_SPACE) || (vchar == KeyEvent.VK_DELETE)) {
@@ -269,33 +264,32 @@ import java.awt.Color;
 		lblMindestbesetzung.setBounds(487, 431, 509, 16);
 		getContentPane().add(lblMindestbesetzung);
 
-		lblMindestbesetzungFrLebensmittel = new JLabel(
+		lblMindestbesetzungFuerLebensmittel = new JLabel(
 				"Mindestbesetzung f\u00FCr Lebensmittel- / Haushaltswarenhaus: Info");
-		lblMindestbesetzungFrLebensmittel.setFont(new Font("Verdana", Font.BOLD, 15));
-		lblMindestbesetzungFrLebensmittel.setBounds(487, 474, 509, 16);
-		getContentPane().add(lblMindestbesetzungFrLebensmittel);
+		lblMindestbesetzungFuerLebensmittel.setFont(new Font("Verdana", Font.BOLD, 15));
+		lblMindestbesetzungFuerLebensmittel.setBounds(487, 474, 532, 16);
+		getContentPane().add(lblMindestbesetzungFuerLebensmittel);
 
-		lblMindestbesetzungFrLebensmittel_1 = new JLabel(
+		lblMindestbesetzungFuerLebensmittel_1 = new JLabel(
 				"Mindestbesetzung f\u00FCr Lebensmittel- / Haushaltswarenhaus Kasse:");
-		lblMindestbesetzungFrLebensmittel_1.setFont(new Font("Verdana", Font.BOLD, 15));
-		lblMindestbesetzungFrLebensmittel_1.setBounds(487, 524, 509, 16);
-		getContentPane().add(lblMindestbesetzungFrLebensmittel_1);
+		lblMindestbesetzungFuerLebensmittel_1.setFont(new Font("Verdana", Font.BOLD, 15));
+		lblMindestbesetzungFuerLebensmittel_1.setBounds(487, 524, 556, 16);
+		getContentPane().add(lblMindestbesetzungFuerLebensmittel_1);
 
-		// siehe vorherige Klassen!
-		cbMinTechInfo = new JComboBox();
+		cbMinTechInfo = new JComboBox<String>();
 		cbMinTechInfo.setBounds(1040, 428, 50, 22);
 		getContentPane().add(cbMinTechInfo);
 		String[] werte2 = setField(10, 0);
 		setComboBox(cbMinTechInfo, werte2);
 
-		cbMinHausInfo = new JComboBox();
-		cbMinHausInfo.setBounds(1040, 471, 50, 22);
+		cbMinHausInfo = new JComboBox<String>();
+		cbMinHausInfo.setBounds(1040, 473, 50, 22);
 		getContentPane().add(cbMinHausInfo);
 		String[] werte3 = setField(10, 0);
 		setComboBox(cbMinHausInfo, werte3);
 
-		cbMinHausKasse = new JComboBox();
-		cbMinHausKasse.setBounds(1040, 522, 50, 22);
+		cbMinHausKasse = new JComboBox<String>();
+		cbMinHausKasse.setBounds(1040, 523, 50, 22);
 		getContentPane().add(cbMinHausKasse);
 		String[] werte4 = setField(10, 0);
 		setComboBox(cbMinHausKasse, werte4);
@@ -308,55 +302,53 @@ import java.awt.Color;
 
 		lblFehlermeldung = new JLabel("");
 		lblFehlermeldung.setFont(new Font("Verdana", Font.BOLD, 15));
-		lblFehlermeldung.setBounds(487, 626, 509, 16);
+		lblFehlermeldung.setBounds(487, 673, 509, 16);
 		getContentPane().add(lblFehlermeldung);
 
-		// siehe vorherige Klassen!
-		cbExtraKassen = new JComboBox();
+		cbExtraKassen = new JComboBox<String>();
 		cbExtraKassen.setBounds(1040, 624, 50, 22);
 		getContentPane().add(cbExtraKassen);
 		String[] werte5 = setField(10, 0);
 		setComboBox(cbExtraKassen, werte5);
 		//
 
-		btnBesttigen = new JButton("best\u00E4tigen");
-		btnBesttigen.addActionListener(new ActionListener() {
+		btnBestaetigen = new JButton("best\u00E4tigen");
+		btnBestaetigen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int confirmed = JOptionPane.showConfirmDialog(null, "Sind Sie sicher?", "Warnung",
 						JOptionPane.YES_NO_OPTION);
 
 				if (confirmed == JOptionPane.YES_OPTION) {
+					// Damit der Controller weiß, ob es sich um nach Standardeinstellungen angelegten Wochenplan handelt,
+					//oder es um einen benutzerdefinierten Wochenplan geht, wird überprüft
+					//welcher Radio Button ausgewählt wurde
 					if (rdbtnBenutzerdefiniert.isSelected()) {
 						if (myController.erstelleWochenplanCustom(myView.getUsername(), gibWochenplanbezeichnung(),
 								gibOeffnungszeiten(), gibBesetzung())) {
-							// myView.update();
 							dispose();
 						} else {
-							// Benutzer hat von sich aus abgebrochen --> Keine
-							// Fehlermeldung notwendig
-							lblFehlermeldung.setText(
-									"Fehler beim Erstellen des Wochenplans. Bitte überprüfen Sie Ihre Eingaben.");
+							//Fehlermeldung kommt vom Controller
+			//lblFehlermeldung.setText("Fehler beim Erstellen des Wochenplans. Bitte überprüfen Sie Ihre Eingaben.");
 
 						}
 					}
 					if (rdbtnStandardeinstellungen.isSelected()) {
 						if (myController.erstelleWochenplanStandard(myView.getUsername(), gibWochenplanbezeichnung())) {
-							// myView.update();
 							dispose();
 						} else {
-							// Benutzer hat von sich aus abgebrochen --> Keine
-							// Fehlermeldung notwendig
-							lblFehlermeldung.setText(
-									"Fehler beim Erstellen des Wochenplans. Bitte überprüfen Sie Ihre Eingaben.");
+						//Fehlermeldung kommt vom Controller	
+			//lblFehlermeldung.setText("Fehler beim Erstellen des Wochenplans. Bitte überprüfen Sie Ihre Eingaben.");
 
 						}
 					}
 				}
 			}
 		});
-		btnBesttigen.setBounds(1246, 793, 97, 25);
-		getContentPane().add(btnBesttigen);
-
+		btnBestaetigen.setBounds(1246, 793, 97, 25);
+		getContentPane().add(btnBestaetigen);
+		//Je nach ausgewählter Einstellung passiert etwas anderes ( Erklärung weiter unten)
+		//Radio Group: Es ist nicht möglich beide Felder auszuwählen
+		//Sobald man einen RadioButton gedrückt hat, wird der andere wieder deaktiviert
 		ButtonGroup gruppe = new ButtonGroup();
 		rdbtnBenutzerdefiniert = new JRadioButton("Benutzerdefiniert");
 		rdbtnStandardeinstellungen = new JRadioButton("Standardeinstellungen");
@@ -364,7 +356,8 @@ import java.awt.Color;
 		gruppe.add(rdbtnStandardeinstellungen);
 		rdbtnBenutzerdefiniert.setSelected(true);
 		rdbtnBenutzerdefiniert.addActionListener(new ActionListener() {
-
+			//Bei Benutzerdefiniert: Alle Textfelder und ComobBoxen 
+			//sind "aktiviert" und können vom Nutzer bearbeitet werden
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				txtOeffnungAnfangA.setEnabled(true);
@@ -386,7 +379,8 @@ import java.awt.Color;
 
 		rdbtnStandardeinstellungen.setBounds(39, 399, 160, 25);
 		rdbtnStandardeinstellungen.addActionListener(new ActionListener() {
-
+			//Bei Standardeinstellungen: Alle Textfelder und ComboBoxen sind deaktiviert,
+			//da diese nicht benötigt werden
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				txtOeffnungAnfangA.setEnabled(false);
@@ -416,10 +410,10 @@ import java.awt.Color;
 		});
 		getContentPane().add(rdbtnStandardeinstellungen);
 
-		lblAnzahlZustzlicherMitarbeiter = new JLabel("Anzahl zus\u00E4tzlicher Mitarbeiter:");
-		lblAnzahlZustzlicherMitarbeiter.setFont(new Font("Verdana", Font.BOLD, 15));
-		lblAnzahlZustzlicherMitarbeiter.setBounds(487, 575, 509, 16);
-		getContentPane().add(lblAnzahlZustzlicherMitarbeiter);
+		lblAnzahlZusaetzlicherMitarbeiter = new JLabel("Anzahl zus\u00E4tzlicher Mitarbeiter:");
+		lblAnzahlZusaetzlicherMitarbeiter.setFont(new Font("Verdana", Font.BOLD, 15));
+		lblAnzahlZusaetzlicherMitarbeiter.setBounds(487, 575, 509, 16);
+		getContentPane().add(lblAnzahlZusaetzlicherMitarbeiter);
 
 		lblUhr = new JLabel("Uhr");
 		lblUhr.setFont(new Font("Verdana", Font.BOLD, 13));
@@ -443,7 +437,9 @@ import java.awt.Color;
 		setVisible(true);
 
 	}
-
+	//TreeMap mit den entsprechenden Uhrzeiten wird übergeben.Da die Uhrzeiten gesplittet sind 
+	//bzw. einzelne Werte vorhanden sind,
+	//aber nur ein Wert erwartet wird, werden diese unten bei der Übergabe zusammen getan.
 	protected TreeMap<String, String> gibOeffnungszeiten() {
 
 		TreeMap<String, String> zeiten = new TreeMap<String, String>();
@@ -455,7 +451,7 @@ import java.awt.Color;
 		return zeiten;
 
 	}
-
+	//TreeMap mit den benutzerdefinierten Anpassungen der Besetzungen
 	protected TreeMap<String, Integer> gibBesetzung() {
 
 		TreeMap<String, Integer> besetzung = new TreeMap<String, Integer>();
@@ -466,9 +462,9 @@ import java.awt.Color;
 		return besetzung;
 	}
 
+	//Ausgewählter Wochenplan wird übergeben
 	protected String gibWochenplanbezeichnung() {
-		return "KW" + cbKW.getSelectedItem().toString(); // KW muss vorher
-															// stehen
+		return "KW" + cbKW.getSelectedItem().toString();
 	}
 
 	// Erstellt einen String Array für einen Wertebereich int a und int b

@@ -14,8 +14,9 @@ import model.Einsatzplanmodel;
 
 /**
  * 
- * @author Ramona Gerke & Darius Panteli
+ * @author Darius Panteli
  * @Info 
+ *  Allgemeine View zum weiterleiten der Anfragen und weiterleiten an die spezifischen Steuerungen.
  */
 
 public class Einsatzplanview implements Observer {

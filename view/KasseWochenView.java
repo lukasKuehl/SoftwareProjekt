@@ -35,14 +35,13 @@ import javax.swing.border.LineBorder;
 import controller.EinsatzplanController;
 import model.Einsatzplanmodel;
 import model.Einsatzplanmodel;
-
-//Klassenbeschreibung fehlt!
-
-//Autoren der Methoden fehlen!
-
-//Kommentare innerhalb der Methoden fehlen!
-
-//Implementierung von ActionListener überflüssig, siehe vorherige Klassen!
+/**
+ * @author Darius Panteli
+ * @info Die Klasse KasseWochenView dient dazu, einem Nutzer eine graphische
+ *       Obefläche anzubieten, um Zugriff auf all die Möglichen Funktionen
+ *       zu bekommen, die ein administrativer Nutzer hat. Davon abgesehen
+ *       wird dem Nutzer der Wochenplan angezeigt
+ */
 
 	class KasseWochenView extends JFrame {
 	
@@ -54,7 +53,7 @@ import model.Einsatzplanmodel;
 	private JMenu mnNewMenuIcon, mnWoche, mnSchicht, mnTermin, mnKrankmeldung, mnBenutzerrolle;
 	private JMenuItem mntmWocheLoeschen, mntmWocheVerschicken, mntmWocheErstellen, mntmSchichtBearbeiten,
 			mntmTerminErstellen, mntmTerminLoeschen, mntmKrankErstellen, mntmKrankLoeschen, mntmBenutzerZuweisen;
-	public JLabel lblKW1;
+	private JLabel lblKW;
 	private String username;
 	private int currentKW = 0;
 	static JScrollPane jsp;
@@ -65,17 +64,8 @@ import model.Einsatzplanmodel;
 	private Einsatzplanview myView = null;
 	private JTable tbleWochenplan;
 
-	//siehe AnmeldungView!
 
-	/**
-	 * Launch the application.
-	 */
-
-	
-	/**
-	 * Create the application.
-	 */
-	public KasseWochenView(Einsatzplanmodel myModel, EinsatzplanController myController, Einsatzplanview myView) {
+	protected KasseWochenView(Einsatzplanmodel myModel, EinsatzplanController myController, Einsatzplanview myView) {
 		getContentPane().setBackground(Color.WHITE);
 		this.myController = myController;
 		this.myModel = myModel;
@@ -83,17 +73,13 @@ import model.Einsatzplanmodel;
 		initialize();
 	}
 
-	/**
-	 * Initialize the contents of the frame.
-	 */
+
 	private void initialize() {
 		setTitle("Einsatzplan Kassenbüro");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setResizable(false);
 		setLocationRelativeTo(null);
 		setBounds(100, 100, 1538, 864);
-
-		// MenuBar mit den ganzen Unterpunkten - Variablen sind public
 
 		menuBar = new JMenuBar();
 		menuBar.setMargin(new Insets(62, 0, 0, 0));
@@ -221,13 +207,13 @@ import model.Einsatzplanmodel;
 		mnBenutzerrolle.add(mntmBenutzerZuweisen);
 		getContentPane().setLayout(null);
 
-		//Warum KW 1? Es gibt doch keine anderen Label in denen die KW steht
-		lblKW1 = new JLabel("");
-		lblKW1.setFont(new Font("Tahoma", Font.BOLD, 13));
-		lblKW1.setBounds(109, 11, 136, 30);
+		//Dynamisches Label, damit jeweils der Name des aktuell angezeigten Wochenplans zu sehen ist
+		lblKW = new JLabel("");
+		lblKW.setFont(new Font("Tahoma", Font.BOLD, 13));
+		lblKW.setBounds(109, 11, 136, 30);
 		ArrayList<String> wochenplaene = myController.getWochenplaene();
-		lblKW1.setText(wochenplaene.get(0).toString());
-		getContentPane().add(lblKW1);
+		lblKW.setText(wochenplaene.get(0).toString());
+		getContentPane().add(lblKW);
 
 		btnRechts = new JButton("");
 		btnRechts.setContentAreaFilled(false);
@@ -236,7 +222,8 @@ import model.Einsatzplanmodel;
 		btnRechts.setIcon(new ImageIcon("view/right.png"));
 		btnRechts.setBounds(255, 11, 32, 23);
 		btnRechts.addActionListener(new ActionListener() {
-			
+			//Sofern es einen nachfolgenden Wochenplan gibt, wird der nachfolgende Wochenplan angezeigt
+			//nach betätigung des Rechten Buttons
 			@Override
 			public void actionPerformed(ActionEvent e) {						
 				currentKW++;
@@ -258,7 +245,8 @@ import model.Einsatzplanmodel;
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-			
+			//Sofern es einen vorherigen Wochenplan gibt, wird der vorherige Wochenplan angezeigt
+			//nach betätigung des Linken Buttons
 				currentKW--;
 				if(currentKW < 0){
 					currentKW++;
@@ -273,11 +261,11 @@ import model.Einsatzplanmodel;
 		generiereTabelle();
 		setVisible(true);
 	}
-	//
-	
+
+	//Methode um den Wochenplan (inkl. Daten) in der View anzeigen zu lassen 
 	private void generiereTabelle(){
 		ArrayList<String> wochenplaene = myController.getWochenplaene();
-		lblKW1.setText(wochenplaene.get(currentKW).toString());
+		lblKW.setText(wochenplaene.get(currentKW).toString());
 		tbleWochenplan = myController.generiereWochenplanView(wochenplaene.get(currentKW));	
 		tbleWochenplan.getTableHeader().setSize(tbleWochenplan.getTableHeader().getPreferredSize());
 		tbleWochenplan.setSize(tbleWochenplan.getPreferredSize());
@@ -285,9 +273,7 @@ import model.Einsatzplanmodel;
 		tbleWochenplan.setFillsViewportHeight(true);
 		jsp = new JScrollPane(tbleWochenplan);
 		jsp.setBounds(24, 81, 1439, 676);
-		//System.out.println(currentKW);
 		getContentPane().add(jsp);
-		//getContentPane().repaint();
 		
 		
 	}

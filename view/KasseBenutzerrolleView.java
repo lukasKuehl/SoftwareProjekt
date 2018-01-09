@@ -58,7 +58,7 @@ import java.awt.Color;
 		setBounds(100, 100, 640, 480);
 		getContentPane().setLayout(null);
 		
-		//Falls der Benutzer das Fenster über den "X" Button schließen sollte, wird die vorherhige View wieder
+		//Falls der Benutzer das Fenster über den "X" Button schließen sollte, wird eine neue View wieder
 		//geöffnet
 		windowListener = new WindowAdapter() {
 			@Override
@@ -81,8 +81,9 @@ import java.awt.Color;
 
 		cbMitarbeiter = new JComboBox<String>();
 		cbMitarbeiter.setBounds(360, 204, 128, 20);
+		//Es werden alle Mitarbeiter die in der Datenbank eingetragen sind gezogen und in die ComboBox
+		//gefüllt
 		LinkedList<Mitarbeiter> alleMitarbeiter = this.myModel.getAlleMitarbeiter();
-
 		for (Mitarbeiter mitarbeiter : alleMitarbeiter) {
 			cbMitarbeiter.addItem(mitarbeiter.getBenutzername());
 		}

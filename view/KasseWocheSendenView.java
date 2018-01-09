@@ -21,12 +21,12 @@ import java.util.LinkedList;
 import javax.swing.JComboBox;
 import javax.swing.JButton;
 import java.awt.Color;
-
-//Klassenbeschreibung fehlt!
-
-//Autoren der einzelnen Methoden fehlen!
-
-//Kommentare innerhalb der Methoden fehlen!
+/**
+ * @author Darius Panteli
+ * @info Die Klasse KasseWocheSendenView dient dazu, dem Nutzer eine graphische
+ *       Obefläche anzubieten, um einen jeweils ausgewählten
+ *       Wochenplan an das gesamte Team zu schicken
+ */
 	class KasseWocheSendenView extends JFrame {
 	private JComboBox cbWochenplaene;
 	private JLabel lblWochenplanVersenden,lblAuswahl;
@@ -36,11 +36,7 @@ import java.awt.Color;
 	private Einsatzplanview myView = null;
 	private WindowListener windowListener;
 	
-	//Siehe AnmeldungView!
-	//
-
-
-	public KasseWocheSendenView(Einsatzplanmodel myModel, Einsatzplanview myView, EinsatzplanController myController) {
+	protected KasseWocheSendenView(Einsatzplanmodel myModel, Einsatzplanview myView, EinsatzplanController myController) {
 		getContentPane().setBackground(Color.WHITE);
 		this.myView = myView;
 		this.myModel = myModel;
@@ -48,9 +44,6 @@ import java.awt.Color;
 		initialize();
 	}
 
-	/**
-	 * Initialize the contents of the frame.
-	 */
 	private void initialize() {
 		
 		setTitle("Wochenplan versenden");
@@ -59,7 +52,8 @@ import java.awt.Color;
 		setLocationRelativeTo(null);
 		setBounds(100, 100, 600,480);
 		getContentPane().setLayout(null);
-		
+		//Falls der Benutzer das Fenster über den "X" Button schließen sollte, wird eine neue KasseWochenView
+		//geöffnet
 		windowListener = new WindowAdapter() {
 
 			@Override
@@ -80,15 +74,15 @@ import java.awt.Color;
 		lblAuswahl.setBounds(90, 181, 451, 16);
 		getContentPane().add(lblAuswahl);
 		
-		//siehe vorherige Klassen!
-		cbWochenplaene = new JComboBox();
+		cbWochenplaene = new JComboBox<Object>();
 		cbWochenplaene.setBounds(192, 225, 231, 22);
+		//Es werden alle aktuell hinterlegten Wochenpläne in der Datenbank abgerufen
+		//und die ComboBox damit befüllt
 		LinkedList<Wochenplan> alleWochenplaene = this.myModel.getWochenplaene();
 		alleWochenplaene.forEach((temp) -> { 
 			cbWochenplaene.addItem("KW " +temp.getWpnr()); 
 			});
 		getContentPane().add(cbWochenplaene);
-		//
 		
 		btnBesttigen = new JButton("best\u00E4tigen");
 		btnBesttigen.addActionListener(new ActionListener() {
@@ -97,15 +91,14 @@ import java.awt.Color;
 						JOptionPane.YES_NO_OPTION);
 
 				if (confirmed == JOptionPane.YES_OPTION) {
-						//Methode im Controller muss aufgerufen werden!
-						//Außerdem muss kontrolliert werden, ob das Senden erfolgreich war, bevor das Fenster geschlossen wird
-					
+					//Bei Bestätigung wird der ausgewählte Wochenplan übergeben
+					//Der Controller erwartet den Usernamen (welcher er sich aus der EinsatzplanView entnimmt),
+					//und jeweils den ausgewählten Wochenplan
+				
 						if(myController.verschickeWochenplan(myView.getUsername(), "KW" + gibWochenplan(), myController.generiereWochenplanView("KW" + gibWochenplan()))){
 							dispose();
 						}else{
-							//JLabel Fehlermeldung erstellen (siehe)
-							//lblFehlermeldung.setText("Fehler beim Erstellen des Wochenplans. Bitte überprüfen Sie Ihre Eingaben.");
-
+					
 						}
 						
 					} else {
@@ -117,9 +110,10 @@ import java.awt.Color;
 		getContentPane().add(btnBesttigen);
 		setVisible(true);
 	}
-	public String gibWochenplan() {
+	
+	// Früher entstanden Fehler, weshalb wir es so belassen haben und "KW" einzelnd oben hinzugefügt haben
+	protected String gibWochenplan() {
 		
-		//.trim() ist besser
 		String[] teile = cbWochenplaene.getSelectedItem().toString().split(" ");
 		return teile[1];
 	}

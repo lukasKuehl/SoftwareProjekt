@@ -30,13 +30,9 @@ import java.awt.Color;
  * @author Darius Panteli
  * @info Die Klasse KasseSchichtView dient dazu, dem Nutzer eine graphische
  *       Obefläche anzubieten, um Mitarbeiter einem jeweils ausgewählten
- *       Wochenplan einer Schicht hinzuu zu
+ *       Wochenplan einer Schicht hinzu zufügen
  */
-// Klassenbeschreibung fehlt!
 
-// Kommentare innerhalb der Methoden fehlen!
-
-// Autoren der einzelnen Methoden fehlen!
 
 	class KasseSchichtView extends JFrame {
 	private EinsatzplanController myController = null;
@@ -59,9 +55,7 @@ import java.awt.Color;
 		initialize();
 	}
 
-	/**
-	 * Initialize the contents of the frame.
-	 */
+
 	private void initialize() {
 		setTitle("Schicht bearbeiten");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -71,7 +65,7 @@ import java.awt.Color;
 		getContentPane().setLayout(null);
 		setVisible(true);
 		
-		//Falls der Benutzer das Fenster über den "X" Button schließen sollte, wird die vorherhige View wieder
+		//Falls der Benutzer das Fenster über den "X" Button schließen sollte, wird eine neue KasseWochenView
 		//geöffnet
 		windowListener = new WindowAdapter() {
 
@@ -88,7 +82,8 @@ import java.awt.Color;
 		lblBitteWochenplanAuswaehlen.setBounds(22, 152, 243, 16);
 		getContentPane().add(lblBitteWochenplanAuswaehlen);
 
-		// Siehe KasseBenutzerrolleView!
+		// Alle aktuell verfügbaren bzw. erstellten und in der Datenbank hinterlegten Wochenpläne
+		//werden geladen und in die ComboBox gefüllt
 		cbWochenplan = new JComboBox();
 		cbWochenplan.setBounds(32, 181, 233, 22);
 		LinkedList<Wochenplan> alleWochenplaene = this.myModel.getWochenplaene();
@@ -102,18 +97,21 @@ import java.awt.Color;
 		btnPlanBestaetigen.setFont(new Font("Verdana", Font.PLAIN, 13));
 		btnPlanBestaetigen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Wochenplan wochenplan = myModel
-						.getWochenplan(Integer.valueOf(cbWochenplan.getSelectedItem().toString().split(" ")[1]));
-
+				//Damit die Tage aus dem ausgewählten Wochenplans geladen werden, übergeben wir den ausgewählten Wochenplan
+				//und übergeben bei der Abfrage der Tagesliste auch den jeweiligen Wochenplan
+				Wochenplan wochenplan = myModel.getWochenplan(Integer.valueOf(cbWochenplan.getSelectedItem().toString().split(" ")[1]));
 				String wochenplanBez = "KW" + wochenplan.getWpnr();
 				ArrayList<String> tagesliste = myController.getTage(wochenplanBez);
-
+				//Falls es bereits schon dazu gekommen sein sollte, dass man bereits mehrere Sachen ausgewählt hat,
+				//aber man die Auswahl des Wochenplans ändern möchte, werden nach dem Klicken des Buttons
+				//alle anderen Felder zurückgesetzt und deaktiviert ( auch wenn diese natürlich schon deaktiviert waren)
 				cbTage.removeAllItems();
 				cbMitarbeiter.removeAllItems();
 				cbSchicht.removeAllItems();
 				cbMitarbeiter.removeAllItems();
 				btnMitarbeiterBestaetigen.setEnabled(false);
 				btnSchichtAuswahl.setEnabled(false);
+				//ComboBox wird mit den Tagen gefüllt
 				for (int i = 0; i < tagesliste.size(); i++) {
 					cbTage.addItem(tagesliste.get(i));
 				}
@@ -140,14 +138,16 @@ import java.awt.Color;
 		btnTagAuswahl.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String tag = cbTage.getSelectedItem().toString();
-
+				//Damit die Schicht/en aus dem ausgewählten Tag geladen werden, übergeben wir den vom User ausgewählten Tag 
+				//und übergeben bei der Abfrage der Schicht auch den jeweiligen Tag
+				//damit in der ComboBox auch nur die Schichten angezeigt werden, die dazu gehören
 				Wochenplan wochenplan = myModel
 						.getWochenplan(Integer.valueOf(cbWochenplan.getSelectedItem().toString().split(" ")[1]));
 				String wochenplanBez = "KW" + wochenplan.getWpnr();
 				ArrayList<String> schichten = myController.getTagesSchichten(wochenplanBez,tag);
 
 				cbSchicht.removeAllItems();
-
+				//ComboBox wird mit den Schichten
 				for (int i = 0; i < schichten.size(); i++) {
 					cbSchicht.addItem(schichten.get(i));
 				}
@@ -177,16 +177,17 @@ import java.awt.Color;
 		btnSchichtAuswahl.setFont(new Font("Verdana", Font.PLAIN, 13));
 		btnSchichtAuswahl.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-
+				//Damit alle verfügbare Mitarbeiter geladen werden, übergeben wir die ausgewählte Schicht
+				//und übergeben bei der Abfrage der verfügbaren Mitarbeiter die ausgewählte Schicht
 				String schichtnr = cbSchicht.getSelectedItem().toString();
 				schichtnr = schichtnr.substring(0, Math.min(schichtnr.length(), 5));
-				// aktuell wg. Testdaten Wert auf 5
+				// aktuell wg. Testdaten Wert auf 5 ( da KW10000) 
 
 				int schichtNr = Integer.parseInt(schichtnr);
 				ArrayList<String> mitarbeiterliste = myController.getVerfuegbareMitarbeiter(schichtNr);
 
 				cbMitarbeiter.removeAllItems();
-
+				//ComboBox werden mit den verfügbaren Mitarbeitern befüllt
 				for (int i = 0; i < mitarbeiterliste.size(); i++) {
 					cbMitarbeiter.addItem(mitarbeiterliste.get(i));
 				}
@@ -218,7 +219,7 @@ import java.awt.Color;
 			public void actionPerformed(ActionEvent e) {
 				int confirmed = JOptionPane.showConfirmDialog(null, "Sind Sie sicher?", "Warnung",
 						JOptionPane.YES_NO_OPTION);
-
+				//Sofern der Benutzer auf Ja klickt, wird der Mitarbeiter in die Schicht eingetragen
 				if (confirmed == JOptionPane.YES_OPTION) {
 
 					String schichtnr = cbSchicht.getSelectedItem().toString();
@@ -226,16 +227,15 @@ import java.awt.Color;
 					int schichtNr = Integer.parseInt(schichtnr);
 					String[] mitarbeiterArray = new String[] {
 							cbMitarbeiter.getSelectedItem().toString().split(" ")[0] };
-
+					//Da am Anfang die Überlegung im Raum stand, mehrere Mitarbeiter gleichzeitig eintragen zu können
+					//wird vom vom Controller ein Array erwartet. Diesen
+					//bekommt er auch aber aktuell nur mit einer Person.
 					if (myController.fülleSchicht(Integer.valueOf(schichtnr), mitarbeiterArray)) {
 						dispose();
 					}
 
 				} else {
-					// JLabel Fehlermeldung erstellen (siehe)
-					// lblFehlermeldung.setText("Fehler beim Erstellen des
-					// Wochenplans. Bitte überprüfen Sie Ihre Eingaben.");
-
+					// Fehlermeldung kommt vom Controller
 				}
 
 			}
@@ -253,7 +253,10 @@ import java.awt.Color;
 		btnReset = new JButton("Reset");
 		btnReset.setBounds(305, 471, 97, 25);
 		btnReset.addActionListener(new ActionListener() {
-
+			//Hat einen psychologischen Effekt: Da durch neu Auswahl eines Wochenplans, Tages oder einer Schicht
+			//jeweils die darauf folgenden Felder sowieso zurück gesetzt/ erneuert werden, braucht man in der Theorie
+			//den Reset Button nicht. Falls man aber gerne von vorne Anfangen möchte, kann man dies auch mit dem Reset
+			//Button erledigen
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
@@ -283,12 +286,14 @@ import java.awt.Color;
 		String[] teile = cbSchicht.getSelectedItem().toString().split(" ");
 		return teile[1];
 	}
-
+	//Mit gibTage wird der jeweilige Tag aus der ComboBox übergeben
 	protected String gibTage() {
 		return cbTage.getSelectedItem().toString();
 	}
 
 	//Siehe gibSchicht. Selbes Prinzip
+	//Theoretisch Überflüssig, da wir am Ende "KW"+ bei der Übergabe übergeben.
+	//Hatte aber zu Fehlermeldungen geführt weshalb wir es so "gelöst" haben
 	protected String gibWochenplan() {
 		String[] teile = cbWochenplan.getSelectedItem().toString().split(" ");
 		return teile[1];
