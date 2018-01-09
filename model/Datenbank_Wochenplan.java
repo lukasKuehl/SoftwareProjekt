@@ -27,7 +27,17 @@ import data.Wochenplan;
  */
 class Datenbank_Wochenplan {
 	//Initialisierung der Instanzvariablen
-
+	private Einsatzplanmodel myModel = null;	
+	
+	/**
+	 * @author Anes Preljevic
+	 * @info Beim erstellen der Hilfsklasse soll das Einsatzplanmodel übergeben werden.
+	 * Das soll vermeiden, dass die Datenbankverbindung häufiger erstellt wird, das Einsatzplanmodel unnötig öfter erstellt wird
+	 * und die Hilfsklassen andere Model-Hilfsklassen übers Einsatzplanmodel nutzen können, was unnötigen Code entfernt und die Kopplung verringert.
+	 */
+	protected Datenbank_Wochenplan(Einsatzplanmodel myModel){
+		this.myModel=myModel;
+	}
 
 	/**
 	 * @Thomas Friesen
@@ -38,7 +48,7 @@ class Datenbank_Wochenplan {
 		boolean success = false;
 		boolean öffentlichstatus = false;
 		PreparedStatement pstmt = null;
-		Datenbank_Tag dtag= new Datenbank_Tag();
+		Datenbank_Tag dtag= new Datenbank_Tag(myModel);
 		int wpnr = 0;
 		int Minanzinfot = 0;
 		int Minanzinfow = 0;
@@ -379,7 +389,6 @@ class Datenbank_Wochenplan {
 	 */
 	protected LinkedList<Wochenplan> getWochenplaene(Connection con) {
 
-		Datenbank_Wochenplan wochenplan=new Datenbank_Wochenplan();
 		Statement stmt = null;
 		ResultSet rs = null;
 	
@@ -396,7 +405,7 @@ class Datenbank_Wochenplan {
 			while (rs.next()) {
 				
 				//Mit der Methode getWochenplan, für die ausgelesene wpnr Wochenplan-Objekte auslesen
-				Wochenplan wp = wochenplan.getWochenplan(rs.getInt("Wpnr"),con);
+				Wochenplan wp = myModel.getWochenplan(rs.getInt("Wpnr"));
 				
 				wochenplanList.add(wp);
 			
@@ -429,8 +438,7 @@ class Datenbank_Wochenplan {
 		*/
 	protected Wochenplan getWochenplan(int wpnr,Connection con) {
 
-		Datenbank_Tag tag = new Datenbank_Tag();
-		LinkedList<Tag> tageList = tag.getTage(con);;
+		LinkedList<Tag> tageList = myModel.getTage();;
 			
 		if (!checkWochenplan(wpnr,con)){
 			return null;
@@ -513,7 +521,6 @@ class Datenbank_Wochenplan {
 	 */
 	
 	protected boolean deleteWochenplan(int wpnr,Connection con) {
-		Datenbank_Tag tag = new Datenbank_Tag();
 		//Prüfen ob der Wochenplan existiert
 		if (!checkWochenplan(wpnr, con)){
 			
@@ -525,7 +532,7 @@ class Datenbank_Wochenplan {
 		String sqlStatement = "DELETE FROM WOCHENPLAN WHERE Wpnr = " + wpnr;
 			//löscht alle Tage mit der Wpnr des zu löschenden Wochenplans, verhinderung von
 			//FK verletzung und Inkonsistenz.
-			tag.deleteTag(wpnr,con);
+			myModel.deleteTag(wpnr);
 			
 		try {
 			//Wenn aus der vorherigen Verbindung das AutoCommit noch auf true ist, auf false setzen
@@ -571,7 +578,7 @@ class Datenbank_Wochenplan {
 	 * eines Wochenplans die nächste Wpnr vorliegt.
 	 */
 	
-	public int getNewWpnr(Connection con) {
+	protected int getNewWpnr(Connection con) {
 		Statement stmt = null;
 		ResultSet rs = null;
 		String sqlQuery = "select max(wpnr)+1 from Wochenplan";

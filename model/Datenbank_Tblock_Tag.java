@@ -19,6 +19,17 @@ import data.Tblock_Tag;
  */
 
 class Datenbank_Tblock_Tag {
+	private Einsatzplanmodel myModel = null;	
+	
+	/**
+	 * @author Anes Preljevic
+	 * @info Beim erstellen der Hilfsklasse soll das Einsatzplanmodel übergeben werden.
+	 * Das soll vermeiden, dass die Datenbankverbindung häufiger erstellt wird, das Einsatzplanmodel unnötig öfter erstellt wird
+	 * und die Hilfsklassen andere Model-Hilfsklassen übers Einsatzplanmodel nutzen können, was unnötigen Code entfernt und die Kopplung verringert.
+	 */
+	protected Datenbank_Tblock_Tag(Einsatzplanmodel myModel){
+		this.myModel=myModel;
+	}
 	
 	/**
 	 * @Thomas Friesen
@@ -237,8 +248,6 @@ class Datenbank_Tblock_Tag {
 	 */
 	protected LinkedList<Tblock_Tag> getAlleTblock_Tag(Connection con) {
 
-		Datenbank_Tblock_Tag tblocktag= new Datenbank_Tblock_Tag();
-
 		Statement stmt = null;
 		ResultSet rs = null;
 		//Benötigten Sql-Befehlt speichern
@@ -253,7 +262,7 @@ class Datenbank_Tblock_Tag {
 			// Solange es einen "nächsten" Datensatz in dem Resultset gibt, mit den Daten des RS 
 			// ein neues Tblock_Tag-Objekt erzeugen. Dieses wird anschließend der Liste hinzugefügt.
 			while (rs.next()) {
-				Tblock_Tag tbt = tblocktag.getTblock_TagTB(rs.getInt("Tblocknr"),con);
+				Tblock_Tag tbt = myModel.getTblock_TagTB(rs.getInt("Tblocknr"));
 
 				
 				tblock_tagList.add(tbt);
@@ -285,9 +294,7 @@ class Datenbank_Tblock_Tag {
 	 */
 	protected Tblock_Tag getTblock_TagTB(int tblocknr,Connection con) {
 		
-		Datenbank_TerminBlockierung tblocktag= new Datenbank_TerminBlockierung();
-
-		LinkedList<TerminBlockierung> terminList = tblocktag.getTerminBlockierungen(con);
+		LinkedList<TerminBlockierung> terminList = myModel.getTerminBlockierungen();
 		//Prüfen ob der erwartete Datensatz existiert
 		if (!checkTblock_TagTB(tblocknr,con)){
 			return null;
@@ -343,9 +350,8 @@ class Datenbank_Tblock_Tag {
 	 * welches anschließend ausgegeben wird mit einer Liste zugehöriger TerminBlockierungen.
 	 */
 	protected Tblock_Tag getTblock_TagT(String tbez, int wpnr,Connection con) {
-		Datenbank_TerminBlockierung tblocktag= new Datenbank_TerminBlockierung();
 
-		LinkedList<TerminBlockierung> terminList = tblocktag.getTerminBlockierungen(con);
+		LinkedList<TerminBlockierung> terminList = myModel.getTerminBlockierungen();
 		//Prüfen ob der erwartete Datensatz existiert
 		if (!checkTblock_TagTA(tbez, wpnr,con)){
 			return null;

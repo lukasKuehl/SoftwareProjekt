@@ -35,8 +35,6 @@ public class Einsatzplanmodel implements Observable {
 
 	private Datenbank_Connection dataConnection = null;
 	private Connection con=null;
-	
-	//Die ganzen Klassen erstellst ihr doch in den Hilfsklassen ständig neu, dann könnt ihr Sie auch bei den entsprechenden Methoden übergeben, sonst habt ihr viele Kopien der Hilfsklassen
 	private Datenbank_Ma_Schicht dataMa_Schicht = null;
 	private Datenbank_Mitarbeiter dataMitarbeiter = null;
 	private Datenbank_Schicht dataSchicht=null;
@@ -49,23 +47,27 @@ public class Einsatzplanmodel implements Observable {
 	private Datenbank_Warenhaus dataWarenhaus = null;
 	private Datenbank_Wochenplan dataWochenplan=null;
 
-	
+	/**
+	 * @author Anes Preljevic
+	 * @info Erzeugen eines neuen Objektes der Klasse Einsatzplanmodel und erzeugen der benötigten Model-Hilfsklassen um diese abrufen zu können.
+	 * Außerdem wird über Datenbank_Connection die Datenbankverbindung hergestellt, welche nur hier erzeugt wird für das ganze Programm.
+	 */
 	public Einsatzplanmodel(){
 		
 		this.observers=new ArrayList<Observer>();
 		this.dataConnection=new Datenbank_Connection();
 		this.con = dataConnection.createCon();
-		this.dataWochenplan= new Datenbank_Wochenplan();
+		this.dataWochenplan= new Datenbank_Wochenplan(this);
 		this.dataMa_Schicht=new Datenbank_Ma_Schicht();
-		this.dataMitarbeiter=new Datenbank_Mitarbeiter();
-		this.dataSchicht=new Datenbank_Schicht();
+		this.dataMitarbeiter=new Datenbank_Mitarbeiter(this);
+		this.dataSchicht=new Datenbank_Schicht(this);
 		this.dataStandardeinstellungen=new Datenbank_Standardeinstellungen();
-		this.dataTag=new Datenbank_Tag();
-		this.dataTauschanfrage=new Datenbank_Tauschanfrage();
-		this.dataTblock_Tag=new Datenbank_Tblock_Tag();
-		this.dataTerminBlockierung=new Datenbank_TerminBlockierung();
+		this.dataTag=new Datenbank_Tag(this);
+		this.dataTauschanfrage=new Datenbank_Tauschanfrage(this);
+		this.dataTblock_Tag=new Datenbank_Tblock_Tag(this);
+		this.dataTerminBlockierung=new Datenbank_TerminBlockierung(this);
 		this.dataUserrecht=new Datenbank_Userrecht();
-		this.dataWarenhaus=new Datenbank_Warenhaus();	
+		this.dataWarenhaus=new Datenbank_Warenhaus(this);	
 		
 	}
 	/**
@@ -96,6 +98,13 @@ public class Einsatzplanmodel implements Observable {
 		}
 	}
 
+	/**
+	 * @author Anes Preljevic
+	 * @info Trägt den selben oder ähnlichen Namen wie die Methode in der Model-Hilfsklasse.
+	 * Aufrufen der Methode der Model-Hilfsklasse, sichern der Ergebnisse/Rückgabe und diese
+	 * ebenfalls zurückgeben.(Alle Methoden in dem Einsatzplanmodel sind von der Funktion gleich,
+	 * es werden nur die Rückgabewerte angepasst etc.)
+	 */
 	public LinkedList<Wochenplan> getWochenplaene(){
 		
 		LinkedList<Wochenplan> result = null;;
@@ -109,6 +118,13 @@ public class Einsatzplanmodel implements Observable {
 		}
 		return result;
 	}	
+	/**
+	 * @author Anes Preljevic
+	 * @info Trägt den selben oder ähnlichen Namen wie die Methode in der Model-Hilfsklasse.
+	 * Aufrufen der Methode der Model-Hilfsklasse, sichern der Ergebnisse/Rückgabe und diese
+	 * ebenfalls zurückgeben.(Alle Methoden in dem Einsatzplanmodel sind von der Funktion gleich,
+	 * es werden nur die Rückgabewerte angepasst etc.)
+	 */
 		
 	public Wochenplan getWochenplan(int wpnr){
 		
@@ -145,6 +161,13 @@ public class Einsatzplanmodel implements Observable {
 			return result;
 			
 		}
+	/**
+	 * @author Anes Preljevic
+	 * @info Trägt den selben oder ähnlichen Namen wie die Methode in der Model-Hilfsklasse.
+	 * Aufrufen der Methode der Model-Hilfsklasse, sichern der Ergebnisse/Rückgabe und diese
+	 * ebenfalls zurückgeben.(Alle Methoden in dem Einsatzplanmodel sind von der Funktion gleich,
+	 * es werden nur die Rückgabewerte angepasst etc.)
+	 */
 	public void oeffentlichStatusaendern(Wochenplan wochenplan){
 		
 		
@@ -158,6 +181,13 @@ public class Einsatzplanmodel implements Observable {
 		}
 		notifyObservers();
 	}
+	/**
+	 * @author Anes Preljevic
+	 * @info Trägt den selben oder ähnlichen Namen wie die Methode in der Model-Hilfsklasse.
+	 * Aufrufen der Methode der Model-Hilfsklasse, sichern der Ergebnisse/Rückgabe und diese
+	 * ebenfalls zurückgeben.(Alle Methoden in dem Einsatzplanmodel sind von der Funktion gleich,
+	 * es werden nur die Rückgabewerte angepasst etc.)
+	 */
 	public void oeffentlichStatustrue(int wpnr){
 		
 		
@@ -171,6 +201,13 @@ public class Einsatzplanmodel implements Observable {
 		}
 		notifyObservers();
 	}
+	/**
+	 * @author Anes Preljevic
+	 * @info Trägt den selben oder ähnlichen Namen wie die Methode in der Model-Hilfsklasse.
+	 * Aufrufen der Methode der Model-Hilfsklasse, sichern der Ergebnisse/Rückgabe und diese
+	 * ebenfalls zurückgeben.(Alle Methoden in dem Einsatzplanmodel sind von der Funktion gleich,
+	 * es werden nur die Rückgabewerte angepasst etc.)
+	 */
 	public void oeffentlichStatusfalse(int wpnr){
 		
 		
@@ -184,6 +221,13 @@ public class Einsatzplanmodel implements Observable {
 		}
 		notifyObservers();
 	}
+	/**
+	 * @author Anes Preljevic
+	 * @info Trägt den selben oder ähnlichen Namen wie die Methode in der Model-Hilfsklasse.
+	 * Aufrufen der Methode der Model-Hilfsklasse, sichern der Ergebnisse/Rückgabe und diese
+	 * ebenfalls zurückgeben.(Alle Methoden in dem Einsatzplanmodel sind von der Funktion gleich,
+	 * es werden nur die Rückgabewerte angepasst etc.)
+	 */
 	public boolean checkWochenplan(int wpnr) {
 		boolean result =false;
 		try{
@@ -215,7 +259,13 @@ public boolean checkWochenplanFK(String benutzername) {
 	}
 	return result;
 }
-	
+/**
+ * @author Anes Preljevic
+ * @info Trägt den selben oder ähnlichen Namen wie die Methode in der Model-Hilfsklasse.
+ * Aufrufen der Methode der Model-Hilfsklasse, sichern der Ergebnisse/Rückgabe und diese
+ * ebenfalls zurückgeben.(Alle Methoden in dem Einsatzplanmodel sind von der Funktion gleich,
+ * es werden nur die Rückgabewerte angepasst etc.)
+ */
 	public boolean deleteWochenplan(int wpnr) {
 		boolean result =false;
 		try{
@@ -229,6 +279,13 @@ public boolean checkWochenplanFK(String benutzername) {
 		notifyObservers();
 		return result;
 	}
+	/**
+	 * @author Anes Preljevic
+	 * @info Trägt den selben oder ähnlichen Namen wie die Methode in der Model-Hilfsklasse.
+	 * Aufrufen der Methode der Model-Hilfsklasse, sichern der Ergebnisse/Rückgabe und diese
+	 * ebenfalls zurückgeben.(Alle Methoden in dem Einsatzplanmodel sind von der Funktion gleich,
+	 * es werden nur die Rückgabewerte angepasst etc.)
+	 */
 	public  int getNewWpnr() {
 		int result = 0;
 		try{
@@ -241,6 +298,13 @@ public boolean checkWochenplanFK(String benutzername) {
 		}
 		return result;
 	}
+	/**
+	 * @author Anes Preljevic
+	 * @info Trägt den selben oder ähnlichen Namen wie die Methode in der Model-Hilfsklasse.
+	 * Aufrufen der Methode der Model-Hilfsklasse, sichern der Ergebnisse/Rückgabe und diese
+	 * ebenfalls zurückgeben.(Alle Methoden in dem Einsatzplanmodel sind von der Funktion gleich,
+	 * es werden nur die Rückgabewerte angepasst etc.)
+	 */
 	public LinkedList<Ma_Schicht> getMitarbeiterausderSchicht(int schichtnr){
 		
 		LinkedList<Ma_Schicht>  result = null;;
@@ -254,6 +318,13 @@ public boolean checkWochenplanFK(String benutzername) {
 		}
 		return result;
 	}	
+	/**
+	 * @author Anes Preljevic
+	 * @info Trägt den selben oder ähnlichen Namen wie die Methode in der Model-Hilfsklasse.
+	 * Aufrufen der Methode der Model-Hilfsklasse, sichern der Ergebnisse/Rückgabe und diese
+	 * ebenfalls zurückgeben.(Alle Methoden in dem Einsatzplanmodel sind von der Funktion gleich,
+	 * es werden nur die Rückgabewerte angepasst etc.)
+	 */
 	public LinkedList<Ma_Schicht> getSchichteneinesMitarbeiters(String benutzername){
 		
 		LinkedList<Ma_Schicht>  result = null;;
@@ -267,7 +338,13 @@ public boolean checkWochenplanFK(String benutzername) {
 		}
 		return result;
 	}
-	
+	/**
+	 * @author Anes Preljevic
+	 * @info Trägt den selben oder ähnlichen Namen wie die Methode in der Model-Hilfsklasse.
+	 * Aufrufen der Methode der Model-Hilfsklasse, sichern der Ergebnisse/Rückgabe und diese
+	 * ebenfalls zurückgeben.(Alle Methoden in dem Einsatzplanmodel sind von der Funktion gleich,
+	 * es werden nur die Rückgabewerte angepasst etc.)
+	 */
 	public LinkedList<Ma_Schicht> getMa_Schicht(){
 		
 		LinkedList<Ma_Schicht>  result = null;;
@@ -302,7 +379,13 @@ public boolean checkWochenplanFK(String benutzername) {
 		notifyObservers();
 		return result;
 	}
-	
+	/**
+	 * @author Anes Preljevic
+	 * @info Trägt den selben oder ähnlichen Namen wie die Methode in der Model-Hilfsklasse.
+	 * Aufrufen der Methode der Model-Hilfsklasse, sichern der Ergebnisse/Rückgabe und diese
+	 * ebenfalls zurückgeben.(Alle Methoden in dem Einsatzplanmodel sind von der Funktion gleich,
+	 * es werden nur die Rückgabewerte angepasst etc.)
+	 */
 	public boolean checkMa_Schicht(int schichtnr, String benutzername) {
 		boolean result =false;
 		try{
@@ -332,7 +415,13 @@ public boolean checkWochenplanFK(String benutzername) {
 		}
 		return result;
 	}
-	
+	/**
+	 * @author Anes Preljevic
+	 * @info Trägt den selben oder ähnlichen Namen wie die Methode in der Model-Hilfsklasse.
+	 * Aufrufen der Methode der Model-Hilfsklasse, sichern der Ergebnisse/Rückgabe und diese
+	 * ebenfalls zurückgeben.(Alle Methoden in dem Einsatzplanmodel sind von der Funktion gleich,
+	 * es werden nur die Rückgabewerte angepasst etc.)
+	 */
 	public boolean deleteMa_Schicht(int schichtnr, String benutzername) {
 		boolean result =false;
 		try{
@@ -346,6 +435,13 @@ public boolean checkWochenplanFK(String benutzername) {
 		notifyObservers();
 		return result;
 	}
+	/**
+	 * @author Anes Preljevic
+	 * @info Trägt den selben oder ähnlichen Namen wie die Methode in der Model-Hilfsklasse.
+	 * Aufrufen der Methode der Model-Hilfsklasse, sichern der Ergebnisse/Rückgabe und diese
+	 * ebenfalls zurückgeben.(Alle Methoden in dem Einsatzplanmodel sind von der Funktion gleich,
+	 * es werden nur die Rückgabewerte angepasst etc.)
+	 */
 	public boolean deleteMa_SchichtWochenplan(int schichtnr) {
 		boolean result =false;
 		try{
@@ -359,6 +455,13 @@ public boolean checkWochenplanFK(String benutzername) {
 		notifyObservers();
 		return result;
 	}
+	/**
+	 * @author Anes Preljevic
+	 * @info Trägt den selben oder ähnlichen Namen wie die Methode in der Model-Hilfsklasse.
+	 * Aufrufen der Methode der Model-Hilfsklasse, sichern der Ergebnisse/Rückgabe und diese
+	 * ebenfalls zurückgeben.(Alle Methoden in dem Einsatzplanmodel sind von der Funktion gleich,
+	 * es werden nur die Rückgabewerte angepasst etc.)
+	 */
 	public LinkedList<Mitarbeiter> getAlleMitarbeiter() {
 		LinkedList<Mitarbeiter>  result = null;;
 		try{
@@ -371,6 +474,13 @@ public boolean checkWochenplanFK(String benutzername) {
 		}
 		return result;
 	}
+	/**
+	 * @author Anes Preljevic
+	 * @info Trägt den selben oder ähnlichen Namen wie die Methode in der Model-Hilfsklasse.
+	 * Aufrufen der Methode der Model-Hilfsklasse, sichern der Ergebnisse/Rückgabe und diese
+	 * ebenfalls zurückgeben.(Alle Methoden in dem Einsatzplanmodel sind von der Funktion gleich,
+	 * es werden nur die Rückgabewerte angepasst etc.)
+	 */
 	public Mitarbeiter getMitarbeiter(String benutzername) {
 		Mitarbeiter  result = null;;
 		try{
@@ -383,6 +493,13 @@ public boolean checkWochenplanFK(String benutzername) {
 		}
 		return result;
 	}
+	/**
+	 * @author Anes Preljevic
+	 * @info Trägt den selben oder ähnlichen Namen wie die Methode in der Model-Hilfsklasse.
+	 * Aufrufen der Methode der Model-Hilfsklasse, sichern der Ergebnisse/Rückgabe und diese
+	 * ebenfalls zurückgeben.(Alle Methoden in dem Einsatzplanmodel sind von der Funktion gleich,
+	 * es werden nur die Rückgabewerte angepasst etc.)
+	 */
 	public boolean checkMitarbeiter(String benutzername) {
 		boolean result =false;
 		try{
@@ -413,7 +530,13 @@ public boolean checkWochenplanFK(String benutzername) {
 		}
 		return result;
 	}
-	
+	/**
+	 * @author Anes Preljevic
+	 * @info Trägt den selben oder ähnlichen Namen wie die Methode in der Model-Hilfsklasse.
+	 * Aufrufen der Methode der Model-Hilfsklasse, sichern der Ergebnisse/Rückgabe und diese
+	 * ebenfalls zurückgeben.(Alle Methoden in dem Einsatzplanmodel sind von der Funktion gleich,
+	 * es werden nur die Rückgabewerte angepasst etc.)
+	 */
 	public LinkedList<Schicht> getSchichten(){
 		
 		LinkedList<Schicht> result = null;;
@@ -427,7 +550,13 @@ public boolean checkWochenplanFK(String benutzername) {
 		}
 		return result;
 	}	
-		
+	/**
+	 * @author Anes Preljevic
+	 * @info Trägt den selben oder ähnlichen Namen wie die Methode in der Model-Hilfsklasse.
+	 * Aufrufen der Methode der Model-Hilfsklasse, sichern der Ergebnisse/Rückgabe und diese
+	 * ebenfalls zurückgeben.(Alle Methoden in dem Einsatzplanmodel sind von der Funktion gleich,
+	 * es werden nur die Rückgabewerte angepasst etc.)
+	 */	
 	public Schicht getSchicht(int schichtnr){
 		
 		Schicht result = null;;
@@ -465,7 +594,13 @@ public boolean checkWochenplanFK(String benutzername) {
 		
 		
 	}
-
+	/**
+	 * @author Anes Preljevic
+	 * @info Trägt den selben oder ähnlichen Namen wie die Methode in der Model-Hilfsklasse.
+	 * Aufrufen der Methode der Model-Hilfsklasse, sichern der Ergebnisse/Rückgabe und diese
+	 * ebenfalls zurückgeben.(Alle Methoden in dem Einsatzplanmodel sind von der Funktion gleich,
+	 * es werden nur die Rückgabewerte angepasst etc.)
+	 */
 	public boolean checkSchicht(int schichtnr) {
 		boolean result =false;
 		try{
@@ -496,7 +631,13 @@ public boolean checkWochenplanFK(String benutzername) {
 		}
 		return result;
 	}
-	
+	/**
+	 * @author Anes Preljevic
+	 * @info Trägt den selben oder ähnlichen Namen wie die Methode in der Model-Hilfsklasse.
+	 * Aufrufen der Methode der Model-Hilfsklasse, sichern der Ergebnisse/Rückgabe und diese
+	 * ebenfalls zurückgeben.(Alle Methoden in dem Einsatzplanmodel sind von der Funktion gleich,
+	 * es werden nur die Rückgabewerte angepasst etc.)
+	 */
 	public boolean deleteSchicht(int wpnr) {
 		boolean result =false;
 		try{
@@ -510,6 +651,13 @@ public boolean checkWochenplanFK(String benutzername) {
 		notifyObservers();
 		return result;
 	}
+	/**
+	 * @author Anes Preljevic
+	 * @info Trägt den selben oder ähnlichen Namen wie die Methode in der Model-Hilfsklasse.
+	 * Aufrufen der Methode der Model-Hilfsklasse, sichern der Ergebnisse/Rückgabe und diese
+	 * ebenfalls zurückgeben.(Alle Methoden in dem Einsatzplanmodel sind von der Funktion gleich,
+	 * es werden nur die Rückgabewerte angepasst etc.)
+	 */
 	public  int getNewSchichtnr() {
 		int result = 0;
 		try{
@@ -522,6 +670,13 @@ public boolean checkWochenplanFK(String benutzername) {
 		}
 		return result;
 	}
+	/**
+	 * @author Anes Preljevic
+	 * @info Trägt den selben oder ähnlichen Namen wie die Methode in der Model-Hilfsklasse.
+	 * Aufrufen der Methode der Model-Hilfsklasse, sichern der Ergebnisse/Rückgabe und diese
+	 * ebenfalls zurückgeben.(Alle Methoden in dem Einsatzplanmodel sind von der Funktion gleich,
+	 * es werden nur die Rückgabewerte angepasst etc.)
+	 */
 	public Standardeinstellungen getStandardeinstellungen() {
 		Standardeinstellungen result = null;;
 		try{
@@ -534,6 +689,13 @@ public boolean checkWochenplanFK(String benutzername) {
 		}
 		return result;
 	}
+	/**
+	 * @author Anes Preljevic
+	 * @info Trägt den selben oder ähnlichen Namen wie die Methode in der Model-Hilfsklasse.
+	 * Aufrufen der Methode der Model-Hilfsklasse, sichern der Ergebnisse/Rückgabe und diese
+	 * ebenfalls zurückgeben.(Alle Methoden in dem Einsatzplanmodel sind von der Funktion gleich,
+	 * es werden nur die Rückgabewerte angepasst etc.)
+	 */
 	public void updateStanadardeinstellungen(Standardeinstellungen standardeinstellungen){
 		
 		
@@ -547,6 +709,13 @@ public boolean checkWochenplanFK(String benutzername) {
 		}
 		notifyObservers();
 	}
+	/**
+	 * @author Anes Preljevic
+	 * @info Trägt den selben oder ähnlichen Namen wie die Methode in der Model-Hilfsklasse.
+	 * Aufrufen der Methode der Model-Hilfsklasse, sichern der Ergebnisse/Rückgabe und diese
+	 * ebenfalls zurückgeben.(Alle Methoden in dem Einsatzplanmodel sind von der Funktion gleich,
+	 * es werden nur die Rückgabewerte angepasst etc.)
+	 */
 	public LinkedList<Tauschanfrage> getTauschanfragen(){
 		
 		LinkedList<Tauschanfrage> result = null;;
@@ -560,7 +729,13 @@ public boolean checkWochenplanFK(String benutzername) {
 		}
 		return result;
 	}	
-		
+	/**
+	 * @author Anes Preljevic
+	 * @info Trägt den selben oder ähnlichen Namen wie die Methode in der Model-Hilfsklasse.
+	 * Aufrufen der Methode der Model-Hilfsklasse, sichern der Ergebnisse/Rückgabe und diese
+	 * ebenfalls zurückgeben.(Alle Methoden in dem Einsatzplanmodel sind von der Funktion gleich,
+	 * es werden nur die Rückgabewerte angepasst etc.)
+	 */	
 	public Tauschanfrage getTauschanfrage(int tauschnr) {
 		Tauschanfrage result = null;;
 		try{
@@ -595,7 +770,13 @@ public boolean checkWochenplanFK(String benutzername) {
 		return result;
 		
 	}
-
+	/**
+	 * @author Anes Preljevic
+	 * @info Trägt den selben oder ähnlichen Namen wie die Methode in der Model-Hilfsklasse.
+	 * Aufrufen der Methode der Model-Hilfsklasse, sichern der Ergebnisse/Rückgabe und diese
+	 * ebenfalls zurückgeben.(Alle Methoden in dem Einsatzplanmodel sind von der Funktion gleich,
+	 * es werden nur die Rückgabewerte angepasst etc.)
+	 */
 	public boolean checkTauschanfrage(int tauschnr) {
 		boolean result =false;
 		try{
@@ -627,7 +808,13 @@ public boolean checkWochenplanFK(String benutzername) {
 		}
 		return result;
 	}
-	
+	/**
+	 * @author Anes Preljevic
+	 * @info Trägt den selben oder ähnlichen Namen wie die Methode in der Model-Hilfsklasse.
+	 * Aufrufen der Methode der Model-Hilfsklasse, sichern der Ergebnisse/Rückgabe und diese
+	 * ebenfalls zurückgeben.(Alle Methoden in dem Einsatzplanmodel sind von der Funktion gleich,
+	 * es werden nur die Rückgabewerte angepasst etc.)
+	 */
 	public boolean deleteTauschanfrage(int tauschnr) {
 		boolean result =false;
 		try{
@@ -641,6 +828,13 @@ public boolean checkWochenplanFK(String benutzername) {
 		notifyObservers();
 		return result;
 	}
+	/**
+	 * @author Anes Preljevic
+	 * @info Trägt den selben oder ähnlichen Namen wie die Methode in der Model-Hilfsklasse.
+	 * Aufrufen der Methode der Model-Hilfsklasse, sichern der Ergebnisse/Rückgabe und diese
+	 * ebenfalls zurückgeben.(Alle Methoden in dem Einsatzplanmodel sind von der Funktion gleich,
+	 * es werden nur die Rückgabewerte angepasst etc.)
+	 */
 	public void updateTauschanfrage(Tauschanfrage tauschanfrage){
 		
 		
@@ -654,11 +848,18 @@ public boolean checkWochenplanFK(String benutzername) {
 		}
 		notifyObservers();
 	}
+	/**
+	 * @author Anes Preljevic
+	 * @info Trägt den selben oder ähnlichen Namen wie die Methode in der Model-Hilfsklasse.
+	 * Aufrufen der Methode der Model-Hilfsklasse, sichern der Ergebnisse/Rückgabe und diese
+	 * ebenfalls zurückgeben.(Alle Methoden in dem Einsatzplanmodel sind von der Funktion gleich,
+	 * es werden nur die Rückgabewerte angepasst etc.)
+	 */
 	public void bestätigeTauschanfrage(String empfänger,int tauschnr){
 		
 		
 		try{
-			this.dataTauschanfrage.bestätigeTauschanfrage(empfänger, tauschnr,con);
+			this.dataTauschanfrage.bestätigeTauschanfrage(empfänger, tauschnr);
 			
 		}catch(Exception e){
 			System.out.println("Fehler innerhalb des Modells:");
@@ -667,6 +868,13 @@ public boolean checkWochenplanFK(String benutzername) {
 		}
 		notifyObservers();
 	}
+	/**
+	 * @author Anes Preljevic
+	 * @info Trägt den selben oder ähnlichen Namen wie die Methode in der Model-Hilfsklasse.
+	 * Aufrufen der Methode der Model-Hilfsklasse, sichern der Ergebnisse/Rückgabe und diese
+	 * ebenfalls zurückgeben.(Alle Methoden in dem Einsatzplanmodel sind von der Funktion gleich,
+	 * es werden nur die Rückgabewerte angepasst etc.)
+	 */
 	public  int getNewTauschnr() {
 		int result = 0;
 		try{
@@ -679,6 +887,13 @@ public boolean checkWochenplanFK(String benutzername) {
 		}
 		return result;
 	}
+	/**
+	 * @author Anes Preljevic
+	 * @info Trägt den selben oder ähnlichen Namen wie die Methode in der Model-Hilfsklasse.
+	 * Aufrufen der Methode der Model-Hilfsklasse, sichern der Ergebnisse/Rückgabe und diese
+	 * ebenfalls zurückgeben.(Alle Methoden in dem Einsatzplanmodel sind von der Funktion gleich,
+	 * es werden nur die Rückgabewerte angepasst etc.)
+	 */
 	public LinkedList<Tag> getTage() {	
 		LinkedList<Tag> result = null;;
 		try{
@@ -691,6 +906,13 @@ public boolean checkWochenplanFK(String benutzername) {
 		}
 		return result;
 	}
+	/**
+	 * @author Anes Preljevic
+	 * @info Trägt den selben oder ähnlichen Namen wie die Methode in der Model-Hilfsklasse.
+	 * Aufrufen der Methode der Model-Hilfsklasse, sichern der Ergebnisse/Rückgabe und diese
+	 * ebenfalls zurückgeben.(Alle Methoden in dem Einsatzplanmodel sind von der Funktion gleich,
+	 * es werden nur die Rückgabewerte angepasst etc.)
+	 */
 	public LinkedList<Tag> getTagewp(int wpnr) {	
 		LinkedList<Tag> result = null;;
 		try{
@@ -724,7 +946,13 @@ public boolean checkWochenplanFK(String benutzername) {
 		notifyObservers();
 		return result;
 	}
-
+	/**
+	 * @author Anes Preljevic
+	 * @info Trägt den selben oder ähnlichen Namen wie die Methode in der Model-Hilfsklasse.
+	 * Aufrufen der Methode der Model-Hilfsklasse, sichern der Ergebnisse/Rückgabe und diese
+	 * ebenfalls zurückgeben.(Alle Methoden in dem Einsatzplanmodel sind von der Funktion gleich,
+	 * es werden nur die Rückgabewerte angepasst etc.)
+	 */
 	public boolean checkTag(String tbez, int wpnr) {
 		boolean result =false;
 		try{
@@ -756,7 +984,13 @@ public boolean checkWochenplanFK(String benutzername) {
 		}
 		return result;
 	}
-	
+	/**
+	 * @author Anes Preljevic
+	 * @info Trägt den selben oder ähnlichen Namen wie die Methode in der Model-Hilfsklasse.
+	 * Aufrufen der Methode der Model-Hilfsklasse, sichern der Ergebnisse/Rückgabe und diese
+	 * ebenfalls zurückgeben.(Alle Methoden in dem Einsatzplanmodel sind von der Funktion gleich,
+	 * es werden nur die Rückgabewerte angepasst etc.)
+	 */
 	public boolean deleteTag(int wpnr) {
 		boolean result =false;
 		try{
@@ -770,7 +1004,13 @@ public boolean checkWochenplanFK(String benutzername) {
 		notifyObservers();
 		return result;
 	}
-
+	/**
+	 * @author Anes Preljevic
+	 * @info Trägt den selben oder ähnlichen Namen wie die Methode in der Model-Hilfsklasse.
+	 * Aufrufen der Methode der Model-Hilfsklasse, sichern der Ergebnisse/Rückgabe und diese
+	 * ebenfalls zurückgeben.(Alle Methoden in dem Einsatzplanmodel sind von der Funktion gleich,
+	 * es werden nur die Rückgabewerte angepasst etc.)
+	 */
 	public void setzeFeiertagtrue(String tbez, int wpnr){
 		
 		
@@ -784,6 +1024,13 @@ public boolean checkWochenplanFK(String benutzername) {
 		}
 		notifyObservers();
 	}
+	/**
+	 * @author Anes Preljevic
+	 * @info Trägt den selben oder ähnlichen Namen wie die Methode in der Model-Hilfsklasse.
+	 * Aufrufen der Methode der Model-Hilfsklasse, sichern der Ergebnisse/Rückgabe und diese
+	 * ebenfalls zurückgeben.(Alle Methoden in dem Einsatzplanmodel sind von der Funktion gleich,
+	 * es werden nur die Rückgabewerte angepasst etc.)
+	 */
 	public void setzeFeiertagfalse(String tbez, int wpnr){
 		
 		
@@ -797,6 +1044,13 @@ public boolean checkWochenplanFK(String benutzername) {
 		}
 		notifyObservers();
 	}
+	/**
+	 * @author Anes Preljevic
+	 * @info Trägt den selben oder ähnlichen Namen wie die Methode in der Model-Hilfsklasse.
+	 * Aufrufen der Methode der Model-Hilfsklasse, sichern der Ergebnisse/Rückgabe und diese
+	 * ebenfalls zurückgeben.(Alle Methoden in dem Einsatzplanmodel sind von der Funktion gleich,
+	 * es werden nur die Rückgabewerte angepasst etc.)
+	 */
 	public LinkedList<Tblock_Tag> getAlleTblock_Tag() {	
 		LinkedList<Tblock_Tag> result = null;;
 		try{
@@ -809,6 +1063,13 @@ public boolean checkWochenplanFK(String benutzername) {
 		}
 		return result;
 	}
+	/**
+	 * @author Anes Preljevic
+	 * @info Trägt den selben oder ähnlichen Namen wie die Methode in der Model-Hilfsklasse.
+	 * Aufrufen der Methode der Model-Hilfsklasse, sichern der Ergebnisse/Rückgabe und diese
+	 * ebenfalls zurückgeben.(Alle Methoden in dem Einsatzplanmodel sind von der Funktion gleich,
+	 * es werden nur die Rückgabewerte angepasst etc.)
+	 */
 	public Tblock_Tag getTblock_TagTB(int tblocknr) {	
 		Tblock_Tag result = null;;
 		try{
@@ -821,6 +1082,13 @@ public boolean checkWochenplanFK(String benutzername) {
 		}
 		return result;
 	}
+	/**
+	 * @author Anes Preljevic
+	 * @info Trägt den selben oder ähnlichen Namen wie die Methode in der Model-Hilfsklasse.
+	 * Aufrufen der Methode der Model-Hilfsklasse, sichern der Ergebnisse/Rückgabe und diese
+	 * ebenfalls zurückgeben.(Alle Methoden in dem Einsatzplanmodel sind von der Funktion gleich,
+	 * es werden nur die Rückgabewerte angepasst etc.)
+	 */
 	public Tblock_Tag getTblock_TagT(String tbez,int wpnr) {	
 		Tblock_Tag result = null;;
 		try{
@@ -850,7 +1118,13 @@ public boolean checkWochenplanFK(String benutzername) {
 		}
 		notifyObservers();		
 	}
-
+	/**
+	 * @author Anes Preljevic
+	 * @info Trägt den selben oder ähnlichen Namen wie die Methode in der Model-Hilfsklasse.
+	 * Aufrufen der Methode der Model-Hilfsklasse, sichern der Ergebnisse/Rückgabe und diese
+	 * ebenfalls zurückgeben.(Alle Methoden in dem Einsatzplanmodel sind von der Funktion gleich,
+	 * es werden nur die Rückgabewerte angepasst etc.)
+	 */
 	public boolean checkTblock_TagTB(int tblocknr) {
 		boolean result =false;
 		try{
@@ -863,7 +1137,13 @@ public boolean checkWochenplanFK(String benutzername) {
 		}
 		return result;
 	}
-	
+	/**
+	 * @author Anes Preljevic
+	 * @info Trägt den selben oder ähnlichen Namen wie die Methode in der Model-Hilfsklasse.
+	 * Aufrufen der Methode der Model-Hilfsklasse, sichern der Ergebnisse/Rückgabe und diese
+	 * ebenfalls zurückgeben.(Alle Methoden in dem Einsatzplanmodel sind von der Funktion gleich,
+	 * es werden nur die Rückgabewerte angepasst etc.)
+	 */
 	public boolean checkTblock_TagTA(String tbez, int wpnr) {
 		boolean result =false;
 		try{
@@ -894,7 +1174,13 @@ public boolean checkWochenplanFK(String benutzername) {
 		}
 		return result;
 	}
-	
+	/**
+	 * @author Anes Preljevic
+	 * @info Trägt den selben oder ähnlichen Namen wie die Methode in der Model-Hilfsklasse.
+	 * Aufrufen der Methode der Model-Hilfsklasse, sichern der Ergebnisse/Rückgabe und diese
+	 * ebenfalls zurückgeben.(Alle Methoden in dem Einsatzplanmodel sind von der Funktion gleich,
+	 * es werden nur die Rückgabewerte angepasst etc.)
+	 */
 	public boolean deleteTblock_Tag(int tblocknr) {
 		boolean result =false;
 		try{
@@ -908,6 +1194,13 @@ public boolean checkWochenplanFK(String benutzername) {
 		notifyObservers();
 		return result;
 	}
+	/**
+	 * @author Anes Preljevic
+	 * @info Trägt den selben oder ähnlichen Namen wie die Methode in der Model-Hilfsklasse.
+	 * Aufrufen der Methode der Model-Hilfsklasse, sichern der Ergebnisse/Rückgabe und diese
+	 * ebenfalls zurückgeben.(Alle Methoden in dem Einsatzplanmodel sind von der Funktion gleich,
+	 * es werden nur die Rückgabewerte angepasst etc.)
+	 */
 	public LinkedList<TerminBlockierung> getTerminBlockierungen(){
 		
 		LinkedList<TerminBlockierung> result = null;;
@@ -942,7 +1235,13 @@ public boolean checkWochenplanFK(String benutzername) {
 		notifyObservers();
 		return result;
 	}
-
+	/**
+	 * @author Anes Preljevic
+	 * @info Trägt den selben oder ähnlichen Namen wie die Methode in der Model-Hilfsklasse.
+	 * Aufrufen der Methode der Model-Hilfsklasse, sichern der Ergebnisse/Rückgabe und diese
+	 * ebenfalls zurückgeben.(Alle Methoden in dem Einsatzplanmodel sind von der Funktion gleich,
+	 * es werden nur die Rückgabewerte angepasst etc.)
+	 */
 	public boolean checkTerminBlockierung(int tblocknr) {
 		boolean result =false;
 		try{
@@ -973,7 +1272,13 @@ public boolean checkWochenplanFK(String benutzername) {
 		}
 		return result;
 	}
-	
+	/**
+	 * @author Anes Preljevic
+	 * @info Trägt den selben oder ähnlichen Namen wie die Methode in der Model-Hilfsklasse.
+	 * Aufrufen der Methode der Model-Hilfsklasse, sichern der Ergebnisse/Rückgabe und diese
+	 * ebenfalls zurückgeben.(Alle Methoden in dem Einsatzplanmodel sind von der Funktion gleich,
+	 * es werden nur die Rückgabewerte angepasst etc.)
+	 */
 	public boolean deleteTerminBlockierung(int tblocknr) {
 		boolean result =false;
 		try{
@@ -987,6 +1292,13 @@ public boolean checkWochenplanFK(String benutzername) {
 		notifyObservers();
 		return result;
 	}
+	/**
+	 * @author Anes Preljevic
+	 * @info Trägt den selben oder ähnlichen Namen wie die Methode in der Model-Hilfsklasse.
+	 * Aufrufen der Methode der Model-Hilfsklasse, sichern der Ergebnisse/Rückgabe und diese
+	 * ebenfalls zurückgeben.(Alle Methoden in dem Einsatzplanmodel sind von der Funktion gleich,
+	 * es werden nur die Rückgabewerte angepasst etc.)
+	 */
 	public  int getNewTblocknr() {
 		int result = 0;
 		try{
@@ -999,6 +1311,13 @@ public boolean checkWochenplanFK(String benutzername) {
 		}
 		return result;
 	}
+	/**
+	 * @author Anes Preljevic
+	 * @info Trägt den selben oder ähnlichen Namen wie die Methode in der Model-Hilfsklasse.
+	 * Aufrufen der Methode der Model-Hilfsklasse, sichern der Ergebnisse/Rückgabe und diese
+	 * ebenfalls zurückgeben.(Alle Methoden in dem Einsatzplanmodel sind von der Funktion gleich,
+	 * es werden nur die Rückgabewerte angepasst etc.)
+	 */
 	public LinkedList<Warenhaus> getWarenhaus() {
 		LinkedList<Warenhaus> result = null;;
 		try{
@@ -1011,6 +1330,13 @@ public boolean checkWochenplanFK(String benutzername) {
 		}
 		return result;
 	}	
+	/**
+	 * @author Anes Preljevic
+	 * @info Trägt den selben oder ähnlichen Namen wie die Methode in der Model-Hilfsklasse.
+	 * Aufrufen der Methode der Model-Hilfsklasse, sichern der Ergebnisse/Rückgabe und diese
+	 * ebenfalls zurückgeben.(Alle Methoden in dem Einsatzplanmodel sind von der Funktion gleich,
+	 * es werden nur die Rückgabewerte angepasst etc.)
+	 */
 	public Warenhaus geteinWarenhaus(String whname) {
 		Warenhaus result = null;;
 		try{

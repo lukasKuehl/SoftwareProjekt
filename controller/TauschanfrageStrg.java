@@ -5,6 +5,7 @@ import java.util.LinkedList;
 
 import javax.swing.JDialog;
 
+import data.Ma_Schicht;
 import data.Mitarbeiter;
 import data.Schicht;
 import data.Tauschanfrage;
@@ -105,18 +106,29 @@ class TauschanfrageStrg {
 	protected boolean akzeptiereTauschanfrage(String empfaengerName, int tauschanfrageNr){	
 		boolean success = false;
 		boolean valid = false;
-
+		boolean valid2=false;
+		LinkedList<Ma_Schicht> maschichtList=myModel.getMa_Schicht();
 		
 		LinkedList<Tauschanfrage> alleTauschanfragen=this.myModel.getTauschanfragen();
 		//Tauschanfragen nach der zu Bestätigenden Tauschanfrage durchsuchen.
 		//Falls die Tauschanfrage nicht vorhanden ist wird die Bestätigung über "valid" nicht gegeben, da es false bleibt
 			for(Tauschanfrage ta: alleTauschanfragen){
 				if((ta.getTauschnr() == tauschanfrageNr) && (ta.getEmpfänger().equals(empfaengerName))){
-					valid = true;	
-			}
+					//Überprüfen ob die Mitarbeiter tatsächlich in den Angegebenen Schichten sind
+					for(Ma_Schicht masch:maschichtList){
+						//Gibt es eine Ma_Schicht-Relation in welcher, der Empfänger in der übergebenen Schicht zu finden ist?
+						if(masch.getBenutzername().equals(ta.getEmpfänger())&&masch.getSchichtnr()==ta.getSchichtnrempfänger()){
+							valid = true;
+						}
+						//Gibt es eine Ma_Schicht-Relation in welcher, der Sender in der übergebenen Schicht zu finden ist?
+						if(masch.getBenutzername().equals(ta.getSender())&&masch.getSchichtnr()==ta.getSchichtnrsender()){
+							valid2 = true;
+						}
+					}
 				}
+			}
 		//Wenn im vorherigen Schritt die Tauschanfrage existiert hat, werden die Variablen übergeben und die Tauschanfrage bestätigt
-		if(valid){
+		if(valid&&valid2){
 		try{				
 			this.myModel.bestätigeTauschanfrage(empfaengerName,tauschanfrageNr);
 			success=true;
@@ -130,7 +142,7 @@ class TauschanfrageStrg {
 		//Fehlermeldung, dass es zu dem übergebenen Empfänger und der Tauschnr keine gültige Tauschanfrage gibt 
 		else{
 			
-			String fehler = "Tauschanfrage kann nicht bestätigt werden, User ist nicht der Empfänger oder Tauschanfrage nicht vorhanden. \n";
+			String fehler = "Tauschanfrage kann nicht bestätigt werden, User ist nicht der Empfänger, Tauschanfrage nicht vorhanden oder Mitarbeiter nicht in der vorgebenen Schicht. \n";
 			myController.printErrorMessage(fehler);			
 		}
 		return success;

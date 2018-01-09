@@ -256,7 +256,7 @@ public class TestModel {
 				System.out.println(scht1.getAnfanguhrzeit() + "  " + scht1.getEndeuhrzeit()+ "   " + scht1.getSchichtnr());
 		
 		}
-		int tauschnr223=100000;
+		int tauschnr223=100001;
 		Tauschanfrage ttsingle=wps.getTauschanfrage(tauschnr223);
 		System.out.println( ttsingle.getTauschnr() + "  " + ttsingle.getSender()+ "  " + ttsingle.getEmpfänger());
 		
