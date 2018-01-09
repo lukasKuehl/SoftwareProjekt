@@ -89,7 +89,7 @@ class Datenbank_Standardeinstellungen {
 
 	/**
 	 * @author Anes Preljevic
-	 * @info Ändern der Standardeinstellungen
+	 * @info Ändern der Standardeinstellungen(momenten nicht benötigt aber denkbare Funktion)
 	 */
 	
 	

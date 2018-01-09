@@ -21,7 +21,17 @@ import data.Schicht;
  */
 
 class Datenbank_Tag {
+	private Einsatzplanmodel myModel = null;	
 	
+	/**
+	 * @author Anes Preljevic
+	 * @info Beim erstellen der Hilfsklasse soll das Einsatzplanmodel übergeben werden.
+	 * Das soll vermeiden, dass die Datenbankverbindung häufiger erstellt wird, das Einsatzplanmodel unnötig öfter erstellt wird
+	 * und die Hilfsklassen andere Model-Hilfsklassen übers Einsatzplanmodel nutzen können, was unnötigen Code entfernt und die Kopplung verringert.
+	 */
+	protected Datenbank_Tag(Einsatzplanmodel myModel){
+		this.myModel=myModel;
+	}
 	/**
 	 * @Thomas Friesen
 	 * @info Die Methode fügt einen Datensatz in die Tag Tabelle ein.
@@ -34,7 +44,7 @@ class Datenbank_Tag {
 		PreparedStatement pstmt = null;
 		String tbez = null;
 		String sqlStatement  = "insert into Tag(tbez, wpnr, feiertag) values(?, ?, ?)";
-		Datenbank_Schicht dschicht= new Datenbank_Schicht();
+		Datenbank_Schicht dschicht= new Datenbank_Schicht(myModel);
 		
 		
 		try {
@@ -302,10 +312,9 @@ class Datenbank_Tag {
 	 * Diese Liste ist in der Tag List enthalten welche außerdem den Ausgabewert darstellt.
 	 */
 	protected LinkedList<Tag> getTage(Connection con) {
-			Datenbank_Schicht schicht= new Datenbank_Schicht();
-			Datenbank_Tblock_Tag tblocktag= new Datenbank_Tblock_Tag();
-			LinkedList<Schicht> schichtList = schicht.getSchichten(con);
-			LinkedList<Tblock_Tag> tblocktagList = tblocktag.getAlleTblock_Tag(con);
+
+			LinkedList<Schicht> schichtList = myModel.getSchichten();
+			LinkedList<Tblock_Tag> tblocktagList = myModel.getAlleTblock_Tag();
 			
 			Statement stmt = null;
 			ResultSet rs = null;
@@ -325,7 +334,7 @@ class Datenbank_Tag {
 				while (rs.next()) {
 					Tag t = new Tag(rs.getString("Tbez"),rs.getInt("Wpnr"),rs.getBoolean("Feiertag"));
 					
-					//Schichten des Tages in der SchichttagList speichern
+					//Schichten des Tages in der SchichttagList speichern(soll Controller, View die Suche ersparen, falls sie diese Funktion nutzen möchten)
 					LinkedList<Schicht> schichttagList = new LinkedList<>();	
 					for (Schicht sch : schichtList) {
 						if (sch.getWpnr() == t.getWpnr()&& sch.getTbez().equals(t.getTbez())) {	
@@ -337,7 +346,7 @@ class Datenbank_Tag {
 				LinkedList<Tblock_Tag> tblocktagtList = new LinkedList<>();
 			
 				
-				
+				//Blockierungen des Tages in  der tblocktagList speichern
 				for (Tblock_Tag tbt : tblocktagList) {
 				
 						if (tbt.getWpnr() == t.getWpnr()&& tbt.getTbez().equals(t.getTbez())) {
@@ -376,10 +385,8 @@ class Datenbank_Tag {
 	 * Diese Liste ist in der Tag List enthalten welche außerdem den Ausgabewert darstellt.
 	 */
 	protected LinkedList<Tag> getTagewp(int wpnr, Connection con) {
-			Datenbank_Schicht schicht= new Datenbank_Schicht();
-			Datenbank_Tblock_Tag tblocktag= new Datenbank_Tblock_Tag();
-			LinkedList<Schicht> schichtList = schicht.getSchichten(con);
-			LinkedList<Tblock_Tag> tblocktagList = tblocktag.getAlleTblock_Tag(con);
+			LinkedList<Schicht> schichtList = myModel.getSchichten();
+			LinkedList<Tblock_Tag> tblocktagList = myModel.getAlleTblock_Tag();
 
 			Statement stmt = null;
 			ResultSet rs = null;
@@ -450,10 +457,8 @@ class Datenbank_Tag {
 	 */
 	
 	protected boolean deleteTag(int wpnr,Connection con) {
-		Datenbank_Schicht schicht = new Datenbank_Schicht();
-		Datenbank_TerminBlockierung terminblockierung = new Datenbank_TerminBlockierung();
-		Datenbank_Tblock_Tag tblocktag= new Datenbank_Tblock_Tag();
-		LinkedList<Tblock_Tag> tblocktagList = tblocktag.getAlleTblock_Tag(con);;
+		Datenbank_Schicht schicht = new Datenbank_Schicht(myModel);
+		LinkedList<Tblock_Tag> tblocktagList = myModel.getAlleTblock_Tag();;
 
 		
 		Statement stmt = null;
@@ -465,7 +470,7 @@ class Datenbank_Tag {
 		//Tblock_Tag wird in der Methode deleteTerminBlockierung mitgelöscht
 		for (Tblock_Tag tbt : tblocktagList) {
 			if (tbt.getWpnr() == wpnr) {
-				terminblockierung.deleteTerminBlockierung(tbt.getTblocknr(),con);;
+				myModel.deleteTerminBlockierung(tbt.getTblocknr());;
 			}
 		}
 		//Schichten der Woche löschen

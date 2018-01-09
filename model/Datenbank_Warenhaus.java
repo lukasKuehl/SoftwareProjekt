@@ -18,7 +18,17 @@ import data.Warenhaus;
  */
 class Datenbank_Warenhaus {
 
+	private Einsatzplanmodel myModel = null;	
 	
+	/**
+	 * @author Anes Preljevic
+	 * @info Beim erstellen der Hilfsklasse soll das Einsatzplanmodel übergeben werden.
+	 * Das soll vermeiden, dass die Datenbankverbindung häufiger erstellt wird, das Einsatzplanmodel unnötig öfter erstellt wird
+	 * und die Hilfsklassen andere Model-Hilfsklassen übers Einsatzplanmodel nutzen können, was unnötigen Code entfernt und die Kopplung verringert.
+	 */
+	protected Datenbank_Warenhaus(Einsatzplanmodel myModel){
+		this.myModel=myModel;
+	}
 	//Methodenbeschreibung fehlt!
 	protected void addWarenhaus(Warenhaus warenhaus, Connection con) {
 
@@ -103,7 +113,7 @@ class Datenbank_Warenhaus {
 	 * Diese werden in eine LinkedList abgelegt und ausgegeben.
 	 */
 	protected LinkedList<Warenhaus> getWarenhaus(Connection con) {
-		Datenbank_Warenhaus wha=new Datenbank_Warenhaus();
+
 		Statement stmt = null;
 		ResultSet rs = null;
 
@@ -120,7 +130,7 @@ class Datenbank_Warenhaus {
 			// Solange es einen "nächsten" Datensatz in dem Resultset gibt, mit den Daten des RS 
 			// ein neues Warenhaus-Objekt erzeugen. Dieses wird anschließend der Liste hinzugefügt.
 			while (rs.next()) {
-				Warenhaus wh = wha.geteinWarenhaus(rs.getString("Whname"),con);
+				Warenhaus wh = myModel.geteinWarenhaus(rs.getString("Whname"));
 				warenhausList.add(wh);
 			}
 

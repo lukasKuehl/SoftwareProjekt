@@ -25,13 +25,23 @@ import data.TerminBlockierung;
 class Datenbank_Schicht {
 	
 	//Initialisierung der Instanzvariablen
+	private Einsatzplanmodel myModel = null;	
 	
+	/**
+	 * @author Anes Preljevic
+	 * @info Beim erstellen der Hilfsklasse soll das Einsatzplanmodel übergeben werden.
+	 * Das soll vermeiden, dass die Datenbankverbindung häufiger erstellt wird, das Einsatzplanmodel unnötig öfter erstellt wird
+	 * und die Hilfsklassen andere Model-Hilfsklassen übers Einsatzplanmodel nutzen können, was unnötigen Code entfernt und die Kopplung verringert.
+	 */
+	protected Datenbank_Schicht(Einsatzplanmodel myModel){
+		this.myModel=myModel;
+	}
 
 	/**
 	 * @Thomas Friesen
 	 * @info Die Methode fügt einen Datensatz in die Schicht Tabelle hinzu.
 	 */
-	public boolean addSchicht(Schicht schicht,Connection con) {
+	protected boolean addSchicht(Schicht schicht,Connection con) {
 		
 		boolean success = false;
 		int schichtnr = 0;
@@ -199,7 +209,7 @@ class Datenbank_Schicht {
 	 * Die zugehörigen Mitarbeiter einer Schicht werden als LinkedList in den Schichten gespeichert.
 	 */
 	protected LinkedList<Schicht> getSchichten(Connection con) {
-		Datenbank_Schicht schicht= new Datenbank_Schicht();
+		
 		Statement stmt = null;
 		ResultSet rs = null;
 		//Benötigten Sql-Befehlt speichern
@@ -214,13 +224,11 @@ class Datenbank_Schicht {
 			// Solange es einen "nächsten" Datensatz in dem Resultset gibt, mit den Daten des RS 
 			// ein neues Schicht-Objekt erzeugen. Dieses wird anschließend der Liste hinzugefügt.
 			while (rs.next()) {
-				Schicht s = schicht.getSchicht(rs.getInt("Schichtnr"),con);
+				Schicht s = myModel.getSchicht(rs.getInt("Schichtnr"));
 		
 				schichtList.add(s);
 			}
 
-			rs.close();
-			stmt.close();
 			//Liste mit Schicht-Objekten zurückgeben
 			return schichtList;
 
@@ -251,9 +259,7 @@ class Datenbank_Schicht {
 	 */
 	protected Schicht getSchicht(int schichtnr,Connection con) {
 
-		Datenbank_Ma_Schicht maschicht= new Datenbank_Ma_Schicht();
-		Datenbank_Mitarbeiter mitarbeiter= new Datenbank_Mitarbeiter();
-		LinkedList<Ma_Schicht> maschichtList = maschicht.getMa_Schicht(con);
+		LinkedList<Ma_Schicht> maschichtList = myModel.getMa_Schicht();
 		//Prüfen ob die Schicht vorhanden ist
 		if (!checkSchicht(schichtnr,con)){
 			return null;
@@ -295,7 +301,7 @@ class Datenbank_Schicht {
 				for (Ma_Schicht mas : maschichtList) {
 					
 					if (mas.getSchichtnr() == s.getSchichtnr()) {
-						Mitarbeiter masch = mitarbeiter.getMitarbeiter(mas.getBenutzername(),con);
+						Mitarbeiter masch = myModel.getMitarbeiter(mas.getBenutzername());
 						
 						mal.add(masch);
 						s.setLl_mitarbeiter(mal);
@@ -330,12 +336,10 @@ class Datenbank_Schicht {
 	 * Schicht, Ma-Schicht.
 	 */
 	protected boolean deleteSchichtvonWp(int wpnr,Connection con) {
-		Datenbank_Ma_Schicht maschicht= new Datenbank_Ma_Schicht();
-		Datenbank_Schicht schicht= new Datenbank_Schicht();
-		Datenbank_Tauschanfrage tauschanfrage= new Datenbank_Tauschanfrage();
-		LinkedList<Tauschanfrage> tauschList = tauschanfrage.getTauschanfragen(con);
-		LinkedList<Schicht> schichtList = schicht.getSchichten(con);
-		LinkedList<Ma_Schicht> maschichtList = maschicht.getMa_Schicht(con);;
+
+		LinkedList<Tauschanfrage> tauschList = myModel.getTauschanfragen();
+		LinkedList<Schicht> schichtList = myModel.getSchichten();
+		LinkedList<Ma_Schicht> maschichtList = myModel.getMa_Schicht();;
 
 		Statement stmt = null;
 		
@@ -349,13 +353,13 @@ class Datenbank_Schicht {
 				//Alle Tauschanfragen die sich auf die Schicht bezogen haben werden gelöscht
 				for (Tauschanfrage tausch : tauschList) {
 					if (tausch.getSchichtnrsender() == sch.getSchichtnr()||tausch.getSchichtnrempfänger() == sch.getSchichtnr()) {
-						tauschanfrage.deleteTauschanfrage(tausch.getTauschnr(),con);
+						myModel.deleteTauschanfrage(tausch.getTauschnr());
 					}
 				}
 				//Alle Ma_Schicht Datensätze mit der zu löschenden Schicht werden gelöscht
 				for (Ma_Schicht ms : maschichtList) {
 					if (ms.getSchichtnr() == sch.getSchichtnr()) {
-						maschicht.deleteMa_SchichtWochenplan(sch.getSchichtnr(),con);
+						myModel.deleteMa_SchichtWochenplan(sch.getSchichtnr());
 					}
 				}
 			}
@@ -398,8 +402,6 @@ class Datenbank_Schicht {
 			rs.next();
 			//Speichern der nächsthöheren Schichtnr in maxSchichtnr
 			int maxSchichtnr = rs.getInt(1);
-			rs.close();
-			stmt.close();
 			
 			//Ausgabe der neuen Schichtnr
 			return maxSchichtnr;

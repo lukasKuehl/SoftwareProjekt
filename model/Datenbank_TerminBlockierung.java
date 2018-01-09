@@ -22,7 +22,17 @@ import data.TerminBlockierung;
  * @info Die Klasse dient dazu, jegliche Abfragen und Änderung in der Datenbank im Bezug auf die Tabelle TerminBlockierung zu verarbeiten.
  */
 class Datenbank_TerminBlockierung {
-
+	private Einsatzplanmodel myModel = null;	
+	
+	/**
+	 * @author Anes Preljevic
+	 * @info Beim erstellen der Hilfsklasse soll das Einsatzplanmodel übergeben werden.
+	 * Das soll vermeiden, dass die Datenbankverbindung häufiger erstellt wird, das Einsatzplanmodel unnötig öfter erstellt wird
+	 * und die Hilfsklassen andere Model-Hilfsklassen übers Einsatzplanmodel nutzen können, was unnötigen Code entfernt und die Kopplung verringert.
+	 */
+	protected Datenbank_TerminBlockierung(Einsatzplanmodel myModel){
+		this.myModel=myModel;
+	}
 	/**
 	 * @Thomas Friesen
 	 * @info  Fügt einen neuen Termin-Datensatz in die TerminBlockierung Tabelle hinzu.
@@ -32,7 +42,7 @@ class Datenbank_TerminBlockierung {
 		boolean success = false;
 		int tBlockNr = 0;
 		PreparedStatement pstmt = null;
-		Datenbank_Tblock_Tag dtblocktag = new Datenbank_Tblock_Tag();
+		Datenbank_Tblock_Tag dtblocktag = new Datenbank_Tblock_Tag(myModel);
 		String benutzername = null;
 		String bbez = null;
 		String anfangzeitraum = null;
@@ -271,8 +281,6 @@ class Datenbank_TerminBlockierung {
 				terminBlockierungList.add(tb);
 			}
 
-			rs.close();
-			stmt.close();
 
 			return terminBlockierungList;
 
@@ -297,13 +305,12 @@ class Datenbank_TerminBlockierung {
 	 * welche die übergebene Tblocknr besitzt. Sowie die zugehörigen child Datensätze Tblock_Tag.
 	 */
 	protected boolean deleteTerminBlockierung(int tblocknr,Connection con) {
-		Datenbank_Tblock_Tag tblock_tag = new Datenbank_Tblock_Tag();
 		
 		Statement stmt = null;
 	
 		String sqlQuery = "DELETE FROM TerminBlockierung WHERE Tblocknr = "+tblocknr;
 		//Löschen der child Beziehungen
-		tblock_tag.deleteTblock_Tag(tblocknr,con);
+		myModel.deleteTblock_Tag(tblocknr);
 			
 		try {
 			stmt = con.createStatement();

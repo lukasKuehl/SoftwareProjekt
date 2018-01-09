@@ -8,6 +8,7 @@ import java.sql.Statement;
 import java.util.LinkedList;
 
 import data.Ma_Schicht;
+import data.Tauschanfrage;
 
 /**
  * @author Thomas Friesen, Anes Preljevic
@@ -16,6 +17,7 @@ import data.Ma_Schicht;
 
 
  class Datenbank_Ma_Schicht {
+
 	 
 	 /**
 		 * @Thomas Friesen

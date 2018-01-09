@@ -16,12 +16,22 @@ import data.Mitarbeiter;
 
 
 class Datenbank_Mitarbeiter {
-
+	private Einsatzplanmodel myModel = null;	
+	
+	/**
+	 * @author Anes Preljevic
+	 * @info Beim erstellen der Hilfsklasse soll das Einsatzplanmodel übergeben werden.
+	 * Das soll vermeiden, dass die Datenbankverbindung häufiger erstellt wird, das Einsatzplanmodel unnötig öfter erstellt wird
+	 * und die Hilfsklassen andere Model-Hilfsklassen übers Einsatzplanmodel nutzen können, was unnötigen Code entfernt und die Kopplung verringert.
+	 */
+	protected Datenbank_Mitarbeiter(Einsatzplanmodel myModel){
+		this.myModel=myModel;
+	}
 	/**
 	 * @Thomas Friesen
 	 * @info Die Methode fügt einen Mitarbeiter in die Datenbank hinein
 	 */
-	public boolean addMitarbeiter(Mitarbeiter ma, Connection con) {
+	protected boolean addMitarbeiter(Mitarbeiter ma, Connection con) {
 		
 		boolean success = false;
 		PreparedStatement pstmt = null;
@@ -122,7 +132,6 @@ class Datenbank_Mitarbeiter {
 	 * Diese werden in eine LinkedList abgelegt und ausgegeben.
 	 */
 	protected LinkedList<Mitarbeiter> getAlleMitarbeiter(Connection con) {
-		Datenbank_Mitarbeiter mitarbeiter=new Datenbank_Mitarbeiter();
 		Statement stmt = null;
 		ResultSet rs = null;
 
@@ -140,7 +149,7 @@ class Datenbank_Mitarbeiter {
 			// ein neues Mitarbeiter-Objekt erzeugen. Dieses wird anschließend der Liste hinzugefügt.
 			while (rs.next()) {
 				
-				Mitarbeiter m =mitarbeiter.getMitarbeiter(rs.getString("Benutzername"),con); 
+				Mitarbeiter m =myModel.getMitarbeiter(rs.getString("Benutzername")); 
 
 				mitarbeiterList.add(m);
 			}
@@ -315,8 +324,7 @@ class Datenbank_Mitarbeiter {
 	 */
 		protected void wechselBenutzerrolle(String benutzername, Connection con) {
 
-			Datenbank_Mitarbeiter mitarbeiter=new Datenbank_Mitarbeiter();
-			Mitarbeiter m = mitarbeiter.getMitarbeiter(benutzername,con);
+			Mitarbeiter m = myModel.getMitarbeiter(benutzername);
 			Statement stmt = null;
 			String sqlStatement=null;
 			

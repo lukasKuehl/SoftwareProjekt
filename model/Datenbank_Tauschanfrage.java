@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.LinkedList;
 
+import data.Ma_Schicht;
 import data.Mitarbeiter;
 import data.Schicht;
 import data.Tauschanfrage;
@@ -18,8 +19,17 @@ import data.Tblock_Tag;
  * @info Die Klasse dient dazu, jegliche Abfragen und Änderung in der Datenbank im Bezug auf die Tabelle Tauschanfrage zu verarbeiten.
  */
 class Datenbank_Tauschanfrage {
+	private Einsatzplanmodel myModel = null;	
 	
-
+	/**
+	 * @author Anes Preljevic
+	 * @info Beim erstellen der Hilfsklasse soll das Einsatzplanmodel übergeben werden.
+	 * Das soll vermeiden, dass die Datenbankverbindung häufiger erstellt wird, das Einsatzplanmodel unnötig öfter erstellt wird
+	 * und die Hilfsklassen andere Model-Hilfsklassen übers Einsatzplanmodel nutzen können, was unnötigen Code entfernt und die Kopplung verringert.
+	 */
+	protected Datenbank_Tauschanfrage(Einsatzplanmodel myModel){
+		this.myModel=myModel;
+	}
 	/**
 	 * @Thomas Friesen
 	 * @info  Fügt eine neue Tauschanfrage in der Tabelle Tauschanfrage hinzu
@@ -233,47 +243,41 @@ class Datenbank_Tauschanfrage {
 	}
 	/**
 	 * @author Anes Preljevic
-	 * @info Ändert den Bestätigungsstatus der übergebenen Tauschanfrage
+	 * @info Wenn eine Tauschanfrage "bestätigt" wird, kommt diese Methode zum greifen.
+	 * Da eine bestätigte Tauschanfrage keinen Nutzen hat und anschließend gelöscht wird, hat
+	 * folgende Funktion bei "bestätigung die Schichten der Mitarbeiter zu tauschen, 
+	 * sowie die Tauschanfrage anschließend zu löschen.
 	 */
-	protected void bestätigeTauschanfrage(String empfänger , int tauschnr,Connection con) {
-
-		Statement stmt = null;
-		String sqlStatement;
-		sqlStatement = "UPDATE Tauschanfrage SET Bestätigungsstatus = true WHERE empfänger='"+empfänger+"' and Tauschnr =" + tauschnr;
+	protected boolean  bestätigeTauschanfrage(String empfänger , int tauschnr) {
 		
-
-		try {
-
-			stmt = con.createStatement();
-			//Wenn aus der vorherigen Verbindung das AutoCommit noch auf true ist, auf false setzen
-			if(con.getAutoCommit()!= false);
-			{
-				con.setAutoCommit(false);
-			}
-			//Preparedstatement ausführen
-			stmt.executeUpdate(sqlStatement);
+		boolean success =false;
+		Tauschanfrage tausch= myModel.getTauschanfrage(tauschnr);
+		// Erstellen von Ma_Schicht-Objekten, welche den Tausch darstellen.
+		//Der Benutzername des Empfängers wird in der Schicht des Senders eingetragen und
+		// umgekehrt. 
+		Ma_Schicht newEmpfänger= new Ma_Schicht(empfänger,tausch.getSchichtnrsender());
+		Ma_Schicht newSender= new Ma_Schicht(tausch.getSender(),tausch.getSchichtnrempfänger());
+		
+		try{
+		//Tauschen der Schichten der Mitarbeiter
 			
-			//Connection Zustand bestätigen und somit fest in die Datenbank schreiben
-			con.commit();
-
-		} catch (SQLException sql) {
-			System.err.println("Methode bestätigeTauschanfrage SQL-Fehler: " + sql.getMessage());
-			try {
-				//Zurücksetzen des Connection Zustandes auf den Ursprungszustand
-				con.rollback();
-			} catch (SQLException sqlRollback) {
-				System.err.println("Methode bestätigeTauschanfrage " + "- Rollback -  SQL-Fehler: " + sqlRollback.getMessage());
-			}
-		} finally {
-			//Schließen der offen gebliebenen Statements
-			try {
-				if (stmt != null)
-					stmt.close();
-			} catch (SQLException e) {
-				System.err.println("Methode bestätigeTauschanfrage (finally) SQL-Fehler: " + e.getMessage());
-			}
+		//Sender und Empfänger aus der aktuellen zu tauschenden Schicht löschen
+		myModel.deleteMa_Schicht(tausch.getSchichtnrempfänger(),empfänger);
+		myModel.deleteMa_Schicht(tausch.getSchichtnrsender(),tausch.getSender());
+		//Neue Ma_Schicht-Datensätze erzeugen, diese Stellen den Empfänger in der Senderschicht und
+		// den Sender in der Empfängerschicht dar(benötigte Ma_Schicht-Objekte oben erzeugt)
+		myModel.addMa_Schicht(newEmpfänger);
+		myModel.addMa_Schicht(newSender);
+		//Löschen der Tauschanfrage, wird nicht länger benötigt(Kann nicht bestäigt oder abgelehnt werden --> Tausch schon vollzogen)
+		myModel.deleteTauschanfrage(tauschnr);
+		success=true;
 		}
-	}
+		catch(Exception e){
+			System.err.println("Methode Modell: bestätigeTauschanfrage Fehler: " + e.getMessage());
+		}
+		return success;
+
+		}
 	/**
 	 * @Anes Preljevic
 	 * @info Auslesen der Tauschanfragen aus der Datenbank und hinzufügen in eine Liste, welche den Ausgabewert darstellt.
@@ -281,9 +285,7 @@ class Datenbank_Tauschanfrage {
 	 * Es werden Mitarbeiter, Schicht Objekte welche dem Sender/Empfänger entsprechen für jede Tauschanfrage gespeichert.
 	 */
 	protected LinkedList<Tauschanfrage> getTauschanfragen(Connection con) {
-		Datenbank_Tauschanfrage tauschanfrage= new Datenbank_Tauschanfrage();
 
-			
 		Statement stmt = null;
 		ResultSet rs = null;
 
@@ -299,7 +301,7 @@ class Datenbank_Tauschanfrage {
 			// Solange es einen "nächsten" Datensatz in dem Resultset gibt, mit den Daten des RS 
 			// ein neues Tauschanfrage-Objekt erzeugen. Dieses wird anschließend der Liste hinzugefügt.
 			while (rs.next()) {
-				Tauschanfrage tanf = tauschanfrage.getTauschanfrage(rs.getInt("Tauschnr"),con);
+				Tauschanfrage tanf = myModel.getTauschanfrage(rs.getInt("Tauschnr"));
 
 				tauschanfrageList.add(tanf);
 			}
@@ -329,10 +331,8 @@ class Datenbank_Tauschanfrage {
 	 * Es werden Mitarbeiter, Schicht Objekte welche dem Sender/Empfänger entsprechen für jede Tauschanfrage gespeichert.
 	 */
 	protected Tauschanfrage getTauschanfrage(int tauschnr, Connection con ) {
-		Datenbank_Schicht schicht= new Datenbank_Schicht();
-		Datenbank_Mitarbeiter mitarbeiter= new Datenbank_Mitarbeiter();
-		LinkedList<Schicht> schichtList = schicht.getSchichten(con);
-		LinkedList<Mitarbeiter> mitarbeiterList = mitarbeiter.getAlleMitarbeiter(con);
+		LinkedList<Schicht> schichtList = myModel.getSchichten();
+		LinkedList<Mitarbeiter> mitarbeiterList = myModel.getAlleMitarbeiter();
 		
 		//Prüfen ob der Tauschanfrage vorhanden ist
 		if (!checkTauschanfrage(tauschnr, con)){
@@ -498,8 +498,7 @@ class Datenbank_Tauschanfrage {
 			rs.next();
 			//Speichern der nächsthöheren Tauschnr in maxTauschnr
 			int maxTauschnr = rs.getInt(1);
-			rs.close();
-			stmt.close();
+
 			//Ausgabe der neuen Tauschnr
 			return maxTauschnr;
 		} catch (SQLException sql) {
