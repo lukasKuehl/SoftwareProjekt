@@ -29,44 +29,50 @@ class Datenbank_Warenhaus {
 	protected Datenbank_Warenhaus(Einsatzplanmodel myModel){
 		this.myModel=myModel;
 	}
-	//Methodenbeschreibung fehlt!
+	/**
+	 * @author Thomas Friesen
+	 * @info Die Methode dient dazu, einen Warenhaus-Datensatz in die Datenbank hinzu zufügen
+	 */
 	protected void addWarenhaus(Warenhaus warenhaus, Connection con) {
 
-		//Eine Anweisung sinnvoller
-		String sqlStatement;
-		sqlStatement = "insert into Warenhaus (Whname,Anzkasse,Anzinfo) values( ?, ?, ?)";
-		
+		String sqlStatement= "insert into Warenhaus (Whname,Anzkasse,Anzinfo) values( ?, ?, ?)";
 		PreparedStatement pstmt = null;
 
 		try {
+			//Erstellen eines prepared Statement Objekts
 			pstmt = con.prepareStatement(sqlStatement);
-
+			//Zuweisen der Parameter aus dem übergebenen Warenhaus-Objekt
 			String whname = warenhaus.getWhname();
 			int anzkasse = warenhaus.getAnzkasse();
 			int anzinfo = warenhaus.getAnzinfo();
 
-			//Siehe vorherige Klassen!
 			con.setAutoCommit(false);
 		
-			//Abfrage mit CheckWarenhaus fehlt!
-			
-			
+			//Überprüfung der PK-Check-Constrains
+			if (checkWarenhaus(whname,con)) {
+				System.out.println("Das Warenhaus befindet sich bereits in der Datenbank!");
+			}
+			else{
+				//Ausfüllen des prepared Statements
 				pstmt.setString(1, whname);
 				pstmt.setInt(2,anzkasse);
 				pstmt.setInt(3, anzinfo);
+				//Ausführen der SQL-Anweisung
 				pstmt.execute();
+				//Übertragung der Daten in die Datenbank
 				con.commit();
-			
+			}
 
 			con.setAutoCommit(true);
 
 		} catch (SQLException sql) {
-			System.err.println("Methode addSchicht SQL-Fehler: " + sql.getMessage());
+			System.err.println("Methode addWarenhaus SQL-Fehler: " + sql.getMessage());
 			try {
+				//Für den Fall einer SQL-Exception soll der ursprüngliche Datenbankzustand wiederhergestellt werden
 				con.rollback();
 				con.setAutoCommit(true);
 			} catch (SQLException sqlRollback) {
-				System.err.println("Methode addSchicht " + "- Rollback -  SQL-Fehler: " + sqlRollback.getMessage());
+				System.err.println("Methode addWarenhaus " + "- Rollback -  SQL-Fehler: " + sqlRollback.getMessage());
 			}
 		} finally {
 			//Schließen der offen gebliebenen Preparedstatements
@@ -74,7 +80,7 @@ class Datenbank_Warenhaus {
 				if (pstmt != null)
 					pstmt.close();
 			} catch (SQLException e) {
-				System.err.println("Methode addSchicht(finally) SQL-Fehler: " + e.getMessage());
+				System.err.println("Methode addWarenhaus(finally) SQL-Fehler: " + e.getMessage());
 			}
 		}
 	}
