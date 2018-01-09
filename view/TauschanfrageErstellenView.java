@@ -41,11 +41,11 @@ class TauschanfrageErstellenView extends JFrame {
 	// Initialisierung der Instanzvariablen
 	private JPanel contentPane = null;
 	private JLabel lblTauschanfrageStellen, labelTagAndererMA, lblWochenplanAuswaehlen, lblMitWemWollen,
-			lblSchichtAuswaehlen, lblTagAuswaehlen, labelSchichtAndererMA, lblMitarbeiter = null;
-	private JComboBox<String> cmbBoxWP, cmbBoxTag, cmbBoxSchicht, comboBoxTagAndererMA, comboBoxSchichtAndererMA,
-			comboBoxEmpfaengerName = null;
+			lblSchichtAuswaehlen, lblTagAuswaehlen, labelSchichtAndererMA, lblBitteAuswhlen = null;
+	private JComboBox<String> cmbBoxWP, cmbBoxTag, cmbBoxSchicht, comboBoxTagAndererMA, comboBoxSchichtAndererMA = null;
 	private ArrayList<String> wp, tagMa, schichtAndererMa, tagAndererMa, schichtMa = null;
-	private JButton btnErstellen = null;
+	private JButton btnErstellen, btnOKwochenplan, btnOkSchichtAndererMa, btnOKTagMa, btnOKSchichtMa,
+			btnOKTagAndererMa = null;
 	private EinsatzplanController myController = null;
 	private Einsatzplanview myView = null;
 	private Einsatzplanmodel myModel = null;
@@ -103,32 +103,25 @@ class TauschanfrageErstellenView extends JFrame {
 		for (String m : wp) {
 			cmbBoxWP.addItem(m);
 		}
-		cmbBoxWP.setBounds(249, 174, 136, 26);
+		cmbBoxWP.setBounds(249, 140, 136, 26);
 		contentPane.add(cmbBoxWP);
 
 		cmbBoxTag = new JComboBox<String>();
-		// Ausgeben der ArrayListe für die Tage der Wochenpläne und in einer JComboBox
-		// hinterlegen
-		tagMa = myController.getTage(cmbBoxWP.getSelectedItem().toString());
-		
-		for (String s : tagMa) {
-			cmbBoxTag.addItem(s);
-		}
 		cmbBoxTag.setEnabled(false);
 		cmbBoxTag.setFont(new Font("Verdana", Font.PLAIN, 15));
-		cmbBoxTag.setBounds(249, 211, 136, 26);
+		cmbBoxTag.setBounds(249, 187, 136, 26);
 		contentPane.add(cmbBoxTag);
 
 		cmbBoxSchicht = new JComboBox<String>();
 		cmbBoxSchicht.setEnabled(false);
 		cmbBoxSchicht.setFont(new Font("Verdana", Font.PLAIN, 15));
-		cmbBoxSchicht.setBounds(249, 248, 499, 26);
+		cmbBoxSchicht.setBounds(248, 234, 505, 26);
 		contentPane.add(cmbBoxSchicht);
 
 		lblWochenplanAuswaehlen = new JLabel("Wochenplan auswählen");
 		lblWochenplanAuswaehlen.setVerticalAlignment(SwingConstants.BOTTOM);
 		lblWochenplanAuswaehlen.setFont(new Font("Verdana", Font.PLAIN, 15));
-		lblWochenplanAuswaehlen.setBounds(62, 178, 188, 22);
+		lblWochenplanAuswaehlen.setBounds(62, 144, 188, 22);
 		contentPane.add(lblWochenplanAuswaehlen);
 
 		lblTagAuswaehlen = new JLabel("Tag auswählen");
@@ -136,19 +129,19 @@ class TauschanfrageErstellenView extends JFrame {
 		lblTagAuswaehlen.setVerticalAlignment(SwingConstants.BOTTOM);
 		lblTagAuswaehlen.setHorizontalAlignment(SwingConstants.LEFT);
 		lblTagAuswaehlen.setFont(new Font("Verdana", Font.PLAIN, 15));
-		lblTagAuswaehlen.setBounds(62, 211, 178, 26);
+		lblTagAuswaehlen.setBounds(62, 187, 178, 26);
 		contentPane.add(lblTagAuswaehlen);
 
 		lblSchichtAuswaehlen = new JLabel("Schicht auswählen");
 		lblSchichtAuswaehlen.setEnabled(false);
 		lblSchichtAuswaehlen.setVerticalAlignment(SwingConstants.BOTTOM);
 		lblSchichtAuswaehlen.setFont(new Font("Verdana", Font.PLAIN, 15));
-		lblSchichtAuswaehlen.setBounds(62, 248, 136, 26);
+		lblSchichtAuswaehlen.setBounds(61, 234, 136, 26);
 		contentPane.add(lblSchichtAuswaehlen);
 
 		lblMitWemWollen = new JLabel("Tauschdaten");
 		lblMitWemWollen.setFont(new Font("Verdana", Font.BOLD, 15));
-		lblMitWemWollen.setBounds(62, 347, 222, 14);
+		lblMitWemWollen.setBounds(62, 340, 222, 14);
 		contentPane.add(lblMitWemWollen);
 
 		labelTagAndererMA = new JLabel("Tag auswählen");
@@ -156,19 +149,19 @@ class TauschanfrageErstellenView extends JFrame {
 		labelTagAndererMA.setVerticalAlignment(SwingConstants.BOTTOM);
 		labelTagAndererMA.setHorizontalAlignment(SwingConstants.LEFT);
 		labelTagAndererMA.setFont(new Font("Verdana", Font.PLAIN, 15));
-		labelTagAndererMA.setBounds(62, 372, 178, 26);
+		labelTagAndererMA.setBounds(62, 365, 178, 26);
 		contentPane.add(labelTagAndererMA);
 
 		comboBoxTagAndererMA = new JComboBox<String>();
 		// Ausgeben einer ArrayList mit den Tagen der Mitarbeiter in einer JComboBox
 		// hinterlegen
-		tagAndererMa = myController.getTage(cmbBoxWP.getSelectedItem().toString());
-		for (String n : tagAndererMa) {
-			comboBoxTagAndererMA.addItem(n);
-		}
+		// tagAndererMa = myController.getTage(cmbBoxWP.getSelectedItem().toString());
+		// for (String n : tagAndererMa) {
+		// comboBoxTagAndererMA.addItem(n);
+		// }
 		comboBoxTagAndererMA.setEnabled(false);
 		comboBoxTagAndererMA.setFont(new Font("Verdana", Font.PLAIN, 15));
-		comboBoxTagAndererMA.setBounds(249, 372, 136, 26);
+		comboBoxTagAndererMA.setBounds(249, 365, 136, 26);
 		contentPane.add(comboBoxTagAndererMA);
 
 		labelSchichtAndererMA = new JLabel("Schicht auswählen");
@@ -181,20 +174,62 @@ class TauschanfrageErstellenView extends JFrame {
 		comboBoxSchichtAndererMA = new JComboBox<String>();
 		comboBoxSchichtAndererMA.setEnabled(false);
 		comboBoxSchichtAndererMA.setFont(new Font("Verdana", Font.PLAIN, 15));
-		comboBoxSchichtAndererMA.setBounds(249, 409, 499, 26);
+		comboBoxSchichtAndererMA.setBounds(249, 409, 504, 26);
 		contentPane.add(comboBoxSchichtAndererMA);
+
+		btnOKwochenplan = new JButton("OK");
+		btnOKwochenplan.setFont(new Font("Verdana", Font.PLAIN, 10));
+		btnOKwochenplan.setBounds(406, 142, 59, 26);
+		contentPane.add(btnOKwochenplan);
+
+		btnOKTagMa = new JButton("OK");
+		btnOKTagMa.setFont(new Font("Verdana", Font.PLAIN, 10));
+		btnOKTagMa.setBounds(406, 187, 59, 26);
+		contentPane.add(btnOKTagMa);
+
+		btnOKSchichtMa = new JButton("OK");
+		btnOKSchichtMa.setFont(new Font("Verdana", Font.PLAIN, 10));
+		btnOKSchichtMa.setBounds(693, 269, 59, 26);
+		contentPane.add(btnOKSchichtMa);
+
+		btnOKTagAndererMa = new JButton("OK");
+		btnOKTagAndererMa.setFont(new Font("Verdana", Font.PLAIN, 10));
+		btnOKTagAndererMa.setBounds(406, 362, 59, 26);
+		contentPane.add(btnOKTagAndererMa);
+
+		btnOkSchichtAndererMa = new JButton("OK");
+		btnOkSchichtAndererMa.setFont(new Font("Verdana", Font.PLAIN, 10));
+		btnOkSchichtAndererMa.setBounds(693, 444, 59, 26);
+		contentPane.add(btnOkSchichtAndererMa);
+
+		lblBitteAuswhlen = new JLabel("Bitte ausw\u00E4hlen");
+		lblBitteAuswhlen.setFont(new Font("Verdana", Font.PLAIN, 15));
+		lblBitteAuswhlen.setBounds(62, 93, 222, 26);
+		contentPane.add(lblBitteAuswhlen);
 		/**
 		 * @author Ramona Gerke
 		 * @Info Action Performed Methode der JComboBox Wochenpläne . Diese ändert nach
 		 *       Auswahl des Wochenplans die Sichtbarkeit der ComboBox Tag und des
 		 *       Labels Tag .
 		 */
-		cmbBoxWP.addActionListener(new ActionListener() {
+		btnOKwochenplan.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-//				aktualisieren(cmbBoxTag);
+
+				ArrayList<String> tagesliste = myController.getTage(cmbBoxWP.getSelectedItem().toString());
+
+				cmbBoxTag.removeAllItems();
+				comboBoxTagAndererMA.removeAllItems();
+				cmbBoxSchicht.removeAllItems();
+				comboBoxSchichtAndererMA.removeAllItems();
+				// Ausgeben der ArrayListe für die Tage der Wochenpläne und in einer JComboBox
+				// hinterlegen
+				for (int i = 0; i < tagesliste.size(); i++) {
+					cmbBoxTag.addItem(tagesliste.get(i));
+				}
+
 				cmbBoxTag.setEnabled(true);
 				lblTagAuswaehlen.setEnabled(true);
-		
+
 			}
 		});
 
@@ -204,7 +239,7 @@ class TauschanfrageErstellenView extends JFrame {
 		 *       Auswählen des Tages, wird die ComboBox Schicht sichtbar und füllt diese
 		 *       mit der Schicht des Mitarbeiters
 		 */
-		cmbBoxTag.addActionListener(new ActionListener() {
+		btnOKTagMa.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// Auslesen einer Array List mit den Schichten
 				try {
@@ -212,16 +247,17 @@ class TauschanfrageErstellenView extends JFrame {
 					// Ausgabe einer ArrayList mit den Schichten des Mitarbeiters
 					schichtMa = myController.getMitarbeiterSchichten(cmbBoxWP.getSelectedItem().toString(),
 							cmbBoxTag.getSelectedItem().toString(), myView.getUsername());
+
 					// Aufbereitung der ArrayList für die JComboBox Schicht des Mitarbeiters und die
 					// Übergabe an den Controller
 					String s = schichtMa.toString();
-					System.out.println(s);
 					String[] temp = s.split(",");
 					String sender = temp[0];
 					String empfaenger = temp[1];
 
 					String[] tempSender = sender.split("-");
 					String schichtNrsMa = tempSender[0].substring(1, 6);
+					System.out.println(schichtNrsMa);
 					senderSchichtnr = Integer.parseInt(schichtNrsMa);
 					String kw = tempSender[1];
 					String tag = tempSender[2];
@@ -247,8 +283,20 @@ class TauschanfrageErstellenView extends JFrame {
 		 * @Info Action Performed Methode - Ändert die Sichtbarkeit der ComboBox Tag und
 		 *       des Labels Tag des auszuwählenden Mitarbeiters
 		 */
-		cmbBoxSchicht.addActionListener(new ActionListener() {
+		btnOKSchichtMa.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+
+				comboBoxTagAndererMA.removeAllItems();
+				comboBoxSchichtAndererMA.removeAllItems();
+
+				ArrayList<String> tageslisteAndererMA = myController.getTage(cmbBoxWP.getSelectedItem().toString());
+
+				// Ausgeben der ArrayListe für die Tage der Wochenpläne und in einer JComboBox
+				// hinterlegen
+				for (int i = 0; i < tageslisteAndererMA.size(); i++) {
+					comboBoxTagAndererMA.addItem(tageslisteAndererMA.get(i));
+				}
+
 				comboBoxTagAndererMA.setEnabled(true);
 				labelTagAndererMA.setEnabled(true);
 			}
@@ -260,9 +308,11 @@ class TauschanfrageErstellenView extends JFrame {
 		 *       Mitarbeiters. Nach dem Auswählen des Tages, wird die ComboBox Schicht
 		 *       sichtbar und füllt diese mit der Schicht des anderen Mitarbeiters.
 		 */
-		comboBoxTagAndererMA.addActionListener(new ActionListener() {
+		btnOKTagAndererMa.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+
 				try {
+					comboBoxSchichtAndererMA.removeAllItems();
 					// Ausgabe einer ArrayList für die Schichten des anderen Mitarbeiters
 					schichtAndererMa = myController.getAndereMitarbeiterSchichten(cmbBoxWP.getSelectedItem().toString(),
 							myView.getUsername(), senderSchichtnr);
@@ -274,6 +324,7 @@ class TauschanfrageErstellenView extends JFrame {
 						System.out.println(s);
 						String[] tempEmpfaenger = s.split("-");
 						String schichtNrsAMa = tempEmpfaenger[0].trim();
+						System.out.println(schichtNrsAMa);
 						empfaengerSchichtNr = Integer.parseInt(schichtNrsAMa);
 						String kwAndererMa = tempEmpfaenger[1];
 						String tagAndererMa = tempEmpfaenger[2];
@@ -282,8 +333,8 @@ class TauschanfrageErstellenView extends JFrame {
 						String empfaengerName = tempEmpfaenger[5];
 						// Notwendigen Parameter für die Anzeige der Schicht des anderen Mitarbeiters
 						// der JComboBox hinzufügen
-						comboBoxSchichtAndererMA.addItem(kwAndererMa + " " + tagAndererMa + " " + anfangszeitAndererMa
-								+ " " + endzeitAndererMa + " " + empfaengerName);
+						comboBoxSchichtAndererMA.addItem(kwAndererMa + "- " + tagAndererMa + "-" + anfangszeitAndererMa
+								+ "-" + endzeitAndererMa + "-" + empfaengerName);
 					}
 					// Sichtbarkeit der Schicht des anderen Mitarbeiters ändern
 					comboBoxSchichtAndererMA.setEnabled(true);
@@ -295,7 +346,19 @@ class TauschanfrageErstellenView extends JFrame {
 				}
 			}
 		});
-		;
+
+		btnOkSchichtAndererMa.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String s = comboBoxSchichtAndererMA.getSelectedItem().toString();
+				String[] tempEmpfaenger = s.split("-");
+				String kwAndererMa = tempEmpfaenger[0];
+				String tagAndererMa = tempEmpfaenger[1];
+				String anfangszeitAndererMa = tempEmpfaenger[2];
+				String endzeitAndererMa = tempEmpfaenger[3];
+				empfaengerName = tempEmpfaenger[4].trim();
+				System.out.println(empfaengerName);
+			}
+		});
 
 		/**
 		 * @author Ramona Gerke
@@ -314,16 +377,27 @@ class TauschanfrageErstellenView extends JFrame {
 							JOptionPane.YES_NO_CANCEL_OPTION);
 					// weiter bei ja
 					if (eingabe == JOptionPane.YES_OPTION) {
-
+						
+						//Übergabe der Variablen funktioniert nicht 
+						System.out.printf(myView.getUsername(), empfaengerName,
+								empfaengerSchichtNr, senderSchichtnr);
+						
 						// Übergabe an den Controller
 						myController.erstelleTauschanfrage(myView.getUsername(), senderSchichtnr, empfaengerName,
 								empfaengerSchichtNr);
-						// Erfolgsmeldung
-						JOptionPane.showConfirmDialog(null, "Tauschanfrage erfolgreich erstellt", "",
-								JOptionPane.PLAIN_MESSAGE);
-						dispose();
-						myView.update();
 
+						// Erfolgsmeldung
+						if (myController.erstelleTauschanfrage(myView.getUsername(), senderSchichtnr, empfaengerName,
+								empfaengerSchichtNr) != false) {
+							JOptionPane.showConfirmDialog(null, "Tauschanfrage erfolgreich erstellt", "",
+									JOptionPane.PLAIN_MESSAGE);
+							dispose();
+							myView.update();
+						} else {
+							JOptionPane.showMessageDialog(null,
+									"Tauschanfrage konnte nicht gestellt werden! Bitte versuchen Sie es erneut!", "",
+									JOptionPane.ERROR_MESSAGE);
+						}
 					} else {
 						JOptionPane.showMessageDialog(null, "Wählen Sie andere Daten aus!", "",
 								JOptionPane.PLAIN_MESSAGE);
@@ -341,16 +415,4 @@ class TauschanfrageErstellenView extends JFrame {
 		setVisible(true);
 
 	}
-//	
-//	public void aktualisieren (JComboBox cmbBoxWp) {
-//		cmbBoxWP.removeAll();
-//		if(cmbBoxTag.getSelectedItem() != null){
-//			tagMa = myController.getTage(cmbBoxWP.getSelectedItem().toString());
-//			
-//			
-//			for (String s : tagMa) {
-//				cmbBoxTag.addItem(s);
-//			}
-//		}
-//	}
 }
