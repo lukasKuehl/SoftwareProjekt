@@ -25,7 +25,10 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.TreeMap;
 import java.awt.event.ActionEvent;
+
 
 import controller.EinsatzplanController;
 import model.Einsatzplanmodel;
@@ -43,14 +46,14 @@ class TauschanfrageErstellenView extends JFrame {
 	private JLabel lblTauschanfrageStellen, labelTagAndererMA, lblWochenplanAuswaehlen, lblMitWemWollen,
 			lblSchichtAuswaehlen, lblTagAuswaehlen, labelSchichtAndererMA, lblBitteAuswhlen = null;
 	private JComboBox<String> cmbBoxWP, cmbBoxTag, cmbBoxSchicht, comboBoxTagAndererMA, comboBoxSchichtAndererMA = null;
-	private ArrayList<String> wp, tagMa, schichtAndererMa, tagAndererMa, schichtMa = null;
+	private ArrayList<String> wp,  schichtAndererMa,  schichtMa  =null;
 	private JButton btnErstellen, btnOKwochenplan, btnOkSchichtAndererMa, btnOKTagMa, btnOKSchichtMa,
 			btnOKTagAndererMa = null;
 	private EinsatzplanController myController = null;
 	private Einsatzplanview myView = null;
 	private Einsatzplanmodel myModel = null;
 	private Schicht mySchicht = null;
-	private String empfaengerName, sendername = null;
+	private String empfaengerName, sendername , tem= null;
 	private int senderSchichtnr, empfaengerSchichtNr = 0;
 	private WindowListener windowListener;
 
@@ -153,12 +156,6 @@ class TauschanfrageErstellenView extends JFrame {
 		contentPane.add(labelTagAndererMA);
 
 		comboBoxTagAndererMA = new JComboBox<String>();
-		// Ausgeben einer ArrayList mit den Tagen der Mitarbeiter in einer JComboBox
-		// hinterlegen
-		// tagAndererMa = myController.getTage(cmbBoxWP.getSelectedItem().toString());
-		// for (String n : tagAndererMa) {
-		// comboBoxTagAndererMA.addItem(n);
-		// }
 		comboBoxTagAndererMA.setEnabled(false);
 		comboBoxTagAndererMA.setFont(new Font("Verdana", Font.PLAIN, 15));
 		comboBoxTagAndererMA.setBounds(249, 365, 136, 26);
@@ -267,7 +264,10 @@ class TauschanfrageErstellenView extends JFrame {
 					// Notwendigen Parameter für die Anzeige der Schicht des Mitarbeiters der
 					// JComboBox hinzufügen
 					cmbBoxSchicht.addItem(kw + " " + tag + " " + anfangszeit + " " + endzeit + " ");
+					
+					//Zwischenspeicher für die Variablen der Übergabe an den Controller
 
+					
 					// Sichtbarkeit der JComboBx Schicht und Label Schicht des Mitarbeiters ändern
 					cmbBoxSchicht.setEnabled(true);
 					lblSchichtAuswaehlen.setEnabled(true);
@@ -323,14 +323,14 @@ class TauschanfrageErstellenView extends JFrame {
 						String s = n.toString();
 						System.out.println(s);
 						String[] tempEmpfaenger = s.split("-");
-						String schichtNrsAMa = tempEmpfaenger[0].trim();
-						System.out.println(schichtNrsAMa);
-						empfaengerSchichtNr = Integer.parseInt(schichtNrsAMa);
+						int empfaengerSchichtNr = Integer.parseInt(tempEmpfaenger[0]);
 						String kwAndererMa = tempEmpfaenger[1];
 						String tagAndererMa = tempEmpfaenger[2];
 						String anfangszeitAndererMa = tempEmpfaenger[3];
 						String endzeitAndererMa = tempEmpfaenger[4];
 						String empfaengerName = tempEmpfaenger[5];
+						//Zwischenspeicher für die Übergabe an den Controller
+						
 						// Notwendigen Parameter für die Anzeige der Schicht des anderen Mitarbeiters
 						// der JComboBox hinzufügen
 						comboBoxSchichtAndererMA.addItem(kwAndererMa + "- " + tagAndererMa + "-" + anfangszeitAndererMa
@@ -351,12 +351,16 @@ class TauschanfrageErstellenView extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				String s = comboBoxSchichtAndererMA.getSelectedItem().toString();
 				String[] tempEmpfaenger = s.split("-");
-				String kwAndererMa = tempEmpfaenger[0];
-				String tagAndererMa = tempEmpfaenger[1];
-				String anfangszeitAndererMa = tempEmpfaenger[2];
-				String endzeitAndererMa = tempEmpfaenger[3];
-				empfaengerName = tempEmpfaenger[4].trim();
-				System.out.println(empfaengerName);
+				int empfaengerSchichtNr = Integer.parseInt(tempEmpfaenger[0]);
+				String kwAndererMa = tempEmpfaenger[1];
+				String tagAndererMa = tempEmpfaenger[2];
+				String anfangszeitAndererMa = tempEmpfaenger[3];
+				String endzeitAndererMa = tempEmpfaenger[4];
+				String empfaengerName = tempEmpfaenger[5].trim();
+		
+				tem =senderSchichtnr +"-"+ sendername +"-"+ empfaengerSchichtNr +"-"+ empfaengerName ;
+				System.out.println(tem);
+		
 			}
 		});
 
@@ -379,16 +383,23 @@ class TauschanfrageErstellenView extends JFrame {
 					if (eingabe == JOptionPane.YES_OPTION) {
 						
 						//Übergabe der Variablen funktioniert nicht 
-						System.out.printf(myView.getUsername(), empfaengerName,
-								empfaengerSchichtNr, senderSchichtnr);
+						String[]s;
+						tem = tem.trim();
+						System.out.println(tem);
+						s =tem.split("-");
+
+						int senderSchichtNummer =Integer.parseInt(s[0]);
+						String senderName = s[1].trim();					
+						int empfSchichtNummer = Integer.parseInt(s[2]);
+						String empfName = s[3].trim();
 						
 						// Übergabe an den Controller
-						myController.erstelleTauschanfrage(myView.getUsername(), senderSchichtnr, empfaengerName,
-								empfaengerSchichtNr);
+						myController.erstelleTauschanfrage(senderName, senderSchichtNummer, empfName,
+								empfSchichtNummer);
 
 						// Erfolgsmeldung
-						if (myController.erstelleTauschanfrage(myView.getUsername(), senderSchichtnr, empfaengerName,
-								empfaengerSchichtNr) != false) {
+						if (myController.erstelleTauschanfrage(myView.getUsername(), senderSchichtNummer, empfName,
+								empfSchichtNummer) != false) {
 							JOptionPane.showConfirmDialog(null, "Tauschanfrage erfolgreich erstellt", "",
 									JOptionPane.PLAIN_MESSAGE);
 							dispose();
