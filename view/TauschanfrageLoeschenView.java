@@ -90,7 +90,7 @@ class TauschanfrageLoeschenView extends JFrame {
 		listTauschanfragen.setBounds(51, 127, 860, 333);
 		panelTauschanfrage.add(listTauschanfragen);
 
-		btnBestaetigen = new JButton("Lösschen");
+		btnBestaetigen = new JButton("Löschen");
 		btnBestaetigen.setHorizontalAlignment(SwingConstants.LEFT);
 		btnBestaetigen.setFont(new Font("Verdana", Font.PLAIN, 15));
 		btnBestaetigen.setBounds(802, 531, 111, 25);
