@@ -16,11 +16,10 @@ import javax.swing.JList;
 import javax.swing.JOptionPane;
 
 import java.awt.Font;
-import javax.swing.JComboBox;
+import javax.swing.*;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JTextField;
-import javax.swing.SwingConstants;
 import java.awt.Color;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -146,6 +145,7 @@ class TauschanfrageAnzeigenView extends JFrame {
 							int tauschanfrageNr = Integer.parseInt(tauschanfrageNrS);
 							String empfaengername = temp[8].substring(2, 9);
 							// Übergabe an den Controller
+							System.out.println(empfaengername + tauschanfrageNr);
 							myController.akzeptiereTauschanfrage(empfaengername, tauschanfrageNr);
 							// Erfolgsmeldung
 							JOptionPane.showMessageDialog(null, "Tauschanfrage erfolgreich angenommen", "",
