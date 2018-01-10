@@ -255,6 +255,9 @@ class SchichtStrg {
 	protected ArrayList<String> getAndereMitarbeiterSchichten(String wpbez, String username, int schichtNr){
 		LinkedList<Schicht> uebergabe = new LinkedList<Schicht>();    	
 		
+		//Umwandeln der Wochenplanbezeichnung in eine eindeutige Wochenplannummer
+		int wpnr = myController.getWpnr(wpbez);
+		
     	LinkedList<Ma_Schicht> einteilung = this.myModel.getMa_Schicht();
 		LinkedList<Ma_Schicht> andereMitarbeiterEinteilung = new LinkedList<Ma_Schicht>();
 		LinkedList<Integer> belegteSchichtnummern = new LinkedList<Integer>();
@@ -286,15 +289,20 @@ class SchichtStrg {
 		// Potentielle Schichten zum Tauschen, in denen der übergebene Mitarbeiter selbst nicht vorhanden ist
 		TreeMap <Integer, Schicht> andereMitarbeiterSchichtenAlle = new TreeMap<Integer, Schicht>();
 				
-		for(Schicht s: alleSchichten){				
-			for(Ma_Schicht mas: andereMitarbeiterEinteilung){
+		for(Schicht s: alleSchichten){			
+			
+			//Überprüfe, ob sich die Schicht in der übergebenen Woche befindet
+			if(s.getWpnr() == wpnr){
 				
-				//Prüfe, ob die Schicht zu der zugehörigen Schichteinteilung gehört und noch nicht in der Map mit potentiellen Schichten zum Tauschen vorhanden ist
-				if(s.getSchichtnr() == mas.getSchichtnr() && (!andereMitarbeiterSchichtenAlle.containsKey(s.getSchichtnr()))){
-					//Hinterlegen der Schicht in der Map
-					andereMitarbeiterSchichtenAlle.put(s.getSchichtnr(),s);
-				}			
-			}		
+				for(Ma_Schicht mas: andereMitarbeiterEinteilung){
+					
+					//Prüfe, ob die Schicht zu der zugehörigen Schichteinteilung gehört und noch nicht in der Map mit potentiellen Schichten zum Tauschen vorhanden ist
+					if(s.getSchichtnr() == mas.getSchichtnr() && (!andereMitarbeiterSchichtenAlle.containsKey(s.getSchichtnr()))){
+						//Hinterlegen der Schicht in der Map
+						andereMitarbeiterSchichtenAlle.put(s.getSchichtnr(),s);
+					}			
+				}	
+			}			
 		}			
 		
 		//Umwandeln der Map in eine Liste zur Aufbereitung der Darstellung der ermittelten Schichten
