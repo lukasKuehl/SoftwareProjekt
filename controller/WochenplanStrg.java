@@ -1,14 +1,10 @@
 package controller;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.text.DateFormat;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -18,21 +14,14 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import javax.imageio.ImageIO;
-import javax.swing.JDialog;
-import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.JTableHeader;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
-
-import com.sun.org.apache.xerces.internal.util.SynchronizedSymbolTable;
 
 import data.Ma_Schicht;
 import data.Mitarbeiter;
 import data.Schicht;
 import data.Standardeinstellungen;
 import data.Tag;
-import data.Userrecht;
 import data.Wochenplan;
 import model.Einsatzplanmodel;
 
