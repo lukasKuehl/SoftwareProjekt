@@ -120,6 +120,10 @@ class SchichtStrg {
 	protected ArrayList<String> getVerfügbareMitarbeiter(int schichtNr){
 		ArrayList<String> verfuegbareMitarbeiter = new ArrayList<String>();
 		
+		//Ermittle die den Wochenplan zu der übergebenen Schichtnr
+		int wpnr = myModel.getSchicht(schichtNr).getWpnr();
+		
+		
 		LinkedList<Mitarbeiter> alleMitarbeiter = this.myModel.getAlleMitarbeiter();
 				
 		for(Mitarbeiter m: alleMitarbeiter){		
@@ -149,8 +153,12 @@ class SchichtStrg {
 			maxDauer = m.getMaxstunden();
 					
 			//Bereits vorhande Schichten werden addiert um momentane Auslastung zu ermitteln
-			for(Schicht schicht: mitarbeiterSchichten){			
-				dauer = dauer + getSchichtDauer(schicht);	
+			for(Schicht schicht: mitarbeiterSchichten){					
+				//Die maximale Arbeitszeit gilt für eine Woche, somit werden nur Schichten der betroffenen Woche addiert
+				if(schicht.getWpnr() == wpnr){
+					dauer = dauer + getSchichtDauer(schicht);	
+				}
+			
 			}
 			
 			//Addieren der zusätzlich notwendigen Auslastung für die neue Schicht
