@@ -20,6 +20,20 @@ public class TestKlasse {
 		myModel = new Einsatzplanmodel();			
 		myController = new EinsatzplanController(myModel);		
 		
+		//Testen der Methode entferneTermin
+		
+		//myController.entferneTermin(100, "Oenns");
+		
+		
+		
+		/*
+		
+		//Testen der Methode benutzerRechteWechseln
+		
+		myController.benutzerRechteWechsel("Kmuster");
+		
+		*/
+		
 		/*
 		
 		//Testen der Methode erstelleTermin
@@ -27,12 +41,15 @@ public class TestKlasse {
 		TreeMap<String, String> zeitraum = new TreeMap<String, String>();
 		
 		zeitraum.put("wpbez", "KW1000");
-		zeitraum.put("anfZeitraumTag", "Montag");
-		zeitraum.put("endZeitraumTag", "Mittwoch");
+		zeitraum.put("anfZeitraumTag", "Mittwoch");
+		zeitraum.put("endZeitraumTag", "Montag");
 		zeitraum.put("anfangsUhrzeit", null);
 		zeitraum.put("endUhrzeit", null);
 		 
-		myController.erstelleTermin("Fhimmelmann", "Test-Termin", zeitraum, "Testen");
+		myController.erstelleTermin("Kmuster", "Test-Termin", zeitraum, "Testen");
+		
+		
+		
 		
 		*/
 		
@@ -71,7 +88,7 @@ public class TestKlasse {
 		
 		//myController.entferneWochenplan("Dgöring", "KW1020");			
 		
-		*/		
+		*/
 		
 		/*
 		
@@ -98,9 +115,9 @@ public class TestKlasse {
 		
 		myController.erstelleWochenplanStandard("Dgöring", "KW1002");
 		
-		myController.entferneWochenplan("Dgöring", "KW1002");			
+		//myController.entferneWochenplan("Dgöring", "KW1002");			
 		
-		*/		
+		*/	
 		
 		/*
 		
@@ -131,7 +148,7 @@ public class TestKlasse {
 		
 		//Testen der Einsatzplanübersicht
 		
-		JTable jt = myController.generiereWochenplanView("KW1001");
+		JTable jt = myController.generiereWochenplanView("KW1076");
 		
 		
 		JFrame frame = new JFrame();
@@ -151,15 +168,17 @@ public class TestKlasse {
 		frame.setVisible(true);	
 		
 		*/
-		
-		
+
 		/*
+		
 		ArrayList<String> mitarbeiterTermine = myController.getMitarbeiterTermine("Oenns");
 		
 		for(String s: mitarbeiterTermine){
 			System.out.println(s);
 		}
+		
 		*/
+		
 		/*
 		ArrayList<String> mitarbeiterTauschanfragen = myController.getTauschanfragen("Fhimmelmann");
 		
@@ -169,22 +188,7 @@ public class TestKlasse {
 		
 		*/
 		/*
-		ArrayList<String
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		> wochenTage = myController.getTage("KW1001");
+		ArrayList<String> wochenTage = myController.getTage("KW1001");
 		
 		for(String s: wochenTage){
 			System.out.println(s);

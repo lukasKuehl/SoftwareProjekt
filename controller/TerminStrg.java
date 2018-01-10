@@ -264,7 +264,7 @@ class TerminStrg {
 		
 		for(TerminBlockierung tb: alleTerminblockierungen){
 			//Prüfe, ob der Termin existiert und ob der Nutzer die Berechtigung zum Löschen besitzt(Bedingung: Ersteller/in des Termins oder Benutzer besitzt Adminrechte)
-			if(((tb.getTblocknr() == tblocknr) && tb.getBenutzername().equals(username)) || myController.isUserAdmin(username)){
+			if((tb.getTblocknr() == tblocknr) &&  (tb.getBenutzername().equals(username) || myController.isUserAdmin(username))){
 				valid = true;				
 			}
 		}
