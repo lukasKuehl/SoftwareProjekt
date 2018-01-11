@@ -119,10 +119,8 @@ class WochenplanLoeschenView extends JFrame {
 							// ausgewähltes Element für die Übergabe an den Controller vorbereiten
 							String s = listWochenplaene.getSelectedValue().toString();
 						
-							// Übergabe an den Controller
-							myController.entferneWochenplan(myView.getUsername(), s);
-							// Erfolgsmeldung
-							if (myController.entferneWochenplan(myView.getUsername(), s) != false) {
+							// Erfolgsmeldung und Übergabe an den Controller
+							if (myController.entferneWochenplan(myView.getUsername(), s)) {
 							JOptionPane.showMessageDialog(null, "Wochenplan erfolgreich gelöscht", "  ",
 									JOptionPane.INFORMATION_MESSAGE);
 							}

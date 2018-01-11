@@ -75,6 +75,7 @@ class KrankmeldungLoeschenView extends JFrame {
 		listKrankmeldung = new JList<String>();
 		listKrankmeldung.setFont(new Font("Verdana", Font.PLAIN, 13));
 		kl = myController.getAlleTermine(myView.getUsername()); 
+
 		model = new DefaultListModel<String>();
 		for (String m : kl) {
 			model.addElement(m);
@@ -140,10 +141,9 @@ class KrankmeldungLoeschenView extends JFrame {
 							String anfangsUhrzeit = temp[5];
 							String endUhrzeit = temp[6];
 
-							// Übergabe an den Controller
-							myController.entferneTermin(tblocknr,mitarbeitername);
-							// Erfolgsmeldung
-							if (myController.entferneTermin(tblocknr,mitarbeitername)!= false) {
+						
+							// Erfolgsmeldung und Übergabe an den Controller
+							if (myController.entferneTermin(tblocknr,mitarbeitername)) {
 							JOptionPane.showMessageDialog(null, "Krankmeldung erfolgreich gelöscht!", "",
 									JOptionPane.INFORMATION_MESSAGE);
 							}

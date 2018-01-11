@@ -341,13 +341,9 @@ class TauschanfrageErstellenView extends JFrame {
 					// weiter bei ja
 					if (eingabe == JOptionPane.YES_OPTION) {
 
-						// Übergabe an den Controller				
-						myController.erstelleTauschanfrage(myView.getUsername(), senderSchichtnr, empfaengerName,
-								empfaengerSchichtNr);
-
-						// Erfolgsmeldung
+					// Erfolgsmeldung und Übergabe an den Controller
 						if (myController.erstelleTauschanfrage(myView.getUsername(),senderSchichtnr, empfaengerName,
-								empfaengerSchichtNr) != false) {
+								empfaengerSchichtNr))  {
 							JOptionPane.showConfirmDialog(null, "Tauschanfrage erfolgreich erstellt", "",
 									JOptionPane.PLAIN_MESSAGE);
 							dispose();

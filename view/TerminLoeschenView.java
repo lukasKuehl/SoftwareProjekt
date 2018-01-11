@@ -138,10 +138,9 @@ class TerminLoeschenView extends JFrame {
 							String date = temp[2];
 							String anfangsUhrzeit = temp[3];
 							String endUhrzeit = temp [4];
-							//Übergabe an den Controller 
-							myController.entferneTermin(terminnr, myView.getUsername());
-							//Erfolgsmeldung
-							if (myController.entferneTermin(terminnr, myView.getUsername())!= false){
+						
+							//Erfolgsmeldung und Übergabe an den Controller
+							if (myController.entferneTermin(terminnr, myView.getUsername())){
 							JOptionPane.showMessageDialog(null, "Termin erfolgreich gelöscht", "", JOptionPane.INFORMATION_MESSAGE);
 							}
 							dispose();

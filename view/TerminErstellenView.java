@@ -318,10 +318,8 @@ class TerminErstellenView extends JFrame {
 							zeitraum.put("endUhrzeit", null);						
 						}					
 						
-						// Übergabe an den Controller
-						myController.erstelleTermin(username, bez, zeitraum, grund);
-						//Erfolgsmeldung
-						if (myController.erstelleTermin(username, bez, zeitraum, grund)!= false) {
+						//Erfolgsmeldung und Übergabe an den Controller
+						if (myController.erstelleTermin(username, bez, zeitraum, grund)) {
 								JOptionPane.showMessageDialog(null, "Termin erfolgreich angelegt!", "  ",
 								JOptionPane.INFORMATION_MESSAGE);
 						}
