@@ -44,6 +44,7 @@ public class AnmeldungView extends JFrame{
 		this.myModel = myModel;
 		this.myView = myView;
 
+		setTitle("Einsatzplan");
 		setResizable(false);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -53,6 +54,7 @@ public class AnmeldungView extends JFrame{
 		cpAnmeldung.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(cpAnmeldung);
 		cpAnmeldung.setLayout(null);
+		
 
 		lblAnmeldung = new JLabel("Anmeldung");
 		lblAnmeldung.setFont(new Font("Verdana", Font.BOLD, 30));
@@ -128,6 +130,7 @@ public class AnmeldungView extends JFrame{
 			
 		});
 		btnLogin.setBounds(316, 248, 57, 47);
+		getRootPane().setDefaultButton(btnLogin);
 		cpAnmeldung.add(btnLogin);
 		cpAnmeldung.add(lblFehlermeldung);
 		cpAnmeldung.add(lblFehlermeldung1);
