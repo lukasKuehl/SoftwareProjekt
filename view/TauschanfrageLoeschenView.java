@@ -132,6 +132,7 @@ class TauschanfrageLoeschenView extends JFrame {
 							int tauschanfrageNr = Integer.parseInt(tauschanfrageNrS);
 
 							// Übergabe an den Controller
+							System.out.println(tauschanfrageNr);
 							myController.entferneTauschanfrage(tauschanfrageNr);
 							// Erfolgsmeldung
 							if (myController.entferneTauschanfrage(tauschanfrageNr) != false) {
