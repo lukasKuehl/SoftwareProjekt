@@ -183,19 +183,29 @@ class SchichtStrg {
 				boolean frei = true;
 				for(TerminBlockierung tb : mitarbeiterTerminBlockierungen){
 				
-					//Suche den Tag + Wochenplan, an dem der Mitarbeiter einen Termin hat
-					String tbezTermin = tb.getBbez();					
-					Tblock_Tag temp = this.myModel.getTblock_TagTB(tb.getTblocknr());								
-					int wpnrTermin = temp.getWpnr();
+					//Suche nach den zugehörigen TerminZuordnungen( zu Tag + Wochenplan), zu den Terminen des Mitarbeiters					
+					LinkedList<Tblock_Tag> temp = this.myModel.getAlleTblock_Tag();		
+					LinkedList<Tblock_Tag> mitarbeiterWochenEinteilung = new LinkedList<Tblock_Tag>();
 					
+					for(Tblock_Tag tbt : temp){
+						
+						if((tbt.getWpnr() == wpnr) && (tbt.getTblocknr() == tb.getTblocknr())){
+							mitarbeiterWochenEinteilung.add(tbt);						
+						}				
+					}					
+						
 					//Suche den Tag + Wochenplan, in dem sich die Schicht befindet
 					String tbezSchicht = this.myModel.getSchicht(schichtNr).getTbez();
 					int wpnrSchicht = this.myModel.getSchicht(schichtNr).getWpnr();
 					
-					if((tbezTermin.equals(tbezSchicht)) &&(wpnrTermin == wpnrSchicht)){
-						//Mitarbeiter hat an dem Tag, in dem sich die Schicht befindet, bereits einen Termin eingetragen und ist somit nicht verfügbar
-						frei = false;
-					}								
+					//Durchsuche alle TerminZuordnungen nach möglichen Terminkonflikten
+					for(Tblock_Tag tbt: mitarbeiterWochenEinteilung){						
+
+						if((tbt.getTbez().equals(tbezSchicht)) &&(tbt.getWpnr() == wpnrSchicht)){
+							//Mitarbeiter hat an dem Tag, in dem sich die Schicht befindet, bereits einen Termin eingetragen und ist somit nicht verfügbar
+							frei = false;
+						}					
+					}											
 				}		
 				
 				if(frei){
