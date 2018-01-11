@@ -347,7 +347,6 @@ class TauschanfrageErstellenView extends JFrame {
 							JOptionPane.showConfirmDialog(null, "Tauschanfrage erfolgreich erstellt", "",
 									JOptionPane.PLAIN_MESSAGE);
 							dispose();
-							myView.update();
 						} else {
 							JOptionPane.showMessageDialog(null,
 									"Tauschanfrage konnte nicht gestellt werden! Bitte versuchen Sie es erneut!", "",
