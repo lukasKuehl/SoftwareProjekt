@@ -22,9 +22,7 @@ public class TestKlasse {
 		
 		//Testen der Methode entferneTermin
 		
-		//myController.entferneTermin(100, "Oenns");
-		
-		
+		//myController.entferneTermin(100, "Oenns");		
 		
 		/*
 		

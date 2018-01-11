@@ -353,29 +353,50 @@ class TerminStrg {
 						
 			LinkedList<Tblock_Tag> alleTerminZuordnungen = this.myModel.getAlleTblock_Tag();
 			
+			//Eine Terminzuordnung wird für jeden betroffenen Tag im Wochenplan erstellt,
+			//falls schon ein betroffener Eintrag bearbeitet wurde, können andere mit gleicher tblocknr übersprungen werden
+			LinkedList<Integer> bearbeiteteTerminZuordnungen = new LinkedList<Integer>();
+			
 			//Übertrage die Termine im Format Terminbezeichnung - Mitarbeitername - KW - Anfangstag - Endtag - Anfangsuhrzeit-Enduhrzeit in die RückgabeListe
 			for(TerminBlockierung tb : alleTermine){
 				
+				int wpnr = 0;
+				
 				for(Tblock_Tag tbt : alleTerminZuordnungen){
-					
-					//Terminblockierung und Terminblockierungszuordnung sind gleich --> zusätzliche Informationen zum zugehörigen Wochenplan sind verfügbar
+				
+					//Suche nach Einträgen von Terminzuordnungen, die zur übergebenen Woche gehören
 					if(tbt.getTblocknr() == tb.getTblocknr()){
+						wpnr = tbt.getWpnr();
+					}
+				}			
+			
+				boolean vorhanden = false;
+					
+				for(Integer i: bearbeiteteTerminZuordnungen){
+					if(i == tb.getTblocknr())						
+						vorhanden = true;
+				}
+					
+				//Es wurde noch kein Eintrag zu der Terminblocknr. hinzugefügt, also muss ein neuer hinzugefügt werden
+				if(!vorhanden){					
 						
-						String temp = tb.getTblocknr() + " - " + tb.getBbez() + " - " + tb.getBenutzername() +" - KW" + tbt.getWpnr() + " - ";
+					String temp = tb.getTblocknr() + " - " + tb.getBbez() + " - " + tb.getBenutzername() +" - KW" + wpnr + " - ";
 						
-						//Falls es sich um einen eintägigen Termin handelt, wird der Anfangs- und Endtag zusammengefasst
-						if(tb.getAnfangzeitraum().equals(tb.getEndezeitraum())){
-							temp = temp + tb.getAnfangzeitraum() + " - ";
-						}
-						else{
-							temp = temp + tb.getAnfangzeitraum() + "-" + tb.getEndezeitraum() + " - ";
-						}
+					//Falls es sich um einen eintägigen Termin handelt, wird der Anfangs- und Endtag zusammengefasst
+					if(tb.getAnfangzeitraum().equals(tb.getEndezeitraum())){
+						temp = temp + tb.getAnfangzeitraum() + " - ";
+					}
+					else{
+						temp = temp + tb.getAnfangzeitraum() + "-" + tb.getEndezeitraum() + " - ";
+					}
 						
-						temp = temp + tb.getAnfanguhrzeit() + "-" + tb.getEndeuhrzeit() + " Uhr";
-						
-						//Datensatz ist vollständig und kann in die Rückgabeliste eingetragen werden
-						rueckgabe.add(temp);						
-					}					
+					temp = temp + tb.getAnfanguhrzeit() + "-" + tb.getEndeuhrzeit() + " Uhr";
+													
+					//Datensatz ist vollständig und kann in die Rückgabeliste eingetragen werden
+					rueckgabe.add(temp);						
+					
+					bearbeiteteTerminZuordnungen.add(tb.getTblocknr());
+										
 				}			
 			}		
 		}
