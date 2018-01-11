@@ -81,11 +81,11 @@ class TauschanfrageStrg {
 				myController.printErrorMessage(fehler);
 			}
 		}
-		// Fehlermeldung, dass die Werte entweder null oder die Tauschanfrage
+		// Fehlermeldung, dass die übergebenen Werte entweder null sind oder die Tauschanfrage
 		// bereits existiert
 		else {
 
-			String fehler = "Tauschanfrage kann nicht . \n";
+			String fehler = "Tauschanfrage kann nicht erstellt werden Tauschanfrage existiert bereits oder Sender/Empfänger Name und Schicht falsch . \n";
 			myController.printErrorMessage(fehler);
 		}
 

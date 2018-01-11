@@ -588,12 +588,19 @@ class Datenbank_Wochenplan {
 			stmt = con.createStatement();
 			rs = stmt.executeQuery(sqlQuery);
 			rs.next();
+			//Wenn kein Datensatz vorhanden ist, manuell den Startwert setzen
+			if(rs.getInt(1)==0){
+			int maxWpnr2=1000;
+			return maxWpnr2;
+			}
+			else{
 			//Speichern der nächsthöheren Schichtnr in maxSchichtnr
 			int maxWpnr = rs.getInt(1);
 			rs.close();
 			stmt.close();
 			//Ausgabe der neuen Wochenplannr(höchste wpnr+1)
 			return maxWpnr;
+			}
 		} catch (SQLException sql) {
 			//Fehlerhandling, Ausgaben zur Ursachensuche und Rückgabewert auf -1 setzen
 			System.err.println("Methode getNewWpnr SQL-Fehler: "

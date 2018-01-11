@@ -349,6 +349,7 @@ class Datenbank_TerminBlockierung {
 			stmt = con.createStatement();
 			rs = stmt.executeQuery(sqlQuery);	
 			rs.next();
+			//Wenn kein Datensatz vorhanden ist, manuell den Startwert setzen
 			if(rs.getInt(1)==0){
 			int maxTblocknr2=100;
 			return maxTblocknr2;

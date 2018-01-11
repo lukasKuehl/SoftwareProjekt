@@ -496,11 +496,18 @@ class Datenbank_Tauschanfrage {
 			stmt = con.createStatement();
 			rs = stmt.executeQuery(sqlQuery);
 			rs.next();
+			//Wenn kein Datensatz vorhanden ist, manuell den Startwert setzen
+			if(rs.getInt(1)==0){
+			int maxTauschnr2=100000;
+			return maxTauschnr2;
+			}
+			else{
 			//Speichern der nächsthöheren Tauschnr in maxTauschnr
 			int maxTauschnr = rs.getInt(1);
 
 			//Ausgabe der neuen Tauschnr
 			return maxTauschnr;
+			}
 		} catch (SQLException sql) {
 			System.err.println("Methode getNewTauschnr SQL-Fehler: "
 					+ sql.getMessage());

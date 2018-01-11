@@ -400,11 +400,18 @@ class Datenbank_Schicht {
 			stmt = con.createStatement();
 			rs = stmt.executeQuery(sqlQuery);
 			rs.next();
+			//Wenn kein Datensatz vorhanden ist, manuell den Startwert setzen
+			if(rs.getInt(1)==0){
+			int maxSchichtnr2=10000;
+			return maxSchichtnr2;
+			}
+			else{
 			//Speichern der nächsthöheren Schichtnr in maxSchichtnr
 			int maxSchichtnr = rs.getInt(1);
 			
 			//Ausgabe der neuen Schichtnr
 			return maxSchichtnr;
+			}
 		} catch (SQLException sql) {
 			System.err.println("Methode getNewSchichtnrSQL-Fehler: "
 					+ sql.getMessage());

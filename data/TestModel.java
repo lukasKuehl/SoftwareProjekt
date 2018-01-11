@@ -272,13 +272,15 @@ public class TestModel {
 		System.out.println( nexttauschnr);
 		//Test Tblock_tAg
 		int tblocknr=100;
-		boolean tblockt = wps.checkTblock_TagTB(tblocknr);
-		if(tblockt==true){
-			System.out.println("successtblocktag");
-		}
-		else{
-			System.out.println("failtblocktag");
-		}
+		String tbez="Montag";
+		int wpnr=100;
+		//boolean tblockt = wps.checkTblock_TagTB(tblocknr,tbez,wpnr);
+//		if(tblockt==true){
+//			System.out.println("successtblocktag");
+//		}
+//		else{
+//			System.out.println("failtblocktag");
+//		}
 		String tbb="Tag1";
 		int tbwpnr=1000;
 		boolean tblockt2 = wps.checkTblock_TagTA(tbb,tbwpnr);
@@ -292,13 +294,13 @@ public class TestModel {
 		for(Tblock_Tag tb1:tballe){
 			System.out.println(tb1.getTblocknr()+" "+tb1.getTbez()+" "+tb1.getWpnr());
 		}
-		int tbnr2=100;
-		int tbnr3=1001;
-		String tbstr="Samstag";
-		Tblock_Tag tb2=wps.getTblock_TagTB(tbnr2);
-		System.out.println(tb2.getTblocknr()+" "+tb2.getTbez()+" "+tb2.getWpnr());
-		Tblock_Tag tb3=wps.getTblock_TagT(tbstr, tbnr3);
-		System.out.println(tb3.getTblocknr()+" "+tb3.getTbez()+" "+tb3.getWpnr());
+//		int tbnr2=100;
+//		int tbnr3=1001;
+//		String tbstr="Samstag";
+//		Tblock_Tag tb2=wps.getTblock_TagTB(tbnr2);
+//		System.out.println(tb2.getTblocknr()+" "+tb2.getTbez()+" "+tb2.getWpnr());
+//		Tblock_Tag tb3=wps.getTblock_TagT(tbstr, tbnr3);
+//		System.out.println(tb3.getTblocknr()+" "+tb3.getTbez()+" "+tb3.getWpnr());
 		//boolean deletetbt=wps.deleteTblock_Tag(tbnr3);
 		//if(deletetbt==true){
 		//	System.out.println("success delete tbt");
