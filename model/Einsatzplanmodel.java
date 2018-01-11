@@ -1271,7 +1271,7 @@ public boolean checkWochenplanFK(String benutzername) {
 			System.out.println("Fehler beim Aufruf der Methode deleteTerminBlockierung:");
 			e.printStackTrace();			
 		}
-		//notifyObservers();
+		notifyObservers();
 		return result;
 	}
 	/**
