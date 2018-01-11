@@ -344,7 +344,7 @@ import java.awt.Color;
 				}
 			}
 		});
-		btnBestaetigen.setBounds(1246, 793, 97, 25);
+		btnBestaetigen.setBounds(993, 720, 97, 25);
 		getContentPane().add(btnBestaetigen);
 		//Je nach ausgewählter Einstellung passiert etwas anderes ( Erklärung weiter unten)
 		//Radio Group: Es ist nicht möglich beide Felder auszuwählen

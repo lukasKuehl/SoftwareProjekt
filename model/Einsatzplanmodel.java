@@ -376,7 +376,7 @@ public boolean checkWochenplanFK(String benutzername) {
 			return false;
 		}
 		
-		notifyObservers();
+		//notifyObservers();
 		return result;
 	}
 	/**
@@ -432,7 +432,7 @@ public boolean checkWochenplanFK(String benutzername) {
 			System.out.println("Fehler beim Aufruf der Methode deleteMa_Schicht:");
 			e.printStackTrace();			
 		}
-		notifyObservers();
+		//notifyObservers();
 		return result;
 	}
 	/**
@@ -825,7 +825,7 @@ public boolean checkWochenplanFK(String benutzername) {
 			System.out.println("Fehler beim Aufruf der Methode deleteTauschanfrage:");
 			e.printStackTrace();			
 		}
-		notifyObservers();
+		//notifyObservers();
 		return result;
 	}
 	/**
@@ -1289,7 +1289,7 @@ public boolean checkWochenplanFK(String benutzername) {
 			System.out.println("Fehler beim Aufruf der Methode deleteTerminBlockierung:");
 			e.printStackTrace();			
 		}
-		notifyObservers();
+		//notifyObservers();
 		return result;
 	}
 	/**
