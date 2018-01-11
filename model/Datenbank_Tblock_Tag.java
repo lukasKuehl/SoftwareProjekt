@@ -55,13 +55,13 @@ class Datenbank_Tblock_Tag {
 			wpnr = tblock_tag.getWpnr();
 			
 			//Prüfung des PK-Constraints
-			if (checkTblock_TagTB(tBlockNr,con)) {
+			if (checkTblock_TagTB(tBlockNr,tbez,wpnr,con)) {
 				System.out.println("Keine Beziehung von Terminblockierung zu Tagen!");
 			}
-			//Prüfung des PK-Constraints
-			if (checkTblock_TagTA(tbez,wpnr,con) == false) {
-				System.out.println("Keine Beziehung von Terminbezeichnung und Wochenplannummern zu Tagen vorhanden!");
-			}
+//			//Prüfung des PK-Constraints
+//			if (checkTblock_TagTA(tbez,wpnr,con) == false) {
+//				System.out.println("Keine Beziehung von Terminbezeichnung und Wochenplannummern zu Tagen vorhanden!");
+//			}
 			//Überprüfung der FK-Constraints
 			if(checkTblock_TagFK(tBlockNr,tbez,wpnr,con) == false){
 				System.out.println("Die Foreign-Key-Constraints der Tabelle TBlock_Tag wurden verletzt" );
@@ -119,11 +119,11 @@ class Datenbank_Tblock_Tag {
 	 * @info Prüft ob es zu der eingegebenen Tblocknr eine Beziehung von Blockierungen zu Tagen  gibt,
 	 * bei Existenz return true sonst false
 	 */
-	protected boolean checkTblock_TagTB(int tblocknr, Connection con) {
+	protected boolean checkTblock_TagTB(int tblocknr,String tbez, int wpnr, Connection con) {
 		Statement stmt = null;
 		ResultSet rs = null;
 		//Benötigten Sql-Befehlt speichern
-		String sqlQuery = "select tblocknr from Tblock_Tag where tblocknr = "+tblocknr;
+		String sqlQuery = "select tblocknr from Tblock_Tag where tblocknr = "+tblocknr+" and tbez= '"+tbez+"'and wpnr ="+wpnr;
 
 		try {
 			//Statement, Resultset wird erstellt und Sql-Befehl wird ausgeführt, anschließend wird der 
@@ -296,10 +296,10 @@ class Datenbank_Tblock_Tag {
 		
 		LinkedList<TerminBlockierung> terminList = myModel.getTerminBlockierungen();
 		//Prüfen ob der erwartete Datensatz existiert
-		if (!checkTblock_TagTB(tblocknr,con)){
-			return null;
-		}
-		else{
+	//	if (!checkTblock_TagTB(tblocknr,con)){
+		//	return null;
+	//	}
+		//else{
 		Statement stmt = null;
 		ResultSet rs = null;
 
@@ -342,7 +342,7 @@ class Datenbank_Tblock_Tag {
 			}
 		}
 			
-		}
+	//	}
 	}
 	/**
 	 * @author Anes Preljevic
