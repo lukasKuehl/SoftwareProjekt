@@ -184,7 +184,7 @@ class KrankmeldungErstellenView extends JFrame {
 
 						// ausgewählte Element wird für die Übergabe an den Controller vorbereitet
 						String s = comboBoxMA.getSelectedItem().toString();
-						String temp [] = s.split("-");
+						String temp [] = s.split("-"); 
 						String name = temp [0];
 						username = temp[1];
 						System.out.println(temp[1]);
