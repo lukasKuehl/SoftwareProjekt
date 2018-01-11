@@ -133,8 +133,7 @@ class TauschanfrageLoeschenView extends JFrame {
 
 							// Erfolgsmeldung und Übergabe an den Controller
 							if (myController.entferneTauschanfrage(tauschanfrageNr) != false) {
-								JOptionPane.showConfirmDialog(null, "Tauschanfrage erfolgreich gelöscht", "",
-										JOptionPane.INFORMATION_MESSAGE);
+								JOptionPane.showConfirmDialog(null, "Tauschanfrage erfolgreich gelöscht", "",JOptionPane.PLAIN_MESSAGE);
 							}
 							dispose();
 						} else {
