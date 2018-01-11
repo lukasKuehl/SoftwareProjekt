@@ -96,6 +96,7 @@ import java.awt.Color;
 					//und jeweils den ausgewählten Wochenplan
 				
 						if(myController.verschickeWochenplan(myView.getUsername(), "KW" + gibWochenplan(), myController.generiereWochenplanView("KW" + gibWochenplan()))){
+							myView.update();
 							dispose();
 						}else{
 					

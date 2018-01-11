@@ -231,6 +231,7 @@ import java.awt.Color;
 					//wird vom vom Controller ein Array erwartet. Diesen
 					//bekommt er auch aber aktuell nur mit einer Person.
 					if (myController.fülleSchicht(Integer.valueOf(schichtnr), mitarbeiterArray)) {
+						myView.update();
 						dispose();
 					}
 
