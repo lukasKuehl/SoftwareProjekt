@@ -452,7 +452,7 @@ public boolean checkWochenplanFK(String benutzername) {
 			System.out.println("Fehler beim Aufruf der Methode deleteMa_SchichWochenplan:");
 			e.printStackTrace();			
 		}
-		notifyObservers();
+		//notifyObservers();
 		return result;
 	}
 	/**
@@ -648,7 +648,7 @@ public boolean checkWochenplanFK(String benutzername) {
 			System.out.println("Fehler beim Aufruf der Methode deleteSchicht:");
 			e.printStackTrace();			
 		}
-		notifyObservers();
+		//notifyObservers();
 		return result;
 	}
 	/**
@@ -1001,7 +1001,7 @@ public boolean checkWochenplanFK(String benutzername) {
 			System.out.println("Fehler beim Aufruf der Methode deleteTag:");
 			e.printStackTrace();			
 		}
-		notifyObservers();
+		//notifyObservers();
 		return result;
 	}
 	/**
@@ -1191,7 +1191,7 @@ public boolean checkWochenplanFK(String benutzername) {
 			System.out.println("Fehler beim Aufruf der Methode deleteTblock_Tag:");
 			e.printStackTrace();			
 		}
-		notifyObservers();
+		//notifyObservers();
 		return result;
 	}
 	/**
