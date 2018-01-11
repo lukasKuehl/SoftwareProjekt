@@ -116,7 +116,7 @@ class Datenbank_Tblock_Tag {
 
 	/**
 	 * @author Anes Preljevic
-	 * @info Prüft ob es zu der eingegebenen Tblocknr eine Beziehung von Blockierungen zu Tagen  gibt,
+	 * @info Prüft ob es zu der eingegebenen Tblocknr,tbez,wpnr eine bestimmte Beziehung von Blockierungen zu Tagen  gibt,
 	 * bei Existenz return true sonst false
 	 */
 	protected boolean checkTblock_TagTB(int tblocknr,String tbez, int wpnr, Connection con) {
@@ -181,6 +181,41 @@ class Datenbank_Tblock_Tag {
 					stmt.close();
 			} catch (SQLException e) {
 				System.err.println("Methode checkTblock_TagTA (finally) SQL-Fehler: " + e.getMessage());
+			}
+		}
+	}
+	/**
+	 * @author Anes Preljevic
+	 * @info Prüft ob es zu der eingegebenen Tblocknr Beziehungen von Blockierungen zu Tagen  gibt,
+	 * bei Existenz return true sonst false
+	 */
+	private boolean checkTblock_TaggetTB(int tblocknr,Connection con) {
+		Statement stmt = null;
+		ResultSet rs = null;
+		//Benötigten Sql-Befehlt speichern
+		String sqlQuery = "select tblocknr from Tblock_Tag where tblocknr = "+tblocknr;
+
+		try {
+			//Statement, Resultset wird erstellt und Sql-Befehl wird ausgeführt, anschließend wird der 
+			//nächste Datensatz aus dem Resultset ausgegeben
+			stmt = con.createStatement();
+			rs = stmt.executeQuery(sqlQuery);
+			//wenn rs.next() !=null ---> true somit ist der Datensatz vorhanden
+			return rs.next();
+
+		} catch (SQLException sql) {
+			//Fehlerhandling, Ausgaben zur Ursachensuche und Rückgabewert auf false setzen
+			System.err.println("Methode checkTblock_TagTB SQL-Fehler: " + sql.getMessage());
+			return false;
+		} finally {
+			//Schließen der offen gebliebenen Resultsets und Statements
+			try {
+				if (rs != null)
+					rs.close();
+				if (stmt != null)
+					stmt.close();
+			} catch (SQLException e) {
+				System.err.println("Methode checkTblock_TagTB (finally) SQL-Fehler: " + e.getMessage());
 			}
 		}
 	}
@@ -251,7 +286,7 @@ class Datenbank_Tblock_Tag {
 		Statement stmt = null;
 		ResultSet rs = null;
 		//Benötigten Sql-Befehlt speichern
-		String sqlStatement = "select Tblocknr from Tblock_Tag";
+		String sqlStatement = "select * from Tblock_Tag";
 
 		try {
 			//Statement/Resultset wird erstellt, der Sql-Befehl wird ausgeführt und im Resultset gespeichert
@@ -262,7 +297,7 @@ class Datenbank_Tblock_Tag {
 			// Solange es einen "nächsten" Datensatz in dem Resultset gibt, mit den Daten des RS 
 			// ein neues Tblock_Tag-Objekt erzeugen. Dieses wird anschließend der Liste hinzugefügt.
 			while (rs.next()) {
-				Tblock_Tag tbt = myModel.getTblock_TagTB(rs.getInt("Tblocknr"));
+				Tblock_Tag tbt = new Tblock_Tag(rs.getInt("Tblocknr"),rs.getString("Tbez"),rs.getInt("wpnr"));
 
 				
 				tblock_tagList.add(tbt);
@@ -292,14 +327,14 @@ class Datenbank_Tblock_Tag {
 	 * @info Auslesen einer bestimmten Termin zu Tag Beziehung aus der Datenbank und erzeugen eines Tblock_Tag Objektes,
 	 * welches anschließend ausgegeben wird mit einer Liste zugehöriger TerminBlockierungen.
 	 */
-	protected Tblock_Tag getTblock_TagTB(int tblocknr,Connection con) {
+	protected LinkedList<Tblock_Tag> getTblock_TagTB(int tblocknr,Connection con) {
 		
 		LinkedList<TerminBlockierung> terminList = myModel.getTerminBlockierungen();
 		//Prüfen ob der erwartete Datensatz existiert
-	//	if (!checkTblock_TagTB(tblocknr,con)){
-		//	return null;
-	//	}
-		//else{
+			if (!checkTblock_TaggetTB(tblocknr,con)){
+			return null;
+			}
+			else{
 		Statement stmt = null;
 		ResultSet rs = null;
 
@@ -308,23 +343,30 @@ class Datenbank_Tblock_Tag {
 		try {
 			stmt = con.createStatement();
 			rs = stmt.executeQuery(sqlStatement);
-				rs.next();
+			LinkedList<Tblock_Tag> tblock_tagList = new LinkedList<Tblock_Tag>();
+			
+			// Solange es einen "nächsten" Datensatz in dem Resultset gibt, mit den Daten des RS 
+			// ein neues Tblock_Tag-Objekt erzeugen. Dieses wird anschließend der Liste hinzugefügt.
+			
+				while(rs.next()){
 				Tblock_Tag tbt = new Tblock_Tag(rs.getInt("Tblocknr"), rs.getString("Tbez"),rs.getInt("Wpnr"));
-				
+				System.out.println(rs.getInt("Tblocknr")+""+ rs.getString("Tbez")+""+rs.getInt("Wpnr"));
 				//Alle TerminBlockierung-Objekte durchsuchen, nach der selben tblocknr.
 				//Zugehörige TerminBlockierung-Objekte in Tblock_Tag-Objekten speichern um
 				// den Suchaufwand zu verringern
+				tblock_tagList.add(tbt);
 				LinkedList<TerminBlockierung> tbtbt=new LinkedList<TerminBlockierung>();
 
 				for (TerminBlockierung tb : terminList) {
 					if (tb.getTblocknr() == tbt.getTblocknr()) {
 						tbtbt.add(tb);
-					}
+						}
 					}
 				tbt.setLinkedList_termine(tbtbt);
+				}
 				
 				//Tblock_Tag-Objekt zurückgeben
-			return tbt;
+			return tblock_tagList;
 
 		} catch (SQLException sql) {
 			//Fehlerhandling, Ausgaben zur Ursachensuche und Rückgabewert auf null setzen
@@ -340,7 +382,7 @@ class Datenbank_Tblock_Tag {
 			} catch (SQLException e) {
 				System.err.println("Methode getTlock_TagTB (finally) SQL-Fehler: " + e.getMessage());
 			}
-		}
+		}}
 			
 	//	}
 	}

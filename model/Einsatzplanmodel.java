@@ -1070,8 +1070,8 @@ public boolean checkWochenplanFK(String benutzername) {
 	 * ebenfalls zurückgeben.(Alle Methoden in dem Einsatzplanmodel sind von der Funktion gleich,
 	 * es werden nur die Rückgabewerte angepasst etc.)
 	 */
-	public Tblock_Tag getTblock_TagTB(int tblocknr) {	
-		Tblock_Tag result = null;;
+	public LinkedList<Tblock_Tag> getTblock_TagTB(int tblocknr) {	
+		LinkedList<Tblock_Tag> result = null;;
 		try{
 			result = this.dataTblock_Tag.getTblock_TagTB(tblocknr,con);
 			
@@ -1118,25 +1118,7 @@ public boolean checkWochenplanFK(String benutzername) {
 		}
 		notifyObservers();		
 	}
-	/**
-	 * @author Anes Preljevic
-	 * @info Trägt den selben oder ähnlichen Namen wie die Methode in der Model-Hilfsklasse.
-	 * Aufrufen der Methode der Model-Hilfsklasse, sichern der Ergebnisse/Rückgabe und diese
-	 * ebenfalls zurückgeben.(Alle Methoden in dem Einsatzplanmodel sind von der Funktion gleich,
-	 * es werden nur die Rückgabewerte angepasst etc.)
-	 */
-	public boolean checkTblock_TagTB(int tblocknr) {
-		boolean result =false;
-		try{
-			result = this.dataTblock_Tag.checkTblock_TagTB(tblocknr,con);
-			
-		}catch(Exception e){
-			System.out.println("Fehler innerhalb des Modells:");
-			System.out.println("Fehler beim Aufruf der Methode checkTblock_TagTB:");
-			e.printStackTrace();			
-		}
-		return result;
-	}
+
 	/**
 	 * @author Anes Preljevic
 	 * @info Trägt den selben oder ähnlichen Namen wie die Methode in der Model-Hilfsklasse.

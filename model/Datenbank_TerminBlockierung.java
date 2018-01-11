@@ -347,14 +347,21 @@ class Datenbank_TerminBlockierung {
 		try {
 			//Resultset- und Statement-Objekt erzeugen
 			stmt = con.createStatement();
-			rs = stmt.executeQuery(sqlQuery);
+			rs = stmt.executeQuery(sqlQuery);	
 			rs.next();
+			if(rs.getInt(1)==0){
+			int maxTblocknr2=100;
+			return maxTblocknr2;
+			}
+			else{
 			//Speichern der nächsthöheren Tblocknr in maxTblocknr
 			int maxTblocknr = rs.getInt(1);
 			rs.close();
 			stmt.close();
 			//Ausgabe der neuen Tblocknr
 			return maxTblocknr;
+			}
+			
 		} catch (SQLException sql) {
 			System.err.println("Methode getNewTblocknr SQL-Fehler: "
 					+ sql.getMessage());
