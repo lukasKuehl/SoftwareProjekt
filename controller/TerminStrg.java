@@ -209,22 +209,29 @@ class TerminStrg {
 				
 				for(Schicht s: mitarbeiterSchichten){
 					
-					for(Tblock_Tag tbt: betroffeneTerminZuordnungen){
+					//Nur Schichten aus der betroffenen Woche müssen überprüft werden
+					if(s.getWpnr() == wpnr){
 						
-						for(TerminBlockierung t: mitarbeiterTerminBlockierungen){
-							//Abgleich zum Ausschluss ungleicher Termine & Terminzuordungen
-							if(t.getTblocknr() == tbt.getTblocknr()){
-								
-								//Suche die TerminBlockierungen für den zugehörigen Wochenplan
-								if(s.getWpnr() == tbt.getWpnr()){									
-									//Prüfe, ob der Mitarbeiter an dem Tag einen neuen Termin hinterlegt hat und somit aus der Schicht entfernt werden muss
-									if(s.getTbez().equals(tbt.getTbez())){
-										this.myModel.deleteMa_Schicht(s.getSchichtnr(), username);
-									}									
-								}							
+						for(Tblock_Tag tbt: betroffeneTerminZuordnungen){
+							
+							for(TerminBlockierung t: mitarbeiterTerminBlockierungen){
+								//Abgleich zum Ausschluss ungleicher Termine & Terminzuordungen
+								if(t.getTblocknr() == tbt.getTblocknr()){
+									
+									//Suche die TerminBlockierungen für den zugehörigen Wochenplan
+									if(s.getWpnr() == tbt.getWpnr()){									
+										//Prüfe, ob der Mitarbeiter an dem Tag einen neuen Termin hinterlegt hat und somit aus der Schicht entfernt werden muss
+										if(s.getTbez().equals(tbt.getTbez())){
+											this.myModel.deleteMa_Schicht(s.getSchichtnr(), username);
+										}									
+									}							
+								}					
 							}					
-						}					
-					}						
+						}	
+						
+					}
+					
+									
 				}			
 				
 				success = true;
@@ -257,7 +264,7 @@ class TerminStrg {
 		
 		for(TerminBlockierung tb: alleTerminblockierungen){
 			//Prüfe, ob der Termin existiert und ob der Nutzer die Berechtigung zum Löschen besitzt(Bedingung: Ersteller/in des Termins oder Benutzer besitzt Adminrechte)
-			if(((tb.getTblocknr() == tblocknr) && tb.getBenutzername().equals(username)) || myController.isUserAdmin(username)){
+			if((tb.getTblocknr() == tblocknr) &&  (tb.getBenutzername().equals(username) || myController.isUserAdmin(username))){
 				valid = true;				
 			}
 		}

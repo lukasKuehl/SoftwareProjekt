@@ -1,14 +1,10 @@
 package controller;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.text.DateFormat;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -18,21 +14,14 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import javax.imageio.ImageIO;
-import javax.swing.JDialog;
-import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.JTableHeader;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
-
-import com.sun.org.apache.xerces.internal.util.SynchronizedSymbolTable;
 
 import data.Ma_Schicht;
 import data.Mitarbeiter;
 import data.Schicht;
 import data.Standardeinstellungen;
 import data.Tag;
-import data.Userrecht;
 import data.Wochenplan;
 import model.Einsatzplanmodel;
 
@@ -185,86 +174,95 @@ class WochenplanStrg {
 		JTable wochenplan = null;	
 		
 		//Umwandeln der Wpbez in die eindeutige Wochennummer
-    	int wpnr = myController.getWpnr(wpbez);			
-		
-		LinkedList<Tag> alleTage = myModel.getTage();
-    	TreeMap<Integer, Tag> wochenTage = new TreeMap<Integer, Tag>();
-    	//Nummerierung der Tage von 1 aufsteigend
-    	int counter = 1;
+    	int wpnr = myController.getWpnr(wpbez);		
     	
-    	//Sortiere alle Tage aus, die nicht zu der angefragten Woche gehören
-    	for(Tag t: alleTage){
-    		if(t.getWpnr() == wpnr){
-    			wochenTage.put(counter, t);
-    			counter++;
-    		}    		
-    	}    	
-		
-    	//Suche nach allen Mitarbeitern, die innerhalb mind. einer Schicht des Wochenplanes eingeteilt wurden. 
-		TreeMap<String, Mitarbeiter> tempMitarbeiter = new TreeMap<String, Mitarbeiter>(); 
-		LinkedList<Mitarbeiter> wochenMitarbeiter = new LinkedList<Mitarbeiter>();
-		
-		LinkedList<Schicht> alleSchichten = myModel.getSchichten();
-		LinkedList<Ma_Schicht> alleSchichtEinteilungen = myModel.getMa_Schicht();
-		
-		for(Schicht s: alleSchichten){
-			if(s.getWpnr() == wpnr){
-				
-				for(Ma_Schicht mas : alleSchichtEinteilungen){
-					//Prüfe, ob der Mitarbeiter bereits in einer Schichteinteilung zu der Woche aufgetaucht ist. Falls nein, wird ein neuer Eintrag hinzugefügt.
-					if(!tempMitarbeiter.containsKey(mas.getBenutzername())){
-						tempMitarbeiter.put(mas.getBenutzername(), this.myModel.getMitarbeiter(mas.getBenutzername()));
-					}				
-				}						
-			}			
-		}
-		//Wandle die tempMitarbeiter-map zu einer LinkedList<Mitarbeiter> um
-		for(String s: tempMitarbeiter.keySet()){
-			wochenMitarbeiter.add(tempMitarbeiter.get(s));			
-		}	
-		
-		String[] spaltennamen = new String[wochenTage.size()+1];
-		String[][] zeilen = new String[wochenMitarbeiter.size()][wochenTage.size()+1];
-				
-		for(int i = 0; i< spaltennamen.length; i++){	
-			
-			//Leerzeile in der oberen Linken Ecke des Wochenplanes
-			if(i == 0){				
-				spaltennamen[0] = "";
-			}
-			else{				
-				//Hinterlegen des Tages als Spaltenname
-				spaltennamen[i] = wochenTage.get(i).getTbez();
-			}			
-		}
-		
-		LinkedList <String[]> temp = new LinkedList<String[]>();
-		
-		for(Mitarbeiter m : wochenMitarbeiter){
-			//Erzeuge für jeden Mitarbeiter die zugehörige Spalte innerhalb der Wochenplanübersicht
-			temp.add(generiereMitarbeiterSpalte(wpnr, m, spaltennamen));				
-		}	
-		
-		//Rückgabe aus der temporären Liste in das zwei dimensionale Array
-		for(int i = 0; i < zeilen.length; i++){
-			zeilen[i]= temp.get(i);			
-		}				
-		
-		try{		
-			//Erzeuge eine neue JTable mit den erhobenen Daten, welche die Wochenübersicht in der View repräsentiert
-			wochenplan = new JTable(zeilen,spaltennamen){
-				
-				//Zellen lassen sich nicht bearbeiten --> Änderungen nur über System und Datenbank
-				 public boolean isCellEditable(int data, int title)
-	               {
-	                   return false;
-	               }				 
-			};
-		}catch(Exception e){			
+    	if(myModel.getWochenplan(wpnr) != null){
+    		LinkedList<Tag> alleTage = myModel.getTage();
+        	TreeMap<Integer, Tag> wochenTage = new TreeMap<Integer, Tag>();
+        	//Nummerierung der Tage von 1 aufsteigend
+        	int counter = 1;
+        	
+        	//Sortiere alle Tage aus, die nicht zu der angefragten Woche gehören
+        	for(Tag t: alleTage){
+        		if(t.getWpnr() == wpnr){
+        			wochenTage.put(counter, t);
+        			counter++;
+        		}    		
+        	}    	
+    		
+        	//Suche nach allen Mitarbeitern, die innerhalb mind. einer Schicht des Wochenplanes eingeteilt wurden. 
+    		TreeMap<String, Mitarbeiter> tempMitarbeiter = new TreeMap<String, Mitarbeiter>(); 
+    		LinkedList<Mitarbeiter> wochenMitarbeiter = new LinkedList<Mitarbeiter>();
+    		
+    		LinkedList<Schicht> alleSchichten = myModel.getSchichten();
+    		LinkedList<Ma_Schicht> alleSchichtEinteilungen = myModel.getMa_Schicht();
+    		
+    		for(Schicht s: alleSchichten){
+    			if(s.getWpnr() == wpnr){
+    				
+    				for(Ma_Schicht mas : alleSchichtEinteilungen){
+    					//Prüfe, ob der Mitarbeiter bereits in einer Schichteinteilung zu der Woche aufgetaucht ist. Falls nein, wird ein neuer Eintrag hinzugefügt.
+    					if(!tempMitarbeiter.containsKey(mas.getBenutzername())){
+    						tempMitarbeiter.put(mas.getBenutzername(), this.myModel.getMitarbeiter(mas.getBenutzername()));
+    					}				
+    				}						
+    			}			
+    		}
+    		//Wandle die tempMitarbeiter-map zu einer LinkedList<Mitarbeiter> um
+    		for(String s: tempMitarbeiter.keySet()){
+    			wochenMitarbeiter.add(tempMitarbeiter.get(s));			
+    		}	
+    		
+    		String[] spaltennamen = new String[wochenTage.size()+1];
+    		String[][] zeilen = new String[wochenMitarbeiter.size()][wochenTage.size()+1];
+    				
+    		for(int i = 0; i< spaltennamen.length; i++){	
+    			
+    			//Leerzeile in der oberen Linken Ecke des Wochenplanes
+    			if(i == 0){				
+    				spaltennamen[0] = "";
+    			}
+    			else{				
+    				//Hinterlegen des Tages als Spaltenname
+    				spaltennamen[i] = wochenTage.get(i).getTbez();
+    			}			
+    		}
+    		
+    		LinkedList <String[]> temp = new LinkedList<String[]>();
+    		
+    		for(Mitarbeiter m : wochenMitarbeiter){
+    			//Erzeuge für jeden Mitarbeiter die zugehörige Spalte innerhalb der Wochenplanübersicht
+    			temp.add(generiereMitarbeiterSpalte(wpnr, m, spaltennamen));				
+    		}	
+    		
+    		//Rückgabe aus der temporären Liste in das zwei dimensionale Array
+    		for(int i = 0; i < zeilen.length; i++){
+    			zeilen[i]= temp.get(i);			
+    		}				
+    		
+    		try{		
+    			//Erzeuge eine neue JTable mit den erhobenen Daten, welche die Wochenübersicht in der View repräsentiert
+    			wochenplan = new JTable(zeilen,spaltennamen){
+    				
+    				//Zellen lassen sich nicht bearbeiten --> Änderungen nur über System und Datenbank
+    				 public boolean isCellEditable(int data, int title)
+    	               {
+    	                   return false;
+    	               }				 
+    			};
+    		}catch(Exception e){			
 
-			String fehler = "Fehler beim Erstellen eines neuen JTables für den Wochenplan" + wpbez + "\n" + e.getMessage();
-			myController.printErrorMessage(fehler);			
-		}	
+    			String fehler = "Fehler beim Erstellen eines neuen JTables für den Wochenplan" + wpbez + "\n" + e.getMessage();
+    			myController.printErrorMessage(fehler);			
+    		}	
+    	}
+    	else{
+    		String fehler = "Der angefragte Wochenplan ist nicht im System vorhanden, bitte Eingaben überprüfen!";
+			myController.printErrorMessage(fehler);	
+    		
+    		return null;
+    	}
+		
 		
          return wochenplan;
 	}	
