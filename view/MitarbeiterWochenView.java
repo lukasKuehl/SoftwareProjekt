@@ -47,7 +47,10 @@ import java.awt.Color;
 	private EinsatzplanController myController = null;
 	private Einsatzplanview myView = null;
 	private int currentKW = 0;
+	private String username;
 	private JScrollPane jsp;
+	private JMenu mnAbmelden;
+	private JMenuItem mntmBenutzerAbmelden;
 
 	protected MitarbeiterWochenView(Einsatzplanmodel myModel, EinsatzplanController myController, Einsatzplanview myView) {
 		getContentPane().setBackground(Color.WHITE);
@@ -132,6 +135,22 @@ import java.awt.Color;
 		mntmTauschanfrageLoeschen.setHorizontalAlignment(SwingConstants.TRAILING);
 		mntmTauschanfrageLoeschen.setFont(new Font("Verdana", Font.PLAIN, 21));
 		mnTauschanfrage.add(mntmTauschanfrageLoeschen);
+		
+		mnAbmelden = new JMenu("Abmelden");
+		mnAbmelden.setFont(new Font("Dialog", Font.PLAIN, 26));
+		menuBar.add(mnAbmelden);
+		
+		mntmBenutzerAbmelden = new JMenuItem("Benutzer abmelden");
+		mntmBenutzerAbmelden.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				myController.benutzerAbmelden(username);
+				dispose();
+				new AnmeldungView(myController, myModel, myView);
+				
+			}
+		});
+		mntmBenutzerAbmelden.setFont(new Font("Verdana", Font.PLAIN, 21));
+		mnAbmelden.add(mntmBenutzerAbmelden);
 		getContentPane().setLayout(null);
 
 		////Dynamisches Label, damit jeweils der Name des aktuell angezeigten Wochenplans zu sehen ist

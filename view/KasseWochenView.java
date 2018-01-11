@@ -50,9 +50,10 @@ import model.Einsatzplanmodel;
 	private JTable table;
 	private JTextField txtBisTermin, txtVonTermin, textUhrzeitTerminV, textUhrzeitTerminB;
 	private JMenuBar menuBar;
-	private JMenu mnNewMenuIcon, mnWoche, mnSchicht, mnTermin, mnKrankmeldung, mnBenutzerrolle;
+	private JMenu mnNewMenuIcon, mnWoche, mnSchicht, mnTermin, mnKrankmeldung, mnBenutzerrolle,mnAbmelden;
 	private JMenuItem mntmWocheLoeschen, mntmWocheVerschicken, mntmWocheErstellen, mntmSchichtBearbeiten,
-			mntmTerminErstellen, mntmTerminLoeschen, mntmKrankErstellen, mntmKrankLoeschen, mntmBenutzerZuweisen;
+			mntmTerminErstellen, mntmTerminLoeschen, mntmKrankErstellen, mntmKrankLoeschen, mntmBenutzerZuweisen,
+			mntmBenutzerAbmelden;
 	private JLabel lblKW;
 	private String username;
 	private int currentKW = 0;
@@ -205,6 +206,21 @@ import model.Einsatzplanmodel;
 		mntmBenutzerZuweisen.setHorizontalAlignment(SwingConstants.TRAILING);
 		mntmBenutzerZuweisen.setFont(new Font("Verdana", Font.PLAIN, 21));
 		mnBenutzerrolle.add(mntmBenutzerZuweisen);
+		
+		mnAbmelden = new JMenu("Abmelden");
+		mnAbmelden.setFont(new Font("Dialog", Font.PLAIN, 26));
+		menuBar.add(mnAbmelden);
+		
+		mntmBenutzerAbmelden = new JMenuItem("Benutzer abmelden");
+		mntmBenutzerAbmelden.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				myController.benutzerAbmelden(username);
+				dispose();
+				new AnmeldungView(myController, myModel, myView);
+			}
+		});
+		mntmBenutzerAbmelden.setFont(new Font("Verdana", Font.PLAIN, 21));
+		mnAbmelden.add(mntmBenutzerAbmelden);
 		getContentPane().setLayout(null);
 
 		//Dynamisches Label, damit jeweils der Name des aktuell angezeigten Wochenplans zu sehen ist
@@ -277,6 +293,4 @@ import model.Einsatzplanmodel;
 		
 		
 	}
-	
-	
 }
