@@ -41,7 +41,7 @@ import java.awt.Color;
 	private JMenu mnNewMenuIcon, mnWoche, mnTermin, mnTauschanfrage;
 	private JMenuItem mntmWocheAnzeigen, mntmTerminErstellen, mntmTerminLoeschen, mntmTauschanfrageErstellen,
 			mntmTauschanfrageLoeschen, mntmTauschanfrageAnzeigen;
-	private JLabel lblKW1;
+	private JLabel lblKW;
 	private JButton btnRechts, btnLinks;
 	private Einsatzplanmodel myModel = null;
 	private EinsatzplanController myController = null;
@@ -154,11 +154,11 @@ import java.awt.Color;
 		getContentPane().setLayout(null);
 
 		////Dynamisches Label, damit jeweils der Name des aktuell angezeigten Wochenplans zu sehen ist
-		lblKW1 = new JLabel("");
-		lblKW1.setBounds(109, 11, 136, 30);
+		lblKW = new JLabel("");
+		lblKW.setBounds(109, 11, 136, 30);
 		ArrayList<String> wochenplaene = myController.getWochenplaene();
-		lblKW1.setText(wochenplaene.get(0).toString());
-		getContentPane().add(lblKW1);
+		lblKW.setText(wpStart(wochenplaene));
+		getContentPane().add(lblKW);
 
 		
 		btnRechts = new JButton("");
@@ -205,10 +205,22 @@ import java.awt.Color;
 		setVisible(true);
 	}
 	
+	//Methode prüft beim Start die Wochenpläne, wenn keine Vorhanden sind wird Platzhalter eingefügt	
+	private String wpStart(ArrayList<String> wochenplaene){
+		String a = null;
+		if(wochenplaene.isEmpty() == false){
+		wochenplaene.get(0).toString();
+		}else{
+			a = "Keine Wochenpläne";
+		}
+		return a;
+	}
+	
 	//Methode um den Wochenplan (inkl. Daten) in der View anzeigen zu lassen 
 	private void generiereTabelle(){
 		ArrayList<String> wochenplaene = myController.getWochenplaene();
-		lblKW1.setText(wochenplaene.get(currentKW).toString());
+		if(wochenplaene.isEmpty() == false){
+		lblKW.setText(wochenplaene.get(currentKW).toString());
 		tbleWochenplan = myController.generiereWochenplanView(wochenplaene.get(currentKW));
 		tbleWochenplan.getTableHeader().setSize(tbleWochenplan.getTableHeader().getPreferredSize());
 		tbleWochenplan.setSize(tbleWochenplan.getPreferredSize());
@@ -217,7 +229,8 @@ import java.awt.Color;
 		JScrollPane jsp = new JScrollPane(tbleWochenplan);			
 		jsp.setBounds(24, 81, 1439, 676);
 		getContentPane().add(jsp);
-		
+		}else{
+		}
 	}
 	
 	
