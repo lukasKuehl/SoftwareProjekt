@@ -143,8 +143,8 @@ class TauschanfrageAnzeigenView extends JFrame {
 							temp[0] = temp[0].substring(10);
 							String tauschanfrageNrS = temp[0].trim();
 							int tauschanfrageNr = Integer.parseInt(tauschanfrageNrS);
-							String empfaengername = temp[8].substring(2, 9);
-						
+							String empfaengername = temp[8].substring(2);
+							empfaengername=empfaengername.trim();
 							// Erfolgsmeldung und Übergabe an den Controller
 							System.out.printf(empfaengername, tauschanfrageNr);
 							if (myController.akzeptiereTauschanfrage(empfaengername, tauschanfrageNr)) {
