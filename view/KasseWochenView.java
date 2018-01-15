@@ -228,7 +228,7 @@ import model.Einsatzplanmodel;
 		lblKW.setFont(new Font("Tahoma", Font.BOLD, 13));
 		lblKW.setBounds(109, 11, 136, 30);
 		ArrayList<String> wochenplaene = myController.getWochenplaene();
-		lblKW.setText(wochenplaene.get(0).toString());
+		lblKW.setText(wpStart(wochenplaene));
 		getContentPane().add(lblKW);
 
 		btnRechts = new JButton("");
@@ -277,10 +277,21 @@ import model.Einsatzplanmodel;
 		generiereTabelle();
 		setVisible(true);
 	}
+	//Methode prüft beim Start die Wochenpläne, wenn keine Vorhanden sind wird Platzhalter eingefügt
+	private String wpStart(ArrayList<String> wochenplaene){
+		String a = null;
+		if(wochenplaene.isEmpty() == false){
+		wochenplaene.get(0).toString();
+		}else{
+			a = "Keine Wochenpläne";
+		}
+		return a;
+	}
 
 	//Methode um den Wochenplan (inkl. Daten) in der View anzeigen zu lassen 
 	private void generiereTabelle(){
 		ArrayList<String> wochenplaene = myController.getWochenplaene();
+		if(wochenplaene.isEmpty() == false){
 		lblKW.setText(wochenplaene.get(currentKW).toString());
 		tbleWochenplan = myController.generiereWochenplanView(wochenplaene.get(currentKW));	
 		tbleWochenplan.getTableHeader().setSize(tbleWochenplan.getTableHeader().getPreferredSize());
@@ -290,6 +301,8 @@ import model.Einsatzplanmodel;
 		jsp = new JScrollPane(tbleWochenplan);
 		jsp.setBounds(24, 81, 1439, 676);
 		getContentPane().add(jsp);
+		}else{
+		}
 		
 		
 	}

@@ -58,10 +58,6 @@ class Datenbank_Tblock_Tag {
 			if (checkTblock_TagTB(tBlockNr,tbez,wpnr,con)) {
 				System.out.println("Keine Beziehung von Terminblockierung zu Tagen!");
 			}
-//			//Prüfung des PK-Constraints
-//			if (checkTblock_TagTA(tbez,wpnr,con) == false) {
-//				System.out.println("Keine Beziehung von Terminbezeichnung und Wochenplannummern zu Tagen vorhanden!");
-//			}
 			//Überprüfung der FK-Constraints
 			if(checkTblock_TagFK(tBlockNr,tbez,wpnr,con) == false){
 				System.out.println("Die Foreign-Key-Constraints der Tabelle TBlock_Tag wurden verletzt" );
