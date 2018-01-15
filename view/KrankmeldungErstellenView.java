@@ -187,7 +187,6 @@ class KrankmeldungErstellenView extends JFrame {
 						String temp [] = s.split("-"); 
 						String name = temp [0];
 						username = temp[1];
-						System.out.println(temp[1]);
 						String bez = "Krankheit";
 						String grund = txtGrund.getText().toString();
 						zeitraum.put("wpbez", comboBoxWochenplaene.getSelectedItem().toString());
