@@ -75,11 +75,13 @@ class KrankmeldungLoeschenView extends JFrame {
 		listKrankmeldung = new JList<String>();
 		listKrankmeldung.setFont(new Font("Verdana", Font.PLAIN, 13));
 		kl = myController.getAlleTermine(myView.getUsername()); 
-
 		model = new DefaultListModel<String>();
+		
+		//Test Übergabe Krankmeldung		
 		for (String m : kl) {
 			model.addElement(m);
 		}
+//		}
 		listKrankmeldung.setModel(model);
 		listKrankmeldung.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		listKrankmeldung.setBounds(62, 143, 659, 302);
@@ -98,7 +100,6 @@ class KrankmeldungLoeschenView extends JFrame {
 		contentPane.add(lblBitteAuswaehlen);
 
 		setVisible(true);
-
 		/**
 		 * @author Ramona Gerke
 		 * @Info Die ActionPerformed Methode wird nach dem Dücken des Buttons
