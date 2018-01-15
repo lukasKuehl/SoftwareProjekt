@@ -146,6 +146,7 @@ class TauschanfrageAnzeigenView extends JFrame {
 							String empfaengername = temp[8].substring(2, 9);
 						
 							// Erfolgsmeldung und Übergabe an den Controller
+							System.out.printf(empfaengername, tauschanfrageNr);
 							if (myController.akzeptiereTauschanfrage(empfaengername, tauschanfrageNr)) {
 							JOptionPane.showMessageDialog(null, "Tauschanfrage erfolgreich angenommen", "",
 									JOptionPane.INFORMATION_MESSAGE);
