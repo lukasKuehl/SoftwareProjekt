@@ -283,7 +283,6 @@ class TauschanfrageErstellenView extends JFrame {
 						String s = n.toString();
 						String[] tempEmpfaenger = s.split("-");
 						String empfaengerSchichtNrS = tempEmpfaenger[0].trim();
-						empfaengerSchichtNr = Integer.parseInt(empfaengerSchichtNrS);
 						String kwAndererMa = tempEmpfaenger[1];
 						String tagAndererMa = tempEmpfaenger[2];
 						String anfangszeitAndererMa = tempEmpfaenger[3];
@@ -292,7 +291,7 @@ class TauschanfrageErstellenView extends JFrame {
 
 						// Notwendigen Parameter für die Anzeige der Schicht des anderen Mitarbeiters
 						// der JComboBox hinzufügen
-						comboBoxSchichtAndererMA.addItem(empfaengerSchichtNr +"-"+ kwAndererMa + "- " + tagAndererMa + "-" + anfangszeitAndererMa
+						comboBoxSchichtAndererMA.addItem(empfaengerSchichtNrS +"-"+ kwAndererMa + "- " + tagAndererMa + "-" + anfangszeitAndererMa
 								+ "-" + endzeitAndererMa + "-" + empfaengerName);
 					}
 					// Sichtbarkeit der JComboBox und Labels ändern
@@ -313,13 +312,15 @@ class TauschanfrageErstellenView extends JFrame {
 				s = s.trim();
 				String[] tempEmpfaenger = s.split("-");
 				String empfaengerSchichtNrS = tempEmpfaenger[0];
+				empfaengerSchichtNr = Integer.parseInt(empfaengerSchichtNrS);
+				System.out.println(empfaengerSchichtNr);
 				String kwAndererMa = tempEmpfaenger[1];
 				String tagAndererMa = tempEmpfaenger[2];
 				String anfangszeitAndererMa = tempEmpfaenger[3];
 				String endzeitAndererMa = tempEmpfaenger[4];
 				String empfaengerNameS = tempEmpfaenger[5];
 				empfaengerName = empfaengerNameS.trim();
-
+// 
 			}
 		});
 
@@ -342,6 +343,7 @@ class TauschanfrageErstellenView extends JFrame {
 					if (eingabe == JOptionPane.YES_OPTION) {
 
 					// Erfolgsmeldung und Übergabe an den Controller
+						System.out.println(myView.getUsername() + "- " +senderSchichtnr +empfaengerName + empfaengerSchichtNr );
 						if (myController.erstelleTauschanfrage(myView.getUsername(),senderSchichtnr, empfaengerName,
 								empfaengerSchichtNr))  {
 							JOptionPane.showConfirmDialog(null, "Tauschanfrage erfolgreich erstellt", "",
