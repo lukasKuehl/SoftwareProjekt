@@ -273,10 +273,15 @@ class Datenbank_TerminBlockierung {
 				String anfangUhrzeit = df.format(dbanfangUhrzeit);
 				String endUhrzeit =df.format(dbendUhrzeit);
 				
+				//Da Grund nicht not null, muss geprüft werden ob das Resultset null ist,
+				//damit kein Fehlerauftritt. Wenn Grund null ist wird automatisch der Wert - zugewiesen.
+				String grund=rs.getString("Grund");
+				if (rs.wasNull())
+					grund = "--";
 				//neues TerminBLockierung-Objekt erzeugen, Daten aus dem Resultset ziehen
 				TerminBlockierung tb = new TerminBlockierung(rs.getInt("Tblocknr"),rs.getString("Benutzername"), rs.getString("Bbez"),
 						rs.getString("Anfangzeitraum"), rs.getString("Endezeitraum"),
-						anfangUhrzeit,endUhrzeit,rs.getString("Grund") );
+						anfangUhrzeit,endUhrzeit,grund );
 
 				terminBlockierungList.add(tb);
 			}
