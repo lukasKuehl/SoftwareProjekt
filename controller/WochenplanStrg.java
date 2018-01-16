@@ -522,12 +522,9 @@ class WochenplanStrg {
 	            			"Mit freundlichen Grüßen,\n" +
 	            			"Team der Einsatzplanverwaltung";           	
 	            	
-	            	//Nutzung des Gruppenaccounts bei Web.de	
-	            	
-	            	//Demoversion zum vermeiden von Spam
-	            	if(m.getBenutzername().equals("Hmustermann")){     	            	
-	            		success = myController.sendMail(user, password, senderAddress, m.getEmail(), "Einsatzplan für die " + wpbez, message, filePath);
-	            	}            	
+	            	//Nutzung des Gruppenaccounts bei Web.de		            	
+	                success = myController.sendMail(user, password, senderAddress, m.getEmail(), "Einsatzplan für die " + wpbez, message, filePath);
+	            	           	
 	            }
 	          
 	        }catch(IOException ioe)
