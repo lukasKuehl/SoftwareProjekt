@@ -511,7 +511,7 @@ class WochenplanStrg {
 	            
 	            //Parameter E-Mail-Account der Einsatzplanverwaltung
 	            final String user = "einsatzplan.team";
-	            final String password = "";
+	            final String password = "FHBIEinsatzplanteam";
 	            final String senderAddress = "einsatzplan.team@web.de";           
 	            
 	            for(Mitarbeiter m: alleMitarbeiter){
