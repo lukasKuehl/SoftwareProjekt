@@ -7,8 +7,6 @@ import controller.EinsatzplanController;
 import data.*;
 import model.Einsatzplanmodel;
 
-
-
 /**
  * @author Anes Preljevic
  * @info Testen meiner Model und Controller Methoden, entspricht dem protokoll
@@ -223,13 +221,14 @@ public class TestAnes {
 		} else {
 			System.out.println("failtauschanfrage");
 		}
-//		try {
-//			wps.bestätigeTauschanfrage(empfänger, tauschnr);
-//		} catch (Exception e) {
-//
-//			String fehler = "Controller: Fehler beim Bestätigen einer Tauschanfrage:\n" + e.getMessage();
-//
-//		}
+		// try {
+		// wps.bestätigeTauschanfrage(empfänger, tauschnr);
+		// } catch (Exception e) {
+		//
+		// String fehler = "Controller: Fehler beim Bestätigen einer
+		// Tauschanfrage:\n" + e.getMessage();
+		//
+		// }
 
 		LinkedList<Tauschanfrage> tauschList = wps.getTauschanfragen();
 		for (Tauschanfrage tausch : tauschList) {
@@ -347,29 +346,30 @@ public class TestAnes {
 		LinkedList<Warenhaus> whList = wps.getWarenhaus();
 		for (Warenhaus wh : whList) {
 			System.out.println(wh.getWhname() + " " + wh.getAnzkasse() + " " + wh.getAnzinfo());
-		}	
-		String whname="Technikwarenhaus";
+		}
+		String whname = "Technikwarenhaus";
 		Warenhaus wh = wps.geteinWarenhaus(whname);
-		
-			System.out.println(wh.getWhname() + " " + wh.getAnzkasse() + " " + wh.getAnzinfo());
+
+		System.out.println(wh.getWhname() + " " + wh.getAnzkasse() + " " + wh.getAnzinfo());
 		// Test Tauschanfragestrg Controller
-			EinsatzplanController epc=new EinsatzplanController(wps);
-			String empfaengerName="Kmuster";
-			int tauschanfrageNr=100000;
-			int tauschanfrageNr2=100001;
-			String senderName="Kmuster";
-			String empfaengerName2="Gschmidt";
-			int senderSchichtNr=10017;
-			int empfaengerSchichtNr=10000;
-			boolean akzeptieret = epc.akzeptiereTauschanfrage(empfaengerName, tauschanfrageNr);
-			boolean entfernet = epc.entferneTauschanfrage(tauschanfrageNr2);
-			boolean erstellet = epc.erstelleTauschanfrage(senderName, senderSchichtNr, empfaengerName2, empfaengerSchichtNr);
-			if(akzeptieret)
-				System.out.println("at success");
-			if(entfernet)
-				System.out.println("et success");
-			if(erstellet)
-				System.out.println("et2 success");
+		EinsatzplanController epc = new EinsatzplanController(wps);
+		String empfaengerName = "Kmuster";
+		int tauschanfrageNr = 100000;
+		int tauschanfrageNr2 = 100001;
+		String senderName = "Kmuster";
+		String empfaengerName2 = "Gschmidt";
+		int senderSchichtNr = 10017;
+		int empfaengerSchichtNr = 10000;
+		boolean akzeptieret = epc.akzeptiereTauschanfrage(empfaengerName, tauschanfrageNr);
+		boolean entfernet = epc.entferneTauschanfrage(tauschanfrageNr2);
+		boolean erstellet = epc.erstelleTauschanfrage(senderName, senderSchichtNr, empfaengerName2,
+				empfaengerSchichtNr);
+		if (akzeptieret)
+			System.out.println("at success");
+		if (entfernet)
+			System.out.println("et success");
+		if (erstellet)
+			System.out.println("et2 success");
 	}
 
 }

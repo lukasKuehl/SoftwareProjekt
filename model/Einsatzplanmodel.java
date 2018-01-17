@@ -1497,7 +1497,7 @@ public class Einsatzplanmodel implements Observable {
 			System.out.println("Fehler beim Aufruf der Methode wechselBenutzerrolle:");
 			e.printStackTrace();
 		}
-		//+notifyObservers();
+		notifyObservers();
 	}
 
 	public Userrecht getUserrecht(String job) {
