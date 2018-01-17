@@ -156,7 +156,8 @@ class Datenbank_Tblock_Tag {
 	 * @author Anes Preljevic
 	 * @info Prüft ob es zu der eingegebenen Tagbez und der Wochenplannr eine
 	 *       Beziehung von Tagen zu Blockierungen gibt, bei existenz return true
-	 *       sonst false
+	 *       sonst false.
+	 *       Erleichtert die überprüfung für Tage.
 	 */
 	protected boolean checkTblock_TagTA(String tbez, int wpnr, Connection con) {
 		Statement stmt = null;
@@ -194,7 +195,8 @@ class Datenbank_Tblock_Tag {
 	/**
 	 * @author Anes Preljevic
 	 * @info Prüft ob es zu der eingegebenen Tblocknr Beziehungen von
-	 *       Blockierungen zu Tagen gibt, bei Existenz return true sonst false
+	 *       Blockierungen zu Tagen gibt, bei Existenz return true sonst false.
+	 *       Erleichtert die überprüfung für TerminBlockierungen.
 	 */
 	private boolean checkTblock_TaggetTB(int tblocknr, Connection con) {
 		Statement stmt = null;

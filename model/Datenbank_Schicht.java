@@ -140,7 +140,8 @@ class Datenbank_Schicht {
 		try {
 			// Statement, Resultset wird erstellt und Sql-Befehl wird
 			// ausgeführt, schließend wird der
-			// nächste Datensatz aus dem Resultset ausgegeben
+			// nächste Datensatz aus dem Resultset ausgegeben.
+			// Wenn kein Datensatz vorhanden ist wird false zurück gegeben, wenn doch true.
 			stmt = con.createStatement();
 			rs = stmt.executeQuery(sqlQuery);
 			return rs.next();
@@ -269,7 +270,7 @@ class Datenbank_Schicht {
 	/**
 	 * @author Anes Preljevic
 	 * @info Auslesen einer bestimmten Schicht aus der Datenbank und erzeugen
-	 *       eines Schicht Objektes, welches anschließend ausgegeben wird. Die
+	 *       eines Schicht-Objektes, welches anschließend ausgegeben wird. Die
 	 *       zugehörigen Mitarbeiter einer Schicht werden als LinkedList in den
 	 *       Schichten gespeichert.
 	 */
@@ -419,8 +420,9 @@ class Datenbank_Schicht {
 
 	/**
 	 * @author Anes Preljevic
-	 * @info Fragt die höchste Schichtnr und erhöht diese um 1, sodass bei neu
+	 * @info Fragt die höchste Schichtnr ab und erhöht diese um 1, sodass bei neu
 	 *       Erstellung einer Schicht die nächste Schichtnr vorliegt.
+	 *       Falls noch keine Schicht vorliegt wird der festgelegte Startwert genommen.
 	 */
 	protected int getNewSchichtnr(Connection con) {
 		Statement stmt = null;

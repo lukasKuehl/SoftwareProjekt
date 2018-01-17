@@ -91,9 +91,9 @@ class Datenbank_Warenhaus {
 
 	/**
 	 * @author Anes Preljevic
-	 * @info Prüft ob es zu der eingegebenen schichtnr und dem benutzernamen
-	 *       bereits einen Mitarbeiter in der Schicht gibt, bei existenz return
-	 *       true, sonst false
+	 * @info Prüft ob es zu dem eingegebenen whnamen 
+	 *       bereits ein Warenhaus gibt, bei existenz return
+	 *       true, sonst false.
 	 */
 	public boolean checkWarenhaus(String whname, Connection con) {
 		Statement stmt = null;

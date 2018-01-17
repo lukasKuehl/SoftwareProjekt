@@ -139,7 +139,8 @@ class Datenbank_Tag {
 		try {
 			// Statement, Resultset wird erstellt und Sql-Befehl wird
 			// ausgeführt, schließend wird der
-			// nächste Datensatz aus dem Resultset ausgegeben
+			// nächste Datensatz aus dem Resultset ausgegeben.
+			// Wenn kein Datensatz vorhanden ist wird false zurück gegeben, wenn doch true.
 			stmt = con.createStatement();
 			rs = stmt.executeQuery(sqlQuery);
 			return rs.next();
@@ -315,7 +316,7 @@ class Datenbank_Tag {
 
 	/**
 	 * @author Anes Preljevic
-	 * @info Auslesen aller Tage aus der Datenbank und erzeugen von Tag
+	 * @info Auslesen aller Tage aus der Datenbank und erzeugen von Tag-
 	 *       Objekten. Diese werden in eine LinkedList abgelegt. Die zugehörigen
 	 *       Schichten werden in einer LinkedList gespeichert. Diese Liste ist
 	 *       in der Tag List enthalten welche außerdem den Ausgabewert
@@ -489,7 +490,6 @@ class Datenbank_Tag {
 	protected boolean deleteTag(int wpnr, Connection con) {
 		Datenbank_Schicht schicht = new Datenbank_Schicht(myModel);
 		LinkedList<Tblock_Tag> tblocktagList = myModel.getAlleTblock_Tag();
-		;
 
 		Statement stmt = null;
 

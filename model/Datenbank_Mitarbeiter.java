@@ -135,7 +135,7 @@ class Datenbank_Mitarbeiter {
 	/**
 	 * @author Anes Preljevic
 	 * @info Auslesen aller Mitarbeiter aus der Datenbank und erzeugen von
-	 *       Mitarbeiter Objekten. Diese werden in eine LinkedList abgelegt und
+	 *       Mitarbeiter-Objekten. Diese werden in eine LinkedList abgelegt und
 	 *       ausgegeben.
 	 */
 	protected LinkedList<Mitarbeiter> getAlleMitarbeiter(Connection con) {
@@ -193,7 +193,7 @@ class Datenbank_Mitarbeiter {
 	/**
 	 * @author Anes Preljevic
 	 * @info Prüft ob es zu dem eingegebenen Benutzernamen einen Mitarbeiter
-	 *       gibt, bei existenz return true sonst false
+	 *       gibt, bei Existenz return true sonst false
 	 */
 
 	protected boolean checkMitarbeiter(String benutzername, Connection con) {
@@ -205,7 +205,8 @@ class Datenbank_Mitarbeiter {
 		try {
 			// Statement, Resultset wird erstellt und Sql-Befehl wird
 			// ausgeführt, anschließend wird der
-			// nächste Datensatz aus dem Resultset ausgegeben
+			// nächste Datensatz aus dem Resultset ausgegeben.
+			// Wenn kein Datensatz vorhanden ist wird false zurück gegeben, wenn doch true
 			stmt = con.createStatement();
 			rs = stmt.executeQuery(sqlQuery);
 			return rs.next();
@@ -281,7 +282,7 @@ class Datenbank_Mitarbeiter {
 	/**
 	 * @author Anes Preljevic
 	 * @info Auslesen eines bestimmten Mitarbeiters aus der Datenbank und
-	 *       erzeugen eines Mitarbeiter Objektes, welches anschließend
+	 *       erzeugen eines Mitarbeiter-Objektes, welches anschließend
 	 *       ausgegeben wird.
 	 */
 	public Mitarbeiter getMitarbeiter(String benutzername, Connection con) {
@@ -339,7 +340,7 @@ class Datenbank_Mitarbeiter {
 
 	/**
 	 * @author Anes Preljevic
-	 * @info Wechselt die Benutzerrolle eines Mitarbeiters der Job verändert
+	 * @info Wechselt die Benutzerrolle eines Mitarbeiters indem der Job verändert
 	 *       wird. Kassenbüro steht für die Admin Benutzerrolle und Kassierer
 	 *       für Mitarbeiter.
 	 */
@@ -354,7 +355,6 @@ class Datenbank_Mitarbeiter {
 			// ist, auf false setzen
 			stmt = con.createStatement();
 			if (con.getAutoCommit() != false)
-				;
 			{
 				con.setAutoCommit(false);
 			}
@@ -412,6 +412,9 @@ class Datenbank_Mitarbeiter {
 
 	protected boolean deleteMitarbeiter(String benutzername, Connection con) {
 		// Überprüfen ob der zu löschende Datensatz existiert
+		// Wenn dieser nicht existiert, trotzdem true zurückgeben,
+		// da der Datensatz gelöscht werden sollte und der gewollte Zustand
+		// vom jetzigen nicht abweicht.
 		if (!checkMitarbeiter(benutzername, con)) {
 			return true;
 		} else {

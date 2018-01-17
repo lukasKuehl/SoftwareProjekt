@@ -114,7 +114,8 @@ class Datenbank_Ma_Schicht {
 		try {
 			// Statement wird erstellt und Sql-Befehl wird ausgeführt,
 			// schließend wird der nächste Datensatz aus dem Resultset
-			// ausgegeben
+			// ausgegeben.
+			// Wenn kein Datensatz vorhanden ist wird false zurück gegeben, wenn doch true.
 			stmt = con.createStatement();
 			rs = stmt.executeQuery(sqlQuery);
 			return rs.next();
@@ -252,10 +253,10 @@ class Datenbank_Ma_Schicht {
 
 	/**
 	 * @author Anes Preljevic
-	 * @info Auslesen der Mitarbeiter die in eine Schicht gehören mit der
+	 * @info Auslesen der Mitarbeiter die in eine Schicht gehören, mit der
 	 *       übergebenen Schichtnr aus der Datenbank. Erstellen eines Objektes
 	 *       Ma_Schicht mit den Daten aus der Datenbank. Liste mit den
-	 *       Ma_Schicht Objekten wird ausgegeben.
+	 *       Ma_Schicht-Objekten wird ausgegeben.
 	 */
 	protected LinkedList<Ma_Schicht> getMitarbeiterausderSchicht(int schichtnr, Connection con) {
 
@@ -310,10 +311,10 @@ class Datenbank_Ma_Schicht {
 
 	/**
 	 * @author Anes Preljevic
-	 * @info Auslesen der Mitarbeiter die in eine Schicht gehören mit der
+	 * @info Auslesen der Mitarbeiter die in eine Schicht gehören, mit der
 	 *       übergebenen Schichtnr aus der Datenbank, erstellen eines Objektes
 	 *       Ma_Schicht mit den Daten aus der Datenbank. Liste mit den
-	 *       Ma_Schicht Objekten wird ausgegeben.
+	 *       Ma_Schicht-Objekten wird ausgegeben.
 	 */
 	protected LinkedList<Ma_Schicht> getSchichteneinesMitarbeiters(String benutzername, Connection con) {
 
@@ -373,6 +374,9 @@ class Datenbank_Ma_Schicht {
 	 */
 	protected boolean deleteMa_Schicht(int schichtnr, String benutzername, Connection con) {
 		// Überprüfen ob der zu löschende Datensatz existiert
+		// Wenn dieser nicht existiert, trotzdem true zurückgeben,
+		// da der Datensatz gelöscht werden sollte und der gewollte Zustand
+		// vom jetzigen nicht abweicht.
 		if (checkMa_Schicht(schichtnr, benutzername, con) == false) {
 			return true;
 		} else {

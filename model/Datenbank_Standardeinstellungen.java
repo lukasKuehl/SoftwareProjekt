@@ -22,13 +22,12 @@ import data.Standardeinstellungen;
  *       im Bezug auf die Tabelle Standardeinstellungen zu verarbeiten.
  */
 
-// Klassenname Einstellungen
 class Datenbank_Standardeinstellungen {
 
 	/**
 	 * @author Anes Preljevic
 	 * @info Auslesen der Standardeinstellungen aus der Datenbank und erzeugen
-	 *       eines Standardeinstellungen Objektes, welches ausgegeben wird.
+	 *       eines Standardeinstellungen-Objektes, welches ausgegeben wird.
 	 */
 	protected Standardeinstellungen getStandardeinstellungen(Connection con) {
 
