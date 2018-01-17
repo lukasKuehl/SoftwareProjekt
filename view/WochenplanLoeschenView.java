@@ -124,6 +124,7 @@ class WochenplanLoeschenView extends JFrame {
 							JOptionPane.showMessageDialog(null, "Wochenplan erfolgreich gelöscht", "  ",
 									JOptionPane.INFORMATION_MESSAGE);
 							}
+							myView.update();
 							dispose();
 						} else {
 							JOptionPane.showMessageDialog(null, "Wählen Sie einen anderen Wochenplan aus!", "  ",

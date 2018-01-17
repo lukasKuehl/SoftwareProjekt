@@ -323,6 +323,7 @@ class TerminErstellenView extends JFrame {
 								JOptionPane.showMessageDialog(null, "Termin erfolgreich angelegt!", "  ",
 								JOptionPane.INFORMATION_MESSAGE);
 						}
+						myView.update();
 						dispose();
 
 					} else {

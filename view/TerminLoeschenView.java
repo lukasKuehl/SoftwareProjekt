@@ -143,6 +143,7 @@ class TerminLoeschenView extends JFrame {
 							if (myController.entferneTermin(terminnr, myView.getUsername())){
 							JOptionPane.showMessageDialog(null, "Termin erfolgreich gelöscht", "", JOptionPane.INFORMATION_MESSAGE);
 							}
+							myView.update();
 							dispose();
 							
 						} else {

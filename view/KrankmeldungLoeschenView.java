@@ -148,6 +148,7 @@ class KrankmeldungLoeschenView extends JFrame {
 							JOptionPane.showMessageDialog(null, "Krankmeldung erfolgreich gelöscht!", "",
 									JOptionPane.INFORMATION_MESSAGE);
 							}
+							myView.update();
 							dispose();
 						} else {
 							JOptionPane.showMessageDialog(null, "Wählen Sie eine andere Krankmeldug aus!", "",

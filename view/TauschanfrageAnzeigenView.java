@@ -150,6 +150,7 @@ class TauschanfrageAnzeigenView extends JFrame {
 							if (myController.akzeptiereTauschanfrage(empfaengername, tauschanfrageNr)) {
 							JOptionPane.showMessageDialog(null, "Tauschanfrage erfolgreich angenommen", "",
 									JOptionPane.INFORMATION_MESSAGE);
+							myView.update();
 							dispose();
 							}
 						} else {

@@ -198,6 +198,7 @@ class KrankmeldungErstellenView extends JFrame {
 					
 						JOptionPane.showMessageDialog(null, "Krankmeldung wurde erfolgreich erstellt!",  "", JOptionPane.INFORMATION_MESSAGE);
 						}
+						myView.update();
 						dispose();
 					} else {
 						JOptionPane.showMessageDialog(null, "Daten können geändert werden.",  "", JOptionPane.INFORMATION_MESSAGE);

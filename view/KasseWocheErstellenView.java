@@ -325,6 +325,7 @@ import java.awt.Color;
 					if (rdbtnBenutzerdefiniert.isSelected()) {
 						if (myController.erstelleWochenplanCustom(myView.getUsername(), gibWochenplanbezeichnung(),
 								gibOeffnungszeiten(), gibBesetzung())) {
+							myView.update();
 							dispose();
 						} else {
 							//Fehlermeldung kommt vom Controller
@@ -334,6 +335,7 @@ import java.awt.Color;
 					}
 					if (rdbtnStandardeinstellungen.isSelected()) {
 						if (myController.erstelleWochenplanStandard(myView.getUsername(), gibWochenplanbezeichnung())) {
+							myView.update();
 							dispose();
 						} else {
 						//Fehlermeldung kommt vom Controller	
